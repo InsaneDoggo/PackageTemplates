@@ -3,11 +3,14 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiManager;
+import org.jetbrains.annotations.NotNull;
+import ui.dialogs.NewPackageDialog;
 
 import java.util.HashMap;
 
@@ -18,21 +21,40 @@ public class SampleAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        FileTemplateManager fileTemplateManager = FileTemplateManager.getDefaultInstance();
-        FileTemplate[] templates = fileTemplateManager.getAllTemplates();
+//        FileTemplateManager fileTemplateManager = FileTemplateManager.getDefaultInstance();
+//        FileTemplate[] templates = fileTemplateManager.getAllTemplates();
+//
+//        VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+//
+//        if (file != null && file.isDirectory()) {
+//            PsiDirectory dir = PsiManager.getInstance(e.getProject()).findDirectory(e.getData(CommonDataKeys.VIRTUAL_FILE));
+//
+//            PsiClass psiClass = JavaDirectoryService.getInstance().createClass(dir, "MegaFile", "Prost", false, getCustomProperties());
+//        }
 
-        VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+        showDialog(e.getProject());
 
-        if (file != null && file.isDirectory()) {
-            PsiDirectory dir = PsiManager.getInstance(e.getProject()).findDirectory(e.getData(CommonDataKeys.VIRTUAL_FILE));
+        System.out.println("Done!");
+    }
 
-            HashMap<String, String> map = new HashMap<>();
-            map.put("myVar", "\"HelloWorld\"");
+    private void showDialog(Project project) {
+        NewPackageDialog dialog = new NewPackageDialog(project, "My Dialog");
+        dialog.show();
 
-            PsiClass psiClass = JavaDirectoryService.getInstance().createClass(dir, "MegaFile", "Prost", false, map);
-            System.out.println("end");
+        switch(dialog.getExitCode()){
+            case NewPackageDialog.OK_EXIT_CODE:
+                System.out.println("OK_EXIT_CODE");
+                break;
+            case NewPackageDialog.CANCEL_EXIT_CODE:
+                System.out.println("CANCEL_EXIT_CODE");
+                break;
         }
+    }
 
-        System.out.println("end");
+    @NotNull
+    private HashMap<String, String> getCustomProperties() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("myVar", "\"HelloWorld\"");
+        return map;
     }
 }
