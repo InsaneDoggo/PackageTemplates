@@ -27,13 +27,16 @@ public class InputManager {
     public void addElement(TemplateElement element){
         if(element.isDirectory()){
             // TODO: 15.06.2016 inc padding
+        } else {
+            //for each fileTempVars vars
+            //listInputBlock.add(block);
         }
 
         Logger.log("input for " + (element.isDirectory() ? " dir  " : " file ") +  element.getName() );
     }
 
     public void onPackageEnds() {
-        // TODO: 15.06.2016 add divider
+        // TODO: 15.06.2016 dec padding
     }
 
 }
