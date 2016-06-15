@@ -1,6 +1,7 @@
 package models;
 
 import utils.Logger;
+import utils.StringTools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,15 @@ public class TemplateElement {
         return true;
     }
 
+    public void replaceNameVariable(String packageTemplateName) {
+        setName(StringTools.replaceName(packageTemplateName, getName()));
+        if (getListTemplateElement() != null) {
+            for (TemplateElement element : getListTemplateElement()) {
+                element.replaceNameVariable(packageTemplateName);
+            }
+        }
+    }
+
     public boolean isDirectory() {
         return isDirectory;
     }
@@ -65,4 +75,5 @@ public class TemplateElement {
     public void setListTemplateElement(ArrayList<TemplateElement> listTemplateElement) {
         this.listTemplateElement = listTemplateElement;
     }
+
 }

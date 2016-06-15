@@ -6,6 +6,7 @@ import models.TemplateElement;
 import org.jetbrains.annotations.NotNull;
 import ui.dialogs.NewPackageDialog;
 import utils.Logger;
+import utils.StringTools;
 import utils.TemplateValidator;
 
 import java.util.ArrayList;
@@ -29,23 +30,29 @@ public class SampleAction extends AnAction {
 //            PsiClass psiClass = JavaDirectoryService.getInstance().createClass(dir, "MegaFile", "Prost", false, getCustomProperties());
 //        }
 
+        ArrayList<TemplateElement> listElementsInner = new ArrayList<>();
+        listElementsInner.add(new TemplateElement(false, "Prost", null));
+        listElementsInner.add(new TemplateElement(false, "Slojn", null));
+
         ArrayList<TemplateElement> listElements = new ArrayList<>();
         listElements.add(new TemplateElement(false, "Prost", null));
-        listElements.add(new TemplateElement(false, "Slojn", null));
+        listElements.add(new TemplateElement(true, "Pre${PACKAGE_TEMPLATE_NAME}Post", listElementsInner));
 //        listElements.add(new TemplateElement(false, "fake", null));
+
 
         PackageTemplate packageTemplate = new PackageTemplate("TestPT", "MegaPT", "tipa description", listElements);
 
         if(TemplateValidator.isTemplatesValid(packageTemplate)){
-            showDialog(e.getProject());
+            showDialog(e.getProject(), packageTemplate);
         }
     }
 
-    private void showDialog(Project project) {
+    private void showDialog(Project project, PackageTemplate packageTemplate) {
         NewPackageDialog dialog = new NewPackageDialog(project, "New package") {
             @Override
             public void onFinish(String result) {
                 Logger.log("onFinish " + result);
+                StringTools.replaceNameVariable(packageTemplate, "Ivan");
             }
         };
     }

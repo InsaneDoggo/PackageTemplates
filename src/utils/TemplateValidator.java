@@ -14,8 +14,9 @@ import java.util.List;
  */
 public class TemplateValidator {
 
-    public static final String PACKAGE_TEMPLATE_NAME = "${PACKAGE_TEMPLATE_NAME}";
-
+    /**
+     * Check existence FileTemplates used in PackageTemplate
+     */
     public static boolean isTemplatesValid(PackageTemplate packageTemplate){
         if (packageTemplate.getListTemplateElement() == null){
             // when template is empty folder(useless, but valid)
