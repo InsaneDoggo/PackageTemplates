@@ -1,14 +1,23 @@
+import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.JavaDirectoryService;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiManager;
 import models.PackageTemplate;
 import models.TemplateElement;
 import org.jetbrains.annotations.NotNull;
 import ui.dialogs.NewPackageDialog;
+import utils.InputManager;
 import utils.Logger;
 import utils.StringTools;
 import utils.TemplateValidator;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,17 +28,6 @@ public class SampleAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-//        FileTemplateManager fileTemplateManager = FileTemplateManager.getDefaultInstance();
-//        FileTemplate[] templates = fileTemplateManager.getAllTemplates();
-//
-//        VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
-//
-//        if (file != null && file.isDirectory()) {
-//            PsiDirectory dir = PsiManager.getInstance(e.getProject()).findDirectory(e.getData(CommonDataKeys.VIRTUAL_FILE));
-//
-//            PsiClass psiClass = JavaDirectoryService.getInstance().createClass(dir, "MegaFile", "Prost", false, getCustomProperties());
-//        }
-
         ArrayList<TemplateElement> listElementsInner = new ArrayList<>();
         listElementsInner.add(new TemplateElement(false, "Prost", null));
         listElementsInner.add(new TemplateElement(false, "Slojn", null));
@@ -48,13 +46,30 @@ public class SampleAction extends AnAction {
     }
 
     private void showDialog(Project project, PackageTemplate packageTemplate) {
-        NewPackageDialog dialog = new NewPackageDialog(project, "New package") {
+        JPanel panel = new JPanel();
+        InputManager inputManager = new InputManager(panel);
+
+        for (TemplateElement element : packageTemplate.getListTemplateElement()){
+            element.makeInputBlock(inputManager);
+        }
+
+        NewPackageDialog dialog = new NewPackageDialog(project, "New package", panel) {
             @Override
             public void onFinish(String result) {
                 Logger.log("onFinish " + result);
                 StringTools.replaceNameVariable(packageTemplate, "Ivan");
             }
         };
+    }
+
+    private void writeClass(AnActionEvent e) {
+        VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+
+        if (file != null && file.isDirectory()) {
+            PsiDirectory dir = PsiManager.getInstance(e.getProject()).findDirectory(e.getData(CommonDataKeys.VIRTUAL_FILE));
+
+            PsiClass psiClass = JavaDirectoryService.getInstance().createClass(dir, "MegaFile", "Prost", false, getCustomProperties());
+        }
     }
 
     @NotNull

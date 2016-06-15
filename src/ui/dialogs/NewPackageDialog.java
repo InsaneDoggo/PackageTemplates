@@ -3,17 +3,22 @@ package ui.dialogs;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.ui.EditorTextField;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by CeH9 on 14.06.2016.
  */
 public abstract class NewPackageDialog extends DialogWrapper {
 
-    public NewPackageDialog(@Nullable Project project, String title) {
+    JPanel panel;
+
+    public NewPackageDialog(@Nullable Project project, String title, JPanel panel) {
         super(project);
+        this.panel = panel;
         init();
         setTitle(title);
         show();
@@ -32,9 +37,14 @@ public abstract class NewPackageDialog extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
         JLabel label = new JLabel("Hello world!");
-        //todo input fields
-        return label;
+        EditorTextField etfName = new EditorTextField();
+
+        panel.add(label);
+        panel.add(etfName);
+        return panel;
     }
 
 

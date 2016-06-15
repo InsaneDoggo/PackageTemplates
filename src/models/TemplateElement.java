@@ -1,10 +1,14 @@
 package models;
 
+import com.intellij.ide.fileTemplates.FileTemplateManager;
+import utils.InputManager;
 import utils.Logger;
 import utils.StringTools;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Arsen on 15.06.2016.
@@ -16,6 +20,8 @@ public class TemplateElement {
     private String name;
     private ArrayList<TemplateElement> listTemplateElement;
 
+    private HashMap<String, String> mapProperties;
+
     public TemplateElement() {
     }
 
@@ -23,6 +29,44 @@ public class TemplateElement {
         this.isDirectory = isDirectory;
         this.name = name;
         this.listTemplateElement = listTemplateElement;
+    }
+
+    public boolean isDirectory() {
+        return isDirectory;
+    }
+
+    public void setDirectory(boolean directory) {
+        isDirectory = directory;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ArrayList<TemplateElement> getListTemplateElement() {
+        return listTemplateElement;
+    }
+
+    public void setListTemplateElement(ArrayList<TemplateElement> listTemplateElement) {
+        this.listTemplateElement = listTemplateElement;
+    }
+
+
+    public Map<String, HashMap<String, String>> getMapTemplates(FileTemplateManager fileTemplateManager) {
+        if (isDirectory()) {
+            if (getListTemplateElement() != null) {
+                for (TemplateElement element : getListTemplateElement()) {
+
+                }
+            }
+        } else {
+
+        }
+        return null;
     }
 
     public boolean isNameValid(List<String> listAllTemplates) {
@@ -52,28 +96,17 @@ public class TemplateElement {
         }
     }
 
-    public boolean isDirectory() {
-        return isDirectory;
-    }
+    public void makeInputBlock(InputManager inputManager) {
+        inputManager.addElement(this);
 
-    public void setDirectory(boolean directory) {
-        isDirectory = directory;
-    }
+        if (getListTemplateElement() != null) {
+            for (TemplateElement element : getListTemplateElement()) {
+                element.makeInputBlock(inputManager);
+            }
+        }
 
-    public String getName() {
-        return name;
+        if(isDirectory()){
+            inputManager.onPackageEnds();
+        }
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ArrayList<TemplateElement> getListTemplateElement() {
-        return listTemplateElement;
-    }
-
-    public void setListTemplateElement(ArrayList<TemplateElement> listTemplateElement) {
-        this.listTemplateElement = listTemplateElement;
-    }
-
 }
