@@ -1,10 +1,12 @@
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
+import models.PackageTemplate;
+import models.TemplateElement;
 import org.jetbrains.annotations.NotNull;
 import ui.dialogs.NewPackageDialog;
 import utils.Logger;
-import utils.TemplatesValidator;
+import utils.TemplateValidator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,17 +29,20 @@ public class SampleAction extends AnAction {
 //            PsiClass psiClass = JavaDirectoryService.getInstance().createClass(dir, "MegaFile", "Prost", false, getCustomProperties());
 //        }
 
-        ArrayList<String> templateNames = new ArrayList<>();
-        templateNames.add("Prost");
-        templateNames.add("Slojn");
+        ArrayList<TemplateElement> listElements = new ArrayList<>();
+        listElements.add(new TemplateElement(false, "Prost", null));
+        listElements.add(new TemplateElement(false, "Slojn", null));
+//        listElements.add(new TemplateElement(false, "fake", null));
 
-        if(TemplatesValidator.isTemplatesValid(templateNames)){
+        PackageTemplate packageTemplate = new PackageTemplate("TestPT", "MegaPT", "tipa description", listElements);
+
+        if(TemplateValidator.isTemplatesValid(packageTemplate)){
             showDialog(e.getProject());
         }
     }
 
     private void showDialog(Project project) {
-        NewPackageDialog dialog = new NewPackageDialog(project, "My Dialog") {
+        NewPackageDialog dialog = new NewPackageDialog(project, "New package") {
             @Override
             public void onFinish(String result) {
                 Logger.log("onFinish " + result);
