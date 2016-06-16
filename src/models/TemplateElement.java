@@ -29,6 +29,10 @@ public class TemplateElement {
         this.isDirectory = isDirectory;
         this.name = name;
         this.listTemplateElement = listTemplateElement;
+
+        if( !isDirectory ) {
+            mapProperties = new HashMap<>();
+        }
     }
 
     public boolean isDirectory() {
@@ -49,6 +53,14 @@ public class TemplateElement {
 
     public ArrayList<TemplateElement> getListTemplateElement() {
         return listTemplateElement;
+    }
+
+    public HashMap<String, String> getMapProperties() {
+        return mapProperties;
+    }
+
+    public void setMapProperties(HashMap<String, String> mapProperties) {
+        this.mapProperties = mapProperties;
     }
 
     public void setListTemplateElement(ArrayList<TemplateElement> listTemplateElement) {

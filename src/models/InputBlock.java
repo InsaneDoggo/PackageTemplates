@@ -10,8 +10,37 @@ import javax.swing.*;
 
 public class InputBlock {
 
-    TemplateElement element;
-    JLabel label;
-    EditorTextField textField;
+    private TemplateElement element;
+    private JLabel label;
+    private EditorTextField textField;
 
+    public InputBlock(TemplateElement element, JLabel label, EditorTextField textField) {
+        this.element = element;
+        this.label = label;
+        this.textField = textField;
+    }
+
+    public TemplateElement getElement() {
+        return element;
+    }
+
+    public void setElement(TemplateElement element) {
+        this.element = element;
+    }
+
+    public JLabel getLabel() {
+        return label;
+    }
+
+    public void setLabel(JLabel label) {
+        this.label = label;
+    }
+
+    public EditorTextField getTextField() {
+        return textField;
+    }
+
+    public void setTextField(EditorTextField textField) {
+        this.textField = textField;
+    }
 }

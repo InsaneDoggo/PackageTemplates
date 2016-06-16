@@ -47,11 +47,11 @@ public class SampleAction extends AnAction {
 
     private void showDialog(Project project, PackageTemplate packageTemplate) {
         JPanel panel = new JPanel();
-        InputManager inputManager = new InputManager(panel);
-
-        for (TemplateElement element : packageTemplate.getListTemplateElement()){
-            element.makeInputBlock(inputManager);
-        }
+//        InputManager inputManager = new InputManager(panel, project);
+//
+//        for (TemplateElement element : packageTemplate.getListTemplateElement()){
+//            element.makeInputBlock(inputManager);
+//        }
 
         NewPackageDialog dialog = new NewPackageDialog(project, "New package", panel) {
             @Override
