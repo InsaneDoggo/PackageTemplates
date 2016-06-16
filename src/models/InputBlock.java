@@ -1,6 +1,8 @@
 package models;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ui.EditorTextField;
+import com.intellij.util.IconUtil;
 
 import javax.swing.*;
 
