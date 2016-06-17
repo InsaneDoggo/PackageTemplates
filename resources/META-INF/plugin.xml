@@ -30,7 +30,7 @@
 
   <actions>
     <!-- Add your actions here -->
-    <action id="SampleAct" class="SampleAction" text="SampleActName">
+    <action id="SampleAct" class="NewPackageTemplateAction" text="SampleActName">
       <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
     </action>
   </actions>

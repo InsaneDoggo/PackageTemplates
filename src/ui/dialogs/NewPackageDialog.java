@@ -1,26 +1,34 @@
 package ui.dialogs;
 
-import com.intellij.icons.AllIcons;
+import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
+import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
-import com.intellij.ui.SeparatorComponent;
+import com.intellij.ui.components.panels.HorizontalBox;
+import models.InputBlock;
 import org.jetbrains.annotations.Nullable;
+import utils.InputManager;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static utils.UIMaker.DEFAULT_PADDING;
 
 /**
  * Created by CeH9 on 14.06.2016.
  */
 public abstract class NewPackageDialog extends DialogWrapper {
 
-    JPanel panel;
+    public abstract void onFinish(String result);
 
-    public NewPackageDialog(@Nullable Project project, String title, JPanel panel) {
+    JPanel panel;
+    InputManager inputManager;
+
+    public NewPackageDialog(@Nullable Project project, String title, InputManager inputManager) {
         super(project);
-        this.panel = panel;
+        this.inputManager = inputManager;
+        this.panel = inputManager.getPanel();
         init();
         setTitle(title);
         show();
@@ -35,45 +43,27 @@ public abstract class NewPackageDialog extends DialogWrapper {
         }
     }
 
-
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//        panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+//        AttributesDefaults attributesDefaults = new AttributesDefaults();
+//        attributesDefaults.add("TEST_BLA", "bla223");
+//        attributesDefaults.add("TEST_PROST", "prost223");
+//        CreateFromTemplatePanel myAttrPanel = new CreateFromTemplatePanel(new String[]{"TEST_BLA", "TEST_PROST"}, true, attributesDefaults);
 
-        JLabel lClass = new JLabel("Var 2");
-        EditorTextField etfClass = new EditorTextField();
-        JLabel lPackage = new JLabel("Package Ivan");
-        SeparatorComponent separator = new SeparatorComponent(10);
+//        panel.add(myAttrPanel.getComponent());
 
+        HorizontalBox horizontalBox = new HorizontalBox();
+        horizontalBox.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        EditorTextField editorTextField = new EditorTextField("Test");
+//        editorTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE, editorTextField.getPreferredSize().height));
+        editorTextField.setMinimumSize(new Dimension(Integer.MAX_VALUE, editorTextField.getPreferredSize().height*5));
 
-        lClass.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
-        lClass.setAlignmentX(Component.LEFT_ALIGNMENT);
-        lClass.setIcon(AllIcons.Nodes.Class);
+        horizontalBox.add(editorTextField);
+        panel.add(horizontalBox);
 
-        etfClass.setBorder(BorderFactory.createEmptyBorder(10, 20, 0, 0));
-        etfClass.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        lPackage.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        lPackage.setAlignmentX(Component.LEFT_ALIGNMENT);
-        lPackage.setIcon(AllIcons.Nodes.Folder);
-
-
-        panel.add(lPackage);
-        panel.add(lClass);
-        panel.add(etfClass);
-        panel.add(separator);
         return panel;
     }
 
-
-    @Nullable
-    @Override
-    protected ValidationInfo doValidate() {
-        return super.doValidate();
-    }
-
-    public abstract void onFinish(String result);
 }

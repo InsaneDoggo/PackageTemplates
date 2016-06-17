@@ -7,27 +7,25 @@ import java.util.ArrayList;
  */
 public class PackageTemplate {
 
-    private String name;
-    private String templateVariableName;
-    private String description;
-    private ArrayList<TemplateElement> listTemplateElement;
+    public static final java.lang.String ATTRIBUTE_PACKAGE_TEMPLATE_NAME = "PACKAGE_TEMPLATE_NAME";
 
-    public PackageTemplate() {
-    }
+    private String name;
+    private String description;
+    private TemplateElement root;
 
     public PackageTemplate(String name, String templateVariableName, String description, ArrayList<TemplateElement> listTemplateElement) {
         this.name = name;
-        this.templateVariableName = templateVariableName;
         this.description = description;
-        this.listTemplateElement = listTemplateElement;
+
+        root = new TemplateElement(true, templateVariableName, listTemplateElement, null);
     }
 
     public String getTemplateVariableName() {
-        return templateVariableName;
+        return root.getName();
     }
 
     public void setTemplateVariableName(String templateVariableName) {
-        this.templateVariableName = templateVariableName;
+        root.setName(templateVariableName);
     }
 
     public String getDescription() {
@@ -47,10 +45,10 @@ public class PackageTemplate {
     }
 
     public ArrayList<TemplateElement> getListTemplateElement() {
-        return listTemplateElement;
+        return root.getListTemplateElement();
     }
 
-    public void setListTemplateElement(ArrayList<TemplateElement> listTemplateElement) {
-        this.listTemplateElement = listTemplateElement;
+    public TemplateElement getTemplateElement() {
+        return root;
     }
 }

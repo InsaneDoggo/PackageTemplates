@@ -20,17 +20,19 @@ public class TemplateElement {
     private String name;
     private ArrayList<TemplateElement> listTemplateElement;
 
+    private TemplateElement parent;
     private HashMap<String, String> mapProperties;
 
     public TemplateElement() {
     }
 
-    public TemplateElement(boolean isDirectory, String name, ArrayList<TemplateElement> listTemplateElement) {
+    public TemplateElement(boolean isDirectory, String name, ArrayList<TemplateElement> listTemplateElement, TemplateElement parent) {
         this.isDirectory = isDirectory;
+        this.parent = parent;
         this.name = name;
         this.listTemplateElement = listTemplateElement;
 
-        if( !isDirectory ) {
+        if (!isDirectory) {
             mapProperties = new HashMap<>();
         }
     }
@@ -111,13 +113,14 @@ public class TemplateElement {
     public void makeInputBlock(InputManager inputManager) {
         inputManager.addElement(this);
 
-        if (getListTemplateElement() != null) {
-            for (TemplateElement element : getListTemplateElement()) {
-                element.makeInputBlock(inputManager);
+        if (isDirectory()) {
+            if (getListTemplateElement() != null) {
+                for (TemplateElement element : getListTemplateElement()) {
+                    element.makeInputBlock(inputManager);
+                }
             }
-        }
 
-        if(isDirectory()){
+            // TODO: 17.06.2016 skip empty packages
             inputManager.onPackageEnds();
         }
     }

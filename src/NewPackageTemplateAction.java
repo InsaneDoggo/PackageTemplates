@@ -1,4 +1,3 @@
-import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -24,21 +23,22 @@ import java.util.HashMap;
 /**
  * Created by Arsen on 13.06.2016.
  */
-public class SampleAction extends AnAction {
+public class NewPackageTemplateAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        ArrayList<TemplateElement> listElementsInner = new ArrayList<>();
-        listElementsInner.add(new TemplateElement(false, "Prost", null));
-        listElementsInner.add(new TemplateElement(false, "Slojn", null));
-
         ArrayList<TemplateElement> listElements = new ArrayList<>();
-        listElements.add(new TemplateElement(false, "Prost", null));
-        listElements.add(new TemplateElement(true, "Pre${PACKAGE_TEMPLATE_NAME}Post", listElementsInner));
+        ArrayList<TemplateElement> listElementsInner = new ArrayList<>();
+        PackageTemplate packageTemplate = new PackageTemplate("TestPT", "MegaPT", "tipa description", listElements);
+
+        TemplateElement element = new TemplateElement(true, "Pre${PACKAGE_TEMPLATE_NAME}Post", listElementsInner, packageTemplate.getTemplateElement());
+
+        listElements.add(new TemplateElement(false, "Prost", null, packageTemplate.getTemplateElement()));
+        listElements.add(element);
+        listElementsInner.add(new TemplateElement(false, "Prost", null, element));
+        listElementsInner.add(new TemplateElement(false, "Slojn", null, element));
 //        listElements.add(new TemplateElement(false, "fake", null));
 
-
-        PackageTemplate packageTemplate = new PackageTemplate("TestPT", "MegaPT", "tipa description", listElements);
 
         if(TemplateValidator.isTemplatesValid(packageTemplate)){
             showDialog(e.getProject(), packageTemplate);
@@ -46,14 +46,16 @@ public class SampleAction extends AnAction {
     }
 
     private void showDialog(Project project, PackageTemplate packageTemplate) {
-        JPanel panel = new JPanel();
-//        InputManager inputManager = new InputManager(panel, project);
-//
-//        for (TemplateElement element : packageTemplate.getListTemplateElement()){
-//            element.makeInputBlock(inputManager);
-//        }
+        InputManager inputManager = new InputManager(project, packageTemplate);
 
-        NewPackageDialog dialog = new NewPackageDialog(project, "New package", panel) {
+        for (TemplateElement element : packageTemplate.getListTemplateElement()){
+            element.makeInputBlock(inputManager);
+        }
+
+        // TODO: 17.06.2016 build panel | do it in InputManager
+//        inputManager.buildPanel();
+
+        NewPackageDialog dialog = new NewPackageDialog(project, "New package from \""+packageTemplate.getName()+"\"", inputManager) {
             @Override
             public void onFinish(String result) {
                 Logger.log("onFinish " + result);

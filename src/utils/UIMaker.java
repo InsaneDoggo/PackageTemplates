@@ -15,10 +15,10 @@ public class UIMaker {
     public static final int PADDING = 10;
 
     public static EditorTextField getEditorTextField(String defValue, int paddingScale) {
-        EditorTextField etfName = new EditorTextField();
-        setLeftPadding(etfName, PADDING * paddingScale);
+        EditorTextField etfName = new EditorTextField("Test");
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
-        etfName.setMaximumSize(new Dimension(Integer.MAX_VALUE, etfName.getPreferredSize().height));
+        //etfName.setMaximumSize(new Dimension(Integer.MAX_VALUE, etfName.getPreferredSize().height));
+        setLeftPadding(etfName, DEFAULT_PADDING + PADDING * paddingScale);
         etfName.setText(defValue);
         return etfName;
     }
