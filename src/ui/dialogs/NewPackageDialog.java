@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.components.panels.HorizontalBox;
+import com.intellij.util.ui.GridBag;
 import models.InputBlock;
 import org.jetbrains.annotations.Nullable;
 import utils.InputManager;
@@ -52,16 +53,6 @@ public abstract class NewPackageDialog extends DialogWrapper {
 //        CreateFromTemplatePanel myAttrPanel = new CreateFromTemplatePanel(new String[]{"TEST_BLA", "TEST_PROST"}, true, attributesDefaults);
 
 //        panel.add(myAttrPanel.getComponent());
-
-        HorizontalBox horizontalBox = new HorizontalBox();
-        horizontalBox.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        EditorTextField editorTextField = new EditorTextField("Test");
-//        editorTextField.setMaximumSize(new Dimension(Integer.MAX_VALUE, editorTextField.getPreferredSize().height));
-        editorTextField.setMinimumSize(new Dimension(Integer.MAX_VALUE, editorTextField.getPreferredSize().height*5));
-
-        horizontalBox.add(editorTextField);
-        panel.add(horizontalBox);
 
         return panel;
     }

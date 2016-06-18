@@ -25,4 +25,8 @@ public class StringTools {
         return name.replace(PACKAGE_TEMPLATE_NAME, packageTemplateName);
     }
 
+    public static String formatConst(String text){
+        return text.replace("_", " ");
+    }
+
 }

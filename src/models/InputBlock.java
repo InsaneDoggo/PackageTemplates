@@ -16,7 +16,7 @@ public class InputBlock {
 
     public InputBlock(TemplateElement element, int paddingScale, String[] unsetAttributes) {
         this.element = element;
-        this.tfName = UIMaker.getEditorTextField(element.getName(), paddingScale);
+        this.tfName = UIMaker.getEditorTextField(element.getName());
         //optionally add TextFields for Attributes
         if (unsetAttributes != null && unsetAttributes.length > 0){
             panelVariables = new CreateFromTemplatePanel(unsetAttributes, false, null);

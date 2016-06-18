@@ -4,10 +4,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.components.panels.HorizontalBox;
-import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.util.ui.GridBag;
-import com.intellij.util.ui.JBImageIcon;
 import models.InputBlock;
 import models.PackageTemplate;
 import models.TemplateElement;
@@ -19,7 +16,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.block;
+import static utils.UIMaker.getClassPanel;
 
 /**
  * Created by Arsen on 15.06.2016.
@@ -57,49 +54,28 @@ public class InputManager {
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-//        HorizontalBox hBox = new HorizontalBox();
-//        VerticalBox vBox = new VerticalBox();
-//        vBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-//        hBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-//
-//        JLabel jLabel_1 = new JLabel("Var 1");
-//        JLabel jLabel_2 = new JLabel("Var 2");
-//        JLabel jLabel_3 = new JLabel("Var 3");
-//        JLabel jLabel_4 = new JLabel("Var 4");
-//        JLabel jLabel_5 = new JLabel("Var 5");
-//        JLabel jLabel_6 = new JLabel("Var 6");
-//
-//        hBox.add(jLabel_1);
-//        hBox.add(jLabel_2);
-//        hBox.add(jLabel_3);
-//        vBox.add(jLabel_4);
-//        vBox.add(jLabel_5);
-//        vBox.add(jLabel_6);
-//
-//        panel.add(hBox);
-//        panel.add(vBox);
-
-        HorizontalBox hBox = getHeader();
+        addHeader(panel);
 
         paddingScale++;
-        panel.add(hBox);
     }
 
     @NotNull
-    private HorizontalBox getHeader() {
+    private void addHeader(JPanel panel) {
         InputBlock inputBlock = new InputBlock(packageTemplate.getTemplateElement(), paddingScale, null);
         listInputBlock.add(inputBlock);
 
-        HorizontalBox hBox = new HorizontalBox();
-        hBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPanel container = new JPanel();
+        container.setLayout(new GridBagLayout());
+
+        GridBag bag = UIMaker.getDefaultGridBag();
 
         JLabel jLabel = new JLabel(AllIcons.Nodes.Package);
-        jLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        jLabel.setText(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME);
+        jLabel.setText(StringTools.formatConst(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME));
 
-        hBox.add(jLabel);
-        hBox.add(inputBlock.getTfName());
-        return hBox;
+        container.add(jLabel, bag.nextLine().next());
+        container.add(inputBlock.getTfName(), bag.next());
+
+        panel.add(container);
     }
 
     public JPanel getPanel() {
@@ -119,20 +95,21 @@ public class InputManager {
         FileTemplate fileTemplate = fileTemplateManager.getTemplate(element.getName());
         if (fileTemplate != null) {
             InputBlock inputBlock = new InputBlock(element, paddingScale, getUnsetAttrs(fileTemplate));
-//            getClassPanel()
+            panel.add(UIMaker.getClassPanel(inputBlock, paddingScale));
             listInputBlock.add(inputBlock);
         }
     }
 
     private void addDirectory(TemplateElement element) {
         // TODO: 17.06.2016 add separator
-        listInputBlock.add(new InputBlock(element, paddingScale, null));
+        InputBlock inputBlock = new InputBlock(element, paddingScale, null);
+        panel.add(UIMaker.getDirectoryPanel(inputBlock, paddingScale));
+        listInputBlock.add(inputBlock);
 
         // panel. add
 
         paddingScale++;
     }
-
 
     private String[] getUnsetAttrs(FileTemplate fileTemplate) {
         try {
@@ -159,18 +136,6 @@ public class InputManager {
 
     public void onPackageEnds() {
         paddingScale--;
-    }
-
-    public HorizontalBox getClassPanel(InputBlock inputBlock) {
-        HorizontalBox hBox = new HorizontalBox();
-        hBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel jLabel = new JLabel(AllIcons.Nodes.Class, SwingConstants.LEFT);
-
-        hBox.add(jLabel);
-        hBox.add(inputBlock.getTfName());
-
-        return hBox;
     }
 
     public void buildPanel() {
