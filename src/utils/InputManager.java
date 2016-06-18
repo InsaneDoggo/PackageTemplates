@@ -3,6 +3,8 @@ package utils;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
+import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
+import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.GridBag;
 import models.InputBlock;
@@ -52,6 +54,7 @@ public class InputManager {
 
     private void initPanel() {
         panel = new JPanel();
+        panel.setMinimumSize(new Dimension(UIMaker.DIALOG_MIN_WIDTH  , panel.getPreferredSize().height));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         addHeader(panel);
@@ -96,6 +99,10 @@ public class InputManager {
         if (fileTemplate != null) {
             InputBlock inputBlock = new InputBlock(element, paddingScale, getUnsetAttrs(fileTemplate));
             panel.add(UIMaker.getClassPanel(inputBlock, paddingScale));
+            // add variables
+            JComponent component = inputBlock.getPanelVariables().getComponent();
+            UIMaker.setLeftPadding(component, UIMaker.PADDING * (paddingScale+1));
+            panel.add(component);
             listInputBlock.add(inputBlock);
         }
     }

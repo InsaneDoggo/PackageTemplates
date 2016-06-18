@@ -47,13 +47,6 @@ public abstract class NewPackageDialog extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-//        AttributesDefaults attributesDefaults = new AttributesDefaults();
-//        attributesDefaults.add("TEST_BLA", "bla223");
-//        attributesDefaults.add("TEST_PROST", "prost223");
-//        CreateFromTemplatePanel myAttrPanel = new CreateFromTemplatePanel(new String[]{"TEST_BLA", "TEST_PROST"}, true, attributesDefaults);
-
-//        panel.add(myAttrPanel.getComponent());
-
         return panel;
     }
 

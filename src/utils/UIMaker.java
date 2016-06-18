@@ -16,12 +16,12 @@ import java.awt.*;
 public class UIMaker {
 
     public static final int DEFAULT_PADDING = 0;
-    public static final int PADDING = 10;
+    public static final int PADDING = 16;
+    public static final int DIALOG_MIN_WIDTH = 400;
 
     public static EditorTextField getEditorTextField(String defValue) {
         EditorTextField etfName = new EditorTextField("Test");
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
-        //etfName.setMaximumSize(new Dimension(Integer.MAX_VALUE, etfName.getPreferredSize().height));
         etfName.setText(defValue);
         return etfName;
     }
