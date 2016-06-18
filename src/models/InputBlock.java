@@ -13,6 +13,8 @@ public class InputBlock {
     private TemplateElement element;
     private EditorTextField tfName;
     private CreateFromTemplatePanel panelVariables;
+    private boolean isGlobalVariable = false;
+    private String globalKey;
 
     public InputBlock(TemplateElement element, int paddingScale, String[] unsetAttributes) {
         this.element = element;
@@ -21,6 +23,22 @@ public class InputBlock {
         if (unsetAttributes != null && unsetAttributes.length > 0){
             panelVariables = new CreateFromTemplatePanel(unsetAttributes, false, null);
         }
+    }
+
+    public String getGlobalKey() {
+        return globalKey;
+    }
+
+    public void setGlobalKey(String globalKey) {
+        this.globalKey = globalKey;
+    }
+
+    public boolean isGlobalVariable() {
+        return isGlobalVariable;
+    }
+
+    public void setGlobalVariable(boolean globalVariable) {
+        isGlobalVariable = globalVariable;
     }
 
     public TemplateElement getElement() {

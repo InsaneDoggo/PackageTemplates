@@ -18,13 +18,11 @@ public class TemplateElement {
 
     private boolean isDirectory;
     private String name;
+    private String templateName;
     private ArrayList<TemplateElement> listTemplateElement;
 
     private TemplateElement parent;
     private HashMap<String, String> mapProperties;
-
-    public TemplateElement() {
-    }
 
     public TemplateElement(boolean isDirectory, String name, ArrayList<TemplateElement> listTemplateElement, TemplateElement parent) {
         this.isDirectory = isDirectory;
@@ -35,6 +33,22 @@ public class TemplateElement {
         if (!isDirectory) {
             mapProperties = new HashMap<>();
         }
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
+    }
+
+    public TemplateElement getParent() {
+        return parent;
+    }
+
+    public void setParent(TemplateElement parent) {
+        this.parent = parent;
     }
 
     public boolean isDirectory() {
@@ -67,20 +81,6 @@ public class TemplateElement {
 
     public void setListTemplateElement(ArrayList<TemplateElement> listTemplateElement) {
         this.listTemplateElement = listTemplateElement;
-    }
-
-
-    public Map<String, HashMap<String, String>> getMapTemplates(FileTemplateManager fileTemplateManager) {
-        if (isDirectory()) {
-            if (getListTemplateElement() != null) {
-                for (TemplateElement element : getListTemplateElement()) {
-
-                }
-            }
-        } else {
-
-        }
-        return null;
     }
 
     public boolean isNameValid(List<String> listAllTemplates) {

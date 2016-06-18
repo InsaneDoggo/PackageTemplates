@@ -32,6 +32,7 @@ public class InputManager {
     private Project project;
     private ArrayList<InputBlock> listInputBlock;
     private FileTemplateManager fileTemplateManager;
+    private HashMap<String, String> mapGlobalProperties;
 
     public static final ArrayList<String> listAttributesToRemove = new ArrayList<String>() {{
         add(FileTemplate.ATTRIBUTE_NAME);
@@ -65,6 +66,8 @@ public class InputManager {
     @NotNull
     private void addHeader(JPanel panel) {
         InputBlock inputBlock = new InputBlock(packageTemplate.getTemplateElement(), paddingScale, null);
+        inputBlock.setGlobalVariable(true);
+        inputBlock.setGlobalKey(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME);
         listInputBlock.add(inputBlock);
 
         JPanel container = new JPanel();
@@ -149,5 +152,18 @@ public class InputManager {
         //add class field
 //        block.getTfName()
         //add vars pane
+    }
+
+    public void initGlobalProperties() {
+        mapGlobalProperties = new HashMap<>();
+        for( InputBlock block : getListInputBlock()){
+            if(block.isGlobalVariable()){
+                mapGlobalProperties.put(block.getGlobalKey(), block.getTfName().getText());
+            }
+        }
+    }
+
+    public HashMap<String, String> getMapGlobalProperties() {
+        return mapGlobalProperties;
     }
 }

@@ -1,12 +1,13 @@
+import com.intellij.ide.fileTemplates.FileTemplate;
+import com.intellij.ide.fileTemplates.FileTemplateManager;
+import com.intellij.ide.fileTemplates.FileTemplateUtil;
+import com.intellij.ide.fileTemplates.ui.CreateFromTemplateDialog;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.JavaDirectoryService;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiManager;
+import com.intellij.psi.*;
 import models.PackageTemplate;
 import models.TemplateElement;
 import org.jetbrains.annotations.NotNull;
@@ -71,6 +72,17 @@ public class NewPackageTemplateAction extends AnAction {
             PsiDirectory dir = PsiManager.getInstance(e.getProject()).findDirectory(e.getData(CommonDataKeys.VIRTUAL_FILE));
 
             PsiClass psiClass = JavaDirectoryService.getInstance().createClass(dir, "MegaFile", "Prost", false, getCustomProperties());
+        }
+    }
+
+    private void writeFile(AnActionEvent e, TemplateElement templateElement) {
+        VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+
+        if (file != null && file.isDirectory() && e.getProject() != null) {
+            PsiDirectory dir = PsiManager.getInstance(e.getProject()).findDirectory(e.getData(CommonDataKeys.VIRTUAL_FILE));
+//            FileTemplate template = FileTemplateManager.getDefaultInstance().getTemplate(templateElement.)
+            // TODO: 18.06.2016 File creator
+//            PsiElement element = FileTemplateUtil.createFromTemplate(template, fileName, properties, dir);
         }
     }
 
