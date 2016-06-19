@@ -1,17 +1,15 @@
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import models.PackageTemplate;
 import models.TemplateElement;
 import ui.dialogs.NewPackageDialog;
-import utils.*;
+import utils.FileWriter;
+import utils.InputManager;
+import utils.Logger;
+import utils.TemplateValidator;
 
 import java.util.ArrayList;
-
-import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.block;
 
 /**
  * Created by Arsen on 13.06.2016.

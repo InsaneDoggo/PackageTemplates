@@ -32,7 +32,7 @@ public class FileWriter {
         return null;
     }
 
-    public static PsiElement writeDirectory(PsiDirectory dir, TemplateElement templateElement) {
+    public static PsiDirectory writeDirectory(PsiDirectory dir, TemplateElement templateElement) {
         if (!templateElement.isDirectory()) {
             //todo print error
             return null;

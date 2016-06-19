@@ -1,6 +1,8 @@
 package models;
 
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiElement;
+import utils.FileWriter;
 import utils.InputManager;
 import utils.Logger;
 import utils.StringTools;
@@ -8,6 +10,8 @@ import utils.StringTools;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.sun.tools.doclint.Entity.Psi;
 
 /**
  * Created by Arsen on 15.06.2016.
@@ -127,7 +131,21 @@ public class TemplateElement {
 
     public void writeFile(PsiDirectory currentDir) {
         if (isDirectory()) {
-            // TODO: 19.06.2016 write
+            PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this);
+            if (subDirectory == null) {
+                // TODO: 20.06.2016 error write file
+            } else {
+                if (getListTemplateElement() != null) {
+                    for (TemplateElement element : getListTemplateElement()) {
+                        element.writeFile(subDirectory);
+                    }
+                }
+            }
+        } else {
+            PsiElement psiElement = FileWriter.writeFile(currentDir, this);
+            if (psiElement == null) {
+                // TODO: 20.06.2016 error write file
+            }
         }
     }
 }
