@@ -1,15 +1,17 @@
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDirectory;
 import models.PackageTemplate;
 import models.TemplateElement;
 import ui.dialogs.NewPackageDialog;
-import utils.InputManager;
-import utils.Logger;
-import utils.StringTools;
-import utils.TemplateValidator;
+import utils.*;
 
 import java.util.ArrayList;
+
+import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.block;
 
 /**
  * Created by Arsen on 13.06.2016.
@@ -43,15 +45,21 @@ public class NewPackageTemplateAction extends AnAction {
             element.makeInputBlock(inputManager);
         }
 
-        // TODO: 17.06.2016 build panel | do it in InputManager
-//        inputManager.buildPanel();
-
         NewPackageDialog dialog = new NewPackageDialog(event.getProject(), "New package from \"" + packageTemplate.getName() + "\"", inputManager) {
             @Override
             public void onFinish(String result) {
                 //StringTools.replaceNameVariable(packageTemplate, "Ivan");
+                createFiles(event, packageTemplate);
                 Logger.log("onFinish " + result);
             }
         };
     }
+
+    private void createFiles(AnActionEvent event, PackageTemplate packageTemplate) {
+        PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
+        if( currentDir != null ) {
+            packageTemplate.getTemplateElement().writeFile(currentDir);
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package models;
 
+import com.intellij.psi.PsiDirectory;
 import utils.InputManager;
 import utils.Logger;
 import utils.StringTools;
@@ -121,6 +122,12 @@ public class TemplateElement {
 
             // TODO: 17.06.2016 skip empty packages
             inputManager.onPackageEnds();
+        }
+    }
+
+    public void writeFile(PsiDirectory currentDir) {
+        if (isDirectory()) {
+            // TODO: 19.06.2016 write
         }
     }
 }
