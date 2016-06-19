@@ -1,6 +1,5 @@
 package models;
 
-import com.intellij.ide.fileTemplates.FileTemplateManager;
 import utils.InputManager;
 import utils.Logger;
 import utils.StringTools;
@@ -8,7 +7,6 @@ import utils.StringTools;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Arsen on 15.06.2016.
@@ -24,10 +22,11 @@ public class TemplateElement {
     private TemplateElement parent;
     private HashMap<String, String> mapProperties;
 
-    public TemplateElement(boolean isDirectory, String name, ArrayList<TemplateElement> listTemplateElement, TemplateElement parent) {
+    public TemplateElement(boolean isDirectory, String name, String templateName, ArrayList<TemplateElement> listTemplateElement, TemplateElement parent) {
         this.isDirectory = isDirectory;
         this.parent = parent;
         this.name = name;
+        this.templateName = templateName;
         this.listTemplateElement = listTemplateElement;
 
         if (!isDirectory) {

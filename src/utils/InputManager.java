@@ -5,6 +5,7 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.GridBag;
 import models.InputBlock;
@@ -28,6 +29,7 @@ public class InputManager {
     private int paddingScale = 0;
 
     private JPanel panel;
+    private AnActionEvent event;
     private PackageTemplate packageTemplate;
     private Project project;
     private ArrayList<InputBlock> listInputBlock;
@@ -40,9 +42,10 @@ public class InputManager {
         add(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME);
     }};
 
-    public InputManager(Project project, PackageTemplate packageTemplate) {
-        this.project = project;
-        this.packageTemplate =  packageTemplate;
+    public InputManager(AnActionEvent event, PackageTemplate packageTemplate) {
+        this.project = event.getProject();
+        this.packageTemplate = packageTemplate;
+        this.event = event;
 
         listInputBlock = new ArrayList<>();
         fileTemplateManager = FileTemplateManager.getDefaultInstance();
@@ -55,7 +58,7 @@ public class InputManager {
 
     private void initPanel() {
         panel = new JPanel();
-        panel.setMinimumSize(new Dimension(UIMaker.DIALOG_MIN_WIDTH  , panel.getPreferredSize().height));
+        panel.setMinimumSize(new Dimension(UIMaker.DIALOG_MIN_WIDTH, panel.getPreferredSize().height));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         addHeader(panel);
@@ -88,6 +91,10 @@ public class InputManager {
         return panel;
     }
 
+    public AnActionEvent getEvent() {
+        return event;
+    }
+
     public void addElement(TemplateElement element) {
         if (element.isDirectory()) {
             addDirectory(element);
@@ -104,7 +111,7 @@ public class InputManager {
             panel.add(UIMaker.getClassPanel(inputBlock, paddingScale));
             // add variables
             JComponent component = inputBlock.getPanelVariables().getComponent();
-            UIMaker.setLeftPadding(component, UIMaker.PADDING * (paddingScale+1));
+            UIMaker.setLeftPadding(component, UIMaker.PADDING * (paddingScale + 1));
             panel.add(component);
             listInputBlock.add(inputBlock);
         }
@@ -135,9 +142,9 @@ public class InputManager {
     private String[] getWithoutDefaultAttributes(String[] unsetAttributes) {
         List<String> list = new ArrayList<>();
         list.addAll(Arrays.asList(unsetAttributes));
-        Iterator<String> iterator =  list.iterator();
-        while(iterator.hasNext()){
-            if( listAttributesToRemove.contains(iterator.next()) ){
+        Iterator<String> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            if (listAttributesToRemove.contains(iterator.next())) {
                 iterator.remove();
             }
         }
@@ -156,8 +163,8 @@ public class InputManager {
 
     public void initGlobalProperties() {
         mapGlobalProperties = new HashMap<>();
-        for( InputBlock block : getListInputBlock()){
-            if(block.isGlobalVariable()){
+        for (InputBlock block : getListInputBlock()) {
+            if (block.isGlobalVariable()) {
                 mapGlobalProperties.put(block.getGlobalKey(), block.getTfName().getText());
             }
         }
