@@ -1,5 +1,6 @@
 package models;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import utils.FileWriter;
@@ -129,15 +130,15 @@ public class TemplateElement {
         }
     }
 
-    public void writeFile(PsiDirectory currentDir) {
+    public void writeFile(PsiDirectory currentDir, Project project) {
         if (isDirectory()) {
-            PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this);
+            PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this, project);
             if (subDirectory == null) {
                 // TODO: 20.06.2016 error write file
             } else {
                 if (getListTemplateElement() != null) {
                     for (TemplateElement element : getListTemplateElement()) {
-                        element.writeFile(subDirectory);
+                        element.writeFile(subDirectory, project);
                     }
                 }
             }

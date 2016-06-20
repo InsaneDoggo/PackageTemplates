@@ -1,10 +1,15 @@
 package utils;
 
+import com.intellij.ide.IdeBundle;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.fileTypes.StdFileTypes;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -32,7 +37,7 @@ public class FileWriter {
         return null;
     }
 
-    public static PsiDirectory writeDirectory(PsiDirectory dir, TemplateElement templateElement) {
+    public static PsiDirectory writeDirectory(PsiDirectory dir, TemplateElement templateElement, Project project) {
         if (!templateElement.isDirectory()) {
             //todo print error
             return null;
@@ -42,8 +47,19 @@ public class FileWriter {
             //todo print error
             return null;
         }
+        final PsiDirectory[] directory = new PsiDirectory[1];
 
-        return dir.createSubdirectory(templateElement.getName());
+        CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> {
+            try {
+                directory[0] = dir.createSubdirectory(templateElement.getName());
+            } catch (Exception ex) {}
+        }), null, null);
+
+        if(directory[0] == null){
+            //todo print error
+        }
+
+        return directory[0];
     }
 
     public static PsiElement writeFile(PsiDirectory dir, TemplateElement templateElement) {

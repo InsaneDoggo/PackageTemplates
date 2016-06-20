@@ -56,7 +56,7 @@ public class NewPackageTemplateAction extends AnAction {
     private void createFiles(AnActionEvent event, PackageTemplate packageTemplate) {
         PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
         if( currentDir != null ) {
-            packageTemplate.getTemplateElement().writeFile(currentDir);
+            packageTemplate.getTemplateElement().writeFile(currentDir, event.getProject());
         }
     }
 
