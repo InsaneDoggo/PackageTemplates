@@ -3,7 +3,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
 import models.PackageTemplate;
 import models.TemplateElement;
-import ui.dialogs.NewPackageDialog;
+import custom.dialogs.NewPackageDialog;
 import utils.FileWriter;
 import utils.InputManager;
 import utils.Logger;

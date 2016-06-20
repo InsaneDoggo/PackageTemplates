@@ -68,7 +68,7 @@ public class InputManager {
 
     @NotNull
     private void addHeader(JPanel panel) {
-        InputBlock inputBlock = new InputBlock(packageTemplate.getTemplateElement(), paddingScale, null);
+        InputBlock inputBlock = new InputBlock(packageTemplate.getTemplateElement(), null, project);
         inputBlock.setGlobalVariable(true);
         inputBlock.setGlobalKey(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME);
         listInputBlock.add(inputBlock);
@@ -115,7 +115,7 @@ public class InputManager {
     private void addClass(TemplateElement element) {
         FileTemplate fileTemplate = fileTemplateManager.getTemplate(element.getName());
         if (fileTemplate != null) {
-            InputBlock inputBlock = new InputBlock(element, paddingScale, getUnsetAttrs(fileTemplate));
+            InputBlock inputBlock = new InputBlock(element, getUnsetAttrs(fileTemplate), project);
             panel.add(UIMaker.getClassPanel(inputBlock, paddingScale));
             // add variables
             JComponent component = inputBlock.getPanelVariables().getComponent();
@@ -127,7 +127,7 @@ public class InputManager {
 
     private void addDirectory(TemplateElement element) {
         // TODO: 17.06.2016 add separator
-        InputBlock inputBlock = new InputBlock(element, paddingScale, null);
+        InputBlock inputBlock = new InputBlock(element, null, project);
         panel.add(UIMaker.getDirectoryPanel(inputBlock, paddingScale));
         listInputBlock.add(inputBlock);
 

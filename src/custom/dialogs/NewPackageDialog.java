@@ -1,25 +1,14 @@
-package ui.dialogs;
+package custom.dialogs;
 
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiManager;
 import models.InputBlock;
-import models.TemplateElement;
 import org.jetbrains.annotations.Nullable;
-import utils.FileWriter;
 import utils.InputManager;
 
 import javax.swing.*;
 import java.util.Map;
 import java.util.Properties;
-
-import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.block;
-import static groovyjarjarantlr.build.ANTLR.root;
 
 /**
  * Created by CeH9 on 14.06.2016.

@@ -1,6 +1,7 @@
 package models;
 
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorTextField;
 import utils.UIMaker;
 
@@ -16,9 +17,9 @@ public class InputBlock {
     private boolean isGlobalVariable = false;
     private String globalKey;
 
-    public InputBlock(TemplateElement element, int paddingScale, String[] unsetAttributes) {
+    public InputBlock(TemplateElement element, String[] unsetAttributes, Project project) {
         this.element = element;
-        this.tfName = UIMaker.getEditorTextField(element.getName());
+        this.tfName = UIMaker.getEditorTextField(element.getName(), project);
         //optionally add TextFields for Attributes
         if (unsetAttributes != null && unsetAttributes.length > 0){
             panelVariables = new CreateFromTemplatePanel(unsetAttributes, false, null);

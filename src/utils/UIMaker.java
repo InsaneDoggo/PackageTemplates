@@ -1,10 +1,14 @@
 package utils;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.ide.highlighter.JavaClassFileType;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.util.EmptyEditorHighlighter;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.editor.highlighter.EditorHighlighter;
+import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.fileTypes.TemplateLanguageFileType;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.templateLanguages.TemplateDataElementType;
 import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
@@ -24,16 +28,13 @@ public class UIMaker {
     public static final int PADDING = 16;
     public static final int DIALOG_MIN_WIDTH = 400;
 
-    public static EditorTextField getEditorTextField(String defValue) {
+    public static EditorTextField getEditorTextField(String defValue, Project project) {
         EditorTextField etfName = new EditorTextField("Test");
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
         etfName.addSettingsProvider(new EditorSettingsProvider() {
             @Override
             public void customizeSettings(EditorEx editor) {
-                editor.getHighlighter();
-                TextAttributes attributes = new TextAttributes();
-                attributes.setAttributes(DefaultLanguageHighlighterColors.LINE_COMMENT);
-                EmptyEditorHighlighter highlighter = new EmptyEditorHighlighter(attributes);
+                EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(project, FileTypeManager.getInstance().getFileTypeByExtension("java"));
                 editor.setHighlighter(highlighter);
             }
         });
