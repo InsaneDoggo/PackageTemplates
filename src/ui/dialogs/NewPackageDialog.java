@@ -41,9 +41,9 @@ public abstract class NewPackageDialog extends DialogWrapper {
 
         switch (getExitCode()) {
             case NewPackageDialog.OK_EXIT_CODE:
-                //todo replace name vars
                 inputManager.initGlobalProperties();
                 saveVariablesFromDialog();
+                inputManager.getPackageTemplate().replaceNameVariable(inputManager);
                 onFinish("OK_EXIT_CODE");
                 break;
             case NewPackageDialog.CANCEL_EXIT_CODE:
@@ -61,14 +61,11 @@ public abstract class NewPackageDialog extends DialogWrapper {
                     Properties properties = new Properties();
                     properties = block.getPanelVariables().getProperties(properties);
 
-                    System.out.println("--------- " + block.getElement().getName() + " ----------------");
-
                     for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-                        System.out.println(entry.getKey() + "  " + entry.getValue());
                         block.getElement().getMapProperties().put((String) entry.getKey(), (String) entry.getValue());
-                        //add def properties
-                        //add package name
-                        block.getElement().getMapProperties().put(FileTemplate.ATTRIBUTE_PACKAGE_NAME, block.getElement().getParent().getName());
+
+                        //add GLOBALS
+                        block.getElement().getMapProperties().putAll(inputManager.getMapGlobalProperties());
                     }
                 }
             }

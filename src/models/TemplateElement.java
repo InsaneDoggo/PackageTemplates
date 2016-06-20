@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.sun.tools.doclint.Entity.Psi;
-
 /**
  * Created by Arsen on 15.06.2016.
  */
@@ -106,11 +104,11 @@ public class TemplateElement {
         return true;
     }
 
-    public void replaceNameVariable(String packageTemplateName) {
-        setName(StringTools.replaceName(packageTemplateName, getName()));
+    public void replaceNameVariable(HashMap<String, String> mapProperties) {
+        setName(StringTools.replaceGlobalVariables(getName(), mapProperties));
         if (getListTemplateElement() != null) {
             for (TemplateElement element : getListTemplateElement()) {
-                element.replaceNameVariable(packageTemplateName);
+                element.replaceNameVariable(mapProperties);
             }
         }
     }

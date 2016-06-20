@@ -1,5 +1,7 @@
 package models;
 
+import utils.InputManager;
+
 import java.util.ArrayList;
 
 /**
@@ -18,6 +20,15 @@ public class PackageTemplate {
         this.description = description;
 
         root = new TemplateElement(true, "", templateVariableName, listTemplateElement, null);
+    }
+
+    public void replaceNameVariable(InputManager inputManager) {
+        if (getListTemplateElement() == null) {
+            return;
+        }
+        for (TemplateElement element : getListTemplateElement()) {
+            element.replaceNameVariable(inputManager.getMapGlobalProperties());
+        }
     }
 
     public String getTemplateVariableName() {

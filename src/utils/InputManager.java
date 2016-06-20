@@ -95,6 +95,14 @@ public class InputManager {
         return event;
     }
 
+    public Project getProject() {
+        return project;
+    }
+
+    public PackageTemplate getPackageTemplate() {
+        return packageTemplate;
+    }
+
     public void addElement(TemplateElement element) {
         if (element.isDirectory()) {
             addDirectory(element);
