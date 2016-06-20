@@ -1,6 +1,11 @@
 package utils;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.ex.util.EmptyEditorHighlighter;
+import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import models.InputBlock;
@@ -22,6 +27,16 @@ public class UIMaker {
     public static EditorTextField getEditorTextField(String defValue) {
         EditorTextField etfName = new EditorTextField("Test");
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
+        etfName.addSettingsProvider(new EditorSettingsProvider() {
+            @Override
+            public void customizeSettings(EditorEx editor) {
+                editor.getHighlighter();
+                TextAttributes attributes = new TextAttributes();
+                attributes.setAttributes(DefaultLanguageHighlighterColors.LINE_COMMENT);
+                EmptyEditorHighlighter highlighter = new EmptyEditorHighlighter(attributes);
+                editor.setHighlighter(highlighter);
+            }
+        });
         etfName.setText(defValue);
         return etfName;
     }
