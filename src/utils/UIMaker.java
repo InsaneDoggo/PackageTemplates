@@ -3,20 +3,16 @@ package utils;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.codeInsight.template.impl.TemplateColors;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
-import com.intellij.util.ui.UIUtil;
 import models.InputBlock;
 import models.TextRange;
 import org.jetbrains.annotations.NotNull;
@@ -32,9 +28,8 @@ import java.util.ArrayList;
 public class UIMaker {
 
     public static final int DEFAULT_PADDING = 0;
-    public static final int PADDING = 16;
+    public static final int PADDING = 20;
     public static final int DIALOG_MIN_WIDTH = 400;
-    public static final Color COLOR_VARIABLES = new Color(174, 138, 190);
 
     public static EditorTextField getEditorTextField(String defValue, Project project) {
         EditorTextField etfName = new EditorTextField("Test");
@@ -43,8 +38,6 @@ public class UIMaker {
         etfName.addSettingsProvider(new EditorSettingsProvider() {
             @Override
             public void customizeSettings(EditorEx editor) {
-//                EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(project, FileTypeManager.getInstance().getFileTypeByExtension("JAVA"));
-//                editor.setHighlighter(highlighter);
                     addHighlightListener(project, etfName, editor);
                     etfName.setText(etfName.getText());
 
@@ -58,10 +51,6 @@ public class UIMaker {
         etfName.addDocumentListener(new DocumentListener() {
             @Override
             public void beforeDocumentChange(DocumentEvent event) {
-                EditorColorsManager.getInstance().getGlobalScheme().getColor(TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES)
-                UIUtil.get
-                EditorColors.LIVE_TEMPLATE_ATTRIBUTES
-
             }
 
             @Override
@@ -70,21 +59,27 @@ public class UIMaker {
                     return;
                 }
                 //highlight text
-                TextAttributes attributes = new TextAttributes();
-                attributes.setForegroundColor(COLOR_VARIABLES);
-                ArrayList<TextRange> list = StringTools.findVariable(event.getDocument().getText());
-                for( TextRange textRange:  list ) {
-                    HighlightManager.getInstance(project).addRangeHighlight(
-                            editor,
-                            textRange.getBegin(),
-                            textRange.getEnd(),
-                            attributes,
-                            true,
-                            null
-                    );
-                }
+                applyHighlightRange(event.getDocument().getText(), project, editor);
             }
         });
+    }
+
+    public static void applyHighlightRange(String text, Project project, Editor editor) {
+        EditorColorsScheme scheme = editor.getColorsScheme(); // or EditorColorsManager.getInstance().getGlobalScheme()
+
+        TextAttributes attributes = scheme.getAttributes(TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
+
+        ArrayList<TextRange> list = StringTools.findVariable(text);
+        for( TextRange textRange:  list ) {
+            HighlightManager.getInstance(project).addRangeHighlight(
+                    editor,
+                    textRange.getBegin(),
+                    textRange.getEnd(),
+                    attributes,
+                    true,
+                    null
+            );
+        }
     }
 
     public static JLabel getLabel(String text, int paddingScale) {

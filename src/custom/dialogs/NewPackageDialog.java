@@ -1,18 +1,14 @@
 package custom.dialogs;
 
-import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import models.InputBlock;
-import models.TextRange;
 import org.jetbrains.annotations.Nullable;
 import utils.InputManager;
 import utils.StringTools;
 import utils.UIMaker;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
 
@@ -59,13 +55,7 @@ public abstract class NewPackageDialog extends DialogWrapper {
                 continue;
             }
 
-            TextAttributes attributes = new TextAttributes();
-            attributes.setForegroundColor(UIMaker.COLOR_VARIABLES);
-            ArrayList<TextRange> list = StringTools.findVariable(inputBlock.getTfName().getText());
-            for( TextRange textRange:  list ) {
-                HighlightManager.getInstance(inputManager.getProject()).addRangeHighlight(
-                        inputBlock.getTfName().getEditor(), textRange.getBegin(), textRange.getEnd(), attributes, true, null );
-            }
+            UIMaker.applyHighlightRange(inputBlock.getTfName().getText(), inputManager.getProject(), inputBlock.getTfName().getEditor());
         }
     }
 
