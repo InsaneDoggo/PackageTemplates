@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.awt.SystemColor.text;
+
 /**
  * Created by Arsen on 15.06.2016.
  */
@@ -71,11 +73,14 @@ public class StringTools {
 //    \w    A word character: [a-zA-Z_0-9]
 //    \W    A non-word character: [^\w]
     public static boolean isNameValid(String text) {
-        //if( text. )
-        // text.matches(".*\\W.*")
-        // !text.matches(".*[a-zA-Z_].*")
-        // text.substring(0,1).matches("\\d")
-        System.out.println("sdsd");
+        if( text.matches(".*[^0-9a-zA-Z_}{\\$].*")){
+            // TODO: 21.06.2016 print illegal symbols
+            return false;
+        }
+        if( text.substring(0,1).matches("\\d")){
+            // TODO: 21.06.2016 print starts with digit
+            return false;
+        }
         return true;
     }
 }
