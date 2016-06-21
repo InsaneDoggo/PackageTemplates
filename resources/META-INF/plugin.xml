@@ -26,7 +26,6 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-    <annotator language="JAVA" implementationClass="custom.annotator.PTAnnotator"/>
   </extensions>
 
   <actions>

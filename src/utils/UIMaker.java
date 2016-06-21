@@ -1,22 +1,20 @@
 package utils;
 
+import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.icons.AllIcons;
-import com.intellij.ide.highlighter.JavaClassFileType;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.TemplateLanguageFileType;
+import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.templateLanguages.TemplateDataElementType;
-import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import models.InputBlock;
+import models.TextRange;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by CeH9 on 16.06.2016.
@@ -27,19 +25,52 @@ public class UIMaker {
     public static final int DEFAULT_PADDING = 0;
     public static final int PADDING = 16;
     public static final int DIALOG_MIN_WIDTH = 400;
+    public static final Color COLOR_VARIABLES = new Color(174, 138, 190);
 
     public static EditorTextField getEditorTextField(String defValue, Project project) {
         EditorTextField etfName = new EditorTextField("Test");
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
-        etfName.addSettingsProvider(new EditorSettingsProvider() {
-            @Override
-            public void customizeSettings(EditorEx editor) {
-                EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(project, FileTypeManager.getInstance().getFileTypeByExtension("java"));
-                editor.setHighlighter(highlighter);
-            }
-        });
+        addHighlightListener(project, etfName);
+
+//        etfName.addSettingsProvider(new EditorSettingsProvider() {
+//            @Override
+//            public void customizeSettings(EditorEx editor) {
+//                EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(project, FileTypeManager.getInstance().getFileTypeByExtension("JAVA"));
+//                editor.setHighlighter(highlighter);
+//            }
+//        });
         etfName.setText(defValue);
         return etfName;
+    }
+
+    private static void addHighlightListener(final Project project, final EditorTextField etfName) {
+        etfName.addDocumentListener(new DocumentListener() {
+            @Override
+            public void beforeDocumentChange(DocumentEvent event) {
+
+            }
+
+            @Override
+            public void documentChanged(DocumentEvent event) {
+                if(etfName.getEditor()==null || !StringTools.containsVariable(event.getDocument().getText())){
+                    return;
+                }
+                //highlight text
+                TextAttributes attributes = new TextAttributes();
+                attributes.setForegroundColor(COLOR_VARIABLES);
+                ArrayList<TextRange> list = StringTools.findVariable(event.getDocument().getText());
+                for( TextRange textRange:  list ) {
+                    HighlightManager.getInstance(project).addRangeHighlight(
+                            etfName.getEditor(),
+                            textRange.getBegin(),
+                            textRange.getEnd(),
+                            attributes,
+                            true,
+                            null
+                    );
+                }
+            }
+        });
     }
 
     public static JLabel getLabel(String text, int paddingScale) {

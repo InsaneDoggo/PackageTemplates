@@ -1,12 +1,25 @@
 package custom.dialogs;
 
+import com.intellij.codeInsight.highlighting.HighlightManager;
+import com.intellij.openapi.editor.HighlighterColors;
+import com.intellij.openapi.editor.SyntaxHighlighterColors;
+import com.intellij.openapi.editor.colors.ColorKey;
+import com.intellij.openapi.editor.colors.EditorColors;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.ex.DefaultColorSchemesManager;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import models.InputBlock;
+import models.TextRange;
 import org.jetbrains.annotations.Nullable;
 import utils.InputManager;
+import utils.StringTools;
+import utils.UIMaker;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
 
@@ -20,13 +33,19 @@ public abstract class NewPackageDialog extends DialogWrapper {
     JPanel panel;
     InputManager inputManager;
 
+
+
     public NewPackageDialog(@Nullable Project project, String title, InputManager inputManager) {
         super(project);
         this.inputManager = inputManager;
         this.panel = inputManager.getPanel();
         init();
         setTitle(title);
-        show();
+    }
+
+    @Override
+    public void show() {
+        super.show();
 
         switch (getExitCode()) {
             case NewPackageDialog.OK_EXIT_CODE:
@@ -38,6 +57,22 @@ public abstract class NewPackageDialog extends DialogWrapper {
             case NewPackageDialog.CANCEL_EXIT_CODE:
                 onFinish("CANCEL_EXIT_CODE");
                 break;
+        }
+    }
+
+    public void updateHighlight() {
+        for (InputBlock inputBlock : inputManager.getListInputBlock()) {
+            if(inputBlock.getTfName().getEditor() == null){
+                continue;
+            }
+
+            TextAttributes attributes = new TextAttributes();
+            attributes.setForegroundColor(UIMaker.COLOR_VARIABLES);
+            ArrayList<TextRange> list = StringTools.findVariable(inputBlock.getTfName().getText());
+            for( TextRange textRange:  list ) {
+                HighlightManager.getInstance(inputManager.getProject()).addRangeHighlight(
+                        inputBlock.getTfName().getEditor(), textRange.getBegin(), textRange.getEnd(), attributes, true, null );
+            }
         }
     }
 

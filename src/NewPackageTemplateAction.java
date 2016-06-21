@@ -51,6 +51,8 @@ public class NewPackageTemplateAction extends AnAction {
                 Logger.log("onFinish " + result);
             }
         };
+        dialog.updateHighlight();
+        dialog.show();
     }
 
     private void createFiles(AnActionEvent event, PackageTemplate packageTemplate) {
