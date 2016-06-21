@@ -1,12 +1,6 @@
 package custom.dialogs;
 
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.openapi.editor.HighlighterColors;
-import com.intellij.openapi.editor.SyntaxHighlighterColors;
-import com.intellij.openapi.editor.colors.ColorKey;
-import com.intellij.openapi.editor.colors.EditorColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.ex.DefaultColorSchemesManager;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -18,7 +12,6 @@ import utils.StringTools;
 import utils.UIMaker;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
@@ -107,6 +100,16 @@ public abstract class NewPackageDialog extends DialogWrapper {
 
     private boolean isInputValid() {
         // TODO: 19.06.2016 check input
+        for (InputBlock block : inputManager.getListInputBlock()) {
+            if( block.getTfName().getText().trim().isEmpty() ){
+                // TODO: 21.06.2016 print pls fill fields
+                    return false;
+            }
+            if( !StringTools.isNameValid(block.getTfName().getText()) ){
+                // TODO: 21.06.2016 print invalid name
+                return false;
+            }
+        }
         return true;
     }
 

@@ -1,13 +1,22 @@
 package utils;
 
 import com.intellij.codeInsight.highlighting.HighlightManager;
+import com.intellij.codeInsight.template.impl.TemplateColors;
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.editor.colors.EditorColors;
+import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.editor.highlighter.EditorHighlighter;
+import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
+import com.intellij.util.ui.UIUtil;
 import models.InputBlock;
 import models.TextRange;
 import org.jetbrains.annotations.NotNull;
@@ -30,29 +39,34 @@ public class UIMaker {
     public static EditorTextField getEditorTextField(String defValue, Project project) {
         EditorTextField etfName = new EditorTextField("Test");
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
-        addHighlightListener(project, etfName);
 
-//        etfName.addSettingsProvider(new EditorSettingsProvider() {
-//            @Override
-//            public void customizeSettings(EditorEx editor) {
+        etfName.addSettingsProvider(new EditorSettingsProvider() {
+            @Override
+            public void customizeSettings(EditorEx editor) {
 //                EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(project, FileTypeManager.getInstance().getFileTypeByExtension("JAVA"));
 //                editor.setHighlighter(highlighter);
-//            }
-//        });
+                    addHighlightListener(project, etfName, editor);
+                    etfName.setText(etfName.getText());
+
+            }
+        });
         etfName.setText(defValue);
         return etfName;
     }
 
-    private static void addHighlightListener(final Project project, final EditorTextField etfName) {
+    private static void addHighlightListener(final Project project, final EditorTextField etfName, EditorEx editor) {
         etfName.addDocumentListener(new DocumentListener() {
             @Override
             public void beforeDocumentChange(DocumentEvent event) {
+                EditorColorsManager.getInstance().getGlobalScheme().getColor(TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES)
+                UIUtil.get
+                EditorColors.LIVE_TEMPLATE_ATTRIBUTES
 
             }
 
             @Override
             public void documentChanged(DocumentEvent event) {
-                if(etfName.getEditor()==null || !StringTools.containsVariable(event.getDocument().getText())){
+                if(editor==null || !StringTools.containsVariable(event.getDocument().getText())){
                     return;
                 }
                 //highlight text
@@ -61,7 +75,7 @@ public class UIMaker {
                 ArrayList<TextRange> list = StringTools.findVariable(event.getDocument().getText());
                 for( TextRange textRange:  list ) {
                     HighlightManager.getInstance(project).addRangeHighlight(
-                            etfName.getEditor(),
+                            editor,
                             textRange.getBegin(),
                             textRange.getEnd(),
                             attributes,
