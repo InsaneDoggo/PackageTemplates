@@ -1,5 +1,7 @@
 package custom.dialogs;
 
+import com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import models.InputBlock;
@@ -11,16 +13,16 @@ import javax.swing.*;
 /**
  * Created by Arsen on 21.06.2016.
  */
-public abstract class TamplateManagerDialog extends DialogWrapper {
+public abstract class TemplateManagerDialog extends DialogWrapper {
 
     public abstract void onFinish(String result);
 
     JPanel panel;
-    InputManager inputManager;
+    AnActionEvent event;
 
-    public TamplateManagerDialog(@Nullable Project project, String title) {
-        super(project);
-        this.panel = inputManager.getPanel();
+    public TemplateManagerDialog(@Nullable AnActionEvent event, String title) {
+        super(event.getProject());
+        this.event = event;
         init();
         setTitle(title);
     }
@@ -50,15 +52,19 @@ public abstract class TamplateManagerDialog extends DialogWrapper {
 
     private boolean isInputValid() {
         // TODO: 19.06.2016 check input
-        for (InputBlock block : inputManager.getListInputBlock()) {
 
-        }
         return true;
     }
 
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
+        panel = new JPanel();
+
+        AllFileTemplatesConfigurable configurable = new AllFileTemplatesConfigurable(event.getProject());
+        configurable.reset();
+        panel.add(configurable.createComponent());
+
         return panel;
     }
 

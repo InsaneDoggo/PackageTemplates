@@ -1,6 +1,11 @@
+import com.intellij.codeInsight.generation.ui.GenerateEqualsWizard;
+import com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.impl.source.PsiClassImpl;
+import custom.configurable.ConfigurePackageTemplatesDialog;
+import custom.dialogs.TemplateManagerDialog;
 import models.PackageTemplate;
 import models.TemplateElement;
 import custom.dialogs.NewPackageDialog;
@@ -31,9 +36,20 @@ public class NewPackageTemplateAction extends AnAction {
 //        listElements.add(new TemplateElement(false, "fake", null));
 
 
-        if (TemplateValidator.isTemplatesValid(packageTemplate)) {
-            showDialog(e, packageTemplate);
-        }
+//        if (TemplateValidator.isTemplatesValid(packageTemplate)) {
+//            showDialog(e, packageTemplate);
+//        }
+
+//        TemplateManagerDialog dialog = new TemplateManagerDialog(e, "Package Teplate Editor") {
+//            @Override
+//            public void onFinish(String result) {
+//                System.out.println("TemplateManagerDialog onFinish");
+//            }
+//        };
+//        dialog.show();
+
+        ConfigurePackageTemplatesDialog dialog1 = new ConfigurePackageTemplatesDialog(e.getProject());
+        dialog1.show();
     }
 
     private void showDialog(AnActionEvent event, PackageTemplate packageTemplate) {
