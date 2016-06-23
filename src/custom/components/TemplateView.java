@@ -1,6 +1,5 @@
 package custom.components;
 
-import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.util.ui.GridBag;
 import utils.UIMaker;
 
@@ -8,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static com.sun.tools.internal.xjc.reader.Ring.add;
 import static utils.UIMaker.getDefaultGridBag;
 
 /**
@@ -22,30 +20,53 @@ public class TemplateView extends JPanel {
     private boolean isDirectory;
     private ArrayList<TemplateView> listTemplateView;
 
-    public TemplateView(String defaultName, String templateName, String extension, boolean isDirectory, ArrayList<TemplateView> listTemplateView) {
+    private GridBag bag;
+    private TemplateView templateParent;
+
+    public TemplateView(String defaultName, String templateName, String extension, boolean isDirectory, ArrayList<TemplateView> listTemplateView, TemplateView templateParent) {
         this.defaultName = defaultName;
+        this.templateParent = templateParent;
         this.templateName = templateName;
         this.extension = extension;
         this.isDirectory = isDirectory;
         this.listTemplateView = listTemplateView;
+
+        setLayout(new GridBagLayout());
     }
 
     public TemplateView buildView() {
-        setLayout(new GridBagLayout());
-        GridBag bag = getDefaultGridBag();
+        setBag(getDefaultGridBag());
+        getBag().setDefaultWeightX(1);
 
-        if( isDirectory() ){
-            add(UIMaker.getPackageView(this), bag.nextLine().next());
+        if (isDirectory()) {
+            add(UIMaker.getPackageView(this), getBag().nextLine().next());
 
-            for(TemplateView templateView : getListTemplateView()){
+            for (TemplateView templateView : getListTemplateView()) {
                 TemplateView view = templateView.buildView();
-                UIMaker.setLeftPadding(view, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);
-                add(view, bag.nextLine().next());
+                add(view, getBag().nextLine().next());
             }
         } else {
-            add(UIMaker.getClassView(this), bag.nextLine().next());
+            add(UIMaker.getClassView(this), getBag().nextLine().next());
         }
+
+        UIMaker.setLeftPadding(this, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);
         return this;
+    }
+
+    public TemplateView getTemplateParent() {
+        return templateParent;
+    }
+
+    public void setTemplateParent(TemplateView parent) {
+        this.templateParent = parent;
+    }
+
+    public GridBag getBag() {
+        return bag;
+    }
+
+    public void setBag(GridBag bag) {
+        this.bag = bag;
     }
 
     public String getDefaultName() {
@@ -86,5 +107,30 @@ public class TemplateView extends JPanel {
 
     public void setListTemplateView(ArrayList<TemplateView> listTemplateView) {
         this.listTemplateView = listTemplateView;
+    }
+
+    public void reBuild() {
+        if (getTemplateParent() == null) {
+            removeAll();
+            buildView();
+        } else {
+            getTemplateParent().reBuild();
+        }
+    }
+
+    public void addTemplate(TemplateView tView) {
+        if (isDirectory()) {
+            getListTemplateView().add(tView);
+        } else {
+            getTemplateParent().getListTemplateView().add(tView);
+        }
+    }
+
+    public void removeMyself() {
+        if(getTemplateParent() == null){
+            return;
+        } else {
+            getTemplateParent().getListTemplateView().remove(this);
+        }
     }
 }

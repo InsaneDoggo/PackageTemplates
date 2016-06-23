@@ -43,6 +43,7 @@ public class ConfigurePackageTemplatesDialog extends ConfigureTemplatesDialog {
     private JComponent getPackageBuilderComponent() {
         JPanel root = new JPanel();
         root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
+
         root.setAlignmentY(Component.TOP_ALIGNMENT);
         ComboBox comboBox = getSelector();
 
@@ -64,11 +65,12 @@ public class ConfigurePackageTemplatesDialog extends ConfigureTemplatesDialog {
 
 //        root.add(comboBox);
 
-        ArrayList<TemplateView> listTemplateView = new ArrayList<>();
-        listTemplateView.add(new TemplateView("IvanClass", "Prost", "java", false, null));
-        listTemplateView.add(new TemplateView("IvanClass", "Slojn", "java", false, null));
 
-        TemplateView main = new TemplateView("IvanClass", "Prost", "java", true, listTemplateView);
+        TemplateView main = new TemplateView("IvanClass", "Prost", "java", true, new ArrayList<>(), null);
+
+        main.getListTemplateView().add(new TemplateView("IvanClass", "Prost", "java", false, null, main));
+        main.getListTemplateView().add(new TemplateView("IvanClass", "Slojn", "java", false, null, main));
+
 
         root.add(main.buildView());
         return root;

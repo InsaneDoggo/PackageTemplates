@@ -122,7 +122,7 @@ public class UIMaker {
     public static GridBag getDefaultGridBag() {
         return new GridBag()
                 .setDefaultWeightX(1, 1)
-                .setDefaultInsets(new Insets(4, 4, 4, 4))
+                .setDefaultInsets(new Insets(4, 0, 4, 0))
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
@@ -173,7 +173,8 @@ public class UIMaker {
                         @Override
                         protected void handle(MouseEvent event) {
                             if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
-                                // todo Delete
+                                templateView.removeMyself();
+                                templateView.reBuild();
                                 System.out.println("Delete");
                             }
                         }
@@ -187,7 +188,6 @@ public class UIMaker {
             }
         });
 
-//        container.setMaximumSize(new Dimension(Integer.MAX_VALUE, container.getPreferredSize().height));
         return container;
     }
 
@@ -196,12 +196,10 @@ public class UIMaker {
         setLeftPadding(container, DEFAULT_PADDING);
 
         JLabel jLabel = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
+        jLabel.setText("Directory");
         EditorTextField etfName = new EditorTextField("");
 
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
-        etfName.setMinimumSize(new Dimension(Integer.MAX_VALUE, etfName.getMinimumSize().height));
-        etfName.setPreferredSize(new Dimension(Integer.MAX_VALUE, etfName.getPreferredSize().height));
-        etfName.setMaximumSize(new Dimension(Integer.MAX_VALUE, etfName.getMaximumSize().height));
 
         GridBag bag = getDefaultGridBag();
         container.add(jLabel, bag.nextLine().next());
@@ -214,24 +212,25 @@ public class UIMaker {
                     JPopupMenu popupMenu = new JBPopupMenu();
 
                     JMenuItem itemAddFile = new JBMenuItem("Add file", AllIcons.FileTypes.Text);
-                    JMenuItem itemAddFolder = new JBMenuItem("Add folder", AllIcons.Nodes.Package);
+                    JMenuItem itemAddDirectory = new JBMenuItem("Add directory", AllIcons.Nodes.Package);
                     JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
-
 
                     itemAddFile.addMouseListener(new MouseEventHandler() {
                         @Override
                         protected void handle(MouseEvent event) {
                             if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
-                                // todo AddFile
+                                TemplateView tView = new TemplateView("MegaClass", "Mega", "java", false, null, templateView);
+                                templateView.addTemplate(tView);
+                                templateView.reBuild();
+//                                templateView.add(tView.buildView(), templateView.getBag().nextLine().next());
                                 System.out.println("AddFile");
                             }
                         }
                     });
-                    itemAddFolder.addMouseListener(new MouseEventHandler() {
+                    itemAddDirectory.addMouseListener(new MouseEventHandler() {
                         @Override
                         protected void handle(MouseEvent event) {
                             if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
-                                // todo AddFolder
                                 System.out.println("AddFolder");
                             }
                         }
@@ -240,21 +239,21 @@ public class UIMaker {
                         @Override
                         protected void handle(MouseEvent event) {
                             if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
-                                // todo Delete
+                                templateView.removeMyself();
+                                templateView.reBuild();
                                 System.out.println("Delete");
                             }
                         }
                     });
 
                     popupMenu.add(itemAddFile);
-                    popupMenu.add(itemAddFolder);
+                    popupMenu.add(itemAddDirectory);
                     popupMenu.add(itemDelete);
                     popupMenu.show(container, event.getX(), event.getY());
                 }
             }
         });
 
-//        container.setMaximumSize(new Dimension(Integer.MAX_VALUE, container.getPreferredSize().height));
         return container;
     }
 
