@@ -1,18 +1,13 @@
-import com.intellij.codeInsight.generation.ui.GenerateEqualsWizard;
-import com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.impl.source.PsiClassImpl;
-import custom.configurable.ConfigurePackageTemplatesDialog;
-import custom.dialogs.TemplateManagerDialog;
+import custom.dialogs.ConfigurePackageTemplatesDialog;
 import models.PackageTemplate;
 import models.TemplateElement;
 import custom.dialogs.NewPackageDialog;
 import utils.FileWriter;
 import utils.InputManager;
 import utils.Logger;
-import utils.TemplateValidator;
 
 import java.util.ArrayList;
 
@@ -22,7 +17,7 @@ import java.util.ArrayList;
 public class NewPackageTemplateAction extends AnAction {
 
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(AnActionEvent event) {
         ArrayList<TemplateElement> listElements = new ArrayList<>();
         ArrayList<TemplateElement> listElementsInner = new ArrayList<>();
         PackageTemplate packageTemplate = new PackageTemplate("TestPT", "MegaPT", "tipa description", listElements);
@@ -37,10 +32,10 @@ public class NewPackageTemplateAction extends AnAction {
 
 
 //        if (TemplateValidator.isTemplatesValid(packageTemplate)) {
-//            showDialog(e, packageTemplate);
+//            showDialog(event, packageTemplate);
 //        }
 
-//        TemplateManagerDialog dialog = new TemplateManagerDialog(e, "Package Teplate Editor") {
+//        TemplateManagerDialog dialog = new TemplateManagerDialog(event, "Package Teplate Editor") {
 //            @Override
 //            public void onFinish(String result) {
 //                System.out.println("TemplateManagerDialog onFinish");
@@ -48,7 +43,7 @@ public class NewPackageTemplateAction extends AnAction {
 //        };
 //        dialog.show();
 
-        ConfigurePackageTemplatesDialog dialog1 = new ConfigurePackageTemplatesDialog(e.getProject());
+        ConfigurePackageTemplatesDialog dialog1 = new ConfigurePackageTemplatesDialog(event);
         dialog1.show();
     }
 

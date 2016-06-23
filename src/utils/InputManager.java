@@ -3,8 +3,6 @@ package utils;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
-import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.GridBag;
@@ -18,8 +16,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-
-import static utils.UIMaker.getClassPanel;
 
 /**
  * Created by Arsen on 15.06.2016.

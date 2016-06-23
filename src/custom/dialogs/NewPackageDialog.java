@@ -22,8 +22,6 @@ public abstract class NewPackageDialog extends DialogWrapper {
     JPanel panel;
     InputManager inputManager;
 
-
-
     public NewPackageDialog(@Nullable Project project, String title, InputManager inputManager) {
         super(project);
         this.inputManager = inputManager;

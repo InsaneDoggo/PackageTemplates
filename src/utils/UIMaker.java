@@ -40,7 +40,6 @@ public class UIMaker {
             public void customizeSettings(EditorEx editor) {
                     addHighlightListener(project, etfName, editor);
                     etfName.setText(etfName.getText());
-
             }
         });
         etfName.setText(defValue);
