@@ -22,13 +22,12 @@ public class NewPackageTemplateAction extends AnAction {
         ArrayList<TemplateElement> listElementsInner = new ArrayList<>();
         PackageTemplate packageTemplate = new PackageTemplate("TestPT", "MegaPT", "tipa description", listElements);
 
-        TemplateElement element = new TemplateElement(true, "Pre${PACKAGE_TEMPLATE_NAME}Post", null, listElementsInner, packageTemplate.getTemplateElement());
+        TemplateElement element = new TemplateElement("Pre${PACKAGE_TEMPLATE_NAME}Post", listElementsInner, packageTemplate.getTemplateElement());
 
-        listElements.add(new TemplateElement(false, "Prost", "Prost", null, packageTemplate.getTemplateElement()));
+        listElements.add(new TemplateElement("Prost", "Prost", "java", packageTemplate.getTemplateElement()));
         listElements.add(element);
-        listElementsInner.add(new TemplateElement(false, "Prost", "Prost", null, element));
-        listElementsInner.add(new TemplateElement(false, "Slojn", "Slojn", null, element));
-//        listElements.add(new TemplateElement(false, "fake", null));
+        listElementsInner.add(new TemplateElement("Prost", "Prost", "java", element));
+        listElementsInner.add(new TemplateElement("Slojn", "Slojn", "java", element));
 
 
 //        if (TemplateValidator.isTemplatesValid(packageTemplate)) {

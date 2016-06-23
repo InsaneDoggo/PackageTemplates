@@ -6,13 +6,16 @@ import com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.ComboboxSpeedSearch;
-import com.intellij.ui.EditorTextField;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.panels.VerticalBox;
+import custom.components.TemplateView;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+
+import static com.sun.tools.internal.xjc.reader.Ring.add;
 
 /**
  * Created by CeH9 on 22.06.2016.
@@ -32,15 +35,15 @@ public class ConfigurePackageTemplatesDialog extends ConfigureTemplatesDialog {
     protected JComponent createCenterPanel() {
         JBSplitter panel = new JBSplitter();
 
-
         panel.setFirstComponent(getPackageBuilderComponent());
         panel.setSecondComponent(super.createCenterPanel());
         return panel;
     }
 
     private JComponent getPackageBuilderComponent() {
-        VerticalBox root = new VerticalBox();
-
+        JPanel root = new JPanel();
+        root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
+        root.setAlignmentY(Component.TOP_ALIGNMENT);
         ComboBox comboBox = getSelector();
 
         //EditorTextField name
@@ -54,12 +57,20 @@ public class ConfigurePackageTemplatesDialog extends ConfigureTemplatesDialog {
         // SeparatorComponent
 
         //EditorTextField root package
-            //rcm ->
-                //add package
-                //add file
-                //remove
+        //rcm ->
+        //add package
+        //add file
+        //remove
 
 //        root.add(comboBox);
+
+        ArrayList<TemplateView> listTemplateView = new ArrayList<>();
+        listTemplateView.add(new TemplateView("IvanClass", "Prost", "java", false, null));
+        listTemplateView.add(new TemplateView("IvanClass", "Slojn", "java", false, null));
+
+        TemplateView main = new TemplateView("IvanClass", "Prost", "java", true, listTemplateView);
+
+        root.add(main.buildView());
         return root;
     }
 
@@ -68,7 +79,7 @@ public class ConfigurePackageTemplatesDialog extends ConfigureTemplatesDialog {
         FileTemplateManager ftManager = FileTemplateManager.getDefaultInstance();
         FileTemplate[] fileTemplates = ftManager.getAllTemplates();
         ComboBox comboBox = new ComboBox(new String[]{"aaaaa", "bbbb", "cccc"});
-        comboBox.setMaximumSize(new Dimension(Integer.MAX_VALUE , comboBox.getPreferredSize().height));
+        comboBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, comboBox.getPreferredSize().height));
         ComboboxSpeedSearch speedSearch = new ComboboxSpeedSearch(comboBox);
         return comboBox;
     }

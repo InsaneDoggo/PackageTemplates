@@ -19,7 +19,7 @@ public class PackageTemplate {
         this.name = name;
         this.description = description;
 
-        root = new TemplateElement(true, "", templateVariableName, listTemplateElement, null);
+        root = new TemplateElement("", listTemplateElement, null);
     }
 
     public void replaceNameVariable(InputManager inputManager) {

@@ -1,6 +1,6 @@
 <idea-plugin version="2">
   <id>com.your.company.supaplugin</id>
-  <name>Megaplugin</name>
+  <defaultName>Megaplugin</defaultName>
   <version>1.0</version>
   <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 

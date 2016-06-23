@@ -21,20 +21,33 @@ public class TemplateElement {
     private boolean isDirectory;
     private String name;
     private String templateName;
+    private String extension;
     private ArrayList<TemplateElement> listTemplateElement;
 
     private TemplateElement parent;
     private HashMap<String, String> mapProperties;
 
-    public TemplateElement(boolean isDirectory, String name, String templateName, ArrayList<TemplateElement> listTemplateElement, TemplateElement parent) {
-        this.isDirectory = isDirectory;
+    // File
+    public TemplateElement(String name, String templateName, String extension, TemplateElement parent) {
+        this.isDirectory = false;
         this.parent = parent;
+        this.extension = extension;
         this.name = name;
         this.templateName = templateName;
-        this.listTemplateElement = listTemplateElement;
+    }
 
-        if (!isDirectory) {
-            mapProperties = new HashMap<>();
+    // Directory
+    public TemplateElement(String name, ArrayList<TemplateElement> listTemplateElement, TemplateElement parent) {
+        this.isDirectory = true;
+        this.parent = parent;
+        this.name = name;
+        this.listTemplateElement = listTemplateElement;
+        mapProperties = new HashMap<>();
+    }
+
+    public void add(TemplateElement element){
+        if( getListTemplateElement() != null ) {
+            getListTemplateElement().add(element);
         }
     }
 
