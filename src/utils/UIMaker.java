@@ -35,6 +35,7 @@ public class UIMaker {
 
     public static final int DEFAULT_PADDING = 0;
     public static final int PADDING = 20;
+    public static final int PADDING_LABEL = 8;
     public static final int DIALOG_MIN_WIDTH = 400;
 
     public static EditorTextField getEditorTextField(String defValue, Project project) {
@@ -96,6 +97,15 @@ public class UIMaker {
         ));
     }
 
+    public static void setRightPadding(JComponent component, int padding) {
+        component.setBorder(BorderFactory.createEmptyBorder(
+                DEFAULT_PADDING,
+                DEFAULT_PADDING,
+                DEFAULT_PADDING,
+                padding
+        ));
+    }
+
     public static JPanel getClassPanel(InputBlock inputBlock, int paddingScale) {
         return getDefaultPanel(inputBlock, paddingScale, AllIcons.Nodes.Class);
     }
@@ -128,65 +138,20 @@ public class UIMaker {
 
     public static JPanel getClassView(TemplateView templateView) {
         JPanel container = new JPanel(new GridBagLayout());
-        GridBag bag = getDefaultGridBag();
+        setLeftPadding(container, DEFAULT_PADDING);
 
         JLabel jLabel = new JLabel(getIconByFileExtension(templateView.getExtension()), SwingConstants.LEFT);
-        setLeftPadding(container, DEFAULT_PADDING);
         jLabel.setText(templateView.getTemplateName());
+        setRightPadding(jLabel, PADDING_LABEL);
 
         EditorTextField etfName = new EditorTextField("");
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        GridBag bag = getDefaultGridBag();
         container.add(jLabel, bag.nextLine().next());
         container.add(etfName, bag.next());
 
-        container.addMouseListener(new MouseEventHandler() {
-            @Override
-            protected void handle(MouseEvent event) {
-                if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isRightMouseButton(event)) {
-                    JPopupMenu popupMenu = new JBPopupMenu();
-
-                    JMenuItem itemAddFile = new JBMenuItem("Add file", AllIcons.FileTypes.Text);
-                    JMenuItem itemAddFolder = new JBMenuItem("Add folder", AllIcons.Nodes.Package);
-                    JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
-
-
-                    itemAddFile.addMouseListener(new MouseEventHandler() {
-                        @Override
-                        protected void handle(MouseEvent event) {
-                            if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
-                                // todo AddFile
-                                System.out.println("AddFile");
-                            }
-                        }
-                    });
-                    itemAddFolder.addMouseListener(new MouseEventHandler() {
-                        @Override
-                        protected void handle(MouseEvent event) {
-                            if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
-                                // todo AddFolder
-                                System.out.println("AddFolder");
-                            }
-                        }
-                    });
-                    itemDelete.addMouseListener(new MouseEventHandler() {
-                        @Override
-                        protected void handle(MouseEvent event) {
-                            if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
-                                templateView.removeMyself();
-                                templateView.reBuild();
-                                System.out.println("Delete");
-                            }
-                        }
-                    });
-
-                    popupMenu.add(itemAddFile);
-                    popupMenu.add(itemAddFolder);
-                    popupMenu.add(itemDelete);
-                    popupMenu.show(container, event.getX(), event.getY());
-                }
-            }
-        });
+        addMouseListener(templateView, container);
 
         return container;
     }
@@ -197,14 +162,21 @@ public class UIMaker {
 
         JLabel jLabel = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
         jLabel.setText("Directory");
-        EditorTextField etfName = new EditorTextField("");
+        setRightPadding(jLabel, PADDING_LABEL);
 
+        EditorTextField etfName = new EditorTextField("");
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         GridBag bag = getDefaultGridBag();
         container.add(jLabel, bag.nextLine().next());
         container.add(etfName, bag.next());
 
+        addMouseListener(templateView, container);
+
+        return container;
+    }
+
+    private static void addMouseListener(final TemplateView templateView, final JPanel container) {
         container.addMouseListener(new MouseEventHandler() {
             @Override
             protected void handle(MouseEvent event) {
@@ -218,11 +190,8 @@ public class UIMaker {
                     itemAddFile.addMouseListener(new MouseEventHandler() {
                         @Override
                         protected void handle(MouseEvent event) {
-                            if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
-                                TemplateView tView = new TemplateView("MegaClass", "Mega", "java", false, null, templateView);
-                                templateView.addTemplate(tView);
-                                templateView.reBuild();
-//                                templateView.add(tView.buildView(), templateView.getBag().nextLine().next());
+                            if (isLeftClick(event)) {
+                                AddFile(templateView);
                                 System.out.println("AddFile");
                             }
                         }
@@ -230,7 +199,8 @@ public class UIMaker {
                     itemAddDirectory.addMouseListener(new MouseEventHandler() {
                         @Override
                         protected void handle(MouseEvent event) {
-                            if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
+                            if (isLeftClick(event)) {
+                                addDirectory(templateView);
                                 System.out.println("AddFolder");
                             }
                         }
@@ -238,9 +208,8 @@ public class UIMaker {
                     itemDelete.addMouseListener(new MouseEventHandler() {
                         @Override
                         protected void handle(MouseEvent event) {
-                            if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
-                                templateView.removeMyself();
-                                templateView.reBuild();
+                            if (isLeftClick(event)) {
+                                deleteFile(templateView);
                                 System.out.println("Delete");
                             }
                         }
@@ -253,8 +222,39 @@ public class UIMaker {
                 }
             }
         });
+    }
 
-        return container;
+    private static boolean isLeftClick(MouseEvent event) {
+        return event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event);
+    }
+
+    private static void addDirectory(TemplateView templateView) {
+        //todo add dialog
+        TemplateView parent;
+        if (templateView.isDirectory()) {
+            parent = templateView;
+        } else {
+            parent = templateView.getTemplateParent();
+        }
+        templateView.addTemplate(new TemplateView("IvanDir", "Ivan", null, true, new ArrayList<>(), parent));
+        templateView.reBuild();
+    }
+
+    private static void deleteFile(TemplateView templateView) {
+        templateView.removeMyself();
+        templateView.reBuild();
+    }
+
+    private static void AddFile(TemplateView templateView) {
+        //todo add dialog
+        TemplateView parent;
+        if (templateView.isDirectory()) {
+            parent = templateView;
+        } else {
+            parent = templateView.getTemplateParent();
+        }
+        templateView.addTemplate(new TemplateView("MegaClass", "Mega", "java", false, null, parent));
+        templateView.reBuild();
     }
 
     private static Icon getIconByFileExtension(String extension) {

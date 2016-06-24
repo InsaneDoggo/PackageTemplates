@@ -35,6 +35,8 @@ public class TemplateView extends JPanel {
     }
 
     public TemplateView buildView() {
+        removeAll();
+
         setBag(getDefaultGridBag());
         getBag().setDefaultWeightX(1);
 
