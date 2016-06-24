@@ -136,7 +136,7 @@ public class UIMaker {
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
-    public static JPanel getClassView(TemplateView templateView) {
+    public static JPanel getClassView(TemplateView templateView, Project project) {
         JPanel container = new JPanel(new GridBagLayout());
         setLeftPadding(container, DEFAULT_PADDING);
 
@@ -151,12 +151,12 @@ public class UIMaker {
         container.add(jLabel, bag.nextLine().next());
         container.add(etfName, bag.next());
 
-        addMouseListener(templateView, container);
+        addMouseListener(templateView, container, project);
 
         return container;
     }
 
-    public static JPanel getPackageView(TemplateView templateView) {
+    public static JPanel getPackageView(TemplateView templateView, Project project) {
         JPanel container = new JPanel(new GridBagLayout());
         setLeftPadding(container, DEFAULT_PADDING);
 
@@ -171,12 +171,12 @@ public class UIMaker {
         container.add(jLabel, bag.nextLine().next());
         container.add(etfName, bag.next());
 
-        addMouseListener(templateView, container);
+        addMouseListener(templateView, container, project);
 
         return container;
     }
 
-    private static void addMouseListener(final TemplateView templateView, final JPanel container) {
+    private static void addMouseListener(final TemplateView templateView, final JPanel container, Project project) {
         container.addMouseListener(new MouseEventHandler() {
             @Override
             protected void handle(MouseEvent event) {

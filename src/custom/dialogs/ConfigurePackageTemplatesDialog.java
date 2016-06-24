@@ -72,7 +72,7 @@ public class ConfigurePackageTemplatesDialog extends ConfigureTemplatesDialog {
         main.getListTemplateView().add(new TemplateView("IvanClass", "Slojn", "java", false, null, main));
 
 
-        root.add(main.buildView());
+        root.add(main.buildView(getProject()));
         return root;
     }
 

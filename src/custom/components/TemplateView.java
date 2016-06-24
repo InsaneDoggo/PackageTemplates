@@ -1,5 +1,6 @@
 package custom.components;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.GridBag;
 import utils.UIMaker;
 
@@ -7,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static com.intellij.testFramework.LightPlatformTestCase.getProject;
 import static utils.UIMaker.getDefaultGridBag;
 
 /**
@@ -34,21 +36,21 @@ public class TemplateView extends JPanel {
         setLayout(new GridBagLayout());
     }
 
-    public TemplateView buildView() {
+    public TemplateView buildView(Project project) {
         removeAll();
 
         setBag(getDefaultGridBag());
         getBag().setDefaultWeightX(1);
 
         if (isDirectory()) {
-            add(UIMaker.getPackageView(this), getBag().nextLine().next());
+            add(UIMaker.getPackageView(this, project), getBag().nextLine().next());
 
             for (TemplateView templateView : getListTemplateView()) {
-                TemplateView view = templateView.buildView();
+                TemplateView view = templateView.buildView(project);
                 add(view, getBag().nextLine().next());
             }
         } else {
-            add(UIMaker.getClassView(this), getBag().nextLine().next());
+            add(UIMaker.getClassView(this, project), getBag().nextLine().next());
         }
 
         UIMaker.setLeftPadding(this, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);
@@ -114,7 +116,7 @@ public class TemplateView extends JPanel {
     public void reBuild() {
         if (getTemplateParent() == null) {
             removeAll();
-            buildView();
+            buildView(getProject());
         } else {
             getTemplateParent().reBuild();
         }

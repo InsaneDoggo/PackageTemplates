@@ -2,6 +2,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
 import custom.dialogs.ConfigurePackageTemplatesDialog;
+import custom.dialogs.SelectTemplateDialog;
 import models.PackageTemplate;
 import models.TemplateElement;
 import custom.dialogs.NewPackageDialog;
@@ -42,8 +43,16 @@ public class NewPackageTemplateAction extends AnAction {
 //        };
 //        dialog.show();
 
-        ConfigurePackageTemplatesDialog dialog1 = new ConfigurePackageTemplatesDialog(event);
-        dialog1.show();
+
+
+//        ConfigurePackageTemplatesDialog dialog1 = new ConfigurePackageTemplatesDialog(event);
+//        dialog1.show();
+
+
+
+        SelectTemplateDialog dialog = new SelectTemplateDialog(event.getProject());
+        dialog.show();
+
     }
 
     private void showDialog(AnActionEvent event, PackageTemplate packageTemplate) {
