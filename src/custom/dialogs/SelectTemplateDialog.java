@@ -8,22 +8,43 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.ListCellRendererWrapper;
-import custom.TemplateCellRender;
+import models.TemplateForSearch;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 import static com.intellij.ide.fileTemplates.FileTemplateManager.DEFAULT_TEMPLATES_CATEGORY;
 
 /**
  * Created by CeH9 on 24.06.2016.
  */
-public class SelectTemplateDialog extends DialogWrapper {
+public abstract class SelectTemplateDialog extends DialogWrapper {
+
+    private ComboBox comboBox;
+
+    public abstract void onSuccess(FileTemplate fileTemplate);
+    public abstract void onCancel();
 
     public SelectTemplateDialog(Project project) {
         super(project);
         init();
+        setTitle("Select File Template");
+    }
+
+    @Override
+    public void show() {
+        super.show();
+
+        switch (getExitCode()) {
+            case NewPackageDialog.OK_EXIT_CODE:
+                onSuccess(((TemplateForSearch) comboBox.getSelectedItem()).getTemplate());
+                break;
+            case NewPackageDialog.CANCEL_EXIT_CODE:
+                onCancel();
+                break;
+        }
     }
 
     @Override
@@ -33,7 +54,7 @@ public class SelectTemplateDialog extends DialogWrapper {
         root.setAlignmentY(Component.TOP_ALIGNMENT);
         //todo filters
 
-        ComboBox comboBox = getSelector();
+        comboBox = getSelector();
 
         root.add(comboBox);
         return root;
@@ -42,24 +63,25 @@ public class SelectTemplateDialog extends DialogWrapper {
 
     @NotNull
     private ComboBox getSelector() {
-        FileTemplateManager ftManager = FileTemplateManager.getDefaultInstance();
-        FileTemplate[] fileTemplates = ftManager.getTemplates(DEFAULT_TEMPLATES_CATEGORY);
+        FileTemplate[] fileTemplates = FileTemplateManager.getDefaultInstance().getTemplates(DEFAULT_TEMPLATES_CATEGORY);
 
-        ComboBox comboBox = new ComboBox(fileTemplates);
-        comboBox.setRenderer(new ListCellRendererWrapper<FileTemplate>() {
+        ArrayList<TemplateForSearch> listTemplateForSearch = new ArrayList<>(fileTemplates.length);
+        for( FileTemplate template : fileTemplates ){
+            listTemplateForSearch.add(new TemplateForSearch(template));
+        }
+
+        ComboBox comboBox = new ComboBox(listTemplateForSearch.toArray());
+        comboBox.setRenderer(new ListCellRendererWrapper<TemplateForSearch>() {
             @Override
-            public void customize(JList list, FileTemplate fileTemplate, int index, boolean selected, boolean hasFocus) {
-                if (fileTemplate != null) {
-                    setIcon(FileTemplateUtil.getIcon(fileTemplate));
-                    setText(fileTemplate.getName());
+            public void customize(JList list, TemplateForSearch template, int index, boolean selected, boolean hasFocus) {
+                if (template != null) {
+                    setIcon(FileTemplateUtil.getIcon(template.getTemplate()));
+                    setText(template.getTemplate().getName());
                 }
             }
         });
 
-
-//        comboBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, comboBox.getPreferredSize().height));
-//        ComboboxSpeedSearch speedSearch = new ComboboxSpeedSearch(comboBox);
-
+        new ComboboxSpeedSearch(comboBox);
         return comboBox;
     }
 }

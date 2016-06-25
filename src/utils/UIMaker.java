@@ -3,6 +3,7 @@ package utils;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.codeInsight.template.impl.TemplateColors;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -18,6 +19,7 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.MouseEventHandler;
 import custom.components.TemplateView;
+import custom.dialogs.SelectTemplateDialog;
 import models.InputBlock;
 import models.TextRange;
 import org.jetbrains.annotations.NotNull;
@@ -191,7 +193,7 @@ public class UIMaker {
                         @Override
                         protected void handle(MouseEvent event) {
                             if (isLeftClick(event)) {
-                                AddFile(templateView);
+                                AddFile(templateView, project);
                                 System.out.println("AddFile");
                             }
                         }
@@ -200,7 +202,7 @@ public class UIMaker {
                         @Override
                         protected void handle(MouseEvent event) {
                             if (isLeftClick(event)) {
-                                addDirectory(templateView);
+                                addDirectory(templateView, project);
                                 System.out.println("AddFolder");
                             }
                         }
@@ -228,15 +230,14 @@ public class UIMaker {
         return event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event);
     }
 
-    private static void addDirectory(TemplateView templateView) {
-        //todo add dialog
+    private static void addDirectory(TemplateView templateView, Project project) {
         TemplateView parent;
         if (templateView.isDirectory()) {
             parent = templateView;
         } else {
             parent = templateView.getTemplateParent();
         }
-        templateView.addTemplate(new TemplateView("IvanDir", "Ivan", null, true, new ArrayList<>(), parent));
+        templateView.addTemplate(new TemplateView("Unnamed", parent));
         templateView.reBuild();
     }
 
@@ -245,16 +246,26 @@ public class UIMaker {
         templateView.reBuild();
     }
 
-    private static void AddFile(TemplateView templateView) {
-        //todo add dialog
-        TemplateView parent;
-        if (templateView.isDirectory()) {
-            parent = templateView;
-        } else {
-            parent = templateView.getTemplateParent();
-        }
-        templateView.addTemplate(new TemplateView("MegaClass", "Mega", "java", false, null, parent));
-        templateView.reBuild();
+    private static void AddFile(TemplateView templateView, Project project) {
+        SelectTemplateDialog dialog = new SelectTemplateDialog(project) {
+            @Override
+            public void onSuccess(FileTemplate fileTemplate) {
+                TemplateView parent;
+                if (templateView.isDirectory()) {
+                    parent = templateView;
+                } else {
+                    parent = templateView.getTemplateParent();
+                }
+                templateView.addTemplate(new TemplateView("Unnamed", fileTemplate.getName(), fileTemplate.getExtension(), parent));
+                templateView.reBuild();
+            }
+
+            @Override
+            public void onCancel() {
+                System.out.println("onCancel");
+            }
+        };
+        dialog.show();
     }
 
     private static Icon getIconByFileExtension(String extension) {

@@ -1,3 +1,4 @@
+import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
@@ -37,21 +38,31 @@ public class NewPackageTemplateAction extends AnAction {
 
 //        TemplateManagerDialog dialog = new TemplateManagerDialog(event, "Package Teplate Editor") {
 //            @Override
-//            public void onFinish(String result) {
-//                System.out.println("TemplateManagerDialog onFinish");
+//            public void onSuccess(String result) {
+//                System.out.println("TemplateManagerDialog onSuccess");
 //            }
 //        };
 //        dialog.show();
 
 
 
-//        ConfigurePackageTemplatesDialog dialog1 = new ConfigurePackageTemplatesDialog(event);
-//        dialog1.show();
-
-
-
-        SelectTemplateDialog dialog = new SelectTemplateDialog(event.getProject());
+        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event);
         dialog.show();
+
+
+
+//        SelectTemplateDialog dialog = new SelectTemplateDialog(event.getProject()) {
+//            @Override
+//            public void onSuccess(FileTemplate fileTemplate) {
+//                System.out.println("fileTemplate " + fileTemplate.getName());
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                System.out.println("onCancel");
+//            }
+//        };
+//        dialog.show();
 
     }
 
@@ -67,7 +78,7 @@ public class NewPackageTemplateAction extends AnAction {
             public void onFinish(String result) {
                 //StringTools.replaceNameVariable(packageTemplate, "Ivan");
                 createFiles(event, packageTemplate);
-                Logger.log("onFinish " + result);
+                Logger.log("onSuccess " + result);
             }
         };
         dialog.updateHighlight();

@@ -45,7 +45,6 @@ public class ConfigurePackageTemplatesDialog extends ConfigureTemplatesDialog {
         root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
 
         root.setAlignmentY(Component.TOP_ALIGNMENT);
-        ComboBox comboBox = getSelector();
 
         //EditorTextField name
         //EditorTextField description
@@ -57,32 +56,15 @@ public class ConfigurePackageTemplatesDialog extends ConfigureTemplatesDialog {
 
         // SeparatorComponent
 
-        //EditorTextField root package
-        //rcm ->
-        //add package
-        //add file
-        //remove
 
-//        root.add(comboBox);
+        TemplateView main = new TemplateView("IvanClass", null);
 
-
-        TemplateView main = new TemplateView("IvanClass", "Prost", "java", true, new ArrayList<>(), null);
-
-        main.getListTemplateView().add(new TemplateView("IvanClass", "Prost", "java", false, null, main));
-        main.getListTemplateView().add(new TemplateView("IvanClass", "Slojn", "java", false, null, main));
+        main.getListTemplateView().add(new TemplateView("IvanClass", "Prost", "java", main));
+        main.getListTemplateView().add(new TemplateView("IvanClass", "Slojn", "java", main));
 
 
         root.add(main.buildView(getProject()));
         return root;
     }
 
-    @NotNull
-    private ComboBox getSelector() {
-        FileTemplateManager ftManager = FileTemplateManager.getDefaultInstance();
-        FileTemplate[] fileTemplates = ftManager.getAllTemplates();
-        ComboBox comboBox = new ComboBox(new String[]{"aaaaa", "bbbb", "cccc"});
-        comboBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, comboBox.getPreferredSize().height));
-        ComboboxSpeedSearch speedSearch = new ComboboxSpeedSearch(comboBox);
-        return comboBox;
-    }
 }

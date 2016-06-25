@@ -9,6 +9,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import static com.intellij.testFramework.LightPlatformTestCase.getProject;
+import static com.intellij.ui.content.ContentManagerEvent.ContentOperation.add;
+import static javafx.scene.input.KeyCode.T;
 import static utils.UIMaker.getDefaultGridBag;
 
 /**
@@ -25,13 +27,21 @@ public class TemplateView extends JPanel {
     private GridBag bag;
     private TemplateView templateParent;
 
-    public TemplateView(String defaultName, String templateName, String extension, boolean isDirectory, ArrayList<TemplateView> listTemplateView, TemplateView templateParent) {
+    public TemplateView(String defaultName, String templateName, String extension, TemplateView templateParent) {
         this.defaultName = defaultName;
         this.templateParent = templateParent;
         this.templateName = templateName;
         this.extension = extension;
-        this.isDirectory = isDirectory;
-        this.listTemplateView = listTemplateView;
+        this.isDirectory = false;
+
+        setLayout(new GridBagLayout());
+    }
+
+    public TemplateView(String defaultName, TemplateView templateParent) {
+        this.defaultName = defaultName;
+        this.templateParent = templateParent;
+        this.isDirectory = true;
+        this.listTemplateView = new ArrayList<>();
 
         setLayout(new GridBagLayout());
     }
