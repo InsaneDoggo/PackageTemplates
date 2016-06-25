@@ -11,8 +11,6 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import static com.intellij.testFramework.LightPlatformTestCase.getProject;
-import static com.intellij.ui.content.ContentManagerEvent.ContentOperation.add;
-import static javafx.scene.input.KeyCode.T;
 import static utils.UIMaker.getDefaultGridBag;
 
 /**
@@ -20,7 +18,7 @@ import static utils.UIMaker.getDefaultGridBag;
  */
 public class TemplateView extends JPanel {
 
-    private String defaultName;
+    private String predefinedName;
     private String extension;
     private String templateName;
     private boolean isDirectory;
@@ -32,8 +30,8 @@ public class TemplateView extends JPanel {
     private EditorTextField etfName;
     private JLabel jlName;
 
-    public TemplateView(String defaultName, String templateName, String extension, TemplateView templateParent) {
-        this.defaultName = defaultName;
+    public TemplateView(String predefinedName, String templateName, String extension, TemplateView templateParent) {
+        this.predefinedName = predefinedName;
         this.templateParent = templateParent;
         this.templateName = templateName;
         this.extension = extension;
@@ -42,8 +40,8 @@ public class TemplateView extends JPanel {
         setLayout(new GridBagLayout());
     }
 
-    public TemplateView(String defaultName, TemplateView templateParent) {
-        this.defaultName = defaultName;
+    public TemplateView(String predefinedName, TemplateView templateParent) {
+        this.predefinedName = predefinedName;
         this.templateParent = templateParent;
         this.isDirectory = true;
         this.listTemplateView = new ArrayList<>();
@@ -88,12 +86,12 @@ public class TemplateView extends JPanel {
         this.bag = bag;
     }
 
-    public String getDefaultName() {
-        return defaultName;
+    public String getPredefinedName() {
+        return predefinedName;
     }
 
-    public void setDefaultName(String defaultName) {
-        this.defaultName = defaultName;
+    public void setPredefinedName(String predefinedName) {
+        this.predefinedName = predefinedName;
     }
 
     public String getExtension() {
@@ -179,9 +177,22 @@ public class TemplateView extends JPanel {
             }
 
         } else {
-            result = new TemplateElement(getName(), getTemplateName(), getExtension(), parent);
+            result = new TemplateElement(getPredefinedName(), getTemplateName(), getExtension(), parent);
         }
 
         return result;
+    }
+
+    public void collectDataFromFields() {
+        if(isDirectory()){
+            setPredefinedName(getEtfName().getText());
+
+            for (TemplateView templateView : getListTemplateView()){
+                templateView.collectDataFromFields();
+            }
+        } else {
+            setPredefinedName(getEtfName().getText());
+            setTemplateName(getJlName().getText());
+        }
     }
 }

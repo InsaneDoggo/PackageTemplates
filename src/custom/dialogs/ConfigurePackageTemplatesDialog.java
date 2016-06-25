@@ -76,12 +76,12 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         TemplateView main = new TemplateView("IvanClass", null);
         templateContainer = new TemplateContainer("", "", main);
 
-        templateContainer.addVariable(new VariableView(StringTools.PACKAGE_TEMPLATE_NAME, "main"));
+        templateContainer.addVariable(new VariableView(StringTools.PACKAGE_TEMPLATE_NAME, ""));
 //        for (int i = 0; i < 5; i++) {
 //            templateContainer.addVariable(new VariableView("key_"+i, ""));
 //        }
 
-        main.getListTemplateView().add(new TemplateView("IvanClass", "Prost", "java", main));
+//        main.getListTemplateView().add(new TemplateView("IvanClass", "Prost", "java", main));
     }
 
     private JComponent getPackageBuilderComponent() {

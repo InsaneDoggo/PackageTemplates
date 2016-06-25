@@ -24,6 +24,8 @@ import static utils.UIMaker.setRightPadding;
 public class VariableView extends JPanel {
     private String key;
     private String value;
+    private EditorTextField tfKey;
+    private EditorTextField tfValue;
 
     public VariableView(String key, String value) {
         this.key = key;
@@ -48,11 +50,14 @@ public class VariableView extends JPanel {
 
     public void buildView(TemplateContainer templateContainer, JPanel container, GridBag bag){
         JLabel label = new JLabel(AllIcons.Nodes.Variable, SwingConstants.LEFT);
-        label.setText(key);
+
+        tfKey = new EditorTextField(key);
+        tfKey.setAlignmentX(Component.LEFT_ALIGNMENT);
+        setRightPadding(label, PADDING_LABEL);
         setRightPadding(label, PADDING_LABEL);
 
-        EditorTextField textField = new EditorTextField(value);
-        textField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        tfValue = new EditorTextField(value);
+        tfValue.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         label.addMouseListener(new MouseEventHandler() {
             @Override
@@ -90,21 +95,30 @@ public class VariableView extends JPanel {
         });
 
         container.add(label, bag.nextLine().next());
-        container.add(textField, bag.next());
+        container.add(tfKey, bag.next());
+        container.add(tfValue, bag.next());
     }
 
     private void deleteVariable(TemplateContainer templateContainer) {
-        if( getKey().endsWith(StringTools.PACKAGE_TEMPLATE_NAME) ){
+        if( getKey().equals(StringTools.PACKAGE_TEMPLATE_NAME) ){
             // TODO: 25.06.2016  error can't delete NAME var
             Logger.log("can't delete NAME var");
             return;
         }
         templateContainer.getListVariableView().remove(this);
+        templateContainer.collectDataFromFields();
         templateContainer.rebuildView();
     }
 
     private void addVariable(TemplateContainer templateContainer) {
+        templateContainer.collectDataFromFields();
+
         templateContainer.addVariable(new VariableView("UNNAMED_VARIABLE", ""));
         templateContainer.rebuildView();
+    }
+
+    public void collectDataFromFields() {
+        setKey(tfKey.getText());
+        setValue(tfValue.getText());
     }
 }

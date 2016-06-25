@@ -139,24 +139,33 @@ public class UIMaker {
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
+    @NotNull
+    public static GridBag getDefaultGridBagForGlobals() {
+        return new GridBag()
+                .setDefaultWeightX(1, 1)
+                .setDefaultWeightX(2, 1)
+                .setDefaultInsets(new Insets(4, 0, 4, 0))
+                .setDefaultFill(GridBagConstraints.HORIZONTAL);
+    }
+
     public static JPanel getClassView(TemplateView templateView, Project project) {
         JPanel container = new JPanel(new GridBagLayout());
         setLeftPadding(container, DEFAULT_PADDING);
 
         JLabel jLabel = new JLabel(getIconByFileExtension(templateView.getExtension()), SwingConstants.LEFT);
+        templateView.setJlName(jLabel);
         jLabel.setText(templateView.getTemplateName());
         setRightPadding(jLabel, PADDING_LABEL);
 
-        EditorTextField etfName = getEditorTextField("", project);
+        EditorTextField etfName = getEditorTextField(templateView.getPredefinedName(), project);
+        templateView.setEtfName(etfName);
+
 
         GridBag bag = getDefaultGridBag();
         container.add(jLabel, bag.nextLine().next());
         container.add(etfName, bag.next());
 
         addMouseListener(templateView, container, project);
-
-        templateView.setJlName(jLabel);
-        templateView.setEtfName(etfName);
 
         return container;
     }
@@ -166,10 +175,12 @@ public class UIMaker {
         setLeftPadding(container, DEFAULT_PADDING);
 
         JLabel jLabel = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
+        templateView.setJlName(jLabel);
         jLabel.setText("Directory");
         setRightPadding(jLabel, PADDING_LABEL);
 
-        EditorTextField etfName = getEditorTextField("", project);
+        EditorTextField etfName = getEditorTextField(templateView.getPredefinedName(), project);
+        templateView.setEtfName(etfName);
 
         GridBag bag = getDefaultGridBag();
         container.add(jLabel, bag.nextLine().next());
@@ -177,8 +188,6 @@ public class UIMaker {
 
         addMouseListener(templateView, container, project);
 
-        templateView.setJlName(jLabel);
-//        templateView.setEtfName(etfName);
 
         return container;
     }
@@ -236,6 +245,8 @@ public class UIMaker {
     }
 
     private static void addDirectory(TemplateView templateView, Project project) {
+        templateView.collectDataFromFields();
+
         TemplateView parent;
         if (templateView.isDirectory()) {
             parent = templateView;
@@ -248,6 +259,8 @@ public class UIMaker {
 
     public static void deleteFile(TemplateView templateView) {
         templateView.removeMyself();
+
+        templateView.collectDataFromFields();
         templateView.reBuild();
     }
 
@@ -255,6 +268,8 @@ public class UIMaker {
         SelectTemplateDialog dialog = new SelectTemplateDialog(project) {
             @Override
             public void onSuccess(FileTemplate fileTemplate) {
+                templateView.collectDataFromFields();
+
                 TemplateView parent;
                 if (templateView.isDirectory()) {
                     parent = templateView;

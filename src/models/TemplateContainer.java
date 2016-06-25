@@ -73,11 +73,11 @@ public class TemplateContainer {
     public JPanel buildView() {
         if (container == null) {
             container = new JPanel(new GridBagLayout());
-            bag = UIMaker.getDefaultGridBag();
+            bag = UIMaker.getDefaultGridBagForGlobals();
         }
 
         JLabel label = new JLabel("Global Variables", JLabel.CENTER);
-        container.add(label, new GridBag().nextLine().next().fillCellHorizontally().coverLine(2));
+        container.add(label, new GridBag().nextLine().next().fillCellHorizontally().coverLine(3));
         bag.nextLine();
 
         for (VariableView variableView : listVariableView) {
@@ -97,6 +97,10 @@ public class TemplateContainer {
     }
 
     public void collectDataFromFields() {
+        getTemplateView().collectDataFromFields();
 
+        for (VariableView variableView : getListVariableView()) {
+            variableView.collectDataFromFields();
+        }
     }
 }
