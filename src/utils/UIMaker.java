@@ -42,7 +42,7 @@ public class UIMaker {
     public static final int DIALOG_MIN_WIDTH = 400;
 
     public static EditorTextField getEditorTextField(String defValue, Project project) {
-        EditorTextField etfName = new EditorTextField("Test");
+        EditorTextField etfName = new EditorTextField();
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         etfName.addSettingsProvider(new EditorSettingsProvider() {
@@ -147,14 +147,16 @@ public class UIMaker {
         jLabel.setText(templateView.getTemplateName());
         setRightPadding(jLabel, PADDING_LABEL);
 
-        EditorTextField etfName = new EditorTextField("");
-        etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
+        EditorTextField etfName = getEditorTextField("", project);
 
         GridBag bag = getDefaultGridBag();
         container.add(jLabel, bag.nextLine().next());
         container.add(etfName, bag.next());
 
         addMouseListener(templateView, container, project);
+
+        templateView.setJlName(jLabel);
+        templateView.setEtfName(etfName);
 
         return container;
     }
@@ -167,14 +169,16 @@ public class UIMaker {
         jLabel.setText("Directory");
         setRightPadding(jLabel, PADDING_LABEL);
 
-        EditorTextField etfName = new EditorTextField("");
-        etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
+        EditorTextField etfName = getEditorTextField("", project);
 
         GridBag bag = getDefaultGridBag();
         container.add(jLabel, bag.nextLine().next());
         container.add(etfName, bag.next());
 
         addMouseListener(templateView, container, project);
+
+        templateView.setJlName(jLabel);
+//        templateView.setEtfName(etfName);
 
         return container;
     }

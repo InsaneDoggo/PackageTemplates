@@ -46,7 +46,17 @@ public class NewPackageTemplateAction extends AnAction {
 
 
 
-        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event);
+        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event) {
+            @Override
+            public void onSuccess(PackageTemplate packageTemplate) {
+                System.out.println("onSuccess");
+            }
+
+            @Override
+            public void onCancel() {
+                System.out.println("onCancel");
+            }
+        };
         dialog.show();
 
 

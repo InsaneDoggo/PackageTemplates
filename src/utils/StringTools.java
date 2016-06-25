@@ -14,7 +14,7 @@ import static java.awt.SystemColor.text;
  */
 public class StringTools {
 
-    public static final String PACKAGE_TEMPLATE_NAME = "${PACKAGE_TEMPLATE_NAME}";
+    public static final String PACKAGE_TEMPLATE_NAME = "PACKAGE_TEMPLATE_NAME";
     public static final String PATTERN_ATTRIBUTE = ".*\\$\\{([_a-zA-Z0-9]*)\\}.*";
     public static final String EMPTY_NAME = "EMPTY_NAME";
 

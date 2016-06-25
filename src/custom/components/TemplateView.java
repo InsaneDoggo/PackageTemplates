@@ -1,7 +1,9 @@
 package custom.components;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
+import models.TemplateElement;
 import utils.UIMaker;
 
 import javax.swing.*;
@@ -26,6 +28,9 @@ public class TemplateView extends JPanel {
 
     private GridBag bag;
     private TemplateView templateParent;
+
+    private EditorTextField etfName;
+    private JLabel jlName;
 
     public TemplateView(String defaultName, String templateName, String extension, TemplateView templateParent) {
         this.defaultName = defaultName;
@@ -123,6 +128,22 @@ public class TemplateView extends JPanel {
         this.listTemplateView = listTemplateView;
     }
 
+    public EditorTextField getEtfName() {
+        return etfName;
+    }
+
+    public void setEtfName(EditorTextField etfName) {
+        this.etfName = etfName;
+    }
+
+    public JLabel getJlName() {
+        return jlName;
+    }
+
+    public void setJlName(JLabel jlName) {
+        this.jlName = jlName;
+    }
+
     public void reBuild() {
         if (getTemplateParent() == null) {
             removeAll();
@@ -141,10 +162,26 @@ public class TemplateView extends JPanel {
     }
 
     public void removeMyself() {
-        if(getTemplateParent() == null){
+        if (getTemplateParent() == null) {
             return;
         } else {
             getTemplateParent().getListTemplateView().remove(this);
         }
+    }
+
+    public TemplateElement toTemplateElement(TemplateElement parent) {
+        TemplateElement result;
+        if (isDirectory()) {
+            result = new TemplateElement(getName(), new ArrayList<>(), parent);
+
+            for (TemplateView templateView : getListTemplateView()) {
+                result.add(templateView.toTemplateElement(result));
+            }
+
+        } else {
+            result = new TemplateElement(getName(), getTemplateName(), getExtension(), parent);
+        }
+
+        return result;
     }
 }

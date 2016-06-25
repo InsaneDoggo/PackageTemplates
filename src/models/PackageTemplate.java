@@ -22,6 +22,11 @@ public class PackageTemplate {
 
         root = new TemplateElement("", listTemplateElement, null);
     }
+    public PackageTemplate(String name, String templateVariableName, String description, TemplateElement root) {
+        this.name = name;
+        this.description = description;
+        this.root = root;
+    }
 
     public void replaceNameVariable(InputManager inputManager) {
         if (getListTemplateElement() == null) {

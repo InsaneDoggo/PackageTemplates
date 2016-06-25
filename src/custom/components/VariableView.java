@@ -7,6 +7,7 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.MouseEventHandler;
 import models.TemplateContainer;
+import utils.Logger;
 import utils.StringTools;
 import utils.UIMaker;
 
@@ -59,7 +60,7 @@ public class VariableView extends JPanel {
                 if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isRightMouseButton(event)) {
                     JPopupMenu popupMenu = new JBPopupMenu();
 
-                    JMenuItem itemAddVariable = new JBMenuItem("Add Variable", AllIcons.Nodes.Package);
+                    JMenuItem itemAddVariable = new JBMenuItem("Add Variable", AllIcons.Nodes.Variable);
                     JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
 
                     itemAddVariable.addMouseListener(new MouseEventHandler() {
@@ -93,6 +94,11 @@ public class VariableView extends JPanel {
     }
 
     private void deleteVariable(TemplateContainer templateContainer) {
+        if( getKey().endsWith(StringTools.PACKAGE_TEMPLATE_NAME) ){
+            // TODO: 25.06.2016  error can't delete NAME var
+            Logger.log("can't delete NAME var");
+            return;
+        }
         templateContainer.getListVariableView().remove(this);
         templateContainer.rebuildView();
     }

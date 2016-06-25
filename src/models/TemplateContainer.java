@@ -76,14 +76,27 @@ public class TemplateContainer {
             bag = UIMaker.getDefaultGridBag();
         }
 
-        for (VariableView variableView : listVariableView){
+        JLabel label = new JLabel("Global Variables", JLabel.CENTER);
+        container.add(label, new GridBag().nextLine().next().fillCellHorizontally().coverLine(2));
+        bag.nextLine();
 
+        for (VariableView variableView : listVariableView) {
+            variableView.buildView(this, container, bag);
         }
 
         return container;
     }
 
     public void rebuildView() {
-        //todo rebuild
+        if (container != null) {
+            container.removeAll();
+            bag = UIMaker.getDefaultGridBag();
+        }
+
+        buildView();
+    }
+
+    public void collectDataFromFields() {
+
     }
 }
