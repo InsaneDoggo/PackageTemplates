@@ -3,6 +3,7 @@ package models;
 import utils.InputManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Arsen on 15.06.2016.
@@ -29,6 +30,18 @@ public class PackageTemplate {
         for (TemplateElement element : getListTemplateElement()) {
             element.replaceNameVariable(inputManager.getMapGlobalProperties());
         }
+    }
+
+    public static String getAttributePackageTemplateName() {
+        return ATTRIBUTE_PACKAGE_TEMPLATE_NAME;
+    }
+
+    public TemplateElement getRoot() {
+        return root;
+    }
+
+    public void setRoot(TemplateElement root) {
+        this.root = root;
     }
 
     public String getTemplateVariableName() {

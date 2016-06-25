@@ -21,6 +21,7 @@ import com.intellij.util.ui.MouseEventHandler;
 import custom.components.TemplateView;
 import custom.dialogs.SelectTemplateDialog;
 import models.InputBlock;
+import models.TemplateContainer;
 import models.TextRange;
 import org.jetbrains.annotations.NotNull;
 
@@ -185,8 +186,8 @@ public class UIMaker {
                 if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isRightMouseButton(event)) {
                     JPopupMenu popupMenu = new JBPopupMenu();
 
-                    JMenuItem itemAddFile = new JBMenuItem("Add file", AllIcons.FileTypes.Text);
-                    JMenuItem itemAddDirectory = new JBMenuItem("Add directory", AllIcons.Nodes.Package);
+                    JMenuItem itemAddFile = new JBMenuItem("Add File", AllIcons.FileTypes.Text);
+                    JMenuItem itemAddDirectory = new JBMenuItem("Add Directory", AllIcons.Nodes.Package);
                     JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
 
                     itemAddFile.addMouseListener(new MouseEventHandler() {
@@ -226,7 +227,7 @@ public class UIMaker {
         });
     }
 
-    private static boolean isLeftClick(MouseEvent event) {
+    public static boolean isLeftClick(MouseEvent event) {
         return event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event);
     }
 
@@ -241,12 +242,12 @@ public class UIMaker {
         templateView.reBuild();
     }
 
-    private static void deleteFile(TemplateView templateView) {
+    public static void deleteFile(TemplateView templateView) {
         templateView.removeMyself();
         templateView.reBuild();
     }
 
-    private static void AddFile(TemplateView templateView, Project project) {
+    public static void AddFile(TemplateView templateView, Project project) {
         SelectTemplateDialog dialog = new SelectTemplateDialog(project) {
             @Override
             public void onSuccess(FileTemplate fileTemplate) {
@@ -268,7 +269,7 @@ public class UIMaker {
         dialog.show();
     }
 
-    private static Icon getIconByFileExtension(String extension) {
+    public static Icon getIconByFileExtension(String extension) {
         return FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon();
     }
 
