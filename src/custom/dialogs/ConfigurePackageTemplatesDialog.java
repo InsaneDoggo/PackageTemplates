@@ -1,21 +1,29 @@
 package custom.dialogs;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.Project;
+import com.intellij.ui.EditorTextField;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.util.ui.GridBag;
 import custom.components.TemplateView;
 import custom.components.VariableView;
 import models.PackageTemplate;
 import models.TemplateContainer;
 import models.TemplateElement;
+import org.jetbrains.annotations.NotNull;
 import utils.StringTools;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.ArrayList;
+
+import static java.io.File.separator;
+import static utils.UIMaker.*;
 
 /**
  * Created by CeH9 on 22.06.2016.
@@ -90,16 +98,31 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
         root.setAlignmentY(JPanel.TOP_ALIGNMENT);
 
-        SeparatorComponent separator = new SeparatorComponent(10);
-
+        root.add(getTemplateNameComponent());
+        root.add(new SeparatorComponent(10));
         root.add(templateContainer.buildView());
-        root.add(separator);
-//        root.add(Box.createRigidArea(new Dimension(0,10)));
+        root.add(new SeparatorComponent(10));
         root.add(templateContainer.getTemplateView().buildView(getProject()));
 
         root.setBorder(new EmptyBorder(8,8,8,8));
-        scrollPane.setMinimumSize(new Dimension(400,300));
+        scrollPane.setMinimumSize(new Dimension(300, 150));
         return scrollPane;
+    }
+
+    private Component getTemplateNameComponent() {
+        JPanel container = new JPanel(new GridBagLayout());
+        setLeftPadding(container, DEFAULT_PADDING);
+
+        JLabel jLabel = new JLabel("Template Name");
+        setRightPadding(jLabel, PADDING_LABEL);
+
+        templateContainer.setEtfTemplateName(getEditorTextField("", getProject()));
+
+        GridBag bag = getDefaultGridBag();
+        container.add(jLabel, bag.nextLine().next());
+        container.add(templateContainer.getEtfTemplateName(), bag.next());
+
+        return container;
     }
 
 }

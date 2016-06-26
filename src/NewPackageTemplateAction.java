@@ -91,7 +91,7 @@ public class NewPackageTemplateAction extends AnAction {
                 Logger.log("onSuccess " + result);
             }
         };
-        dialog.updateHighlight();
+//        dialog.updateHighlight();
         dialog.show();
     }
 

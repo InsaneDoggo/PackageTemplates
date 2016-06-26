@@ -1,5 +1,6 @@
 package models;
 
+import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import custom.components.TemplateView;
 import custom.components.VariableView;
@@ -20,12 +21,21 @@ public class TemplateContainer {
 
     private GridBag bag;
     private JPanel container;
+    private EditorTextField etfTemplateName;
 
     public TemplateContainer(String name, String description, TemplateView templateView) {
         this.name = name;
         this.description = description;
         this.templateView = templateView;
         this.listVariableView = new ArrayList<>();
+    }
+
+    public EditorTextField getEtfTemplateName() {
+        return etfTemplateName;
+    }
+
+    public void setEtfTemplateName(EditorTextField etfTemplateName) {
+        this.etfTemplateName = etfTemplateName;
     }
 
     public String getName() {
@@ -77,8 +87,7 @@ public class TemplateContainer {
         }
 
         JLabel label = new JLabel("Global Variables", JLabel.CENTER);
-        container.add(label, new GridBag().nextLine().next().fillCellHorizontally().coverLine(3));
-        bag.nextLine();
+        container.add(label, bag.nextLine().next().fillCellHorizontally().coverLine(3));
 
         for (VariableView variableView : listVariableView) {
             variableView.buildView(this, container, bag);
@@ -90,13 +99,15 @@ public class TemplateContainer {
     public void rebuildView() {
         if (container != null) {
             container.removeAll();
-            bag = UIMaker.getDefaultGridBag();
+            bag = UIMaker.getDefaultGridBagForGlobals();
         }
 
         buildView();
     }
 
     public void collectDataFromFields() {
+        setName(getEtfTemplateName().getText());
+
         getTemplateView().collectDataFromFields();
 
         for (VariableView variableView : getListVariableView()) {

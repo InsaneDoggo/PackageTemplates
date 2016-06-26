@@ -16,7 +16,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 import static utils.UIMaker.PADDING_LABEL;
-import static utils.UIMaker.setRightPadding;
 
 /**
  * Created by CeH9 on 25.06.2016.
@@ -48,13 +47,13 @@ public class VariableView extends JPanel {
         this.value = value;
     }
 
-    public void buildView(TemplateContainer templateContainer, JPanel container, GridBag bag){
+    public void buildView(TemplateContainer templateContainer, JPanel container, GridBag bag) {
         JLabel label = new JLabel(AllIcons.Nodes.Variable, SwingConstants.LEFT);
 
         tfKey = new EditorTextField(key);
         tfKey.setAlignmentX(Component.LEFT_ALIGNMENT);
-        setRightPadding(label, PADDING_LABEL);
-        setRightPadding(label, PADDING_LABEL);
+        UIMaker.setRightPadding(tfKey, PADDING_LABEL);
+        UIMaker.setLeftPadding(tfKey, PADDING_LABEL);
 
         tfValue = new EditorTextField(value);
         tfValue.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -94,13 +93,16 @@ public class VariableView extends JPanel {
             }
         });
 
+        tfKey.setPreferredWidth(0);
+        tfValue.setPreferredWidth(0);
+
         container.add(label, bag.nextLine().next());
         container.add(tfKey, bag.next());
         container.add(tfValue, bag.next());
     }
 
     private void deleteVariable(TemplateContainer templateContainer) {
-        if( getKey().equals(StringTools.PACKAGE_TEMPLATE_NAME) ){
+        if (getKey().equals(StringTools.PACKAGE_TEMPLATE_NAME)) {
             // TODO: 25.06.2016  error can't delete NAME var
             Logger.log("can't delete NAME var");
             return;

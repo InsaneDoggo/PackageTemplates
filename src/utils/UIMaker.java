@@ -74,6 +74,10 @@ public class UIMaker {
     }
 
     public static void applyHighlightRange(String text, Project project, Editor editor) {
+        if( project==null ){
+            return;
+        }
+
         EditorColorsScheme scheme = editor.getColorsScheme(); // or EditorColorsManager.getInstance().getGlobalScheme()
 
         TextAttributes attributes = scheme.getAttributes(TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
@@ -142,8 +146,9 @@ public class UIMaker {
     @NotNull
     public static GridBag getDefaultGridBagForGlobals() {
         return new GridBag()
-                .setDefaultWeightX(1, 1)
-                .setDefaultWeightX(2, 1)
+//                .setDefaultWeightX(0, 0.02)
+                .setDefaultWeightX(1, 0.5)
+                .setDefaultWeightX(2, 0.5)
                 .setDefaultInsets(new Insets(4, 0, 4, 0))
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
