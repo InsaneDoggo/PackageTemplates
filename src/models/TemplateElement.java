@@ -1,5 +1,6 @@
 package models;
 
+import com.google.gson.annotations.Expose;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -12,19 +13,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.apache.batik.svggen.SVGStylingAttributes.set;
+
 /**
  * Created by Arsen on 15.06.2016.
  */
 
 public class TemplateElement {
 
+    @Expose
     private boolean isDirectory;
+    @Expose
     private String name;
+    @Expose
     private String templateName;
+    @Expose
     private String extension;
+    @Expose
     private ArrayList<TemplateElement> listTemplateElement;
 
     private TemplateElement parent;
+    @Expose
     private HashMap<String, String> mapProperties;
 
     // File
@@ -45,8 +54,8 @@ public class TemplateElement {
         mapProperties = new HashMap<>();
     }
 
-    public void add(TemplateElement element){
-        if( getListTemplateElement() != null ) {
+    public void add(TemplateElement element) {
+        if (getListTemplateElement() != null) {
             getListTemplateElement().add(element);
         }
     }
@@ -157,6 +166,15 @@ public class TemplateElement {
             PsiElement psiElement = FileWriter.writeFile(currentDir, this);
             if (psiElement == null) {
                 // TODO: 20.06.2016 error write file
+            }
+        }
+    }
+
+    public void updateParents(TemplateElement element) {
+        setParent(element);
+        if (isDirectory()) {
+            for (TemplateElement templateElement : getListTemplateElement()){
+                templateElement.updateParents(this);
             }
         }
     }

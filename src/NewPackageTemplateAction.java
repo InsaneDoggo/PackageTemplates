@@ -1,9 +1,15 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.intellij.ide.fileTemplates.FileTemplate;
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
 import custom.dialogs.ConfigurePackageTemplatesDialog;
 import custom.dialogs.SelectTemplateDialog;
+import io.SaveUtil;
+import io.TemplateList;
+import io.TemplateSaver;
 import models.PackageTemplate;
 import models.TemplateElement;
 import custom.dialogs.NewPackageDialog;
@@ -17,6 +23,9 @@ import java.util.ArrayList;
  * Created by Arsen on 13.06.2016.
  */
 public class NewPackageTemplateAction extends AnAction {
+
+    private TemplateList templateList;
+    private Gson gson;
 
     @Override
     public void actionPerformed(AnActionEvent event) {
@@ -45,10 +54,18 @@ public class NewPackageTemplateAction extends AnAction {
 //        dialog.show();
 
 
+        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+        templateList = gson.fromJson(PropertiesComponent.getInstance().getValue(SaveUtil.KEY_PREFIX), TemplateList.class);
+        if(templateList==null){
+            templateList = new TemplateList();
+        }
+
 
         ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
+                templateList.add(packageTemplate);
+                PropertiesComponent.getInstance().setValue(SaveUtil.KEY_PREFIX, gson.toJson(templateList));
                 System.out.println("onSuccess");
             }
 
@@ -58,7 +75,6 @@ public class NewPackageTemplateAction extends AnAction {
             }
         };
         dialog.show();
-
 
 
 //        SelectTemplateDialog dialog = new SelectTemplateDialog(event.getProject()) {
@@ -97,7 +113,7 @@ public class NewPackageTemplateAction extends AnAction {
 
     private void createFiles(AnActionEvent event, PackageTemplate packageTemplate) {
         PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
-        if( currentDir != null ) {
+        if (currentDir != null) {
             packageTemplate.getTemplateElement().writeFile(currentDir, event.getProject());
         }
     }

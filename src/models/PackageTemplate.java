@@ -1,5 +1,6 @@
 package models;
 
+import com.google.gson.annotations.Expose;
 import utils.InputManager;
 
 import java.util.ArrayList;
@@ -12,9 +13,9 @@ public class PackageTemplate {
 
     public static final java.lang.String ATTRIBUTE_PACKAGE_TEMPLATE_NAME = "PACKAGE_TEMPLATE_NAME";
 
-    private String name;
-    private String description;
-    private TemplateElement root;
+    @Expose private String name;
+    @Expose private String description;
+    @Expose private TemplateElement root;
 
     public PackageTemplate(String name, String templateVariableName, String description, ArrayList<TemplateElement> listTemplateElement) {
         this.name = name;
