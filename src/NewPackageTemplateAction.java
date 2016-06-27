@@ -1,15 +1,11 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
 import custom.dialogs.ConfigurePackageTemplatesDialog;
-import custom.dialogs.SelectTemplateDialog;
+import custom.dialogs.SelectFileTemplateDialog;
+import custom.dialogs.SelectPackageTemplateDialog;
 import io.SaveUtil;
-import io.TemplateList;
-import io.TemplateSaver;
 import models.PackageTemplate;
 import models.TemplateElement;
 import custom.dialogs.NewPackageDialog;
@@ -24,8 +20,7 @@ import java.util.ArrayList;
  */
 public class NewPackageTemplateAction extends AnAction {
 
-    private TemplateList templateList;
-    private Gson gson;
+    SaveUtil saveUtil;
 
     @Override
     public void actionPerformed(AnActionEvent event) {
@@ -54,18 +49,27 @@ public class NewPackageTemplateAction extends AnAction {
 //        dialog.show();
 
 
-        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
-        templateList = gson.fromJson(PropertiesComponent.getInstance().getValue(SaveUtil.KEY_PREFIX), TemplateList.class);
-        if(templateList==null){
-            templateList = new TemplateList();
-        }
+
+//        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event) {
+//            @Override
+//            public void onSuccess(PackageTemplate packageTemplate) {
+//                SaveUtil.getInstance().getTemplateList().add(packageTemplate);
+//                SaveUtil.getInstance().save();
+//                System.out.println("onSuccess");
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                System.out.println("onCancel");
+//            }
+//        };
+//        dialog.show();
 
 
-        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event) {
+
+        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
-                templateList.add(packageTemplate);
-                PropertiesComponent.getInstance().setValue(SaveUtil.KEY_PREFIX, gson.toJson(templateList));
                 System.out.println("onSuccess");
             }
 
@@ -77,7 +81,7 @@ public class NewPackageTemplateAction extends AnAction {
         dialog.show();
 
 
-//        SelectTemplateDialog dialog = new SelectTemplateDialog(event.getProject()) {
+//        SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(event.getProject()) {
 //            @Override
 //            public void onSuccess(FileTemplate fileTemplate) {
 //                System.out.println("fileTemplate " + fileTemplate.getName());

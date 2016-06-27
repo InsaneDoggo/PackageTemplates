@@ -10,6 +10,17 @@ import models.PackageTemplate;
  */
 public class SaveUtil {
 
+    private static SaveUtil instance;
+
+    public static SaveUtil getInstance() {
+        if (instance == null) {
+            instance = new SaveUtil();
+            instance.load();
+        }
+
+        return instance;
+    }
+
     public static final String KEY_PREFIX = "package_template_key_prefix";
 
     private TemplateList templateList;
@@ -19,7 +30,6 @@ public class SaveUtil {
     public SaveUtil() {
         gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
         propertiesComponent = PropertiesComponent.getInstance();
-        load();
     }
 
     public void load() {
@@ -31,7 +41,7 @@ public class SaveUtil {
     }
 
     public void save() {
-        propertiesComponent.setValue(SaveUtil.KEY_PREFIX, gson.toJson(templateList));
+        propertiesComponent.setValue(SaveUtil.KEY_PREFIX, gson.toJson(templateList, TemplateList.class));
     }
 
     private void updateParents() {
@@ -40,4 +50,11 @@ public class SaveUtil {
         }
     }
 
+    public TemplateList getTemplateList() {
+        return templateList;
+    }
+
+    public void setTemplateList(TemplateList templateList) {
+        this.templateList = templateList;
+    }
 }

@@ -19,9 +19,8 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.MouseEventHandler;
 import custom.components.TemplateView;
-import custom.dialogs.SelectTemplateDialog;
+import custom.dialogs.SelectFileTemplateDialog;
 import models.InputBlock;
-import models.TemplateContainer;
 import models.TextRange;
 import org.jetbrains.annotations.NotNull;
 
@@ -270,7 +269,7 @@ public class UIMaker {
     }
 
     public static void AddFile(TemplateView templateView, Project project) {
-        SelectTemplateDialog dialog = new SelectTemplateDialog(project) {
+        SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(project) {
             @Override
             public void onSuccess(FileTemplate fileTemplate) {
                 templateView.collectDataFromFields();

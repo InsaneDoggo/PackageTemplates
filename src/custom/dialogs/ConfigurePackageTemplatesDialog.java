@@ -1,10 +1,7 @@
 package custom.dialogs;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
-import com.intellij.ui.EditorTextField;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBScrollPane;
@@ -13,16 +10,12 @@ import custom.components.TemplateView;
 import custom.components.VariableView;
 import models.PackageTemplate;
 import models.TemplateContainer;
-import models.TemplateElement;
-import org.jetbrains.annotations.NotNull;
 import utils.StringTools;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.ArrayList;
 
-import static java.io.File.separator;
 import static utils.UIMaker.*;
 
 /**

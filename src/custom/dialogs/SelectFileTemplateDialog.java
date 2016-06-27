@@ -20,14 +20,14 @@ import static com.intellij.ide.fileTemplates.FileTemplateManager.DEFAULT_TEMPLAT
 /**
  * Created by CeH9 on 24.06.2016.
  */
-public abstract class SelectTemplateDialog extends DialogWrapper {
+public abstract class SelectFileTemplateDialog extends DialogWrapper {
 
     private ComboBox comboBox;
 
     public abstract void onSuccess(FileTemplate fileTemplate);
     public abstract void onCancel();
 
-    public SelectTemplateDialog(Project project) {
+    public SelectFileTemplateDialog(Project project) {
         super(project);
         init();
         setTitle("Select File Template");
