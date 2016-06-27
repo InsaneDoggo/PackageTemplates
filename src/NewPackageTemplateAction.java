@@ -26,7 +26,7 @@ public class NewPackageTemplateAction extends AnAction {
     public void actionPerformed(AnActionEvent event) {
         ArrayList<TemplateElement> listElements = new ArrayList<>();
         ArrayList<TemplateElement> listElementsInner = new ArrayList<>();
-        PackageTemplate packageTemplate = new PackageTemplate("TestPT", "MegaPT", "tipa description", listElements);
+        PackageTemplate packageTemplate = new PackageTemplate("TestPT", "tipa description", listElements);
 
         TemplateElement element = new TemplateElement("Pre${PACKAGE_TEMPLATE_NAME}Post", listElementsInner, packageTemplate.getTemplateElement());
 
@@ -39,32 +39,6 @@ public class NewPackageTemplateAction extends AnAction {
 //        if (TemplateValidator.isTemplatesValid(packageTemplate)) {
 //            showDialog(event, packageTemplate);
 //        }
-
-//        TemplateManagerDialog dialog = new TemplateManagerDialog(event, "Package Teplate Editor") {
-//            @Override
-//            public void onSuccess(String result) {
-//                System.out.println("TemplateManagerDialog onSuccess");
-//            }
-//        };
-//        dialog.show();
-
-
-
-//        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event) {
-//            @Override
-//            public void onSuccess(PackageTemplate packageTemplate) {
-//                SaveUtil.getInstance().getTemplateList().add(packageTemplate);
-//                SaveUtil.getInstance().save();
-//                System.out.println("onSuccess");
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                System.out.println("onCancel");
-//            }
-//        };
-//        dialog.show();
-
 
 
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {

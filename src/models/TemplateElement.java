@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import custom.components.TemplateView;
 import utils.FileWriter;
 import utils.InputManager;
 import utils.Logger;
@@ -58,6 +59,14 @@ public class TemplateElement {
         if (getListTemplateElement() != null) {
             getListTemplateElement().add(element);
         }
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 
     public String getTemplateName() {
@@ -173,9 +182,23 @@ public class TemplateElement {
     public void updateParents(TemplateElement element) {
         setParent(element);
         if (isDirectory()) {
-            for (TemplateElement templateElement : getListTemplateElement()){
+            for (TemplateElement templateElement : getListTemplateElement()) {
                 templateElement.updateParents(this);
             }
         }
+    }
+
+    public TemplateView toTemplateView(TemplateView parent) {
+        TemplateView result;
+        if (isDirectory()) {
+            result = new TemplateView(getName(), parent);
+            for( TemplateElement templateElement : getListTemplateElement() ){
+                result.addTemplate(templateElement.toTemplateView(result));
+            }
+        } else {
+            result = new TemplateView(getName(), getTemplateName(), getExtension(), parent);
+        }
+
+        return result;
     }
 }

@@ -1,7 +1,7 @@
 package custom.dialogs;
 
 import com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBScrollPane;
@@ -16,6 +16,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+import static com.intellij.openapi.vcs.ActionType.update;
 import static utils.UIMaker.*;
 
 /**
@@ -24,12 +25,19 @@ import static utils.UIMaker.*;
 public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplatesDialog {
 
     private TemplateContainer templateContainer;
+    private PackageTemplate packageTemplate;
 
     public abstract void onSuccess(PackageTemplate packageTemplate);
+
     public abstract void onCancel();
 
-    public ConfigurePackageTemplatesDialog(AnActionEvent event) {
-        super(event.getProject());
+    public ConfigurePackageTemplatesDialog(Project project) {
+        super(project);
+    }
+
+    public ConfigurePackageTemplatesDialog(Project project, PackageTemplate packageTemplate) {
+        super(project);
+        this.packageTemplate = packageTemplate;
     }
 
     @Override
@@ -39,7 +47,14 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         switch (getExitCode()) {
             case NewPackageDialog.OK_EXIT_CODE:
                 templateContainer.collectDataFromFields();
-                onSuccess(getResultAsPackageTemplate());
+
+                if (packageTemplate == null) {
+                    onSuccess(getResultAsPackageTemplate());
+                } else {
+                    updatePackageTemplate();
+                    onSuccess(packageTemplate);
+                }
+
                 break;
             case NewPackageDialog.CANCEL_EXIT_CODE:
                 onCancel();
@@ -47,13 +62,23 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         }
     }
 
+    private void updatePackageTemplate() {
+        packageTemplate.setName(templateContainer.getName());
+        packageTemplate.setTemplateVariableName(templateContainer.getTemplateView().getTemplateName());
+        packageTemplate.setDescription(templateContainer.getDescription());
+        packageTemplate.setTemplateElement(templateContainer.getTemplateView().toTemplateElement(null));
+    }
+
     private PackageTemplate getResultAsPackageTemplate() {
-        return new PackageTemplate(
+        PackageTemplate result = new PackageTemplate(
                 templateContainer.getName(),
-                templateContainer.getTemplateView().getTemplateName(),
                 templateContainer.getDescription(),
                 templateContainer.getTemplateView().toTemplateElement(null)
         );
+
+//        result.getTemplateElement().setMapProperties(templateContainer.get);
+
+        return result;
     }
 
     @Override
@@ -74,15 +99,17 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
     }
 
     private void initContainer() {
-        TemplateView main = new TemplateView("IvanClass", null);
-        templateContainer = new TemplateContainer("", "", main);
+        if (packageTemplate == null) {
+            templateContainer = new TemplateContainer("New Template", "", new TemplateView("MyFolder", null));
 
-        templateContainer.addVariable(new VariableView(StringTools.PACKAGE_TEMPLATE_NAME, ""));
-//        for (int i = 0; i < 5; i++) {
-//            templateContainer.addVariable(new VariableView("key_"+i, ""));
-//        }
-
-//        main.getListTemplateView().add(new TemplateView("IvanClass", "Prost", "java", main));
+            templateContainer.addVariable(new VariableView(StringTools.PACKAGE_TEMPLATE_NAME, ""));
+        } else {
+            templateContainer = new TemplateContainer(
+                    packageTemplate.getName(),
+                    packageTemplate.getDescription(),
+                    packageTemplate.getTemplateElement().toTemplateView(null)
+            );
+        }
     }
 
     private JComponent getPackageBuilderComponent() {
@@ -97,7 +124,7 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         root.add(new SeparatorComponent(10));
         root.add(templateContainer.getTemplateView().buildView(getProject()));
 
-        root.setBorder(new EmptyBorder(8,8,8,8));
+        root.setBorder(new EmptyBorder(8, 8, 8, 8));
         scrollPane.setMinimumSize(new Dimension(300, 150));
         return scrollPane;
     }
