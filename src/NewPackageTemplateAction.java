@@ -1,9 +1,6 @@
-import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
-import custom.dialogs.ConfigurePackageTemplatesDialog;
-import custom.dialogs.SelectFileTemplateDialog;
 import custom.dialogs.SelectPackageTemplateDialog;
 import io.SaveUtil;
 import models.PackageTemplate;
@@ -12,6 +9,7 @@ import custom.dialogs.NewPackageDialog;
 import utils.FileWriter;
 import utils.InputManager;
 import utils.Logger;
+import utils.TemplateValidator;
 
 import java.util.ArrayList;
 
@@ -20,10 +18,25 @@ import java.util.ArrayList;
  */
 public class NewPackageTemplateAction extends AnAction {
 
-    SaveUtil saveUtil;
-
     @Override
     public void actionPerformed(AnActionEvent event) {
+        PackageTemplate ptFake = fakePT();
+
+        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
+            @Override
+            public void onSuccess(PackageTemplate packageTemplate) {
+                System.out.println("SelectPackageTemplateDialog onSuccess");
+            }
+
+            @Override
+            public void onCancel() {
+                System.out.println("onCancel");
+            }
+        };
+        dialog.show();
+    }
+
+    private PackageTemplate fakePT() {
         ArrayList<TemplateElement> listElements = new ArrayList<>();
         ArrayList<TemplateElement> listElementsInner = new ArrayList<>();
         PackageTemplate packageTemplate = new PackageTemplate("TestPT", "tipa description", listElements);
@@ -34,40 +47,7 @@ public class NewPackageTemplateAction extends AnAction {
         listElements.add(element);
         listElementsInner.add(new TemplateElement("Prost", "Prost", "java", element));
         listElementsInner.add(new TemplateElement("Slojn", "Slojn", "java", element));
-
-
-//        if (TemplateValidator.isTemplatesValid(packageTemplate)) {
-//            showDialog(event, packageTemplate);
-//        }
-
-
-        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
-            @Override
-            public void onSuccess(PackageTemplate packageTemplate) {
-                System.out.println("onSuccess");
-            }
-
-            @Override
-            public void onCancel() {
-                System.out.println("onCancel");
-            }
-        };
-        dialog.show();
-
-
-//        SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(event.getProject()) {
-//            @Override
-//            public void onSuccess(FileTemplate fileTemplate) {
-//                System.out.println("fileTemplate " + fileTemplate.getName());
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                System.out.println("onCancel");
-//            }
-//        };
-//        dialog.show();
-
+        return packageTemplate;
     }
 
     private void showDialog(AnActionEvent event, PackageTemplate packageTemplate) {

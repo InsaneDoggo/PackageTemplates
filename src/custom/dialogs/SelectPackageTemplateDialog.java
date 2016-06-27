@@ -12,6 +12,7 @@ import io.TemplateList;
 import models.MyListModel;
 import models.PackageTemplate;
 import org.jetbrains.annotations.NotNull;
+import utils.TemplateValidator;
 
 import javax.swing.*;
 import javax.swing.event.ListDataListener;
@@ -49,7 +50,13 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
                     // TODO: 27.06.2016 selection empty
                     return;
                 }
-                onSuccess((PackageTemplate) jbList.getSelectedValue());
+                PackageTemplate selectedValue = (PackageTemplate) jbList.getSelectedValue();
+                if (TemplateValidator.isTemplateValid(selectedValue)) {
+                    onSuccess(selectedValue);
+                } else {
+                    // TODO: 27.06.2016 print error FileTemplate doesn't exist
+                }
+
                 break;
             case NewPackageDialog.CANCEL_EXIT_CODE:
                 onCancel();

@@ -6,8 +6,9 @@ import models.PackageTemplate;
 import models.TemplateElement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import static com.intellij.ide.fileTemplates.FileTemplateManager.DEFAULT_TEMPLATES_CATEGORY;
 
 /**
  * Created by CeH9 on 14.06.2016.
@@ -17,16 +18,16 @@ public class TemplateValidator {
     /**
      * Check existence FileTemplates used in PackageTemplate
      */
-    public static boolean isTemplatesValid(PackageTemplate packageTemplate){
+    public static boolean isTemplateValid(PackageTemplate packageTemplate){
         if (packageTemplate.getListTemplateElement() == null){
             // when template is empty folder(useless, but valid)
             return true;
         }
 
-        FileTemplateManager fileTemplateManager = FileTemplateManager.getDefaultInstance();
+
         List<String> listAllTemplates = new ArrayList<>();
 
-        for( FileTemplate template : fileTemplateManager.getAllTemplates() ){
+        for( FileTemplate template : FileTemplateManager.getDefaultInstance().getTemplates(DEFAULT_TEMPLATES_CATEGORY) ){
             //if( template.isDefault() ){
                 listAllTemplates.add(template.getName());
             //}
