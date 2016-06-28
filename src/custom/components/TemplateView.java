@@ -170,14 +170,14 @@ public class TemplateView extends JPanel {
     public TemplateElement toTemplateElement(TemplateElement parent) {
         TemplateElement result;
         if (isDirectory()) {
-            result = new TemplateElement(getName(), new ArrayList<>(), parent);
+            result = new TemplateElement(getPredefinedName(), new ArrayList<>(), parent);
 
             for (TemplateView templateView : getListTemplateView()) {
                 result.add(templateView.toTemplateElement(result));
             }
 
         } else {
-            result = new TemplateElement(getPredefinedName(), getTemplateName(), getExtension(), parent);
+            result = new TemplateElement(getTemplateName(), getPredefinedName(), getExtension(), parent);
         }
 
         return result;

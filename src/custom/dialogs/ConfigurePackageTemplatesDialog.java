@@ -27,6 +27,7 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
 
     private TemplateContainer templateContainer;
     private PackageTemplate packageTemplate;
+    private JBSplitter panel;
 
     public abstract void onSuccess(PackageTemplate packageTemplate);
 
@@ -43,6 +44,7 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
 
     @Override
     public void show() {
+        preShow();
         super.show();
 
         switch (getExitCode()) {
@@ -53,6 +55,11 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
                 onCancel();
                 break;
         }
+    }
+
+    private void preShow() {
+        initContainer();
+        panel.setFirstComponent(getPackageBuilderComponent());
     }
 
     private void onOKAction() {
@@ -93,14 +100,12 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
 
     @Override
     protected JComponent createCenterPanel() {
-        initContainer();
+        panel = new JBSplitter();
 
-        JBSplitter panel = new JBSplitter();
-
-        panel.setFirstComponent(getPackageBuilderComponent());
-        super.createCenterPanel();
         // TODO: 28.06.2016 fix default template editor
 //        panel.setSecondComponent(super.createCenterPanel());
+        super.createCenterPanel();
+
         return panel;
     }
 
@@ -115,11 +120,13 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
                     packageTemplate.getTemplateElement().toTemplateView(null)
             );
 
-            for (Map.Entry<String, String> entry : packageTemplate.getMapGlobalVars().entrySet()) {
-                templateContainer.getListVariableView().add(new VariableView(
-                        entry.getKey(),
-                        entry.getValue()
-                ));
+            if(packageTemplate.getMapGlobalVars() != null) {
+                for (Map.Entry<String, String> entry : packageTemplate.getMapGlobalVars().entrySet()) {
+                    templateContainer.getListVariableView().add(new VariableView(
+                            entry.getKey(),
+                            entry.getValue()
+                    ));
+                }
             }
 
         }
@@ -149,7 +156,8 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         JLabel jLabel = new JLabel("Template Name");
         setRightPadding(jLabel, PADDING_LABEL);
 
-        templateContainer.setEtfTemplateName(getEditorTextField("", getProject()));
+
+        templateContainer.setEtfTemplateName(getEditorTextField(templateContainer.getName(), getProject()));
 
         GridBag bag = getDefaultGridBag();
         container.add(jLabel, bag.nextLine().next());
