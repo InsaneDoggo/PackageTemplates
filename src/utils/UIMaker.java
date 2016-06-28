@@ -73,7 +73,8 @@ public class UIMaker {
     }
 
     public static void applyHighlightRange(String text, Project project, Editor editor) {
-        if( project==null ){
+        if (project == null) {
+            Logger.log("project = null");
             return;
         }
 
@@ -112,8 +113,8 @@ public class UIMaker {
         ));
     }
 
-    public static JPanel getClassPanel(InputBlock inputBlock, int paddingScale) {
-        return getDefaultPanel(inputBlock, paddingScale, AllIcons.Nodes.Class);
+    public static JPanel getClassPanel(InputBlock inputBlock, int paddingScale, Icon icon) {
+        return getDefaultPanel(inputBlock, paddingScale, icon);
     }
 
     public static JPanel getDirectoryPanel(InputBlock inputBlock, int paddingScale) {
@@ -122,13 +123,16 @@ public class UIMaker {
 
     public static JPanel getDefaultPanel(InputBlock inputBlock, int paddingScale, Icon icon) {
         JPanel container = new JPanel(new GridBagLayout());
-
-        GridBag bag = getDefaultGridBag();
-
-        JLabel jLabel = new JLabel(icon, SwingConstants.LEFT);
         setLeftPadding(container, DEFAULT_PADDING + PADDING * paddingScale);
 
-        container.add(jLabel, bag.nextLine().next());
+        JLabel jLabel = new JLabel(icon, SwingConstants.LEFT);
+        if(!inputBlock.getElement().isDirectory()) {
+            jLabel.setText(inputBlock.getElement().getTemplateName());
+        }
+        inputBlock.getTfName().setText(inputBlock.getElement().getName());
+
+        GridBag bag = getDefaultGridBag();
+        container.add(jLabel, bag.nextLine().next().insets(0,0,0,8));
         container.add(inputBlock.getTfName(), bag.next());
 
         return container;

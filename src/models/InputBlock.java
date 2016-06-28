@@ -11,11 +11,13 @@ import utils.UIMaker;
 
 public class InputBlock {
 
-    private TemplateElement element;
     private EditorTextField tfName;
     private CreateFromTemplatePanel panelVariables;
+
+    private TemplateElement element;
     private boolean isGlobalVariable = false;
     private String globalKey;
+    private String globalValue;
 
     public InputBlock(TemplateElement element, String[] unsetAttributes, Project project) {
         this.element = element;
@@ -24,6 +26,14 @@ public class InputBlock {
         if (unsetAttributes != null && unsetAttributes.length > 0){
             panelVariables = new CreateFromTemplatePanel(unsetAttributes, false, null);
         }
+    }
+
+    public String getGlobalValue() {
+        return globalValue;
+    }
+
+    public void setGlobalValue(String globalValue) {
+        this.globalValue = globalValue;
     }
 
     public String getGlobalKey() {

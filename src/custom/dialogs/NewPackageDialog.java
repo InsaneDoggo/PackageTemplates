@@ -17,7 +17,8 @@ import java.util.Properties;
  */
 public abstract class NewPackageDialog extends DialogWrapper {
 
-    public abstract void onFinish(String result);
+    public abstract void onSuccess();
+    public abstract void onCancel();
 
     JPanel panel;
     InputManager inputManager;
@@ -36,13 +37,13 @@ public abstract class NewPackageDialog extends DialogWrapper {
 
         switch (getExitCode()) {
             case NewPackageDialog.OK_EXIT_CODE:
-                inputManager.initGlobalProperties();
+                inputManager.collectGlobalVars();
                 saveVariablesFromDialog();
                 inputManager.getPackageTemplate().replaceNameVariable(inputManager);
-                onFinish("OK_EXIT_CODE");
+                onSuccess();
                 break;
             case NewPackageDialog.CANCEL_EXIT_CODE:
-                onFinish("CANCEL_EXIT_CODE");
+                onCancel();
                 break;
         }
     }
@@ -59,6 +60,10 @@ public abstract class NewPackageDialog extends DialogWrapper {
 
     private void saveVariablesFromDialog() {
         for (InputBlock block : inputManager.getListInputBlock()) {
+            if(block.isGlobalVariable()){
+                continue;
+            }
+
             block.getElement().setName(block.getTfName().getText());
 
             if (!block.getElement().isDirectory()) {
@@ -68,10 +73,9 @@ public abstract class NewPackageDialog extends DialogWrapper {
 
                     for (Map.Entry<Object, Object> entry : properties.entrySet()) {
                         block.getElement().getMapProperties().put((String) entry.getKey(), (String) entry.getValue());
-
-                        //add GLOBALS
-                        block.getElement().getMapProperties().putAll(inputManager.getMapGlobalProperties());
                     }
+                    //add GLOBALS
+                    block.getElement().getMapProperties().putAll(inputManager.getMapGlobalProperties());
                 }
             }
         }

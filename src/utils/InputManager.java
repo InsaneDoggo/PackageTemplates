@@ -64,21 +64,29 @@ public class InputManager {
 
     @NotNull
     private void addHeader(JPanel panel) {
-        InputBlock inputBlock = new InputBlock(packageTemplate.getTemplateElement(), null, project);
-        inputBlock.setGlobalVariable(true);
-        inputBlock.setGlobalKey(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME);
-        listInputBlock.add(inputBlock);
-
         JPanel container = new JPanel();
         container.setLayout(new GridBagLayout());
 
         GridBag bag = UIMaker.getDefaultGridBag();
 
-        JLabel jLabel = new JLabel(AllIcons.Nodes.Package);
-        jLabel.setText(StringTools.formatConst(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME));
+        // Add globals blocks
+        for (Map.Entry<String, String> entry : packageTemplate.getMapGlobalVars().entrySet()) {
+            InputBlock inputBlock = new InputBlock(packageTemplate.getTemplateElement(), null, project);
+            inputBlock.setGlobalVariable(true);
+            inputBlock.setGlobalKey(entry.getKey());
+            inputBlock.setGlobalValue(entry.getValue());
+            listInputBlock.add(inputBlock);
 
-        container.add(jLabel, bag.nextLine().next());
-        container.add(inputBlock.getTfName(), bag.next());
+            JLabel jLabel = new JLabel(AllIcons.Nodes.Variable);
+            jLabel.setText(StringTools.formatConst(inputBlock.getGlobalKey()));
+            jLabel.setHorizontalAlignment(SwingConstants.LEFT);
+            jLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            inputBlock.getTfName().setText(entry.getValue());
+            inputBlock.getTfName().setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            container.add(jLabel, bag.nextLine().next());
+            container.add(inputBlock.getTfName(), bag.next());
+        }
 
         panel.add(container);
     }
@@ -105,14 +113,14 @@ public class InputManager {
         } else {
             addClass(element);
         }
-        Logger.log("input for " + (element.isDirectory() ? " dir  " : " file ") + element.getName());
     }
 
     private void addClass(TemplateElement element) {
-        FileTemplate fileTemplate = fileTemplateManager.getTemplate(element.getName());
+        FileTemplate fileTemplate = fileTemplateManager.getTemplate(element.getTemplateName());
         if (fileTemplate != null) {
             InputBlock inputBlock = new InputBlock(element, getUnsetAttrs(fileTemplate), project);
-            panel.add(UIMaker.getClassPanel(inputBlock, paddingScale));
+            panel.add(UIMaker.getClassPanel(inputBlock, paddingScale, UIMaker.getIconByFileExtension(element.getExtension())));
+
             // add variables
             JComponent component = inputBlock.getPanelVariables().getComponent();
             UIMaker.setLeftPadding(component, UIMaker.PADDING * (paddingScale + 1));
@@ -122,7 +130,6 @@ public class InputManager {
     }
 
     private void addDirectory(TemplateElement element) {
-        // TODO: 17.06.2016 add separator
         InputBlock inputBlock = new InputBlock(element, null, project);
         panel.add(UIMaker.getDirectoryPanel(inputBlock, paddingScale));
         listInputBlock.add(inputBlock);
@@ -159,17 +166,12 @@ public class InputManager {
         paddingScale--;
     }
 
-    public void buildPanel() {
-        //add class field
-//        block.getTfName()
-        //add vars pane
-    }
-
-    public void initGlobalProperties() {
+    public void collectGlobalVars() {
         mapGlobalProperties = new HashMap<>();
         for (InputBlock block : getListInputBlock()) {
             if (block.isGlobalVariable()) {
-                mapGlobalProperties.put(block.getGlobalKey(), block.getTfName().getText());
+                block.setGlobalValue(block.getTfName().getText());
+                mapGlobalProperties.put(block.getGlobalKey(), block.getGlobalValue());
             }
         }
     }

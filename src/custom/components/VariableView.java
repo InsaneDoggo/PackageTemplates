@@ -6,6 +6,7 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.MouseEventHandler;
+import models.PackageTemplate;
 import models.TemplateContainer;
 import utils.Logger;
 import utils.StringTools;
@@ -48,7 +49,7 @@ public class VariableView extends JPanel {
     }
 
     public void buildView(TemplateContainer templateContainer, JPanel container, GridBag bag) {
-        JLabel label = new JLabel(AllIcons.Nodes.Variable, SwingConstants.LEFT);
+        JLabel label = new JLabel(AllIcons.Nodes.Variable, JLabel.LEFT);
 
         tfKey = new EditorTextField(key);
         tfKey.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -102,7 +103,7 @@ public class VariableView extends JPanel {
     }
 
     private void deleteVariable(TemplateContainer templateContainer) {
-        if (getKey().equals(StringTools.PACKAGE_TEMPLATE_NAME)) {
+        if (getKey().equals(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME)) {
             // TODO: 25.06.2016  error can't delete NAME var
             Logger.log("can't delete NAME var");
             return;

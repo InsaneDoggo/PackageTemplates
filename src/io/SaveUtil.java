@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.intellij.ide.util.PropertiesComponent;
 import models.PackageTemplate;
 
+import java.util.HashMap;
+
 /**
  * Created by CeH9 on 26.06.2016.
  */
@@ -37,16 +39,17 @@ public class SaveUtil {
         if (templateList == null) {
             templateList = new TemplateList();
         }
-        updateParents();
+        initNonSerializableFields();
     }
 
     public void save() {
         propertiesComponent.setValue(SaveUtil.KEY_PREFIX, gson.toJson(templateList, TemplateList.class));
     }
 
-    private void updateParents() {
+    private void initNonSerializableFields() {
         for (PackageTemplate packageTemplate : templateList) {
             packageTemplate.getTemplateElement().updateParents(null);
+            packageTemplate.getTemplateElement().initNonSerializableFields();
         }
     }
 

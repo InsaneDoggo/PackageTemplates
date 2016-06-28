@@ -31,12 +31,7 @@ public class PackageTemplate {
     }
 
     public void replaceNameVariable(InputManager inputManager) {
-        if (getListTemplateElement() == null) {
-            return;
-        }
-        for (TemplateElement element : getListTemplateElement()) {
-            element.replaceNameVariable(inputManager.getMapGlobalProperties());
-        }
+        templateElement.replaceNameVariable(inputManager.getMapGlobalProperties());
     }
 
     public HashMap<String, String> getMapGlobalVars() {

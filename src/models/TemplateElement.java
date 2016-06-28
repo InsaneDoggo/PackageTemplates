@@ -44,6 +44,7 @@ public class TemplateElement {
         this.extension = extension;
         this.name = name;
         this.templateName = templateName;
+        mapProperties = new HashMap<>();
     }
 
     // Directory
@@ -52,7 +53,6 @@ public class TemplateElement {
         this.parent = parent;
         this.name = name;
         this.listTemplateElement = listTemplateElement;
-        mapProperties = new HashMap<>();
     }
 
     public void add(TemplateElement element) {
@@ -127,8 +127,8 @@ public class TemplateElement {
                 }
             }
         } else {
-            if (!listAllTemplates.contains(getName())) {
-                Logger.log("Template " + getName() + " doesn't exist!");
+            if (!listAllTemplates.contains(getTemplateName())) {
+                Logger.log("Template " + getTemplateName() + " doesn't exist!");
                 return false;
             }
         }
@@ -201,4 +201,16 @@ public class TemplateElement {
 
         return result;
     }
+
+    public void initNonSerializableFields() {
+        if( getMapProperties() == null ){
+            setMapProperties(new HashMap<>());
+        }
+        if( isDirectory() ){
+            for(TemplateElement element : getListTemplateElement()){
+                element.initNonSerializableFields();
+            }
+        }
+    }
+
 }

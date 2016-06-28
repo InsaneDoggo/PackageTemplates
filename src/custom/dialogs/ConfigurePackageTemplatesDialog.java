@@ -111,8 +111,12 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
 
     private void initContainer() {
         if (packageTemplate == null) {
-            templateContainer = new TemplateContainer("New Template", "", new TemplateView("MyFolder", null));
-            templateContainer.addVariable(new VariableView(StringTools.PACKAGE_TEMPLATE_NAME, ""));
+            templateContainer = new TemplateContainer(
+                    "New Template",
+                    "Description..",
+                    new TemplateView(String.format("%s%s%s", "${", PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME, "}"), null)
+            );
+            templateContainer.addVariable(new VariableView(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME, ""));
         } else {
             templateContainer = new TemplateContainer(
                     packageTemplate.getName(),
@@ -120,7 +124,7 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
                     packageTemplate.getTemplateElement().toTemplateView(null)
             );
 
-            if(packageTemplate.getMapGlobalVars() != null) {
+            if (packageTemplate.getMapGlobalVars() != null) {
                 for (Map.Entry<String, String> entry : packageTemplate.getMapGlobalVars().entrySet()) {
                     templateContainer.getListVariableView().add(new VariableView(
                             entry.getKey(),

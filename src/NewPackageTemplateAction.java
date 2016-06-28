@@ -12,6 +12,7 @@ import utils.Logger;
 import utils.TemplateValidator;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by Arsen on 13.06.2016.
@@ -20,12 +21,13 @@ public class NewPackageTemplateAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
-        PackageTemplate ptFake = fakePT();
+//        PackageTemplate ptFake = fakePT();
 
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
                 System.out.println("SelectPackageTemplateDialog onSuccess");
+                showDialog(event, packageTemplate);
             }
 
             @Override
@@ -53,19 +55,24 @@ public class NewPackageTemplateAction extends AnAction {
     private void showDialog(AnActionEvent event, PackageTemplate packageTemplate) {
         InputManager inputManager = new InputManager(event, packageTemplate);
 
-        for (TemplateElement element : packageTemplate.getListTemplateElement()) {
-            element.makeInputBlock(inputManager);
-        }
+            packageTemplate.getTemplateElement().makeInputBlock(inputManager);
+//        for (TemplateElement element : packageTemplate.getListTemplateElement()) {
+//            element.makeInputBlock(inputManager);
+//        }
 
         NewPackageDialog dialog = new NewPackageDialog(event.getProject(), "New package from \"" + packageTemplate.getName() + "\"", inputManager) {
             @Override
-            public void onFinish(String result) {
-                //StringTools.replaceNameVariable(packageTemplate, "Ivan");
+            public void onSuccess() {
                 createFiles(event, packageTemplate);
-                Logger.log("onSuccess " + result);
+                SaveUtil.getInstance().load();
+            }
+
+            @Override
+            public void onCancel() {
+                SaveUtil.getInstance().load();
             }
         };
-//        dialog.updateHighlight();
+        dialog.updateHighlight();
         dialog.show();
     }
 

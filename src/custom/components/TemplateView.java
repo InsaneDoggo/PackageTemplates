@@ -177,7 +177,7 @@ public class TemplateView extends JPanel {
             }
 
         } else {
-            result = new TemplateElement(getTemplateName(), getPredefinedName(), getExtension(), parent);
+            result = new TemplateElement(getPredefinedName(), getTemplateName(), getExtension(), parent);
         }
 
         return result;
