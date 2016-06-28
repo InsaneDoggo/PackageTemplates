@@ -15,19 +15,19 @@ public class PackageTemplate {
 
     @Expose private String name;
     @Expose private String description;
-    @Expose private TemplateElement root;
+    @Expose private TemplateElement templateElement;
     @Expose private HashMap<String, String> mapGlobalVars;
 
     public PackageTemplate(String name, String description, ArrayList<TemplateElement> listTemplateElement) {
         this.name = name;
         this.description = description;
 
-        root = new TemplateElement("", listTemplateElement, null);
+        templateElement = new TemplateElement("", listTemplateElement, null);
     }
-    public PackageTemplate(String name, String description, TemplateElement root) {
+    public PackageTemplate(String name, String description, TemplateElement templateElement) {
         this.name = name;
         this.description = description;
-        this.root = root;
+        this.templateElement = templateElement;
     }
 
     public void replaceNameVariable(InputManager inputManager) {
@@ -39,12 +39,20 @@ public class PackageTemplate {
         }
     }
 
+    public HashMap<String, String> getMapGlobalVars() {
+        return mapGlobalVars;
+    }
+
+    public void setMapGlobalVars(HashMap<String, String> mapGlobalVars) {
+        this.mapGlobalVars = mapGlobalVars;
+    }
+
     public void setTemplateElement(TemplateElement root) {
-        this.root = root;
+        this.templateElement = root;
     }
 
     public void setTemplateVariableName(String templateVariableName) {
-        root.setName(templateVariableName);
+        templateElement.setName(templateVariableName);
     }
 
     public String getDescription() {
@@ -64,10 +72,10 @@ public class PackageTemplate {
     }
 
     public ArrayList<TemplateElement> getListTemplateElement() {
-        return root.getListTemplateElement();
+        return templateElement.getListTemplateElement();
     }
 
     public TemplateElement getTemplateElement() {
-        return root;
+        return templateElement;
     }
 }

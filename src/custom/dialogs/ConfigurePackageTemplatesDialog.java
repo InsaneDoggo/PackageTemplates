@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.util.containers.IntObjectLinkedMap;
 import com.intellij.util.ui.GridBag;
 import custom.components.TemplateView;
 import custom.components.VariableView;
@@ -15,8 +16,8 @@ import utils.StringTools;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.Map;
 
-import static com.intellij.openapi.vcs.ActionType.update;
 import static utils.UIMaker.*;
 
 /**
@@ -45,20 +46,23 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         super.show();
 
         switch (getExitCode()) {
-            case NewPackageDialog.OK_EXIT_CODE:
-                templateContainer.collectDataFromFields();
-
-                if (packageTemplate == null) {
-                    onSuccess(getResultAsPackageTemplate());
-                } else {
-                    updatePackageTemplate();
-                    onSuccess(packageTemplate);
-                }
-
+            case ConfigurePackageTemplatesDialog.OK_EXIT_CODE:
+                onOKAction();
                 break;
-            case NewPackageDialog.CANCEL_EXIT_CODE:
+            case ConfigurePackageTemplatesDialog.CANCEL_EXIT_CODE:
                 onCancel();
                 break;
+        }
+    }
+
+    private void onOKAction() {
+        templateContainer.collectDataFromFields();
+
+        if (packageTemplate == null) {
+            onSuccess(getResultAsPackageTemplate());
+        } else {
+            updatePackageTemplate();
+            onSuccess(packageTemplate);
         }
     }
 
@@ -67,6 +71,7 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         packageTemplate.setTemplateVariableName(templateContainer.getTemplateView().getTemplateName());
         packageTemplate.setDescription(templateContainer.getDescription());
         packageTemplate.setTemplateElement(templateContainer.getTemplateView().toTemplateElement(null));
+        packageTemplate.setMapGlobalVars(templateContainer.collectGlobalVarsAsMap());
     }
 
     private PackageTemplate getResultAsPackageTemplate() {
@@ -76,7 +81,7 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
                 templateContainer.getTemplateView().toTemplateElement(null)
         );
 
-//        result.getTemplateElement().setMapProperties(templateContainer.get);
+        result.setMapGlobalVars(templateContainer.collectGlobalVarsAsMap());
 
         return result;
     }
@@ -94,6 +99,7 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
 
         panel.setFirstComponent(getPackageBuilderComponent());
         super.createCenterPanel();
+        // TODO: 28.06.2016 fix default template editor
 //        panel.setSecondComponent(super.createCenterPanel());
         return panel;
     }
@@ -101,7 +107,6 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
     private void initContainer() {
         if (packageTemplate == null) {
             templateContainer = new TemplateContainer("New Template", "", new TemplateView("MyFolder", null));
-
             templateContainer.addVariable(new VariableView(StringTools.PACKAGE_TEMPLATE_NAME, ""));
         } else {
             templateContainer = new TemplateContainer(
@@ -109,6 +114,14 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
                     packageTemplate.getDescription(),
                     packageTemplate.getTemplateElement().toTemplateView(null)
             );
+
+            for (Map.Entry<String, String> entry : packageTemplate.getMapGlobalVars().entrySet()) {
+                templateContainer.getListVariableView().add(new VariableView(
+                        entry.getKey(),
+                        entry.getValue()
+                ));
+            }
+
         }
     }
 

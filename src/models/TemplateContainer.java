@@ -9,6 +9,7 @@ import utils.UIMaker;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by CeH9 on 25.06.2016.
@@ -113,5 +114,13 @@ public class TemplateContainer {
         for (VariableView variableView : getListVariableView()) {
             variableView.collectDataFromFields();
         }
+    }
+
+    public HashMap<String, String> collectGlobalVarsAsMap() {
+        HashMap<String, String> map = new HashMap<>();
+        for( VariableView variableView : getListVariableView() ){
+            map.put(variableView.getKey(), variableView.getValue());
+        }
+        return map;
     }
 }
