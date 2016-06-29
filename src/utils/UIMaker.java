@@ -113,6 +113,15 @@ public class UIMaker {
         ));
     }
 
+    public static void setHorizontalPadding(JComponent component, int padding) {
+        component.setBorder(BorderFactory.createEmptyBorder(
+                DEFAULT_PADDING,
+                padding,
+                DEFAULT_PADDING,
+                padding
+        ));
+    }
+
     public static JPanel getClassPanel(InputBlock inputBlock, int paddingScale, Icon icon) {
         return getDefaultPanel(inputBlock, paddingScale, icon);
     }

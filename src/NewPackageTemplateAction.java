@@ -22,6 +22,7 @@ public class NewPackageTemplateAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent event) {
 //        PackageTemplate ptFake = fakePT();
+        SaveUtil.getInstance().load();
 
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
@@ -64,13 +65,10 @@ public class NewPackageTemplateAction extends AnAction {
             @Override
             public void onSuccess() {
                 createFiles(event, packageTemplate);
-                SaveUtil.getInstance().load();
             }
 
             @Override
-            public void onCancel() {
-                SaveUtil.getInstance().load();
-            }
+            public void onCancel() {}
         };
         dialog.updateHighlight();
         dialog.show();

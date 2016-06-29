@@ -35,7 +35,7 @@ public class InputManager {
     public static final ArrayList<String> listAttributesToRemove = new ArrayList<String>() {{
         add(FileTemplate.ATTRIBUTE_NAME);
         add(FileTemplate.ATTRIBUTE_PACKAGE_NAME);
-        add(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME);
+        add(PackageTemplate.ATTRIBUTE_BASE_NAME);
     }};
 
     public InputManager(AnActionEvent event, PackageTemplate packageTemplate) {
@@ -81,6 +81,8 @@ public class InputManager {
             jLabel.setText(StringTools.formatConst(inputBlock.getGlobalKey()));
             jLabel.setHorizontalAlignment(SwingConstants.LEFT);
             jLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            UIMaker.setHorizontalPadding(jLabel, UIMaker.PADDING_LABEL);
+
             inputBlock.getTfName().setText(entry.getValue());
             inputBlock.getTfName().setAlignmentX(Component.LEFT_ALIGNMENT);
 

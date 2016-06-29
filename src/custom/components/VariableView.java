@@ -9,7 +9,6 @@ import com.intellij.util.ui.MouseEventHandler;
 import models.PackageTemplate;
 import models.TemplateContainer;
 import utils.Logger;
-import utils.StringTools;
 import utils.UIMaker;
 
 import javax.swing.*;
@@ -53,8 +52,8 @@ public class VariableView extends JPanel {
 
         tfKey = new EditorTextField(key);
         tfKey.setAlignmentX(Component.LEFT_ALIGNMENT);
-        UIMaker.setRightPadding(tfKey, PADDING_LABEL);
-        UIMaker.setLeftPadding(tfKey, PADDING_LABEL);
+        UIMaker.setHorizontalPadding(tfKey, PADDING_LABEL);
+
 
         tfValue = new EditorTextField(value);
         tfValue.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -103,7 +102,7 @@ public class VariableView extends JPanel {
     }
 
     private void deleteVariable(TemplateContainer templateContainer) {
-        if (getKey().equals(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME)) {
+        if (getKey().equals(PackageTemplate.ATTRIBUTE_BASE_NAME)) {
             // TODO: 25.06.2016  error can't delete NAME var
             Logger.log("can't delete NAME var");
             return;

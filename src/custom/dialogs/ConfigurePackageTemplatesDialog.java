@@ -5,13 +5,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.util.containers.IntObjectLinkedMap;
 import com.intellij.util.ui.GridBag;
 import custom.components.TemplateView;
 import custom.components.VariableView;
 import models.PackageTemplate;
 import models.TemplateContainer;
-import utils.StringTools;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -111,13 +109,15 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
 
     private void initContainer() {
         if (packageTemplate == null) {
+            // New
             templateContainer = new TemplateContainer(
                     "New Template",
                     "Description..",
-                    new TemplateView(String.format("%s%s%s", "${", PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME, "}"), null)
+                    new TemplateView(String.format("%s%s%s", "${", PackageTemplate.ATTRIBUTE_BASE_NAME, "}"), null)
             );
-            templateContainer.addVariable(new VariableView(PackageTemplate.ATTRIBUTE_PACKAGE_TEMPLATE_NAME, ""));
+            templateContainer.addVariable(new VariableView(PackageTemplate.ATTRIBUTE_BASE_NAME, ""));
         } else {
+            // Load (old)
             templateContainer = new TemplateContainer(
                     packageTemplate.getName(),
                     packageTemplate.getDescription(),
