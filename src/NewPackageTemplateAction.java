@@ -1,7 +1,10 @@
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.psi.PsiDirectory;
 import custom.dialogs.SelectPackageTemplateDialog;
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
 import io.SaveUtil;
 import models.PackageTemplate;
 import models.TemplateElement;
@@ -21,6 +24,7 @@ public class NewPackageTemplateAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
+
 //        PackageTemplate ptFake = fakePT();
         SaveUtil.getInstance().load();
 
