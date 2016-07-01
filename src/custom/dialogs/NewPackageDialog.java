@@ -2,6 +2,7 @@ package custom.dialogs;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.ValidationInfo;
 import models.InputBlock;
 import org.jetbrains.annotations.Nullable;
 import utils.InputManager;
@@ -82,27 +83,16 @@ public abstract class NewPackageDialog extends DialogWrapper {
     }
 
     @Override
-    protected void doOKAction() {
-        if (isInputValid()) {
-            super.doOKAction();
-        } else {
-            // TODO: 19.06.2016 print wrong input
-        }
-    }
-
-    private boolean isInputValid() {
-        // TODO: 19.06.2016 check input
+    protected ValidationInfo doValidate() {
         for (InputBlock block : inputManager.getListInputBlock()) {
             if( block.getTfName().getText().trim().isEmpty() ){
-                // TODO: 21.06.2016 print pls fill fields
-                    return false;
+                return new ValidationInfo("Fill empty fields", block.getTfName());
             }
             if( !StringTools.isNameValid(block.getTfName().getText()) ){
-                // TODO: 21.06.2016 print invalid name
-                return false;
+                return new ValidationInfo("Name contains illegal symbols", block.getTfName() );
             }
         }
-        return true;
+        return null;
     }
 
     @Nullable

@@ -73,11 +73,9 @@ public class StringTools {
 //    \W    A non-word character: [^\w]
     public static boolean isNameValid(String text) {
         if( text.matches(".*[^0-9a-zA-Z_}{\\$].*")){
-            // TODO: 21.06.2016 print illegal symbols
             return false;
         }
         if( text.substring(0,1).matches("\\d")){
-            // TODO: 21.06.2016 print starts with digit
             return false;
         }
         return true;

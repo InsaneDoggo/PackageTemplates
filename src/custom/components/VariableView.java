@@ -105,6 +105,7 @@ public class VariableView extends JPanel {
         if (getKey().equals(PackageTemplate.ATTRIBUTE_BASE_NAME)) {
             // TODO: 25.06.2016  error can't delete NAME var
             Logger.log("can't delete NAME var");
+
             return;
         }
         templateContainer.getListVariableView().remove(this);

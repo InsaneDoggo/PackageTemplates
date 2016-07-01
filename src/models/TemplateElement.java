@@ -2,6 +2,7 @@ package models;
 
 import com.google.gson.annotations.Expose;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import custom.components.TemplateView;
@@ -117,22 +118,23 @@ public class TemplateElement {
         this.listTemplateElement = listTemplateElement;
     }
 
-    public boolean isNameValid(List<String> listAllTemplates) {
+    public ValidationInfo isNameValid(List<String> listAllTemplates) {
         if (isDirectory()) {
             if (getListTemplateElement() != null) {
                 for (TemplateElement element : getListTemplateElement()) {
-                    if (!element.isNameValid(listAllTemplates)) {
-                        return false;
+                    ValidationInfo validationInfo = element.isNameValid(listAllTemplates);
+                    if (validationInfo != null) {
+                        return validationInfo;
                     }
                 }
             }
         } else {
             if (!listAllTemplates.contains(getTemplateName())) {
                 Logger.log("Template " + getTemplateName() + " doesn't exist!");
-                return false;
+                return new ValidationInfo("Template \"" + getTemplateName() + "\" doesn't exist!");
             }
         }
-        return true;
+        return null;
     }
 
     public void replaceNameVariable(HashMap<String, String> mapProperties) {
@@ -154,7 +156,6 @@ public class TemplateElement {
                 }
             }
 
-            // TODO: 17.06.2016 skip empty packages
             inputManager.onPackageEnds();
         }
     }

@@ -2,6 +2,7 @@ package utils;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
+import com.intellij.openapi.ui.ValidationInfo;
 import models.PackageTemplate;
 import models.TemplateElement;
 
@@ -18,12 +19,11 @@ public class TemplateValidator {
     /**
      * Check existence FileTemplates used in PackageTemplate
      */
-    public static boolean isTemplateValid(PackageTemplate packageTemplate){
+    public static ValidationInfo isTemplateValid(PackageTemplate packageTemplate){
         if (packageTemplate.getListTemplateElement() == null){
             // when template is empty folder(useless, but valid)
-            return true;
+            return null;
         }
-
 
         List<String> listAllTemplates = new ArrayList<>();
 
@@ -34,11 +34,12 @@ public class TemplateValidator {
         }
 
         for( TemplateElement element : packageTemplate.getListTemplateElement() ){
-            if( !element.isNameValid(listAllTemplates) ){
-                return false;
+            ValidationInfo validationInfo = element.isNameValid(listAllTemplates);
+            if( validationInfo != null ){
+                return validationInfo;
             }
         }
-        return true;
+        return null;
     }
 
 }

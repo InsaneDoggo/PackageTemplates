@@ -78,7 +78,7 @@ public class InputManager {
             listInputBlock.add(inputBlock);
 
             JLabel jLabel = new JLabel(AllIcons.Nodes.Variable);
-            jLabel.setText(StringTools.formatConst(inputBlock.getGlobalKey()));
+//            jLabel.setText(StringTools.formatConst(inputBlock.getGlobalKey()));
             jLabel.setHorizontalAlignment(SwingConstants.LEFT);
             jLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
             UIMaker.setHorizontalPadding(jLabel, UIMaker.PADDING_LABEL);

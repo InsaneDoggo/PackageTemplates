@@ -3,6 +3,7 @@ package custom.dialogs;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.GridBag;
@@ -18,6 +19,8 @@ import javax.swing.*;
 import javax.swing.event.ListDataListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+
+import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.block;
 
 
 /**
@@ -46,17 +49,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
 
         switch (getExitCode()) {
             case NewPackageDialog.OK_EXIT_CODE:
-                if (jbList.isSelectionEmpty()) {
-                    // TODO: 27.06.2016 selection empty
-                    return;
-                }
-                PackageTemplate selectedValue = (PackageTemplate) jbList.getSelectedValue();
-                if (TemplateValidator.isTemplateValid(selectedValue)) {
-                    onSuccess(selectedValue);
-                } else {
-                    // TODO: 27.06.2016 print error FileTemplate doesn't exist
-                }
-
+                onSuccess((PackageTemplate) jbList.getSelectedValue());
                 break;
             case NewPackageDialog.CANCEL_EXIT_CODE:
                 onCancel();
@@ -65,8 +58,23 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
     }
 
     @Override
+    protected ValidationInfo doValidate() {
+        if (jbList.isSelectionEmpty()) {
+            return new ValidationInfo("Select item!", jbList);
+        }
+
+        ValidationInfo validationInfo = TemplateValidator.isTemplateValid((PackageTemplate) jbList.getSelectedValue());
+        if (validationInfo != null) {
+            return new ValidationInfo(validationInfo.message, jbList);
+        }
+
+        return null;
+    }
+
+    @Override
     protected JComponent createCenterPanel() {
         JSplitPane root = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        root.setMinimumSize(new Dimension(400, 300));
         root.setEnabled(false);
 
 
