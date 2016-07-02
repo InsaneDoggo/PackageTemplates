@@ -17,15 +17,17 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
-import com.intellij.util.ui.MouseEventHandler;
 import custom.components.TemplateView;
 import custom.dialogs.SelectFileTemplateDialog;
+import custom.impl.ClickListener;
 import models.InputBlock;
 import models.TextRange;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
@@ -135,13 +137,13 @@ public class UIMaker {
         setLeftPadding(container, DEFAULT_PADDING + PADDING * paddingScale);
 
         JLabel jLabel = new JLabel(icon, SwingConstants.LEFT);
-        if(!inputBlock.getElement().isDirectory()) {
+        if (!inputBlock.getElement().isDirectory()) {
             jLabel.setText(inputBlock.getElement().getTemplateName());
         }
         inputBlock.getTfName().setText(inputBlock.getElement().getName());
 
         GridBag bag = getDefaultGridBag();
-        container.add(jLabel, bag.nextLine().next().insets(0,0,0,8));
+        container.add(jLabel, bag.nextLine().next().insets(0, 0, 0, 8));
         container.add(inputBlock.getTfName(), bag.next());
 
         return container;
@@ -210,55 +212,46 @@ public class UIMaker {
     }
 
     private static void addMouseListener(final TemplateView templateView, final JPanel container, Project project) {
-        container.addMouseListener(new MouseEventHandler() {
+        container.addMouseListener(new ClickListener() {
             @Override
-            protected void handle(MouseEvent event) {
-                if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isRightMouseButton(event)) {
+            public void mouseClicked(MouseEvent mouseEvent) {
+                if (SwingUtilities.isRightMouseButton(mouseEvent)) {
                     JPopupMenu popupMenu = new JBPopupMenu();
 
                     JMenuItem itemAddFile = new JBMenuItem("Add File", AllIcons.FileTypes.Text);
                     JMenuItem itemAddDirectory = new JBMenuItem("Add Directory", AllIcons.Nodes.Package);
                     JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
 
-                    itemAddFile.addMouseListener(new MouseEventHandler() {
+                    itemAddFile.addActionListener(new ActionListener() {
                         @Override
-                        protected void handle(MouseEvent event) {
-                            if (isLeftClick(event)) {
-                                AddFile(templateView, project);
-                                System.out.println("AddFile");
-                            }
+                        public void actionPerformed(ActionEvent e) {
+                            AddFile(templateView, project);
                         }
                     });
-                    itemAddDirectory.addMouseListener(new MouseEventHandler() {
+                    itemAddDirectory.addActionListener(new ActionListener() {
                         @Override
-                        protected void handle(MouseEvent event) {
-                            if (isLeftClick(event)) {
-                                addDirectory(templateView, project);
-                                System.out.println("AddFolder");
-                            }
+                        public void actionPerformed(ActionEvent e) {
+                            addDirectory(templateView, project);
                         }
                     });
-                    itemDelete.addMouseListener(new MouseEventHandler() {
+                    itemDelete.addActionListener(new ActionListener() {
                         @Override
-                        protected void handle(MouseEvent event) {
-                            if (isLeftClick(event)) {
-                                deleteFile(templateView);
-                                System.out.println("Delete");
-                            }
+                        public void actionPerformed(ActionEvent e) {
+                            deleteFile(templateView);
                         }
                     });
 
                     popupMenu.add(itemAddFile);
                     popupMenu.add(itemAddDirectory);
                     popupMenu.add(itemDelete);
-                    popupMenu.show(container, event.getX(), event.getY());
+                    popupMenu.show(container, mouseEvent.getX(), mouseEvent.getY());
                 }
             }
         });
     }
 
     public static boolean isLeftClick(MouseEvent event) {
-        return event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event);
+        return SwingUtilities.isLeftMouseButton(event);
     }
 
     private static void addDirectory(TemplateView templateView, Project project) {

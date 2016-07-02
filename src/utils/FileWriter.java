@@ -68,7 +68,7 @@ public class FileWriter {
             return null;
         }
 
-        FileTemplate template = FileTemplateManager.getDefaultInstance().getTemplate(templateElement.getTemplateName());
+        FileTemplate template = InputManager.getTemplate(templateElement.getTemplateName());
 
         Properties properties = new Properties();
         properties.putAll(templateElement.getMapProperties());
@@ -78,6 +78,7 @@ public class FileWriter {
             element = FileTemplateUtil.createFromTemplate(template, templateElement.getName(), properties, dir);
         } catch (Exception e) {
             //todo print error
+            System.out.println(e.getMessage());
             return null;
         }
 

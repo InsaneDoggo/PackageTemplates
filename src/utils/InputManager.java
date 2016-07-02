@@ -11,6 +11,7 @@ import models.PackageTemplate;
 import models.TemplateElement;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +30,6 @@ public class InputManager {
     private PackageTemplate packageTemplate;
     private Project project;
     private ArrayList<InputBlock> listInputBlock;
-    private FileTemplateManager fileTemplateManager;
     private HashMap<String, String> mapGlobalProperties;
 
     public static final ArrayList<String> listAttributesToRemove = new ArrayList<String>() {{
@@ -44,7 +44,6 @@ public class InputManager {
         this.event = event;
 
         listInputBlock = new ArrayList<>();
-        fileTemplateManager = FileTemplateManager.getDefaultInstance();
         initPanel();
     }
 
@@ -78,7 +77,7 @@ public class InputManager {
             listInputBlock.add(inputBlock);
 
             JLabel jLabel = new JLabel(AllIcons.Nodes.Variable);
-//            jLabel.setText(StringTools.formatConst(inputBlock.getGlobalKey()));
+            jLabel.setText(inputBlock.getGlobalKey());
             jLabel.setHorizontalAlignment(SwingConstants.LEFT);
             jLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
             UIMaker.setHorizontalPadding(jLabel, UIMaker.PADDING_LABEL);
@@ -118,16 +117,29 @@ public class InputManager {
     }
 
     private void addClass(TemplateElement element) {
-        FileTemplate fileTemplate = fileTemplateManager.getTemplate(element.getTemplateName());
+        FileTemplate fileTemplate = getTemplate(element.getTemplateName());
         if (fileTemplate != null) {
             InputBlock inputBlock = new InputBlock(element, getUnsetAttrs(fileTemplate), project);
             panel.add(UIMaker.getClassPanel(inputBlock, paddingScale, UIMaker.getIconByFileExtension(element.getExtension())));
 
-            // add variables
-            JComponent component = inputBlock.getPanelVariables().getComponent();
-            UIMaker.setLeftPadding(component, UIMaker.PADDING * (paddingScale + 1));
-            panel.add(component);
+            if (inputBlock.getPanelVariables() != null) {
+                // add variables
+                JComponent component = inputBlock.getPanelVariables().getComponent();
+                UIMaker.setLeftPadding(component, UIMaker.PADDING * (paddingScale + 1));
+                panel.add(component);
+            }
+
             listInputBlock.add(inputBlock);
+        }
+    }
+
+    @Nullable
+    public static FileTemplate getTemplate(String name) {
+        FileTemplate fileTemplate = FileTemplateManager.getDefaultInstance().getTemplate(name);
+        if (fileTemplate != null) {
+            return fileTemplate;
+        } else {
+            return FileTemplateManager.getDefaultInstance().getDefaultTemplate(name);
         }
     }
 

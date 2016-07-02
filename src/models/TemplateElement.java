@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.apache.batik.svggen.SVGStylingAttributes.set;
-
 /**
  * Created by Arsen on 15.06.2016.
  */

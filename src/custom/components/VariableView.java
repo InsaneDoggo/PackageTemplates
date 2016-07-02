@@ -5,7 +5,7 @@ import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
-import com.intellij.util.ui.MouseEventHandler;
+import custom.impl.ClickListener;
 import models.PackageTemplate;
 import models.TemplateContainer;
 import utils.Logger;
@@ -58,27 +58,27 @@ public class VariableView extends JPanel {
         tfValue = new EditorTextField(value);
         tfValue.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        label.addMouseListener(new MouseEventHandler() {
+        label.addMouseListener(new ClickListener() {
             @Override
-            protected void handle(MouseEvent event) {
-                if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isRightMouseButton(event)) {
+            public void mouseClicked(MouseEvent eventOuter) {
+                if (SwingUtilities.isRightMouseButton(eventOuter)) {
                     JPopupMenu popupMenu = new JBPopupMenu();
 
                     JMenuItem itemAddVariable = new JBMenuItem("Add Variable", AllIcons.Nodes.Variable);
                     JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
 
-                    itemAddVariable.addMouseListener(new MouseEventHandler() {
+                    itemAddVariable.addMouseListener(new ClickListener() {
                         @Override
-                        protected void handle(MouseEvent event) {
+                        public void mouseClicked(MouseEvent event) {
                             if (UIMaker.isLeftClick(event)) {
                                 addVariable(templateContainer);
                                 System.out.println("AddVariable");
                             }
                         }
                     });
-                    itemDelete.addMouseListener(new MouseEventHandler() {
+                    itemDelete.addMouseListener(new ClickListener() {
                         @Override
-                        protected void handle(MouseEvent event) {
+                        public void mouseClicked(MouseEvent event) {
                             if (UIMaker.isLeftClick(event)) {
                                 deleteVariable(templateContainer);
                                 System.out.println("Delete");
@@ -88,7 +88,7 @@ public class VariableView extends JPanel {
 
                     popupMenu.add(itemAddVariable);
                     popupMenu.add(itemDelete);
-                    popupMenu.show(label, event.getX(), event.getY());
+                    popupMenu.show(label, eventOuter.getX(), eventOuter.getY());
                 }
             }
         });

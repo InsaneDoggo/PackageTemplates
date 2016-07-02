@@ -1,38 +1,44 @@
 <idea-plugin version="2">
-  <id>com.your.company.supaplugin</id>
-  <predefinedName>Megaplugin</predefinedName>
-  <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <id>com.your.company.supaplugin</id>
+    <version>1.0</version>
+    <name>PackageTemplate</name>
+    <vendor email="support@supaplugin.com"
+            url="http://www.supaplugin.com">YourCompany
+    </vendor>
 
-  <description><![CDATA[
+    <description><![CDATA[
       Enter short description for your plugin here.<br>
       <em>most HTML tags may be used</em>
     ]]></description>
 
-  <change-notes><![CDATA[
+    <change-notes><![CDATA[
       Add change notes here.<br>
       <em>most HTML tags may be used</em>
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="141.0"/>
+    <idea-version since-build="141.0"/>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products
-  <depends>com.intellij.modules.lang</depends>
-  -->
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+    <!--<depends>com.intellij.modules.platform</depends>-->
+    <!--<depends>com.intellij.modules.vcs</depends>-->
+    <!--<depends>com.intellij.modules.xml</depends>-->
+    <!--<depends>com.intellij.modules.xdebugger</depends>-->
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
 
-  <actions>
-    <!-- Add your actions here -->
-    <action id="SampleAct" class="NewPackageTemplateAction" text="SampleActName">
-      <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
-    </action>
-  </actions>
+    <actions>
+        <!-- Add your actions here -->
+        <action id="SampleAct"
+                class="NewPackageTemplateAction"
+                text="SampleActName">
+            <add-to-group group-id="ProjectViewPopupMenu"
+                          anchor="first"/>
+        </action>
+    </actions>
+
 
 </idea-plugin>

@@ -59,11 +59,7 @@ public class NewPackageTemplateAction extends AnAction {
 
     private void showDialog(AnActionEvent event, PackageTemplate packageTemplate) {
         InputManager inputManager = new InputManager(event, packageTemplate);
-
-            packageTemplate.getTemplateElement().makeInputBlock(inputManager);
-//        for (TemplateElement element : packageTemplate.getListTemplateElement()) {
-//            element.makeInputBlock(inputManager);
-//        }
+        packageTemplate.getTemplateElement().makeInputBlock(inputManager);
 
         NewPackageDialog dialog = new NewPackageDialog(event.getProject(), "New package from \"" + packageTemplate.getName() + "\"", inputManager) {
             @Override
@@ -72,7 +68,8 @@ public class NewPackageTemplateAction extends AnAction {
             }
 
             @Override
-            public void onCancel() {}
+            public void onCancel() {
+            }
         };
         dialog.updateHighlight();
         dialog.show();

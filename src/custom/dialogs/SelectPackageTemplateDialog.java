@@ -7,7 +7,8 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.GridBag;
-import com.intellij.util.ui.MouseEventHandler;
+import custom.impl.ClickListener;
+import custom.impl.ReleaseListener;
 import io.SaveUtil;
 import io.TemplateList;
 import models.MyListModel;
@@ -16,11 +17,11 @@ import org.jetbrains.annotations.NotNull;
 import utils.TemplateValidator;
 
 import javax.swing.*;
-import javax.swing.event.ListDataListener;
+import javax.swing.event.MouseInputListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-
-import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.block;
 
 
 /**
@@ -98,26 +99,24 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
         JButton jbDelete = getIconButton(AllIcons.General.Remove);
         JButton jbEdit = getIconButton(AllIcons.Modules.Edit);
 
-        jbAdd.addMouseListener(new MouseEventHandler() {
+        jbAdd.addMouseListener(new ReleaseListener() {
             @Override
-            protected void handle(MouseEvent event) {
-                if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
-                    onAddAction();
-                }
+            public void mouseReleased(MouseEvent event) {
+                onAddAction();
             }
         });
-        jbDelete.addMouseListener(new MouseEventHandler() {
+        jbDelete.addMouseListener(new ReleaseListener() {
             @Override
-            protected void handle(MouseEvent event) {
-                if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
+            public void mouseReleased(MouseEvent event) {
+                if (SwingUtilities.isLeftMouseButton(event)) {
                     onDeleteAction(jbDelete);
                 }
             }
         });
-        jbEdit.addMouseListener(new MouseEventHandler() {
+        jbEdit.addMouseListener(new ReleaseListener() {
             @Override
-            protected void handle(MouseEvent event) {
-                if (event.getID() == MouseEvent.MOUSE_RELEASED && SwingUtilities.isLeftMouseButton(event)) {
+            public void mouseReleased(MouseEvent event) {
+                if (SwingUtilities.isLeftMouseButton(event)) {
                     onEditAction();
                 }
             }

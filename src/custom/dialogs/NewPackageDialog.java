@@ -75,9 +75,9 @@ public abstract class NewPackageDialog extends DialogWrapper {
                     for (Map.Entry<Object, Object> entry : properties.entrySet()) {
                         block.getElement().getMapProperties().put((String) entry.getKey(), (String) entry.getValue());
                     }
-                    //add GLOBALS
-                    block.getElement().getMapProperties().putAll(inputManager.getMapGlobalProperties());
                 }
+                //add GLOBALS
+                block.getElement().getMapProperties().putAll(inputManager.getMapGlobalProperties());
             }
         }
     }
