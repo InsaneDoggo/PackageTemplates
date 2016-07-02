@@ -7,13 +7,12 @@
     </vendor>
 
     <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+      Tool for create "package templates".<br>
+      <em>Plugin in Beta</em>
     ]]></description>
 
     <change-notes><![CDATA[
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+      No changes.<br>
     ]]>
     </change-notes>
 
@@ -32,9 +31,9 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="SampleAct"
+        <action id="PackageTemplate"
                 class="NewPackageTemplateAction"
-                text="SampleActName">
+                text="New PackageTemplate">
             <add-to-group group-id="ProjectViewPopupMenu"
                           anchor="first"/>
         </action>
