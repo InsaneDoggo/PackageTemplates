@@ -7,20 +7,16 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.GridBag;
-import custom.impl.ClickListener;
 import custom.impl.ReleaseListener;
-import io.SaveUtil;
-import io.TemplateList;
+import state.SaveUtil;
+import state.TemplateList;
 import models.MyListModel;
 import models.PackageTemplate;
 import org.jetbrains.annotations.NotNull;
 import utils.TemplateValidator;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
 

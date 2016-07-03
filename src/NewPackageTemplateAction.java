@@ -1,21 +1,15 @@
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.psi.PsiDirectory;
+import custom.dialogs.NewPackageDialog;
 import custom.dialogs.SelectPackageTemplateDialog;
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
-import io.SaveUtil;
 import models.PackageTemplate;
 import models.TemplateElement;
-import custom.dialogs.NewPackageDialog;
+import state.SaveUtil;
 import utils.FileWriter;
 import utils.InputManager;
-import utils.Logger;
-import utils.TemplateValidator;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created by Arsen on 13.06.2016.

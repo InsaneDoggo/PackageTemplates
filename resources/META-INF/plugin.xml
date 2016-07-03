@@ -1,5 +1,5 @@
 <idea-plugin version="2">
-    <id>com.your.company.supaplugin</id>
+    <id>com.supaplugin</id>
     <version>1.0</version>
     <name>PackageTemplate</name>
     <vendor email="support@supaplugin.com"
@@ -26,7 +26,9 @@
     <!--<depends>com.intellij.modules.xdebugger</depends>-->
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
+        <applicationService
+                serviceInterface="state.Config"
+                serviceImplementation="state.Config"/>
     </extensions>
 
     <actions>

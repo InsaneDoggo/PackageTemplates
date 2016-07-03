@@ -1,11 +1,9 @@
-package io;
+package state;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.components.ServiceManager;
 import models.PackageTemplate;
-
-import java.util.HashMap;
 
 /**
  * Created by CeH9 on 26.06.2016.
@@ -23,19 +21,20 @@ public class SaveUtil {
         return instance;
     }
 
-    public static final String KEY_PREFIX = "package_template_key_prefix";
-
     private TemplateList templateList;
     private Gson gson;
-    private PropertiesComponent propertiesComponent;
+    private Config cfg;
 
     public SaveUtil() {
         gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
-        propertiesComponent = PropertiesComponent.getInstance();
+        cfg = ServiceManager.getService(Config.class);
     }
 
     public void load() {
-        templateList = gson.fromJson(propertiesComponent.getValue(SaveUtil.KEY_PREFIX), TemplateList.class);
+        PackageTemplateState state = cfg.getState();
+        if( state != null ){
+            templateList = gson.fromJson(state.value, TemplateList.class);
+        }
         if (templateList == null) {
             templateList = new TemplateList();
         }
@@ -43,7 +42,14 @@ public class SaveUtil {
     }
 
     public void save() {
-        propertiesComponent.setValue(SaveUtil.KEY_PREFIX, gson.toJson(templateList, TemplateList.class));
+        PackageTemplateState state = cfg.getState();
+        if( state != null ) {
+            state.value = gson.toJson(templateList, TemplateList.class);
+        } else {
+            state = new PackageTemplateState();
+            state.value = gson.toJson(templateList, TemplateList.class);
+            cfg.loadState(state);
+        }
     }
 
     private void initNonSerializableFields() {
