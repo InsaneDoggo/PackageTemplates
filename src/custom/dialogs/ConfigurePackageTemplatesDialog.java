@@ -26,6 +26,7 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
     private TemplateContainer templateContainer;
     private PackageTemplate packageTemplate;
     private JBSplitter panel;
+    private Project project;
 
     public abstract void onSuccess(PackageTemplate packageTemplate);
 
@@ -33,10 +34,12 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
 
     public ConfigurePackageTemplatesDialog(Project project) {
         super(project);
+        this.project = project;
     }
 
     public ConfigurePackageTemplatesDialog(Project project, PackageTemplate packageTemplate) {
         super(project);
+        this.project = project;
         this.packageTemplate = packageTemplate;
     }
 
@@ -57,7 +60,7 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
 
     private void preShow() {
         initContainer();
-        panel.setFirstComponent(getPackageBuilderComponent());
+        panel.setFirstComponent(getPackageBuilderComponent(project));
     }
 
     private void onOKAction() {
@@ -136,24 +139,24 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         }
     }
 
-    private JComponent getPackageBuilderComponent() {
+    private JComponent getPackageBuilderComponent(Project project) {
         JPanel root = new JPanel();
         JBScrollPane scrollPane = new JBScrollPane(root);
         root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
         root.setAlignmentY(JPanel.TOP_ALIGNMENT);
 
-        root.add(getTemplateNameComponent());
+        root.add(getTemplateNameComponent(project));
         root.add(new SeparatorComponent(10));
         root.add(templateContainer.buildView());
         root.add(new SeparatorComponent(10));
-        root.add(templateContainer.getTemplateView().buildView(getProject()));
+        root.add(templateContainer.getTemplateView().buildView(project));
 
         root.setBorder(new EmptyBorder(8, 8, 8, 8));
         scrollPane.setMinimumSize(new Dimension(300, 150));
         return scrollPane;
     }
 
-    private Component getTemplateNameComponent() {
+    private Component getTemplateNameComponent(Project project) {
         JPanel container = new JPanel(new GridBagLayout());
         setLeftPadding(container, DEFAULT_PADDING);
 
@@ -161,7 +164,7 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         setRightPadding(jLabel, PADDING_LABEL);
 
 
-        templateContainer.setEtfTemplateName(getEditorTextField(templateContainer.getName(), getProject()));
+        templateContainer.setEtfTemplateName(getEditorTextField(templateContainer.getName(), project));
 
         GridBag bag = getDefaultGridBag();
         container.add(jLabel, bag.nextLine().next());
