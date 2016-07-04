@@ -1,5 +1,6 @@
 package utils;
 
+import models.PackageTemplate;
 import models.TextRange;
 
 import java.util.ArrayList;
@@ -79,5 +80,9 @@ public class StringTools {
             return false;
         }
         return true;
+    }
+
+    public static String wrapAsVariable(String name) {
+        return String.format("%s%s%s", "${", name, "}");
     }
 }

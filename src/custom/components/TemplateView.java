@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static com.intellij.testFramework.LightPlatformTestCase.getProject;
 import static utils.UIMaker.getDefaultGridBag;
 
 /**
@@ -142,12 +141,12 @@ public class TemplateView extends JPanel {
         this.jlName = jlName;
     }
 
-    public void reBuild() {
+    public void reBuild(Project project) {
         if (getTemplateParent() == null) {
             removeAll();
-            buildView(getProject());
+            buildView(project);
         } else {
-            getTemplateParent().reBuild();
+            getTemplateParent().reBuild(project);
         }
     }
 

@@ -237,7 +237,7 @@ public class UIMaker {
                     itemDelete.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            deleteFile(templateView);
+                            deleteFile(templateView, project);
                         }
                     });
 
@@ -264,14 +264,14 @@ public class UIMaker {
             parent = templateView.getTemplateParent();
         }
         templateView.addTemplate(new TemplateView("Unnamed", parent));
-        templateView.reBuild();
+        templateView.reBuild(project);
     }
 
-    public static void deleteFile(TemplateView templateView) {
+    public static void deleteFile(TemplateView templateView, Project project) {
         templateView.removeMyself();
 
         templateView.collectDataFromFields();
-        templateView.reBuild();
+        templateView.reBuild(project);
     }
 
     public static void AddFile(TemplateView templateView, Project project) {
@@ -287,7 +287,7 @@ public class UIMaker {
                     parent = templateView.getTemplateParent();
                 }
                 templateView.addTemplate(new TemplateView("Unnamed", fileTemplate.getName(), fileTemplate.getExtension(), parent));
-                templateView.reBuild();
+                templateView.reBuild(project);
             }
 
             @Override

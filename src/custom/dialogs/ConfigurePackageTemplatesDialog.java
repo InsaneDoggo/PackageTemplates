@@ -114,11 +114,11 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         if (packageTemplate == null) {
             // New
             templateContainer = new TemplateContainer(
-                    "New Template",
+                    "ExampleTemplate",
                     "Description..",
-                    new TemplateView(String.format("%s%s%s", "${", PackageTemplate.ATTRIBUTE_BASE_NAME, "}"), null)
+                    new TemplateView("example", null)
             );
-            templateContainer.addVariable(new VariableView(PackageTemplate.ATTRIBUTE_BASE_NAME, ""));
+            templateContainer.addVariable(new VariableView(PackageTemplate.ATTRIBUTE_BASE_NAME, "Example"));
         } else {
             // Load (old)
             templateContainer = new TemplateContainer(

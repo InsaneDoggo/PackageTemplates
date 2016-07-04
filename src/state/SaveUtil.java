@@ -63,6 +63,10 @@ public class SaveUtil {
         return templateList;
     }
 
+    public String getTemplatesForExport() {
+        return gson.toJson(templateList, TemplateList.class);
+    }
+
     public void setTemplateList(TemplateList templateList) {
         this.templateList = templateList;
     }

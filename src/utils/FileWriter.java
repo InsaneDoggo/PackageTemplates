@@ -10,12 +10,15 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import models.TemplateElement;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -83,6 +86,18 @@ public class FileWriter {
         }
 
         return element;
+    }
+
+    public static boolean exportFile(String path, String fileName, String content){
+        try {
+            FileUtil.writeToFile(new File(path+"/"+fileName),content);
+        } catch (IOException e) {
+            //todo print error
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 
 }
