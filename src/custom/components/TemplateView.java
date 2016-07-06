@@ -16,7 +16,6 @@ import static utils.UIMaker.getDefaultGridBag;
  * Created by CeH9 on 23.06.2016.
  */
 public class TemplateView extends JPanel {
-
     private String predefinedName;
     private String extension;
     private String templateName;
