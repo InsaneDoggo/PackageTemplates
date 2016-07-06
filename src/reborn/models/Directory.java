@@ -7,18 +7,18 @@ import java.util.ArrayList;
  */
 public class Directory extends BaseElement {
 
-    private ArrayList<File> listFile;
+    private ArrayList<BaseElement> listBaseElement;
 
-    public Directory(String name, boolean isEnabled, Directory parent, String groovyCode, ArrayList<File> listFile) {
+    public Directory(String name, boolean isEnabled, Directory parent, String groovyCode, ArrayList<BaseElement> listBaseElement) {
         super(name, isEnabled, parent, groovyCode);
-        this.listFile = listFile;
+        this.listBaseElement = listBaseElement;
     }
 
-    public ArrayList<File> getListFile() {
-        return listFile;
+    public ArrayList<BaseElement> getListBaseElement() {
+        return listBaseElement;
     }
 
-    public void setListFile(ArrayList<File> listFile) {
-        this.listFile = listFile;
+    public void setListBaseElement(ArrayList<BaseElement> listBaseElement) {
+        this.listBaseElement = listBaseElement;
     }
 }

@@ -23,6 +23,9 @@ import custom.impl.ClickListener;
 import models.InputBlock;
 import models.TextRange;
 import org.jetbrains.annotations.NotNull;
+import reborn.wrappers.BaseWrapper;
+import reborn.wrappers.DirectoryWrapper;
+import reborn.wrappers.FileWrapper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -211,8 +214,8 @@ public class UIMaker {
         return container;
     }
 
-    private static void addMouseListener(final TemplateView templateView, final JPanel container, Project project) {
-        container.addMouseListener(new ClickListener() {
+    public static void addMouseListener(final BaseWrapper baseWrapper, Project project) {
+        baseWrapper.jlName.addMouseListener(new ClickListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 if (SwingUtilities.isRightMouseButton(mouseEvent)) {
@@ -225,26 +228,26 @@ public class UIMaker {
                     itemAddFile.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            AddFile(templateView, project);
+                            AddFile(baseWrapper, project);
                         }
                     });
                     itemAddDirectory.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            addDirectory(templateView, project);
+                            addDirectory(baseWrapper, project);
                         }
                     });
                     itemDelete.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            deleteFile(templateView, project);
+                            deleteFile(baseWrapper, project);
                         }
                     });
 
                     popupMenu.add(itemAddFile);
                     popupMenu.add(itemAddDirectory);
                     popupMenu.add(itemDelete);
-                    popupMenu.show(container, mouseEvent.getX(), mouseEvent.getY());
+                    popupMenu.show(baseWrapper.jlName, mouseEvent.getX(), mouseEvent.getY());
                 }
             }
         });
@@ -254,27 +257,28 @@ public class UIMaker {
         return SwingUtilities.isLeftMouseButton(event);
     }
 
-    private static void addDirectory(TemplateView templateView, Project project) {
-        templateView.collectDataFromFields();
+    public static void addDirectory(BaseWrapper baseWrapper, Project project) {
+        baseWrapper.collectDataFromFields();
 
-        TemplateView parent;
-        if (templateView.isDirectory()) {
-            parent = templateView;
+        DirectoryWrapper parent;
+        if (baseWrapper instanceof DirectoryWrapper) {
+            parent = ((DirectoryWrapper) baseWrapper);
         } else {
-            parent = templateView.getTemplateParent();
+            parent = baseWrapper.getParent();
         }
-        templateView.addTemplate(new TemplateView("Unnamed", parent));
-        templateView.reBuild(project);
+        parent.addTemplate(new BaseWrapper("Unnamed", parent));
+
+        parent.reBuild(project);
     }
 
-    public static void deleteFile(TemplateView templateView, Project project) {
+    public static void deleteFile(BaseWrapper baseWrapper, Project project) {
         templateView.removeMyself();
 
         templateView.collectDataFromFields();
         templateView.reBuild(project);
     }
 
-    public static void AddFile(TemplateView templateView, Project project) {
+    public static void AddFile(BaseWrapper baseWrapper, Project project) {
         SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(project) {
             @Override
             public void onSuccess(FileTemplate fileTemplate) {
