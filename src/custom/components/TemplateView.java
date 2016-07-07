@@ -54,7 +54,7 @@ public class TemplateView extends JPanel {
         getBag().setDefaultWeightX(1);
 
         if (isDirectory()) {
-            add(UIMaker.getPackageView(this, project), getBag().nextLine().next());
+            add(UIMaker.createPackageView(this, project), getBag().nextLine().next());
 
             for (TemplateView templateView : getListTemplateView()) {
                 TemplateView view = templateView.buildView(project);

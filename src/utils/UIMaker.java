@@ -23,9 +23,9 @@ import custom.impl.ClickListener;
 import models.InputBlock;
 import models.TextRange;
 import org.jetbrains.annotations.NotNull;
+import reborn.models.Directory;
 import reborn.wrappers.BaseWrapper;
 import reborn.wrappers.DirectoryWrapper;
-import reborn.wrappers.FileWrapper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -192,26 +192,17 @@ public class UIMaker {
         return container;
     }
 
-    public static JPanel getPackageView(TemplateView templateView, Project project) {
-        JPanel container = new JPanel(new GridBagLayout());
-        setLeftPadding(container, DEFAULT_PADDING);
+    public static void createPackageView(DirectoryWrapper dirWrapper, Project project, JPanel container, GridBag bag) {
+        dirWrapper.jlName = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
+        dirWrapper.jlName.setText("Directory");
+        setRightPadding(dirWrapper.jlName, PADDING_LABEL);
 
-        JLabel jLabel = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
-        templateView.setJlName(jLabel);
-        jLabel.setText("Directory");
-        setRightPadding(jLabel, PADDING_LABEL);
+        dirWrapper.etfName = getEditorTextField(dirWrapper.getDirectory().getName(), project);
 
-        EditorTextField etfName = getEditorTextField(templateView.getPredefinedName(), project);
-        templateView.setEtfName(etfName);
+        container.add(dirWrapper.jlName, bag.nextLine().next());
+        container.add(dirWrapper.etfName, bag.next());
 
-        GridBag bag = getDefaultGridBag();
-        container.add(jLabel, bag.nextLine().next());
-        container.add(etfName, bag.next());
-
-        addMouseListener(templateView, container, project);
-
-
-        return container;
+        addMouseListener(dirWrapper, project);
     }
 
     public static void addMouseListener(final BaseWrapper baseWrapper, Project project) {
@@ -240,7 +231,7 @@ public class UIMaker {
                     itemDelete.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            deleteFile(baseWrapper, project);
+                            deleteElement(baseWrapper, project);
                         }
                     });
 
@@ -266,16 +257,33 @@ public class UIMaker {
         } else {
             parent = baseWrapper.getParent();
         }
-        parent.addTemplate(new BaseWrapper("Unnamed", parent));
+
+        parent.addElement(createNewWrappedDirectory(parent));
 
         parent.reBuild(project);
     }
 
-    public static void deleteFile(BaseWrapper baseWrapper, Project project) {
-        templateView.removeMyself();
+    @NotNull
+    private static DirectoryWrapper createNewWrappedDirectory(DirectoryWrapper parent) {
+        DirectoryWrapper dirWrapper = new DirectoryWrapper();
 
-        templateView.collectDataFromFields();
-        templateView.reBuild(project);
+        Directory dir = new Directory();
+        dir.setName("unnamed");
+        dir.setEnabled(true);
+        dir.setGroovyCode("");
+        dir.setListBaseElement(new ArrayList<>());
+
+        dirWrapper.setParent(parent);
+        dirWrapper.setDirectory(dir);
+
+        return dirWrapper;
+    }
+
+    public static void deleteElement(BaseWrapper baseWrapper, Project project) {
+        baseWrapper.getParent().removeMyself();
+
+        baseWrapper.collectDataFromFields();
+        baseWrapper.getParent().reBuild(project);
     }
 
     public static void AddFile(BaseWrapper baseWrapper, Project project) {

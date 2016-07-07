@@ -1,14 +1,15 @@
 package reborn.wrappers;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.EditorTextField;
+import com.intellij.util.ui.GridBag;
 import custom.components.TemplateView;
+import reborn.models.BaseElement;
 import reborn.models.Directory;
 import utils.UIMaker;
 
 import javax.swing.*;
-
-import static utils.UIMaker.getDefaultGridBag;
+import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -16,7 +17,10 @@ import static utils.UIMaker.getDefaultGridBag;
 public class DirectoryWrapper extends BaseWrapper {
 
     private Directory directory;
-    private Directory parent;
+    private JPanel panel;
+    private GridBag gridBag;
+
+    private ArrayList<BaseWrapper> listBaseWrapper;
 
     public Directory getDirectory() {
         return directory;
@@ -26,70 +30,76 @@ public class DirectoryWrapper extends BaseWrapper {
         this.directory = directory;
     }
 
-    public Directory getParent() {
-        return parent;
+    public ArrayList<BaseWrapper> getListBaseWrapper() {
+        return listBaseWrapper;
     }
 
-    public void setParent(Directory parent) {
-        this.parent = parent;
+    public void setListBaseWrapper(ArrayList<BaseWrapper> listBaseWrapper) {
+        this.listBaseWrapper = listBaseWrapper;
     }
 
-    public TemplateView buildView(Project project) {
-        removeAll();
-
-        setBag(getDefaultGridBag());
-        getBag().setDefaultWeightX(1);
-
-        if (isDirectory()) {
-            add(UIMaker.getPackageView(this, project), getBag().nextLine().next());
-
-            for (TemplateView templateView : getListTemplateView()) {
-                TemplateView view = templateView.buildView(project);
-                add(view, getBag().nextLine().next());
-            }
-        } else {
-            add(UIMaker.getClassView(this, project), getBag().nextLine().next());
-        }
-
-        UIMaker.setLeftPadding(this, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);
-        return this;
+    public void addElement(BaseWrapper element) {
+        directory.getListBaseElement().add(element.getElement());
+        listBaseWrapper.add(element);
     }
 
-    public void reBuild(Project project) {
-        if (getTemplateParent() == null) {
-            removeAll();
-            buildView(project);
-        } else {
-            getTemplateParent().reBuild(project);
-        }
+    @Override
+    public BaseElement getElement() {
+        return directory;
     }
 
-    public void addTemplate(TemplateView tView) {
-        if (isDirectory()) {
-            getListTemplateView().add(tView);
-        } else {
-            getTemplateParent().getListTemplateView().add(tView);
-        }
+    public void removeElement(BaseWrapper element) {
+        directory.getListBaseElement().remove(element.getElement());
+        listBaseWrapper.remove(element);
     }
 
+    @Override
     public void removeMyself() {
-        if (getTemplateParent() == null) {
+        if (getParent() == null) {
             return;
+        }
+
+        getParent().removeElement(this);
+    }
+
+    @Override
+    public void buildView(Project project, JPanel container, GridBag bag) {
+        if (panel == null) {
+            panel = new JPanel(new GridBagLayout());
         } else {
-            getTemplateParent().getListTemplateView().remove(this);
+            panel.removeAll();
+        }
+
+        gridBag = new GridBag()
+                .setDefaultWeightX(1)
+                .setDefaultInsets(new Insets(4, 0, 4, 0))
+                .setDefaultFill(GridBagConstraints.HORIZONTAL);
+
+        UIMaker.createPackageView(this, project, container, bag);
+
+        for (BaseWrapper baseWrapper : getListBaseWrapper()) {
+            baseWrapper.buildView(project, panel, gridBag);
+        }
+
+        UIMaker.setLeftPadding(panel, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);
+        container.add(panel, bag.nextLine().next());
+    }
+
+    @Override
+    public void reBuild(Project project) {
+        if (getParent() == null) {
+            buildView(project, panel, gridBag);
+        } else {
+            getParent().reBuild(project);
         }
     }
 
+    @Override
     public void collectDataFromFields() {
-        if(isDirectory()){
-            setPredefinedName(getEtfName().getText());
+        getDirectory().setName(etfName.getText());
 
-            for (TemplateView templateView : getListTemplateView()){
-                templateView.collectDataFromFields();
-            }
-        } else {
-            setPredefinedName(getEtfName().getText());
-            setTemplateName(getJlName().getText());
+        for (BaseWrapper baseWrapper : getListBaseWrapper()) {
+            baseWrapper.collectDataFromFields();
         }
     }
 

@@ -23,13 +23,14 @@ public class FileWrapper extends BaseWrapper {
         this.file = file;
     }
 
+    @Override
     public void buildView(Project project, JPanel container, GridBag bag) {
         jlName = new JLabel(UIMaker.getIconByFileExtension(file.getExtension()), SwingConstants.LEFT);
 
-        jlName.setText(file.getName());
+        jlName.setText(file.getTemplateName());
         UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
 
-        etfName = UIMaker.getEditorTextField(file.getValue(), project);
+        etfName = UIMaker.getEditorTextField(file.getName(), project);
 
         bag.weightx(1);
         container.add(jlName, bag.nextLine().next());
@@ -38,19 +39,30 @@ public class FileWrapper extends BaseWrapper {
         UIMaker.addMouseListener(this, project);
     }
 
-    public void addTemplate(BaseElement element) {
-        // TODO: 07.07.2016 add method in Directory
-//        getParent().getDirectory().getListBaseElement().add(element);
+    @Override
+    public void reBuild(Project project) {
+        getParent().reBuild(project);
     }
 
+    @Override
+    public void addElement(BaseWrapper element) {
+        getParent().addElement(element);
+    }
+
+    @Override
+    public BaseElement getElement() {
+        return file;
+    }
+
+    @Override
     public void removeMyself() {
-        // TODO: 07.07.2016 remove method in Directory
-        //   getParent().getDirectory().getListBaseElement().remove(this);
+        getParent().removeElement(this);
     }
 
+    @Override
     public void collectDataFromFields() {
         file.setName(jlName.getText());
-        file.setValue(etfName.getText());
+        file.setTemplateName(etfName.getText());
     }
 
 }

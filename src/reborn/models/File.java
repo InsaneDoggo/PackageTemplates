@@ -5,21 +5,15 @@ package reborn.models;
  */
 public class File extends BaseElement {
 
-    private String value;
+    private String templateName;
     private String extension;
 
-    public File(String name, boolean isEnabled, Directory parent, String groovyCode, String value, String extension) {
-        super(name, isEnabled, parent, groovyCode);
-        this.value = value;
-        this.extension = extension;
+    public String getTemplateName() {
+        return templateName;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public String getExtension() {
