@@ -24,24 +24,17 @@ public class FileWrapper extends BaseWrapper {
     }
 
     @Override
-    public void buildView(Project project, JPanel container, GridBag bag) {
-        jlName = new JLabel(UIMaker.getIconByFileExtension(file.getExtension()), SwingConstants.LEFT);
-
-        jlName.setText(file.getTemplateName());
+    public void buildView(Project project, JPanel container, GridBag bag, boolean isEditMode) {
+        jlName = new JLabel(UIMaker.getIconByFileExtension(getFile().getExtension()), SwingConstants.LEFT);
+        jlName.setText(getFile().getTemplateName());
         UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
 
-        etfName = UIMaker.getEditorTextField(file.getName(), project);
+        etfName = UIMaker.getEditorTextField(getFile().getName(), project);
 
-        bag.weightx(1);
         container.add(jlName, bag.nextLine().next());
         container.add(etfName, bag.next());
 
-        UIMaker.addMouseListener(this, project);
-    }
-
-    @Override
-    public void reBuild(Project project) {
-        getParent().reBuild(project);
+        UIMaker.addMouseListener(this, project, isEditMode);
     }
 
     @Override
@@ -52,6 +45,11 @@ public class FileWrapper extends BaseWrapper {
     @Override
     public BaseElement getElement() {
         return file;
+    }
+
+    @Override
+    public boolean isDirectory() {
+        return false;
     }
 
     @Override

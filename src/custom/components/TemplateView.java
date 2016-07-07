@@ -61,7 +61,7 @@ public class TemplateView extends JPanel {
                 add(view, getBag().nextLine().next());
             }
         } else {
-            add(UIMaker.getClassView(this, project), getBag().nextLine().next());
+            add(UIMaker.createClassView(this, project), getBag().nextLine().next());
         }
 
         UIMaker.setLeftPadding(this, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);

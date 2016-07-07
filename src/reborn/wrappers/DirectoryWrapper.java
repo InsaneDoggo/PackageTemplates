@@ -1,8 +1,10 @@
 package reborn.wrappers;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.GridBag;
 import custom.components.TemplateView;
+import models.PackageTemplate;
 import reborn.models.BaseElement;
 import reborn.models.Directory;
 import utils.UIMaker;
@@ -48,6 +50,11 @@ public class DirectoryWrapper extends BaseWrapper {
         return directory;
     }
 
+    @Override
+    public boolean isDirectory() {
+        return true;
+    }
+
     public void removeElement(BaseWrapper element) {
         directory.getListBaseElement().remove(element.getElement());
         listBaseWrapper.remove(element);
@@ -63,7 +70,7 @@ public class DirectoryWrapper extends BaseWrapper {
     }
 
     @Override
-    public void buildView(Project project, JPanel container, GridBag bag) {
+    public void buildView(Project project, JPanel container, GridBag bag, boolean isEditMode) {
         if (panel == null) {
             panel = new JPanel(new GridBagLayout());
         } else {
@@ -75,23 +82,27 @@ public class DirectoryWrapper extends BaseWrapper {
                 .setDefaultInsets(new Insets(4, 0, 4, 0))
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
 
-        UIMaker.createPackageView(this, project, container, bag);
+        createPackageView( project, container, bag, isEditMode);
 
         for (BaseWrapper baseWrapper : getListBaseWrapper()) {
-            baseWrapper.buildView(project, panel, gridBag);
+            baseWrapper.buildView(project, panel, gridBag, true);
         }
 
         UIMaker.setLeftPadding(panel, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);
         container.add(panel, bag.nextLine().next());
     }
 
-    @Override
-    public void reBuild(Project project) {
-        if (getParent() == null) {
-            buildView(project, panel, gridBag);
-        } else {
-            getParent().reBuild(project);
-        }
+    private void createPackageView(Project project, JPanel container, GridBag bag, boolean isEditMode) {
+        jlName = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
+        jlName.setText("Directory");
+        UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
+
+        etfName = UIMaker.getEditorTextField(getDirectory().getName(), project);
+
+        container.add(jlName, bag.nextLine().next());
+        container.add(etfName, bag.next());
+
+        UIMaker.addMouseListener(this, project, isEditMode);
     }
 
     @Override

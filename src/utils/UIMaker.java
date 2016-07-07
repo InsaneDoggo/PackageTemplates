@@ -17,15 +17,16 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
-import custom.components.TemplateView;
 import custom.dialogs.SelectFileTemplateDialog;
 import custom.impl.ClickListener;
 import models.InputBlock;
 import models.TextRange;
 import org.jetbrains.annotations.NotNull;
 import reborn.models.Directory;
+import reborn.models.File;
 import reborn.wrappers.BaseWrapper;
 import reborn.wrappers.DirectoryWrapper;
+import reborn.wrappers.FileWrapper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -170,29 +171,20 @@ public class UIMaker {
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
-    public static JPanel getClassView(TemplateView templateView, Project project) {
-        JPanel container = new JPanel(new GridBagLayout());
-        setLeftPadding(container, DEFAULT_PADDING);
+    public static void createClassView(FileWrapper fileWrapper, Project project, JPanel container, GridBag bag, boolean isEditMode) {
+        fileWrapper.jlName = new JLabel(getIconByFileExtension(fileWrapper.getFile().getExtension()), SwingConstants.LEFT);
+        fileWrapper.jlName.setText(fileWrapper.getFile().getTemplateName());
+        setRightPadding(fileWrapper.jlName, PADDING_LABEL);
 
-        JLabel jLabel = new JLabel(getIconByFileExtension(templateView.getExtension()), SwingConstants.LEFT);
-        templateView.setJlName(jLabel);
-        jLabel.setText(templateView.getTemplateName());
-        setRightPadding(jLabel, PADDING_LABEL);
+        fileWrapper.etfName = getEditorTextField(fileWrapper.getFile().getName(), project);
 
-        EditorTextField etfName = getEditorTextField(templateView.getPredefinedName(), project);
-        templateView.setEtfName(etfName);
+        container.add(fileWrapper.jlName, bag.nextLine().next());
+        container.add(fileWrapper.etfName, bag.next());
 
-
-        GridBag bag = getDefaultGridBag();
-        container.add(jLabel, bag.nextLine().next());
-        container.add(etfName, bag.next());
-
-        addMouseListener(templateView, container, project);
-
-        return container;
+        addMouseListener(fileWrapper, project, isEditMode);
     }
 
-    public static void createPackageView(DirectoryWrapper dirWrapper, Project project, JPanel container, GridBag bag) {
+    public static void createPackageView(DirectoryWrapper dirWrapper, Project project, JPanel container, GridBag bag, boolean isEditMode) {
         dirWrapper.jlName = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
         dirWrapper.jlName.setText("Directory");
         setRightPadding(dirWrapper.jlName, PADDING_LABEL);
@@ -202,46 +194,57 @@ public class UIMaker {
         container.add(dirWrapper.jlName, bag.nextLine().next());
         container.add(dirWrapper.etfName, bag.next());
 
-        addMouseListener(dirWrapper, project);
+        addMouseListener(dirWrapper, project, isEditMode);
     }
 
-    public static void addMouseListener(final BaseWrapper baseWrapper, Project project) {
+    public static void addMouseListener(final BaseWrapper baseWrapper, Project project, boolean isEditMode) {
         baseWrapper.jlName.addMouseListener(new ClickListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 if (SwingUtilities.isRightMouseButton(mouseEvent)) {
-                    JPopupMenu popupMenu = new JBPopupMenu();
-
-                    JMenuItem itemAddFile = new JBMenuItem("Add File", AllIcons.FileTypes.Text);
-                    JMenuItem itemAddDirectory = new JBMenuItem("Add Directory", AllIcons.Nodes.Package);
-                    JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
-
-                    itemAddFile.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            AddFile(baseWrapper, project);
-                        }
-                    });
-                    itemAddDirectory.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            addDirectory(baseWrapper, project);
-                        }
-                    });
-                    itemDelete.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            deleteElement(baseWrapper, project);
-                        }
-                    });
-
-                    popupMenu.add(itemAddFile);
-                    popupMenu.add(itemAddDirectory);
-                    popupMenu.add(itemDelete);
-                    popupMenu.show(baseWrapper.jlName, mouseEvent.getX(), mouseEvent.getY());
+                    if(isEditMode) {
+                        createPopupForEditMode(mouseEvent, baseWrapper, project);
+                    } else {
+                        createDefaultPopup(mouseEvent, baseWrapper, project);
+                    }
                 }
             }
         });
+    }
+
+    private static void createDefaultPopup(MouseEvent mouseEvent, final BaseWrapper baseWrapper, final Project project) {
+        // TODO: 07.07.2016 def popup
+    }
+    private static void createPopupForEditMode(MouseEvent mouseEvent, final BaseWrapper baseWrapper, final Project project) {
+        JPopupMenu popupMenu = new JBPopupMenu();
+
+        JMenuItem itemAddFile = new JBMenuItem("Add File", AllIcons.FileTypes.Text);
+        JMenuItem itemAddDirectory = new JBMenuItem("Add Directory", AllIcons.Nodes.Package);
+        JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
+
+        itemAddFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddFile(baseWrapper, project);
+            }
+        });
+        itemAddDirectory.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addDirectory(baseWrapper, project);
+            }
+        });
+        itemDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteElement(baseWrapper, project);
+            }
+        });
+
+        popupMenu.add(itemAddFile);
+        popupMenu.add(itemAddDirectory);
+        popupMenu.add(itemDelete);
+        popupMenu.show(baseWrapper.jlName, mouseEvent.getX(), mouseEvent.getY());
     }
 
     public static boolean isLeftClick(MouseEvent event) {
@@ -252,7 +255,7 @@ public class UIMaker {
         baseWrapper.collectDataFromFields();
 
         DirectoryWrapper parent;
-        if (baseWrapper instanceof DirectoryWrapper) {
+        if (baseWrapper.isDirectory()) {
             parent = ((DirectoryWrapper) baseWrapper);
         } else {
             parent = baseWrapper.getParent();
@@ -279,6 +282,23 @@ public class UIMaker {
         return dirWrapper;
     }
 
+    @NotNull
+    private static FileWrapper createNewWrappedFile(DirectoryWrapper parent, String templateName, String extension) {
+        FileWrapper fileWrapper = new FileWrapper();
+
+        File file = new File();
+        file.setName("Unnamed");
+        file.setTemplateName(templateName);
+        file.setExtension(extension);
+        file.setEnabled(true);
+        file.setGroovyCode("");
+
+        fileWrapper.setParent(parent);
+        fileWrapper.setFile(file);
+
+        return fileWrapper;
+    }
+
     public static void deleteElement(BaseWrapper baseWrapper, Project project) {
         baseWrapper.getParent().removeMyself();
 
@@ -290,16 +310,16 @@ public class UIMaker {
         SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(project) {
             @Override
             public void onSuccess(FileTemplate fileTemplate) {
-                templateView.collectDataFromFields();
+                baseWrapper.collectDataFromFields();
 
-                TemplateView parent;
-                if (templateView.isDirectory()) {
-                    parent = templateView;
+                DirectoryWrapper parent;
+                if (baseWrapper.isDirectory()) {
+                    parent = ((DirectoryWrapper) baseWrapper);
                 } else {
-                    parent = templateView.getTemplateParent();
+                    parent = baseWrapper.getParent();
                 }
-                templateView.addTemplate(new TemplateView("Unnamed", fileTemplate.getName(), fileTemplate.getExtension(), parent));
-                templateView.reBuild(project);
+                parent.addElement(createNewWrappedFile(parent, fileTemplate.getName(), fileTemplate.getExtension()));
+                parent.reBuild(project);
             }
 
             @Override
