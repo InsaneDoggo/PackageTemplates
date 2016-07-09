@@ -1,8 +1,6 @@
 package custom.dialogs;
 
-import com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.ui.GridBag;
@@ -21,49 +19,38 @@ import static utils.UIMaker.*;
 /**
  * Created by CeH9 on 22.06.2016.
  */
-public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplatesDialog {
+//public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplatesDialog {
+public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
 
     private TemplateContainer templateContainer;
     private PackageTemplate packageTemplate;
-    private JBSplitter panel;
-    private Project project;
+    private GridBag gridBag;
 
     public abstract void onSuccess(PackageTemplate packageTemplate);
 
-    public abstract void onCancel();
+    public abstract void onFail();
 
     public ConfigurePackageTemplatesDialog(Project project) {
         super(project);
-        this.project = project;
     }
 
     public ConfigurePackageTemplatesDialog(Project project, PackageTemplate packageTemplate) {
         super(project);
-        this.project = project;
         this.packageTemplate = packageTemplate;
     }
 
     @Override
-    public void show() {
-        preShow();
-        super.show();
+    void preShow() {
+        panel.setLayout(new GridBagLayout());
+        gridBag = new GridBag()
+                .setDefaultWeightX(1);
 
-        switch (getExitCode()) {
-            case ConfigurePackageTemplatesDialog.OK_EXIT_CODE:
-                onOKAction();
-                break;
-            case ConfigurePackageTemplatesDialog.CANCEL_EXIT_CODE:
-                onCancel();
-                break;
-        }
-    }
-
-    private void preShow() {
         initContainer();
-        panel.setFirstComponent(getPackageBuilderComponent(project));
+        panel.add(getPackageBuilderComponent(project));
     }
 
-    private void onOKAction() {
+    @Override
+    void onOKAction() {
         templateContainer.collectDataFromFields();
 
         if (packageTemplate == null) {
@@ -72,6 +59,11 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
             updatePackageTemplate();
             onSuccess(packageTemplate);
         }
+    }
+
+    @Override
+    void onCancelAction() {
+        onFail();
     }
 
     private void updatePackageTemplate() {
@@ -92,22 +84,6 @@ public abstract class ConfigurePackageTemplatesDialog extends ConfigureTemplates
         result.setMapGlobalVars(templateContainer.collectGlobalVarsAsMap());
 
         return result;
-    }
-
-    @Override
-    public JComponent getContentPanel() {
-        return super.getContentPanel();
-    }
-
-    @Override
-    protected JComponent createCenterPanel() {
-        panel = new JBSplitter();
-
-        // TODO: 28.06.2016 fix default template editor
-//        panel.setSecondComponent(super.createCenterPanel());
-        super.createCenterPanel();
-
-        return panel;
     }
 
     private void initContainer() {

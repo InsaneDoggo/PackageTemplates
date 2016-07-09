@@ -134,8 +134,8 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
             }
 
             @Override
-            public void onCancel() {
-                System.out.println("onCancel");
+            public void onFail() {
+                System.out.println("onFail");
             }
         };
         dialog.show();
@@ -162,8 +162,8 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
             }
 
             @Override
-            public void onCancel() {
-                System.out.println("onCancel");
+            public void onFail() {
+                System.out.println("onFail");
             }
         };
         dialog.show();

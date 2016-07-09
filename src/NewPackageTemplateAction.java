@@ -1,10 +1,12 @@
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
+import custom.dialogs.ConfigurePackageTemplatesDialog;
 import custom.dialogs.ImpexDialog;
 import custom.dialogs.NewPackageDialog;
 import models.PackageTemplate;
 import models.TemplateElement;
+import state.SaveUtil;
 import utils.FileWriter;
 import utils.InputManager;
 
@@ -17,18 +19,31 @@ public class NewPackageTemplateAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
-
-        ImpexDialog dialog = new ImpexDialog(event.getProject(), "Export Templates") {
+        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event.getProject()) {
             @Override
-            public void onSuccess() {
+            public void onSuccess(PackageTemplate packageTemplate) {
                 System.out.println("onSuccess");
             }
 
             @Override
-            public void onCancel() {
-                System.out.println("onCancel");
+            public void onFail() {
+                System.out.println("onSuccess");
             }
+
         };
+
+
+//        ImpexDialog dialog = new ImpexDialog(event.getProject(), "Export Templates") {
+//            @Override
+//            public void onSuccess() {
+//                System.out.println("onSuccess");
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                System.out.println("onCancel");
+//            }
+//        };
 
 //        SaveUtil.getInstance().load();
 //        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {

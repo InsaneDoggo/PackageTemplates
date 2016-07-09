@@ -27,6 +27,7 @@ import reborn.models.File;
 import reborn.wrappers.BaseWrapper;
 import reborn.wrappers.DirectoryWrapper;
 import reborn.wrappers.FileWrapper;
+import reborn.wrappers.PackageTemplateWrapper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -171,7 +172,7 @@ public class UIMaker {
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
-    public static void createClassView(FileWrapper fileWrapper, Project project, JPanel container, GridBag bag, boolean isEditMode) {
+    public static void createClassView(FileWrapper fileWrapper, Project project, JPanel container, GridBag bag, PackageTemplateWrapper.ViewMode mode) {
         fileWrapper.jlName = new JLabel(getIconByFileExtension(fileWrapper.getFile().getExtension()), SwingConstants.LEFT);
         fileWrapper.jlName.setText(fileWrapper.getFile().getTemplateName());
         setRightPadding(fileWrapper.jlName, PADDING_LABEL);
@@ -181,10 +182,10 @@ public class UIMaker {
         container.add(fileWrapper.jlName, bag.nextLine().next());
         container.add(fileWrapper.etfName, bag.next());
 
-        addMouseListener(fileWrapper, project, isEditMode);
+        addMouseListener(fileWrapper, project, mode);
     }
 
-    public static void createPackageView(DirectoryWrapper dirWrapper, Project project, JPanel container, GridBag bag, boolean isEditMode) {
+    public static void createPackageView(DirectoryWrapper dirWrapper, Project project, JPanel container, GridBag bag, PackageTemplateWrapper.ViewMode mode) {
         dirWrapper.jlName = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
         dirWrapper.jlName.setText("Directory");
         setRightPadding(dirWrapper.jlName, PADDING_LABEL);
@@ -194,18 +195,21 @@ public class UIMaker {
         container.add(dirWrapper.jlName, bag.nextLine().next());
         container.add(dirWrapper.etfName, bag.next());
 
-        addMouseListener(dirWrapper, project, isEditMode);
+        addMouseListener(dirWrapper, project, mode);
     }
 
-    public static void addMouseListener(final BaseWrapper baseWrapper, Project project, boolean isEditMode) {
+    public static void addMouseListener(final BaseWrapper baseWrapper, Project project, PackageTemplateWrapper.ViewMode mode) {
         baseWrapper.jlName.addMouseListener(new ClickListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 if (SwingUtilities.isRightMouseButton(mouseEvent)) {
-                    if(isEditMode) {
-                        createPopupForEditMode(mouseEvent, baseWrapper, project);
-                    } else {
-                        createDefaultPopup(mouseEvent, baseWrapper, project);
+                    switch (mode) {
+                        case EDIT:
+                            createPopupForEditMode(mouseEvent, baseWrapper, project);
+                            break;
+                        case CREATE:
+                            createDefaultPopup(mouseEvent, baseWrapper, project);
+                            break;
                     }
                 }
             }
@@ -215,6 +219,7 @@ public class UIMaker {
     private static void createDefaultPopup(MouseEvent mouseEvent, final BaseWrapper baseWrapper, final Project project) {
         // TODO: 07.07.2016 def popup
     }
+
     private static void createPopupForEditMode(MouseEvent mouseEvent, final BaseWrapper baseWrapper, final Project project) {
         JPopupMenu popupMenu = new JBPopupMenu();
 

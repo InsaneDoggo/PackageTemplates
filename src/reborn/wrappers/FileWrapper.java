@@ -24,7 +24,7 @@ public class FileWrapper extends BaseWrapper {
     }
 
     @Override
-    public void buildView(Project project, JPanel container, GridBag bag, boolean isEditMode) {
+    public void buildView(Project project, JPanel container, GridBag bag, PackageTemplateWrapper.ViewMode mode) {
         jlName = new JLabel(UIMaker.getIconByFileExtension(getFile().getExtension()), SwingConstants.LEFT);
         jlName.setText(getFile().getTemplateName());
         UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
@@ -34,7 +34,7 @@ public class FileWrapper extends BaseWrapper {
         container.add(jlName, bag.nextLine().next());
         container.add(etfName, bag.next());
 
-        UIMaker.addMouseListener(this, project, isEditMode);
+        UIMaker.addMouseListener(this, project, PackageTemplateWrapper.ViewMode.EDIT);
     }
 
     @Override

@@ -54,14 +54,14 @@ public class TemplateView extends JPanel {
         getBag().setDefaultWeightX(1);
 
         if (isDirectory()) {
-            add(UIMaker.createPackageView(this, project), getBag().nextLine().next());
+//            add(UIMaker.createPackageView(this, project), getBag().nextLine().next());
 
             for (TemplateView templateView : getListTemplateView()) {
                 TemplateView view = templateView.buildView(project);
                 add(view, getBag().nextLine().next());
             }
         } else {
-            add(UIMaker.createClassView(this, project), getBag().nextLine().next());
+//            add(UIMaker.createClassView(this, project), getBag().nextLine().next());
         }
 
         UIMaker.setLeftPadding(this, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);
