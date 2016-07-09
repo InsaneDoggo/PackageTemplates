@@ -20,7 +20,7 @@ public class TemplateValidator {
      * Check existence FileTemplates used in PackageTemplate
      */
     public static ValidationInfo isTemplateValid(PackageTemplate packageTemplate){
-        if (packageTemplate.getListTemplateElement() == null){
+        if (packageTemplate.getTemplateElement().getListTemplateElement() == null){
             // when template is empty folder(useless, but valid)
             return null;
         }
@@ -33,7 +33,7 @@ public class TemplateValidator {
             //}
         }
 
-        for( TemplateElement element : packageTemplate.getListTemplateElement() ){
+        for( TemplateElement element : packageTemplate.getTemplateElement().getListTemplateElement() ){
             ValidationInfo validationInfo = element.isNameValid(listAllTemplates);
             if( validationInfo != null ){
                 return validationInfo;

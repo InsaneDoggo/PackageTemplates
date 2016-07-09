@@ -5,17 +5,19 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import models.PackageTemplate;
 import org.omg.CORBA.PUBLIC_MEMBER;
+import utils.InputManager;
 import utils.UIMaker;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Arsen on 07.07.2016.
  */
 public class PackageTemplateWrapper {
 
-    public enum ViewMode { EDIT, CREATE }
+    public enum ViewMode { EDIT, CREATE, USAGE }
 
     public JPanel panel;
     public EditorTextField etfName;
@@ -61,7 +63,7 @@ public class PackageTemplateWrapper {
 
     public JPanel buildView(Project project){
         JLabel jlName = new JLabel("Template Name");
-        JLabel jlDescription = new JLabel("Description");
+        JLabel jlDescription = new JLabel("Description..");
         UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
         UIMaker.setRightPadding(jlDescription, UIMaker.PADDING_LABEL);
 
@@ -81,5 +83,9 @@ public class PackageTemplateWrapper {
     public void reBuild(Project project) {
         // TODO: 07.07.2016 rebuild
         rootElement.buildView(project, panel, gridBag, mode);
+    }
+
+    public void replaceNameVariable() {
+        rootElement.replaceNameVariable(packageTemplate.getMapGlobalVars());
     }
 }

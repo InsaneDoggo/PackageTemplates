@@ -8,10 +8,14 @@ import custom.components.TemplateView;
 import custom.components.VariableView;
 import models.PackageTemplate;
 import models.TemplateContainer;
+import reborn.wrappers.DirectoryWrapper;
+import reborn.wrappers.PackageTemplateWrapper;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import static utils.UIMaker.*;
@@ -23,7 +27,7 @@ import static utils.UIMaker.*;
 public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
 
     private TemplateContainer templateContainer;
-    private PackageTemplate packageTemplate;
+    private PackageTemplateWrapper ptWrapper;
     private GridBag gridBag;
 
     public abstract void onSuccess(PackageTemplate packageTemplate);
@@ -32,11 +36,29 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
 
     public ConfigurePackageTemplatesDialog(Project project) {
         super(project);
+
+        PackageTemplate packageTemplate = new PackageTemplate();
+        packageTemplate.setMapGlobalVars(new HashMap<>());
+        packageTemplate.setName("New Package Template");
+        packageTemplate.setDescription("");
+
+        ptWrapper = new PackageTemplateWrapper();
+        ptWrapper.setPackageTemplate(packageTemplate);
+        ptWrapper.setMode(PackageTemplateWrapper.ViewMode.EDIT);
+        ptWrapper.setListGlobalVariableWrapper(new ArrayList<>());
     }
 
     public ConfigurePackageTemplatesDialog(Project project, PackageTemplate packageTemplate) {
         super(project);
-        this.packageTemplate = packageTemplate;
+        ptWrapper = new PackageTemplateWrapper();
+        ptWrapper.setPackageTemplate(packageTemplate);
+        ptWrapper.setMode(PackageTemplateWrapper.ViewMode.EDIT);
+        ptWrapper.setListGlobalVariableWrapper(new ArrayList<>());
+
+        DirectoryWrapper dirWrapper = new DirectoryWrapper();
+//        dirWrapper.setDirectory(packageTemplate.get);
+        // TODO: 09.07.2016 wrap pt
+        ptWrapper.setRootElement();
     }
 
     @Override

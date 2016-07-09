@@ -6,6 +6,7 @@ import com.intellij.util.ui.GridBag;
 import reborn.models.BaseElement;
 
 import javax.swing.*;
+import java.util.HashMap;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -26,6 +27,7 @@ public abstract class BaseWrapper {
     public abstract void addElement(BaseWrapper element);
     public abstract BaseElement getElement();
     public abstract boolean isDirectory();
+    public abstract void replaceNameVariable(HashMap<String, String> mapVariables);
 
     public DirectoryWrapper getParent() {
         return parent;
@@ -42,7 +44,6 @@ public abstract class BaseWrapper {
     public void setPackageTemplateWrapper(PackageTemplateWrapper packageTemplateWrapper) {
         this.packageTemplateWrapper = packageTemplateWrapper;
     }
-
 
     public void reBuild(Project project) {
         packageTemplateWrapper.reBuild(project);

@@ -1,6 +1,7 @@
 package models;
 
 import com.google.gson.annotations.Expose;
+import reborn.models.Directory;
 import utils.InputManager;
 
 import java.util.ArrayList;
@@ -13,26 +14,34 @@ public class PackageTemplate {
 
     public static final java.lang.String ATTRIBUTE_BASE_NAME = "BASE_NAME";
 
-    @Expose private String name;
-    @Expose private String description;
-    @Expose private TemplateElement templateElement;
-    @Expose private HashMap<String, String> mapGlobalVars;
+    @Expose
+    private String name;
+    @Expose
+    private String description;
+    @Expose
+    private Directory directory;
+    @Expose
+    private HashMap<String, String> mapGlobalVars;
+
+    public PackageTemplate() {
+    }
 
     public PackageTemplate(String name, String description, ArrayList<TemplateElement> listTemplateElement) {
         this.name = name;
         this.description = description;
 
-        templateElement = new TemplateElement("", listTemplateElement, null);
+//        templateElement = new TemplateElement("", listTemplateElement, null);
     }
+
     public PackageTemplate(String name, String description, TemplateElement templateElement) {
         this.name = name;
         this.description = description;
-        this.templateElement = templateElement;
+//        this.templateElement = templateElement;
     }
 
-    public void replaceNameVariable(InputManager inputManager) {
-        templateElement.replaceNameVariable(inputManager.getMapGlobalProperties());
-    }
+//    public void replaceNameVariable(InputManager inputManager) {
+//        directory.replaceNameVariable(inputManager.getMapGlobalProperties());
+//    }
 
     public HashMap<String, String> getMapGlobalVars() {
         return mapGlobalVars;
@@ -40,14 +49,6 @@ public class PackageTemplate {
 
     public void setMapGlobalVars(HashMap<String, String> mapGlobalVars) {
         this.mapGlobalVars = mapGlobalVars;
-    }
-
-    public void setTemplateElement(TemplateElement root) {
-        this.templateElement = root;
-    }
-
-    public void setTemplateVariableName(String templateVariableName) {
-        templateElement.setName(templateVariableName);
     }
 
     public String getDescription() {
@@ -64,10 +65,6 @@ public class PackageTemplate {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public ArrayList<TemplateElement> getListTemplateElement() {
-        return templateElement.getListTemplateElement();
     }
 
     public TemplateElement getTemplateElement() {

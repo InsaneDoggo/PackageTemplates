@@ -53,6 +53,11 @@ public class DirectoryWrapper extends BaseWrapper {
         return true;
     }
 
+    @Override
+    public void replaceNameVariable() {
+        // TODO: 09.07.2016 replaceNameVariable
+    }
+
     public void removeElement(BaseWrapper element) {
         directory.getListBaseElement().remove(element.getElement());
         listBaseWrapper.remove(element);
