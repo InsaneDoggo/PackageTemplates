@@ -5,10 +5,8 @@ import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
-import custom.components.VariableView;
 import custom.impl.ClickListener;
 import models.PackageTemplate;
-import models.TemplateContainer;
 import reborn.models.GlobalVariable;
 import utils.Logger;
 import utils.UIMaker;
@@ -28,10 +26,8 @@ public class GlobalVariableWrapper {
     private EditorTextField tfKey;
     private EditorTextField tfValue;
 
-    public GlobalVariableWrapper(GlobalVariable globalVariable, EditorTextField tfKey, EditorTextField tfValue) {
+    public GlobalVariableWrapper(GlobalVariable globalVariable) {
         this.globalVariable = globalVariable;
-        this.tfKey = tfKey;
-        this.tfValue = tfValue;
     }
 
     public GlobalVariable getGlobalVariable() {
@@ -60,7 +56,7 @@ public class GlobalVariableWrapper {
 
 
 
-    public void buildView(TemplateContainer templateContainer, JPanel container, GridBag bag) {
+    public void buildView(PackageTemplateWrapper ptWrapper, JPanel container, GridBag bag) {
         JLabel label = new JLabel(AllIcons.Nodes.Variable, JLabel.LEFT);
 
         tfKey = new EditorTextField(getGlobalVariable().getName());
@@ -84,7 +80,7 @@ public class GlobalVariableWrapper {
                         @Override
                         public void mouseClicked(MouseEvent event) {
                             if (UIMaker.isLeftClick(event)) {
-                                addVariable(templateContainer);
+                                addVariable(ptWrapper);
                                 System.out.println("AddVariable");
                             }
                         }
@@ -93,7 +89,7 @@ public class GlobalVariableWrapper {
                         @Override
                         public void mouseClicked(MouseEvent event) {
                             if (UIMaker.isLeftClick(event)) {
-                                deleteVariable(templateContainer);
+                                deleteVariable(ptWrapper);
                                 System.out.println("Delete");
                             }
                         }
@@ -114,23 +110,30 @@ public class GlobalVariableWrapper {
         container.add(tfValue, bag.next());
     }
 
-    private void deleteVariable(TemplateContainer templateContainer) {
+    private void deleteVariable(PackageTemplateWrapper ptWrapper) {
         if (getGlobalVariable().getName().equals(PackageTemplate.ATTRIBUTE_BASE_NAME)) {
             // TODO: 25.06.2016  error can't delete NAME var
             Logger.log("can't delete NAME var");
 
             return;
         }
-        templateContainer.getListVariableView().remove(this);
-        templateContainer.collectDataFromFields();
-        templateContainer.rebuildView();
+        ptWrapper.getListGlobalVariableWrapper().remove(this);
+        ptWrapper.collectDataFromFields();
+        ptWrapper.reBuildView();
     }
 
-    private void addVariable(TemplateContainer templateContainer) {
-        templateContainer.collectDataFromFields();
+    private void addVariable(PackageTemplateWrapper ptWrapper) {
+        ptWrapper.collectDataFromFields();
 
-        templateContainer.addVariable(new VariableView("UNNAMED_VARIABLE", ""));
-        templateContainer.rebuildView();
+        GlobalVariable gVariable = new GlobalVariable();
+        gVariable.setName("UNNAMED_VARIABLE");
+        gVariable.setValue("");
+
+        GlobalVariableWrapper gvWrapper = new GlobalVariableWrapper(gVariable);
+
+
+        ptWrapper.getListGlobalVariableWrapper().add(gvWrapper);
+        ptWrapper.reBuildView();
     }
 
     public void collectDataFromFields() {

@@ -147,29 +147,11 @@ public class UIMaker {
         }
         inputBlock.getTfName().setText(inputBlock.getElement().getName());
 
-        GridBag bag = getDefaultGridBag();
+        GridBag bag = GridBagFactory.getDefaultGridBag();
         container.add(jLabel, bag.nextLine().next().insets(0, 0, 0, 8));
         container.add(inputBlock.getTfName(), bag.next());
 
         return container;
-    }
-
-    @NotNull
-    public static GridBag getDefaultGridBag() {
-        return new GridBag()
-                .setDefaultWeightX(1, 1)
-                .setDefaultInsets(new Insets(4, 0, 4, 0))
-                .setDefaultFill(GridBagConstraints.HORIZONTAL);
-    }
-
-    @NotNull
-    public static GridBag getDefaultGridBagForGlobals() {
-        return new GridBag()
-//                .setDefaultWeightX(0, 0.02)
-                .setDefaultWeightX(1, 0.5)
-                .setDefaultWeightX(2, 0.5)
-                .setDefaultInsets(new Insets(4, 0, 4, 0))
-                .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
     public static void createClassView(FileWrapper fileWrapper, Project project, JPanel container, GridBag bag, PackageTemplateWrapper.ViewMode mode) {
@@ -208,7 +190,8 @@ public class UIMaker {
                             createPopupForEditMode(mouseEvent, baseWrapper, project);
                             break;
                         case CREATE:
-                            createDefaultPopup(mouseEvent, baseWrapper, project);
+                            createPopupForEditMode(mouseEvent, baseWrapper, project);
+//                            createDefaultPopup(mouseEvent, baseWrapper, project);
                             break;
                     }
                 }
@@ -283,7 +266,10 @@ public class UIMaker {
 
         dirWrapper.setParent(parent);
         dirWrapper.setDirectory(dir);
+        dirWrapper.setListBaseWrapper(new ArrayList<>());
+        dirWrapper.setPackageTemplateWrapper(parent.getPackageTemplateWrapper());
 
+        parent.getDirectory().getListBaseElement().add(dir);
         return dirWrapper;
     }
 
@@ -301,6 +287,7 @@ public class UIMaker {
         fileWrapper.setParent(parent);
         fileWrapper.setFile(file);
 
+        parent.getDirectory().getListBaseElement().add(file);
         return fileWrapper;
     }
 

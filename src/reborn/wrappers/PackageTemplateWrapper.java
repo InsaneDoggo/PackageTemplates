@@ -4,20 +4,21 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import models.PackageTemplate;
-import org.omg.CORBA.PUBLIC_MEMBER;
-import utils.InputManager;
+import utils.GridBagFactory;
 import utils.UIMaker;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Arsen on 07.07.2016.
  */
 public class PackageTemplateWrapper {
 
-    public enum ViewMode { EDIT, CREATE, USAGE }
+    public enum ViewMode {EDIT, CREATE, USAGE}
+
+    private Project project;
 
     public JPanel panel;
     public EditorTextField etfName;
@@ -28,6 +29,18 @@ public class PackageTemplateWrapper {
     private DirectoryWrapper rootElement;
     private ArrayList<GlobalVariableWrapper> listGlobalVariableWrapper;
     private ViewMode mode;
+
+    public PackageTemplateWrapper(Project project) {
+        this.project = project;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
 
     public PackageTemplate getPackageTemplate() {
         return packageTemplate;
@@ -61,9 +74,14 @@ public class PackageTemplateWrapper {
         this.mode = mode;
     }
 
-    public JPanel buildView(Project project){
+    public JPanel buildView() {
+        if (panel == null) {
+            panel = new JPanel(new GridBagLayout());
+            gridBag = GridBagFactory.getBagForPackageTemplate();
+        }
+
         JLabel jlName = new JLabel("Template Name");
-        JLabel jlDescription = new JLabel("Description..");
+        JLabel jlDescription = new JLabel("Description");
         UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
         UIMaker.setRightPadding(jlDescription, UIMaker.PADDING_LABEL);
 
@@ -77,15 +95,36 @@ public class PackageTemplateWrapper {
 
         //todo exec build on children
 
+        JLabel label = new JLabel("Global Variables", JLabel.CENTER);
+        panel.add(label, gridBag.nextLine().next().fillCellHorizontally().coverLine(3));
+
+        for (GlobalVariableWrapper variableWrapper : getListGlobalVariableWrapper()) {
+            variableWrapper.buildView(this, panel, gridBag);
+        }
+
+        rootElement.buildView(project, panel, gridBag, mode);
+
         return panel;
     }
 
-    public void reBuild(Project project) {
-        // TODO: 07.07.2016 rebuild
-        rootElement.buildView(project, panel, gridBag, mode);
+    public void reBuildView() {
+        panel.removeAll();
+        buildView();
     }
 
     public void replaceNameVariable() {
         rootElement.replaceNameVariable(packageTemplate.getMapGlobalVars());
     }
+
+    public void collectDataFromFields() {
+        getPackageTemplate().setName(etfName.getText());
+        getPackageTemplate().setDescription(etfDescription.getText());
+
+        for (GlobalVariableWrapper variableWrapper : getListGlobalVariableWrapper()) {
+            variableWrapper.collectDataFromFields();
+        }
+
+        rootElement.collectDataFromFields();
+    }
+
 }

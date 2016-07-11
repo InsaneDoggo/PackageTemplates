@@ -17,6 +17,7 @@ public abstract class BaseDialog extends DialogWrapper {
     public BaseDialog(@Nullable Project project) {
         super(project);
         this.project = project;
+        init();
     }
 
     abstract void preShow();

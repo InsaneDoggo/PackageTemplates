@@ -12,6 +12,7 @@ import icons.VcsLogIcons;
 import org.jetbrains.annotations.Nullable;
 import state.SaveUtil;
 import utils.FileWriter;
+import utils.GridBagFactory;
 import utils.UIMaker;
 
 import javax.swing.*;
@@ -77,7 +78,7 @@ public abstract class ImpexDialog extends DialogWrapper {
         tfbButton.addBrowseFolderListener("Export templates to", "", project,
                 new FileChooserDescriptor(false, true, false, false, false, false));
 
-        GridBag bag = UIMaker.getDefaultGridBag();
+        GridBag bag = GridBagFactory.getDefaultGridBag();
 
         panelExport.add(tfbButton, bag.nextLine().next());
 

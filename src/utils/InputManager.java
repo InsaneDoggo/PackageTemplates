@@ -66,7 +66,7 @@ public class InputManager {
         JPanel container = new JPanel();
         container.setLayout(new GridBagLayout());
 
-        GridBag bag = UIMaker.getDefaultGridBag();
+        GridBag bag = GridBagFactory.getDefaultGridBag();
 
         // Add globals blocks
         for (Map.Entry<String, String> entry : packageTemplate.getMapGlobalVars().entrySet()) {

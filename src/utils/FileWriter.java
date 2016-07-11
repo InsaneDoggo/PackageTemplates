@@ -16,6 +16,9 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import models.TemplateElement;
+import reborn.wrappers.BaseWrapper;
+import reborn.wrappers.DirectoryWrapper;
+import reborn.wrappers.FileWrapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,12 +43,7 @@ public class FileWriter {
         return null;
     }
 
-    public static PsiDirectory writeDirectory(PsiDirectory dir, TemplateElement templateElement, Project project) {
-        if (!templateElement.isDirectory()) {
-            //todo print error
-            return null;
-        }
-
+    public static PsiDirectory writeDirectory(PsiDirectory dir, DirectoryWrapper dirWrapper, Project project) {
         if (dir == null) {
             //todo print error
             return null;
@@ -54,8 +52,8 @@ public class FileWriter {
 
         CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> {
             try {
-                directory[0] = dir.createSubdirectory(templateElement.getName());
-            } catch (Exception ex) {}
+                directory[0] = dir.createSubdirectory(dirWrapper.getDirectory().getName());
+            } catch (Exception ex) {Logger.log(ex.getMessage());}
         }), null, null);
 
         if(directory[0] == null){
@@ -65,23 +63,23 @@ public class FileWriter {
         return directory[0];
     }
 
-    public static PsiElement writeFile(PsiDirectory dir, TemplateElement templateElement) {
-        if (dir == null) {
+    public static PsiElement writeFile(PsiDirectory dir, FileWrapper fileWrapper) {
+        FileTemplate template = InputManager.getTemplate(fileWrapper.getFile().getTemplateName());
+
+        if (dir == null || template == null) {
             //todo print error
             return null;
         }
 
-        FileTemplate template = InputManager.getTemplate(templateElement.getTemplateName());
-
         Properties properties = new Properties();
-        properties.putAll(templateElement.getMapProperties());
+        properties.putAll(fileWrapper.getFile().getMapProperties());
 
         PsiElement element;
         try {
-            element = FileTemplateUtil.createFromTemplate(template, templateElement.getName(), properties, dir);
+            element = FileTemplateUtil.createFromTemplate(template, fileWrapper.getFile().getName(), properties, dir);
         } catch (Exception e) {
             //todo print error
-            System.out.println(e.getMessage());
+            Logger.log(e.getMessage());
             return null;
         }
 

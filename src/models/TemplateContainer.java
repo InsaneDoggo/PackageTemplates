@@ -4,7 +4,7 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import custom.components.TemplateView;
 import custom.components.VariableView;
-import utils.UIMaker;
+import utils.GridBagFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,7 +84,7 @@ public class TemplateContainer {
     public JPanel buildView() {
         if (container == null) {
             container = new JPanel(new GridBagLayout());
-            bag = UIMaker.getDefaultGridBagForGlobals();
+            bag = GridBagFactory.getGridBagForGlobals();
         }
 
         JLabel label = new JLabel("Global Variables", JLabel.CENTER);
@@ -100,7 +100,7 @@ public class TemplateContainer {
     public void rebuildView() {
         if (container != null) {
             container.removeAll();
-            bag = UIMaker.getDefaultGridBagForGlobals();
+            bag = GridBagFactory.getGridBagForGlobals();
         }
 
         buildView();

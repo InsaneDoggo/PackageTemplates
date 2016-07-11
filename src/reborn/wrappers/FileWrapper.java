@@ -1,12 +1,21 @@
 package reborn.wrappers;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiElement;
 import com.intellij.util.ui.GridBag;
+import models.TemplateElement;
 import reborn.models.BaseElement;
 import reborn.models.File;
+import utils.FileWriter;
+import utils.Logger;
+import utils.StringTools;
 import utils.UIMaker;
 
 import javax.swing.*;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -50,6 +59,37 @@ public class FileWrapper extends BaseWrapper {
     @Override
     public boolean isDirectory() {
         return false;
+    }
+
+    @Override
+    public void replaceNameVariable(HashMap<String, String> mapVariables) {
+        getFile().setName(StringTools.replaceGlobalVariables(getFile().getName(), mapVariables));
+    }
+
+    @Override
+    public ValidationInfo isNameValid(List<String> listAllTemplates) {
+        if (!listAllTemplates.contains(getFile().getTemplateName())) {
+            return new ValidationInfo("Template \"" + getFile().getTemplateName() + "\" doesn't exist!");
+        }
+        return null;
+    }
+
+    @Override
+    public void writeFile(PsiDirectory currentDir, Project project) {
+        PsiElement psiElement = FileWriter.writeFile(currentDir, this);
+        if (psiElement == null) {
+            // TODO: 20.06.2016 error write file
+        }
+    }
+
+    @Override
+    public void updateParents(DirectoryWrapper dwParent) {
+
+    }
+
+    @Override
+    public void initNonSerializableFields() {
+
     }
 
     @Override

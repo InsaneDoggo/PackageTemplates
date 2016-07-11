@@ -1,12 +1,15 @@
 package reborn.wrappers;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import reborn.models.BaseElement;
 
 import javax.swing.*;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -28,6 +31,10 @@ public abstract class BaseWrapper {
     public abstract BaseElement getElement();
     public abstract boolean isDirectory();
     public abstract void replaceNameVariable(HashMap<String, String> mapVariables);
+    public abstract ValidationInfo isNameValid(List<String> listAllTemplates);
+    public abstract void writeFile(PsiDirectory currentDir, Project project);
+    public abstract void updateParents(DirectoryWrapper dwParent);
+    public abstract void initNonSerializableFields();
 
     public DirectoryWrapper getParent() {
         return parent;
@@ -46,6 +53,7 @@ public abstract class BaseWrapper {
     }
 
     public void reBuild(Project project) {
-        packageTemplateWrapper.reBuild(project);
+        //todo delete project?
+        packageTemplateWrapper.reBuildView();
     }
 }

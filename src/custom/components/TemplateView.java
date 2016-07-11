@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static utils.UIMaker.getDefaultGridBag;
+import static utils.GridBagFactory.getDefaultGridBag;
 
 /**
  * Created by CeH9 on 23.06.2016.

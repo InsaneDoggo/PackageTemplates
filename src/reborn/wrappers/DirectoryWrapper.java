@@ -2,14 +2,21 @@ package reborn.wrappers;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiElement;
 import com.intellij.util.ui.GridBag;
+import models.TemplateElement;
 import reborn.models.BaseElement;
 import reborn.models.Directory;
+import utils.FileWriter;
+import utils.GridBagFactory;
 import utils.UIMaker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -54,8 +61,41 @@ public class DirectoryWrapper extends BaseWrapper {
     }
 
     @Override
-    public void replaceNameVariable() {
-        // TODO: 09.07.2016 replaceNameVariable
+    public void replaceNameVariable(HashMap<String, String> mapVariables) {
+        for (BaseWrapper element : getListBaseWrapper()) {
+            element.replaceNameVariable(mapVariables);
+        }
+    }
+
+    @Override
+    public ValidationInfo isNameValid(List<String> listAllTemplates) {
+        for (BaseWrapper element : getListBaseWrapper()) {
+            ValidationInfo validationInfo = element.isNameValid(listAllTemplates);
+            if (validationInfo != null) {
+                return validationInfo;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void writeFile(PsiDirectory currentDir, Project project) {
+        PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this, project);
+        if (subDirectory != null) {
+            for (BaseWrapper element : getListBaseWrapper()) {
+                element.writeFile(subDirectory, project);
+            }
+        }
+    }
+
+    @Override
+    public void updateParents(DirectoryWrapper dwParent) {
+        //deprecated
+    }
+
+    @Override
+    public void initNonSerializableFields() {
+        //deprecated
     }
 
     public void removeElement(BaseWrapper element) {
@@ -80,19 +120,16 @@ public class DirectoryWrapper extends BaseWrapper {
             panel.removeAll();
         }
 
-        gridBag = new GridBag()
-                .setDefaultWeightX(1)
-                .setDefaultInsets(new Insets(4, 0, 4, 0))
-                .setDefaultFill(GridBagConstraints.HORIZONTAL);
+        createPackageView(project, container, bag, mode);
 
-        createPackageView( project, container, bag, mode);
+        gridBag = GridBagFactory.getBagForDirectory();
 
         for (BaseWrapper baseWrapper : getListBaseWrapper()) {
-            baseWrapper.buildView(project, panel, gridBag, PackageTemplateWrapper.ViewMode.EDIT);
+            baseWrapper.buildView(project, panel, gridBag, mode);
         }
 
         UIMaker.setLeftPadding(panel, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);
-        container.add(panel, bag.nextLine().next());
+        container.add(panel, bag.nextLine().next().coverLine());
     }
 
     private void createPackageView(Project project, JPanel container, GridBag bag, PackageTemplateWrapper.ViewMode mode) {

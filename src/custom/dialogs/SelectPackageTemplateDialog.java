@@ -8,11 +8,13 @@ import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.GridBag;
 import custom.impl.ReleaseListener;
+import reborn.wrappers.PackageTemplateWrapper;
 import state.SaveUtil;
 import state.TemplateList;
 import models.MyListModel;
 import models.PackageTemplate;
 import org.jetbrains.annotations.NotNull;
+import utils.GridBagFactory;
 import utils.TemplateValidator;
 
 import javax.swing.*;
@@ -87,9 +89,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
 
     private Component getControls() {
         JPanel container = new JPanel(new GridBagLayout());
-        GridBag bag = new GridBag()
-                .setDefaultInsets(new Insets(4, 4, 4, 4))
-                .setDefaultFill(GridBagConstraints.HORIZONTAL);
+        GridBag bag = GridBagFactory.getBagForSelectDialog();
 
         JButton jbAdd = getIconButton(AllIcons.General.Add);
         JButton jbDelete = getIconButton(AllIcons.General.Remove);
@@ -128,7 +128,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
     private void onEditAction() {
         ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(project, ((PackageTemplate) jbList.getSelectedValue())) {
             @Override
-            public void onSuccess(PackageTemplate packageTemplate) {
+            public void onSuccess(PackageTemplateWrapper packageTemplate) {
                 SaveUtil.getInstance().save();
                 System.out.println("onSuccess");
             }
@@ -155,8 +155,8 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
     private void onAddAction() {
         ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(project) {
             @Override
-            public void onSuccess(PackageTemplate packageTemplate) {
-                templateList.add(packageTemplate);
+            public void onSuccess(PackageTemplateWrapper ptWrapper) {
+                templateList.add(ptWrapper.getPackageTemplate());
                 SaveUtil.getInstance().save();
                 initJBList();
             }

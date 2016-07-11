@@ -2,11 +2,10 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
 import custom.dialogs.ConfigurePackageTemplatesDialog;
-import custom.dialogs.ImpexDialog;
 import custom.dialogs.NewPackageDialog;
 import models.PackageTemplate;
 import models.TemplateElement;
-import state.SaveUtil;
+import reborn.wrappers.PackageTemplateWrapper;
 import utils.FileWriter;
 import utils.InputManager;
 
@@ -21,7 +20,7 @@ public class NewPackageTemplateAction extends AnAction {
     public void actionPerformed(AnActionEvent event) {
         ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event.getProject()) {
             @Override
-            public void onSuccess(PackageTemplate packageTemplate) {
+            public void onSuccess(PackageTemplateWrapper packageTemplate) {
                 System.out.println("onSuccess");
             }
 

@@ -159,23 +159,23 @@ public class TemplateElement {
     }
 
     public void writeFile(PsiDirectory currentDir, Project project) {
-        if (isDirectory()) {
-            PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this, project);
-            if (subDirectory == null) {
-                // TODO: 20.06.2016 error write file
-            } else {
-                if (getListTemplateElement() != null) {
-                    for (TemplateElement element : getListTemplateElement()) {
-                        element.writeFile(subDirectory, project);
-                    }
-                }
-            }
-        } else {
-            PsiElement psiElement = FileWriter.writeFile(currentDir, this);
-            if (psiElement == null) {
-                // TODO: 20.06.2016 error write file
-            }
-        }
+//        if (isDirectory()) {
+//            PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this, project);
+//            if (subDirectory == null) {
+//                // TODO: 20.06.2016 error write file
+//            } else {
+//                if (getListTemplateElement() != null) {
+//                    for (TemplateElement element : getListTemplateElement()) {
+//                        element.writeFile(subDirectory, project);
+//                    }
+//                }
+//            }
+//        } else {
+//            PsiElement psiElement = FileWriter.writeFile(currentDir, this);
+//            if (psiElement == null) {
+//                // TODO: 20.06.2016 error write file
+//            }
+//        }
     }
 
     public void updateParents(TemplateElement element) {

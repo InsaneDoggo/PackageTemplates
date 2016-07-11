@@ -39,9 +39,9 @@ public class PackageTemplate {
 //        this.templateElement = templateElement;
     }
 
-//    public void replaceNameVariable(InputManager inputManager) {
+    public void replaceNameVariable(InputManager inputManager) {
 //        directory.replaceNameVariable(inputManager.getMapGlobalProperties());
-//    }
+    }
 
     public HashMap<String, String> getMapGlobalVars() {
         return mapGlobalVars;
@@ -68,6 +68,6 @@ public class PackageTemplate {
     }
 
     public TemplateElement getTemplateElement() {
-        return templateElement;
+        return null;
     }
 }
