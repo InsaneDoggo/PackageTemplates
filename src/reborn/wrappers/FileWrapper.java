@@ -5,11 +5,9 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ui.GridBag;
-import models.TemplateElement;
 import reborn.models.BaseElement;
 import reborn.models.File;
 import utils.FileWriter;
-import utils.Logger;
 import utils.StringTools;
 import utils.UIMaker;
 
@@ -20,7 +18,7 @@ import java.util.List;
 /**
  * Created by CeH9 on 06.07.2016.
  */
-public class FileWrapper extends BaseWrapper {
+public class FileWrapper extends ElementWrapper {
 
     private File file;
 
@@ -41,13 +39,13 @@ public class FileWrapper extends BaseWrapper {
         etfName = UIMaker.getEditorTextField(getFile().getName(), project);
 
         container.add(jlName, bag.nextLine().next());
-        container.add(etfName, bag.next());
+        container.add(etfName, bag.next().coverLine(2));
 
         UIMaker.addMouseListener(this, project, PackageTemplateWrapper.ViewMode.EDIT);
     }
 
     @Override
-    public void addElement(BaseWrapper element) {
+    public void addElement(ElementWrapper element) {
         getParent().addElement(element);
     }
 
@@ -99,8 +97,13 @@ public class FileWrapper extends BaseWrapper {
 
     @Override
     public void collectDataFromFields() {
-        file.setName(jlName.getText());
-        file.setTemplateName(etfName.getText());
+        file.setTemplateName(jlName.getText());
+        file.setName(etfName.getText());
+    }
+
+    @Override
+    public void runGroovyScript() {
+
     }
 
 }

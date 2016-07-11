@@ -1,6 +1,5 @@
 package utils;
 
-import models.PackageTemplate;
 import models.TextRange;
 
 import java.util.ArrayList;
@@ -8,15 +7,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.awt.SystemColor.text;
-
 /**
  * Created by Arsen on 15.06.2016.
  */
 public class StringTools {
 
     public static final String PATTERN_ATTRIBUTE = ".*\\$\\{([_a-zA-Z0-9]*)\\}.*";
-    public static final String EMPTY_NAME = "EMPTY_NAME";
+    public static final String EMPTY_NAME = "UNNAMED";
 
     public static String replaceGlobalVariables(String text, Map<String, String> mapGlobals) {
         Pattern pattern = Pattern.compile(PATTERN_ATTRIBUTE);

@@ -6,14 +6,16 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import custom.impl.ClickListener;
-import models.PackageTemplate;
+import org.jetbrains.annotations.NotNull;
 import reborn.models.GlobalVariable;
-import utils.Logger;
 import utils.UIMaker;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 
 import static utils.UIMaker.PADDING_LABEL;
 
@@ -54,49 +56,22 @@ public class GlobalVariableWrapper {
         this.tfValue = tfValue;
     }
 
-
-
     public void buildView(PackageTemplateWrapper ptWrapper, JPanel container, GridBag bag) {
         JLabel label = new JLabel(AllIcons.Nodes.Variable, JLabel.LEFT);
+        label.setText("variable");
 
-        tfKey = new EditorTextField(getGlobalVariable().getName());
+        tfKey = new EditorTextField(globalVariable.getName());
         tfKey.setAlignmentX(Component.LEFT_ALIGNMENT);
-        UIMaker.setHorizontalPadding(tfKey, PADDING_LABEL);
+        UIMaker.setRightPadding(tfKey, PADDING_LABEL);
 
-
-        tfValue = new EditorTextField(getGlobalVariable().getValue());
+        tfValue = new EditorTextField(globalVariable.getValue());
         tfValue.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         label.addMouseListener(new ClickListener() {
             @Override
             public void mouseClicked(MouseEvent eventOuter) {
                 if (SwingUtilities.isRightMouseButton(eventOuter)) {
-                    JPopupMenu popupMenu = new JBPopupMenu();
-
-                    JMenuItem itemAddVariable = new JBMenuItem("Add Variable", AllIcons.Nodes.Variable);
-                    JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
-
-                    itemAddVariable.addMouseListener(new ClickListener() {
-                        @Override
-                        public void mouseClicked(MouseEvent event) {
-                            if (UIMaker.isLeftClick(event)) {
-                                addVariable(ptWrapper);
-                                System.out.println("AddVariable");
-                            }
-                        }
-                    });
-                    itemDelete.addMouseListener(new ClickListener() {
-                        @Override
-                        public void mouseClicked(MouseEvent event) {
-                            if (UIMaker.isLeftClick(event)) {
-                                deleteVariable(ptWrapper);
-                                System.out.println("Delete");
-                            }
-                        }
-                    });
-
-                    popupMenu.add(itemAddVariable);
-                    popupMenu.add(itemDelete);
+                    JPopupMenu popupMenu = getPopupMenu(ptWrapper);
                     popupMenu.show(label, eventOuter.getX(), eventOuter.getY());
                 }
             }
@@ -105,19 +80,43 @@ public class GlobalVariableWrapper {
         tfKey.setPreferredWidth(0);
         tfValue.setPreferredWidth(0);
 
-        container.add(label, bag.nextLine().next());
-        container.add(tfKey, bag.next());
-        container.add(tfValue, bag.next());
+        container.add(label, bag.nextLine().next().weightx(0));
+        container.add(tfKey, bag.next().weightx(1));
+        container.add(tfValue, bag.next().weightx(1));
+    }
+
+    @NotNull
+    private JPopupMenu getPopupMenu(final PackageTemplateWrapper ptWrapper) {
+        JPopupMenu popupMenu = new JBPopupMenu();
+
+        JMenuItem itemAddVariable = new JBMenuItem("Add Variable", AllIcons.Nodes.Variable);
+        JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
+
+        itemAddVariable.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addVariable(ptWrapper);
+                System.out.println("AddVariable");
+            }
+        });
+        itemDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteVariable(ptWrapper);
+                System.out.println("Delete");
+            }
+        });
+
+        popupMenu.add(itemAddVariable);
+        if (!getGlobalVariable().getName().equals(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME)) {
+            popupMenu.add(itemDelete);
+        }
+        return popupMenu;
     }
 
     private void deleteVariable(PackageTemplateWrapper ptWrapper) {
-        if (getGlobalVariable().getName().equals(PackageTemplate.ATTRIBUTE_BASE_NAME)) {
-            // TODO: 25.06.2016  error can't delete NAME var
-            Logger.log("can't delete NAME var");
+        ptWrapper.removeGlobalVariable(this);
 
-            return;
-        }
-        ptWrapper.getListGlobalVariableWrapper().remove(this);
         ptWrapper.collectDataFromFields();
         ptWrapper.reBuildView();
     }
@@ -131,14 +130,14 @@ public class GlobalVariableWrapper {
 
         GlobalVariableWrapper gvWrapper = new GlobalVariableWrapper(gVariable);
 
-
-        ptWrapper.getListGlobalVariableWrapper().add(gvWrapper);
+        ptWrapper.addGlobalVariable(gvWrapper);
         ptWrapper.reBuildView();
     }
 
-    public void collectDataFromFields() {
-        getGlobalVariable().setName(tfKey.getText());
-        getGlobalVariable().setValue(tfValue.getText());
+    public void collectDataFromFields(HashMap<String, String> mapGlobalVars) {
+        globalVariable.setName(tfKey.getText());
+        globalVariable.setValue(tfValue.getText());
+        mapGlobalVars.put(globalVariable.getName(), globalVariable.getValue());
     }
 
 }

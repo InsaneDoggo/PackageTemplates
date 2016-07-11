@@ -4,9 +4,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import com.intellij.util.ui.GridBag;
-import models.TemplateElement;
 import reborn.models.BaseElement;
 import reborn.models.Directory;
 import utils.FileWriter;
@@ -21,13 +19,13 @@ import java.util.List;
 /**
  * Created by CeH9 on 06.07.2016.
  */
-public class DirectoryWrapper extends BaseWrapper {
+public class DirectoryWrapper extends ElementWrapper {
 
     private Directory directory;
     private JPanel panel;
     private GridBag gridBag;
 
-    private ArrayList<BaseWrapper> listBaseWrapper;
+    private ArrayList<ElementWrapper> listElementWrapper;
 
     public Directory getDirectory() {
         return directory;
@@ -37,17 +35,17 @@ public class DirectoryWrapper extends BaseWrapper {
         this.directory = directory;
     }
 
-    public ArrayList<BaseWrapper> getListBaseWrapper() {
-        return listBaseWrapper;
+    public ArrayList<ElementWrapper> getListElementWrapper() {
+        return listElementWrapper;
     }
 
-    public void setListBaseWrapper(ArrayList<BaseWrapper> listBaseWrapper) {
-        this.listBaseWrapper = listBaseWrapper;
+    public void setListElementWrapper(ArrayList<ElementWrapper> listElementWrapper) {
+        this.listElementWrapper = listElementWrapper;
     }
 
-    public void addElement(BaseWrapper element) {
+    public void addElement(ElementWrapper element) {
         directory.getListBaseElement().add(element.getElement());
-        listBaseWrapper.add(element);
+        listElementWrapper.add(element);
     }
 
     @Override
@@ -62,14 +60,14 @@ public class DirectoryWrapper extends BaseWrapper {
 
     @Override
     public void replaceNameVariable(HashMap<String, String> mapVariables) {
-        for (BaseWrapper element : getListBaseWrapper()) {
+        for (ElementWrapper element : getListElementWrapper()) {
             element.replaceNameVariable(mapVariables);
         }
     }
 
     @Override
     public ValidationInfo isNameValid(List<String> listAllTemplates) {
-        for (BaseWrapper element : getListBaseWrapper()) {
+        for (ElementWrapper element : getListElementWrapper()) {
             ValidationInfo validationInfo = element.isNameValid(listAllTemplates);
             if (validationInfo != null) {
                 return validationInfo;
@@ -82,7 +80,7 @@ public class DirectoryWrapper extends BaseWrapper {
     public void writeFile(PsiDirectory currentDir, Project project) {
         PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this, project);
         if (subDirectory != null) {
-            for (BaseWrapper element : getListBaseWrapper()) {
+            for (ElementWrapper element : getListElementWrapper()) {
                 element.writeFile(subDirectory, project);
             }
         }
@@ -98,9 +96,9 @@ public class DirectoryWrapper extends BaseWrapper {
         //deprecated
     }
 
-    public void removeElement(BaseWrapper element) {
+    public void removeElement(ElementWrapper element) {
         directory.getListBaseElement().remove(element.getElement());
-        listBaseWrapper.remove(element);
+        listElementWrapper.remove(element);
     }
 
     @Override
@@ -124,8 +122,8 @@ public class DirectoryWrapper extends BaseWrapper {
 
         gridBag = GridBagFactory.getBagForDirectory();
 
-        for (BaseWrapper baseWrapper : getListBaseWrapper()) {
-            baseWrapper.buildView(project, panel, gridBag, mode);
+        for (ElementWrapper elementWrapper : getListElementWrapper()) {
+            elementWrapper.buildView(project, panel, gridBag, mode);
         }
 
         UIMaker.setLeftPadding(panel, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);
@@ -140,7 +138,7 @@ public class DirectoryWrapper extends BaseWrapper {
         etfName = UIMaker.getEditorTextField(getDirectory().getName(), project);
 
         container.add(jlName, bag.nextLine().next());
-        container.add(etfName, bag.next());
+        container.add(etfName, bag.next().coverLine(2));
 
         UIMaker.addMouseListener(this, project, mode);
     }
@@ -149,9 +147,14 @@ public class DirectoryWrapper extends BaseWrapper {
     public void collectDataFromFields() {
         getDirectory().setName(etfName.getText());
 
-        for (BaseWrapper baseWrapper : getListBaseWrapper()) {
-            baseWrapper.collectDataFromFields();
+        for (ElementWrapper elementWrapper : getListElementWrapper()) {
+            elementWrapper.collectDataFromFields();
         }
+    }
+
+    @Override
+    public void runGroovyScript() {
+
     }
 
 }

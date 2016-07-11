@@ -24,7 +24,7 @@ import models.TextRange;
 import org.jetbrains.annotations.NotNull;
 import reborn.models.Directory;
 import reborn.models.File;
-import reborn.wrappers.BaseWrapper;
+import reborn.wrappers.ElementWrapper;
 import reborn.wrappers.DirectoryWrapper;
 import reborn.wrappers.FileWrapper;
 import reborn.wrappers.PackageTemplateWrapper;
@@ -43,7 +43,7 @@ import java.util.ArrayList;
 public class UIMaker {
 
     public static final int DEFAULT_PADDING = 0;
-    public static final int PADDING = 20;
+    public static final int PADDING = 28;
     public static final int PADDING_LABEL = 8;
     public static final int DIALOG_MIN_WIDTH = 400;
 
@@ -180,18 +180,18 @@ public class UIMaker {
         addMouseListener(dirWrapper, project, mode);
     }
 
-    public static void addMouseListener(final BaseWrapper baseWrapper, Project project, PackageTemplateWrapper.ViewMode mode) {
-        baseWrapper.jlName.addMouseListener(new ClickListener() {
+    public static void addMouseListener(final ElementWrapper elementWrapper, Project project, PackageTemplateWrapper.ViewMode mode) {
+        elementWrapper.jlName.addMouseListener(new ClickListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
                 if (SwingUtilities.isRightMouseButton(mouseEvent)) {
                     switch (mode) {
                         case EDIT:
-                            createPopupForEditMode(mouseEvent, baseWrapper, project);
+                            createPopupForEditMode(mouseEvent, elementWrapper, project);
                             break;
                         case CREATE:
-                            createPopupForEditMode(mouseEvent, baseWrapper, project);
-//                            createDefaultPopup(mouseEvent, baseWrapper, project);
+                            createPopupForEditMode(mouseEvent, elementWrapper, project);
+//                            createDefaultPopup(mouseEvent, elementWrapper, project);
                             break;
                     }
                 }
@@ -199,11 +199,11 @@ public class UIMaker {
         });
     }
 
-    private static void createDefaultPopup(MouseEvent mouseEvent, final BaseWrapper baseWrapper, final Project project) {
+    private static void createDefaultPopup(MouseEvent mouseEvent, final ElementWrapper elementWrapper, final Project project) {
         // TODO: 07.07.2016 def popup
     }
 
-    private static void createPopupForEditMode(MouseEvent mouseEvent, final BaseWrapper baseWrapper, final Project project) {
+    private static void createPopupForEditMode(MouseEvent mouseEvent, final ElementWrapper elementWrapper, final Project project) {
         JPopupMenu popupMenu = new JBPopupMenu();
 
         JMenuItem itemAddFile = new JBMenuItem("Add File", AllIcons.FileTypes.Text);
@@ -213,40 +213,44 @@ public class UIMaker {
         itemAddFile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddFile(baseWrapper, project);
+                AddFile(elementWrapper, project);
             }
         });
         itemAddDirectory.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addDirectory(baseWrapper, project);
+                addDirectory(elementWrapper, project);
             }
         });
         itemDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                deleteElement(baseWrapper, project);
+                deleteElement(elementWrapper, project);
             }
         });
 
         popupMenu.add(itemAddFile);
         popupMenu.add(itemAddDirectory);
-        popupMenu.add(itemDelete);
-        popupMenu.show(baseWrapper.jlName, mouseEvent.getX(), mouseEvent.getY());
+
+        // if not root element
+        if( elementWrapper.getParent() != null ){
+            popupMenu.add(itemDelete);
+        }
+        popupMenu.show(elementWrapper.jlName, mouseEvent.getX(), mouseEvent.getY());
     }
 
     public static boolean isLeftClick(MouseEvent event) {
         return SwingUtilities.isLeftMouseButton(event);
     }
 
-    public static void addDirectory(BaseWrapper baseWrapper, Project project) {
-        baseWrapper.collectDataFromFields();
+    public static void addDirectory(ElementWrapper elementWrapper, Project project) {
+        elementWrapper.collectDataFromFields();
 
         DirectoryWrapper parent;
-        if (baseWrapper.isDirectory()) {
-            parent = ((DirectoryWrapper) baseWrapper);
+        if (elementWrapper.isDirectory()) {
+            parent = ((DirectoryWrapper) elementWrapper);
         } else {
-            parent = baseWrapper.getParent();
+            parent = elementWrapper.getParent();
         }
 
         parent.addElement(createNewWrappedDirectory(parent));
@@ -266,7 +270,7 @@ public class UIMaker {
 
         dirWrapper.setParent(parent);
         dirWrapper.setDirectory(dir);
-        dirWrapper.setListBaseWrapper(new ArrayList<>());
+        dirWrapper.setListElementWrapper(new ArrayList<>());
         dirWrapper.setPackageTemplateWrapper(parent.getPackageTemplateWrapper());
 
         parent.getDirectory().getListBaseElement().add(dir);
@@ -291,24 +295,25 @@ public class UIMaker {
         return fileWrapper;
     }
 
-    public static void deleteElement(BaseWrapper baseWrapper, Project project) {
-        baseWrapper.getParent().removeMyself();
+    public static void deleteElement(ElementWrapper elementWrapper, Project project) {
+        DirectoryWrapper parent = elementWrapper.getParent();
+        elementWrapper.removeMyself();
 
-        baseWrapper.collectDataFromFields();
-        baseWrapper.getParent().reBuild(project);
+        parent.getPackageTemplateWrapper().collectDataFromFields();
+        parent.reBuild(project);
     }
 
-    public static void AddFile(BaseWrapper baseWrapper, Project project) {
+    public static void AddFile(ElementWrapper elementWrapper, Project project) {
         SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(project) {
             @Override
             public void onSuccess(FileTemplate fileTemplate) {
-                baseWrapper.collectDataFromFields();
+                elementWrapper.collectDataFromFields();
 
                 DirectoryWrapper parent;
-                if (baseWrapper.isDirectory()) {
-                    parent = ((DirectoryWrapper) baseWrapper);
+                if (elementWrapper.isDirectory()) {
+                    parent = ((DirectoryWrapper) elementWrapper);
                 } else {
-                    parent = baseWrapper.getParent();
+                    parent = elementWrapper.getParent();
                 }
                 parent.addElement(createNewWrappedFile(parent, fileTemplate.getName(), fileTemplate.getExtension()));
                 parent.reBuild(project);

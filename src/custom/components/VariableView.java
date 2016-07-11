@@ -8,6 +8,7 @@ import com.intellij.util.ui.GridBag;
 import custom.impl.ClickListener;
 import models.PackageTemplate;
 import models.TemplateContainer;
+import reborn.wrappers.PackageTemplateWrapper;
 import utils.Logger;
 import utils.UIMaker;
 
@@ -102,7 +103,7 @@ public class VariableView extends JPanel {
     }
 
     private void deleteVariable(TemplateContainer templateContainer) {
-        if (getKey().equals(PackageTemplate.ATTRIBUTE_BASE_NAME)) {
+        if (getKey().equals(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME)) {
             // TODO: 25.06.2016  error can't delete NAME var
             Logger.log("can't delete NAME var");
 

@@ -12,6 +12,7 @@ import models.TemplateElement;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import reborn.wrappers.PackageTemplateWrapper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +36,7 @@ public class InputManager {
     public static final ArrayList<String> listAttributesToRemove = new ArrayList<String>() {{
         add(FileTemplate.ATTRIBUTE_NAME);
         add(FileTemplate.ATTRIBUTE_PACKAGE_NAME);
-        add(PackageTemplate.ATTRIBUTE_BASE_NAME);
+        add(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME);
     }};
 
     public InputManager(AnActionEvent event, PackageTemplate packageTemplate) {

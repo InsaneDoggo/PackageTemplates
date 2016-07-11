@@ -12,8 +12,6 @@ import java.util.HashMap;
  */
 public class PackageTemplate {
 
-    public static final java.lang.String ATTRIBUTE_BASE_NAME = "BASE_NAME";
-
     @Expose
     private String name;
     @Expose

@@ -2,6 +2,7 @@ package reborn.wrappers;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorTextField;
+import com.intellij.ui.SeparatorComponent;
 import com.intellij.util.ui.GridBag;
 import models.PackageTemplate;
 import utils.GridBagFactory;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
  * Created by Arsen on 07.07.2016.
  */
 public class PackageTemplateWrapper {
+
+    public static final java.lang.String ATTRIBUTE_BASE_NAME = "BASE_NAME";
 
     public enum ViewMode {EDIT, CREATE, USAGE}
 
@@ -80,7 +83,8 @@ public class PackageTemplateWrapper {
             gridBag = GridBagFactory.getBagForPackageTemplate();
         }
 
-        JLabel jlName = new JLabel("Template Name");
+        // Header
+        JLabel jlName = new JLabel("Name");
         JLabel jlDescription = new JLabel("Description");
         UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
         UIMaker.setRightPadding(jlDescription, UIMaker.PADDING_LABEL);
@@ -89,26 +93,37 @@ public class PackageTemplateWrapper {
         etfDescription = UIMaker.getEditorTextField(packageTemplate.getDescription(), project);
 
         panel.add(jlName, gridBag.nextLine().next());
-        panel.add(etfName, gridBag.next());
+        panel.add(etfName, gridBag.next().coverLine(2));
         panel.add(jlDescription, gridBag.nextLine().next());
-        panel.add(etfDescription, gridBag.next());
+        panel.add(etfDescription, gridBag.next().coverLine(2));
 
-        //todo exec build on children
-
-        JLabel label = new JLabel("Global Variables", JLabel.CENTER);
-        panel.add(label, gridBag.nextLine().next().fillCellHorizontally().coverLine(3));
+        // Globals
+        JLabel jlGlobals = new JLabel("Global Variables", JLabel.CENTER);
+        panel.add(new SeparatorComponent(10), gridBag.nextLine().next().coverLine());
+        panel.add(jlGlobals, gridBag.nextLine().next().fillCellHorizontally().coverLine());
 
         for (GlobalVariableWrapper variableWrapper : getListGlobalVariableWrapper()) {
             variableWrapper.buildView(this, panel, gridBag);
         }
 
+        // Files and Directories
+        panel.add(new SeparatorComponent(10), gridBag.nextLine().next().coverLine());
         rootElement.buildView(project, panel, gridBag, mode);
 
         return panel;
     }
 
+    public void addGlobalVariable(GlobalVariableWrapper gvWrapper) {
+        listGlobalVariableWrapper.add(gvWrapper);
+    }
+
+    public void removeGlobalVariable(GlobalVariableWrapper gvWrapper) {
+        listGlobalVariableWrapper.remove(gvWrapper);
+    }
+
     public void reBuildView() {
         panel.removeAll();
+        gridBag = GridBagFactory.getBagForPackageTemplate();
         buildView();
     }
 
@@ -117,11 +132,12 @@ public class PackageTemplateWrapper {
     }
 
     public void collectDataFromFields() {
-        getPackageTemplate().setName(etfName.getText());
-        getPackageTemplate().setDescription(etfDescription.getText());
+        packageTemplate.setName(etfName.getText());
+        packageTemplate.setDescription(etfDescription.getText());
 
-        for (GlobalVariableWrapper variableWrapper : getListGlobalVariableWrapper()) {
-            variableWrapper.collectDataFromFields();
+        packageTemplate.getMapGlobalVars().clear();
+        for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
+            variableWrapper.collectDataFromFields(packageTemplate.getMapGlobalVars());
         }
 
         rootElement.collectDataFromFields();

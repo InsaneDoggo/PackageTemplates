@@ -21,8 +21,8 @@ public class GridBagFactory {
 
     public static GridBag getBagForDirectory() {
         return new GridBag()
-                .setDefaultWeightX(1,0)
-                .setDefaultWeightX(2,1)
+                .setDefaultWeightX(0,0)
+                .setDefaultWeightX(1,1)
                 .setDefaultInsets(new Insets(4, 0, 4, 0))
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
