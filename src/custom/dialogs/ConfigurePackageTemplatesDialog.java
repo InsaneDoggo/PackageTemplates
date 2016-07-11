@@ -21,9 +21,7 @@ import java.util.HashMap;
 
 public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
 
-    private TemplateContainer templateContainer;
     private PackageTemplateWrapper ptWrapper;
-    private GridBag gridBag;
 
     public abstract void onSuccess(PackageTemplateWrapper packageTemplate);
 
@@ -33,16 +31,17 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
         super(project);
         ptWrapper = new PackageTemplateWrapper(project);
 
-        PackageTemplate packageTemplate = new PackageTemplate();
-        packageTemplate.setMapGlobalVars(new HashMap<>());
-        packageTemplate.setName("New Package Template");
-        packageTemplate.setDescription("");
-
         Directory directory = new Directory();
         directory.setName("example");
         directory.setListBaseElement(new ArrayList<>());
         directory.setEnabled(true);
         directory.setGroovyCode("");
+
+        PackageTemplate packageTemplate = new PackageTemplate();
+        packageTemplate.setMapGlobalVars(new HashMap<>());
+        packageTemplate.setName("New Package Template");
+        packageTemplate.setDescription("");
+        packageTemplate.setDirectory(directory);
 
         DirectoryWrapper dirWrapper = new DirectoryWrapper();
         dirWrapper.setListElementWrapper(new ArrayList<>());
@@ -84,7 +83,7 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
         }
 
         panel.setLayout(new GridBagLayout());
-        gridBag = GridBagFactory.getBagForConfigureDialog();
+        GridBag gridBag = GridBagFactory.getBagForConfigureDialog();
 
         panel.add(ptWrapper.buildView(), gridBag.nextLine().next());
     }
@@ -93,7 +92,6 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
     void onOKAction() {
         ptWrapper.collectDataFromFields();
         onSuccess(ptWrapper);
-
     }
 
     @Override

@@ -24,6 +24,14 @@ public class PackageTemplate {
     public PackageTemplate() {
     }
 
+    public Directory getDirectory() {
+        return directory;
+    }
+
+    public void setDirectory(Directory directory) {
+        this.directory = directory;
+    }
+
     public PackageTemplate(String name, String description, ArrayList<TemplateElement> listTemplateElement) {
         this.name = name;
         this.description = description;

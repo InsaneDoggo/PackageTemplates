@@ -43,11 +43,6 @@ public class DirectoryWrapper extends ElementWrapper {
         this.listElementWrapper = listElementWrapper;
     }
 
-    public void addElement(ElementWrapper element) {
-        directory.getListBaseElement().add(element.getElement());
-        listElementWrapper.add(element);
-    }
-
     @Override
     public BaseElement getElement() {
         return directory;
@@ -94,6 +89,11 @@ public class DirectoryWrapper extends ElementWrapper {
     @Override
     public void initNonSerializableFields() {
         //deprecated
+    }
+
+    public void addElement(ElementWrapper element) {
+        directory.getListBaseElement().add(element.getElement());
+        listElementWrapper.add(element);
     }
 
     public void removeElement(ElementWrapper element) {
@@ -145,7 +145,9 @@ public class DirectoryWrapper extends ElementWrapper {
 
     @Override
     public void collectDataFromFields() {
-        getDirectory().setName(etfName.getText());
+        directory.setName(etfName.getText());
+//        directory.setGroovyCode("");
+//        directory.setEnabled(true);
 
         for (ElementWrapper elementWrapper : getListElementWrapper()) {
             elementWrapper.collectDataFromFields();

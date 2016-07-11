@@ -244,7 +244,7 @@ public class UIMaker {
     }
 
     public static void addDirectory(ElementWrapper elementWrapper, Project project) {
-        elementWrapper.collectDataFromFields();
+        elementWrapper.getPackageTemplateWrapper().collectDataFromFields();
 
         DirectoryWrapper parent;
         if (elementWrapper.isDirectory()) {
@@ -254,26 +254,23 @@ public class UIMaker {
         }
 
         parent.addElement(createNewWrappedDirectory(parent));
-
         parent.reBuild(project);
     }
 
     @NotNull
     private static DirectoryWrapper createNewWrappedDirectory(DirectoryWrapper parent) {
-        DirectoryWrapper dirWrapper = new DirectoryWrapper();
-
         Directory dir = new Directory();
         dir.setName("unnamed");
         dir.setEnabled(true);
         dir.setGroovyCode("");
         dir.setListBaseElement(new ArrayList<>());
 
+        DirectoryWrapper dirWrapper = new DirectoryWrapper();
         dirWrapper.setParent(parent);
         dirWrapper.setDirectory(dir);
         dirWrapper.setListElementWrapper(new ArrayList<>());
         dirWrapper.setPackageTemplateWrapper(parent.getPackageTemplateWrapper());
 
-        parent.getDirectory().getListBaseElement().add(dir);
         return dirWrapper;
     }
 
@@ -290,24 +287,23 @@ public class UIMaker {
 
         fileWrapper.setParent(parent);
         fileWrapper.setFile(file);
+        fileWrapper.setPackageTemplateWrapper(parent.getPackageTemplateWrapper());
 
-        parent.getDirectory().getListBaseElement().add(file);
         return fileWrapper;
     }
 
     public static void deleteElement(ElementWrapper elementWrapper, Project project) {
-        DirectoryWrapper parent = elementWrapper.getParent();
         elementWrapper.removeMyself();
 
-        parent.getPackageTemplateWrapper().collectDataFromFields();
-        parent.reBuild(project);
+        elementWrapper.getParent().getPackageTemplateWrapper().collectDataFromFields();
+        elementWrapper.getParent().reBuild(project);
     }
 
     public static void AddFile(ElementWrapper elementWrapper, Project project) {
         SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(project) {
             @Override
             public void onSuccess(FileTemplate fileTemplate) {
-                elementWrapper.collectDataFromFields();
+                elementWrapper.getPackageTemplateWrapper().collectDataFromFields();
 
                 DirectoryWrapper parent;
                 if (elementWrapper.isDirectory()) {
