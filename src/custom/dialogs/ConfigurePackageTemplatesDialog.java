@@ -23,7 +23,7 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
 
     private PackageTemplateWrapper ptWrapper;
 
-    public abstract void onSuccess(PackageTemplateWrapper packageTemplate);
+    public abstract void onSuccess(PackageTemplate packageTemplate);
 
     public abstract void onFail();
 
@@ -91,7 +91,7 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
     @Override
     void onOKAction() {
         ptWrapper.collectDataFromFields();
-        onSuccess(ptWrapper);
+        onSuccess(ptWrapper.getPackageTemplate());
     }
 
     @Override

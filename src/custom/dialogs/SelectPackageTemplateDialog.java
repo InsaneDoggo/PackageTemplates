@@ -128,7 +128,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
     private void onEditAction() {
         ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(project, ((PackageTemplate) jbList.getSelectedValue())) {
             @Override
-            public void onSuccess(PackageTemplateWrapper packageTemplate) {
+            public void onSuccess(PackageTemplate packageTemplate) {
                 SaveUtil.getInstance().save();
                 System.out.println("onSuccess");
             }
@@ -155,8 +155,8 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
     private void onAddAction() {
         ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(project) {
             @Override
-            public void onSuccess(PackageTemplateWrapper ptWrapper) {
-                templateList.add(ptWrapper.getPackageTemplate());
+            public void onSuccess(PackageTemplate packageTemplate) {
+                templateList.add(packageTemplate);
                 SaveUtil.getInstance().save();
                 initJBList();
             }

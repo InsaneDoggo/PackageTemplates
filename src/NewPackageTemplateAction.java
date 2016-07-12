@@ -3,9 +3,11 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
 import custom.dialogs.ConfigurePackageTemplatesDialog;
 import custom.dialogs.NewPackageDialog;
+import custom.dialogs.SelectPackageTemplateDialog;
 import models.PackageTemplate;
 import models.TemplateElement;
 import reborn.wrappers.PackageTemplateWrapper;
+import state.SaveUtil;
 import utils.FileWriter;
 import utils.InputManager;
 
@@ -18,18 +20,20 @@ public class NewPackageTemplateAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
-        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event.getProject()) {
-            @Override
-            public void onSuccess(PackageTemplateWrapper packageTemplate) {
-                System.out.println("onSuccess");
-            }
 
-            @Override
-            public void onFail() {
-                System.out.println("onSuccess");
-            }
-
-        };
+//        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event.getProject()) {
+//            @Override
+//            public void onSuccess(PackageTemplate packageTemplate) {
+//                SaveUtil.getInstance().getTemplateList().add(packageTemplate);
+//                SaveUtil.getInstance().save();
+//                System.out.println("onSuccess");
+//            }
+//
+//            @Override
+//            public void onFail() {
+//                System.out.println("onSuccess");
+//            }
+//        };
 
 
 //        ImpexDialog dialog = new ImpexDialog(event.getProject(), "Export Templates") {
@@ -44,19 +48,19 @@ public class NewPackageTemplateAction extends AnAction {
 //            }
 //        };
 
-//        SaveUtil.getInstance().load();
-//        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
-//            @Override
-//            public void onSuccess(PackageTemplate packageTemplate) {
-//                System.out.println("SelectPackageTemplateDialog onSuccess");
-//                showDialog(event, packageTemplate);
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                System.out.println("onCancel");
-//            }
-//        };
+        SaveUtil.getInstance().load();
+        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
+            @Override
+            public void onSuccess(PackageTemplate packageTemplate) {
+                System.out.println("SelectPackageTemplateDialog onSuccess");
+                showDialog(event, packageTemplate);
+            }
+
+            @Override
+            public void onCancel() {
+                System.out.println("onCancel");
+            }
+        };
         dialog.show();
     }
 
