@@ -38,7 +38,7 @@ public class SaveUtil {
         if (templateList == null) {
             templateList = new TemplateList();
         }
-        initNonSerializableFields();
+//        initNonSerializableFields();
     }
 
     public void save() {

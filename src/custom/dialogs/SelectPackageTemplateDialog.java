@@ -25,7 +25,7 @@ import java.awt.event.MouseEvent;
 /**
  * Created by CeH9 on 24.06.2016.
  */
-public abstract class SelectPackageTemplateDialog extends DialogWrapper {
+public abstract class SelectPackageTemplateDialog extends BaseDialog {
 
     private JBList jbList;
     private Project project;
@@ -42,19 +42,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
         setTitle("Select File Template");
     }
 
-    @Override
-    public void show() {
-        super.show();
-
-        switch (getExitCode()) {
-            case NewPackageDialog.OK_EXIT_CODE:
-                onSuccess((PackageTemplate) jbList.getSelectedValue());
-                break;
-            case NewPackageDialog.CANCEL_EXIT_CODE:
-                onCancel();
-                break;
-        }
-    }
 
     @Override
     protected ValidationInfo doValidate() {
@@ -68,6 +55,21 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper {
         }
 
         return null;
+    }
+
+    @Override
+    void preShow() {
+
+    }
+
+    @Override
+    void onOKAction() {
+        onSuccess((PackageTemplate) jbList.getSelectedValue());
+    }
+
+    @Override
+    void onCancelAction() {
+        onCancel();
     }
 
     @Override
