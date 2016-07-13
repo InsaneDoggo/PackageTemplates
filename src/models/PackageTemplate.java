@@ -2,6 +2,7 @@ package models;
 
 import com.google.gson.annotations.Expose;
 import reborn.models.Directory;
+import reborn.models.GlobalVariable;
 import utils.InputManager;
 
 import java.util.ArrayList;
@@ -20,8 +21,17 @@ public class PackageTemplate {
     private Directory directory;
     @Expose
     private HashMap<String, String> mapGlobalVars;
+    @Expose
+    private ArrayList<GlobalVariable> listGlobalVariable;
 
     public PackageTemplate() {
+    }
+
+    public PackageTemplate(String name, String description, ArrayList<TemplateElement> listTemplateElement) {
+        this.name = name;
+        this.description = description;
+
+//        templateElement = new TemplateElement("", listTemplateElement, null);
     }
 
     public Directory getDirectory() {
@@ -30,13 +40,6 @@ public class PackageTemplate {
 
     public void setDirectory(Directory directory) {
         this.directory = directory;
-    }
-
-    public PackageTemplate(String name, String description, ArrayList<TemplateElement> listTemplateElement) {
-        this.name = name;
-        this.description = description;
-
-//        templateElement = new TemplateElement("", listTemplateElement, null);
     }
 
     public PackageTemplate(String name, String description, TemplateElement templateElement) {
@@ -75,5 +78,13 @@ public class PackageTemplate {
 
     public TemplateElement getTemplateElement() {
         return null;
+    }
+
+    public ArrayList<GlobalVariable> getListGlobalVariable() {
+        return listGlobalVariable;
+    }
+
+    public void setListGlobalVariable(ArrayList<GlobalVariable> listGlobalVariable) {
+        this.listGlobalVariable = listGlobalVariable;
     }
 }

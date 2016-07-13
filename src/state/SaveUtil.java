@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.intellij.openapi.components.ServiceManager;
 import models.PackageTemplate;
+import reborn.models.BaseElement;
+import reborn.models.deserializers.BaseElementConverter;
 
 /**
  * Created by CeH9 on 26.06.2016.
@@ -26,7 +28,12 @@ public class SaveUtil {
     private Config cfg;
 
     public SaveUtil() {
-        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+        gson = new GsonBuilder()
+                .registerTypeAdapter(BaseElement.class, new BaseElementConverter())
+                .excludeFieldsWithoutExposeAnnotation()
+                .setPrettyPrinting()
+                .create();
+
         cfg = ServiceManager.getService(Config.class);
     }
 

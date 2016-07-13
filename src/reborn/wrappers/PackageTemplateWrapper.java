@@ -5,6 +5,10 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.util.ui.GridBag;
 import models.PackageTemplate;
+import reborn.models.BaseElement;
+import reborn.models.Directory;
+import reborn.models.File;
+import reborn.models.GlobalVariable;
 import utils.GridBagFactory;
 import utils.UIMaker;
 
@@ -115,9 +119,11 @@ public class PackageTemplateWrapper {
 
     public void addGlobalVariable(GlobalVariableWrapper gvWrapper) {
         listGlobalVariableWrapper.add(gvWrapper);
+        packageTemplate.getListGlobalVariable().add(gvWrapper.getGlobalVariable());
     }
 
     public void removeGlobalVariable(GlobalVariableWrapper gvWrapper) {
+        packageTemplate.getListGlobalVariable().remove(gvWrapper.getGlobalVariable());
         listGlobalVariableWrapper.remove(gvWrapper);
     }
 
@@ -135,12 +141,48 @@ public class PackageTemplateWrapper {
         packageTemplate.setName(etfName.getText());
         packageTemplate.setDescription(etfDescription.getText());
 
-        packageTemplate.getMapGlobalVars().clear();
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
-            variableWrapper.collectDataFromFields(packageTemplate.getMapGlobalVars());
+            variableWrapper.collectDataFromFields();
         }
 
         rootElement.collectDataFromFields();
+    }
+
+
+    public DirectoryWrapper wrapDirectory(Directory directory, DirectoryWrapper parent) {
+        DirectoryWrapper result = new DirectoryWrapper();
+        result.setDirectory(directory);
+        result.setParent(parent);
+        result.setPackageTemplateWrapper(PackageTemplateWrapper.this);
+
+        ArrayList<ElementWrapper> list = new ArrayList<>();
+
+        for (BaseElement baseElement : directory.getListBaseElement()) {
+            if (baseElement.isDirectory()) {
+                list.add(wrapDirectory(((Directory) baseElement), result));
+            } else {
+                list.add(wrapFile(((File) baseElement), result));
+            }
+        }
+
+        result.setListElementWrapper(list);
+        return result;
+    }
+
+    private FileWrapper wrapFile(File file, DirectoryWrapper parent) {
+        FileWrapper result = new FileWrapper();
+        result.setPackageTemplateWrapper(PackageTemplateWrapper.this);
+        result.setParent(parent);
+        result.setFile(file);
+
+        return result;
+    }
+
+    public void wrapGlobals() {
+        listGlobalVariableWrapper = new ArrayList<>();
+        for(GlobalVariable globalVariable : packageTemplate.getListGlobalVariable()){
+            listGlobalVariableWrapper.add(new GlobalVariableWrapper(globalVariable));
+        }
     }
 
 }

@@ -127,17 +127,16 @@ public class GlobalVariableWrapper {
         GlobalVariable gVariable = new GlobalVariable();
         gVariable.setName("UNNAMED_VARIABLE");
         gVariable.setValue("");
+        gVariable.setEnabled(true);
+        gVariable.setGroovyCode("");
 
-        GlobalVariableWrapper gvWrapper = new GlobalVariableWrapper(gVariable);
-
-        ptWrapper.addGlobalVariable(gvWrapper);
+        ptWrapper.addGlobalVariable(new GlobalVariableWrapper(gVariable));
         ptWrapper.reBuildView();
     }
 
-    public void collectDataFromFields(HashMap<String, String> mapGlobalVars) {
+    public void collectDataFromFields() {
         globalVariable.setName(tfKey.getText());
         globalVariable.setValue(tfValue.getText());
-        mapGlobalVars.put(globalVariable.getName(), globalVariable.getValue());
     }
 
 }

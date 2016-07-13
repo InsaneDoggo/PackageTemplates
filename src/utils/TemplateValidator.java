@@ -5,6 +5,9 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.ui.ValidationInfo;
 import models.PackageTemplate;
 import models.TemplateElement;
+import reborn.models.BaseElement;
+import reborn.wrappers.ElementWrapper;
+import reborn.wrappers.PackageTemplateWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +22,8 @@ public class TemplateValidator {
     /**
      * Check existence FileTemplates used in PackageTemplate
      */
-    public static ValidationInfo isTemplateValid(PackageTemplate packageTemplate){
-        if (packageTemplate.getTemplateElement().getListTemplateElement() == null){
+    public static ValidationInfo isTemplateValid(PackageTemplateWrapper ptWrapper){
+        if (ptWrapper.getRootElement().getListElementWrapper() == null){
             // when template is empty folder(useless, but valid)
             return null;
         }
@@ -33,7 +36,7 @@ public class TemplateValidator {
             //}
         }
 
-        for( TemplateElement element : packageTemplate.getTemplateElement().getListTemplateElement() ){
+        for( ElementWrapper element : ptWrapper.getRootElement().getListElementWrapper() ){
             ValidationInfo validationInfo = element.isNameValid(listAllTemplates);
             if( validationInfo != null ){
                 return validationInfo;

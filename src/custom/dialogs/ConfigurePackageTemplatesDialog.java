@@ -39,6 +39,7 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
 
         PackageTemplate packageTemplate = new PackageTemplate();
         packageTemplate.setMapGlobalVars(new HashMap<>());
+        packageTemplate.setListGlobalVariable(new ArrayList<>());
         packageTemplate.setName("New Package Template");
         packageTemplate.setDescription("");
         packageTemplate.setDirectory(directory);
@@ -57,6 +58,7 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
 
         ptWrapper.setPackageTemplate(packageTemplate);
         ptWrapper.setRootElement(dirWrapper);
+        ptWrapper.setProject(project);
         ptWrapper.setMode(PackageTemplateWrapper.ViewMode.CREATE);
         ptWrapper.setListGlobalVariableWrapper(new ArrayList<>());
         ptWrapper.addGlobalVariable(new GlobalVariableWrapper(globalVariable));
@@ -65,14 +67,11 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
     public ConfigurePackageTemplatesDialog(Project project, PackageTemplate packageTemplate) {
         super(project);
         ptWrapper = new PackageTemplateWrapper(project);
-        ptWrapper.setPackageTemplate(packageTemplate);
         ptWrapper.setMode(PackageTemplateWrapper.ViewMode.EDIT);
-        ptWrapper.setListGlobalVariableWrapper(new ArrayList<>());
-
-        DirectoryWrapper dirWrapper = new DirectoryWrapper();
-//        dirWrapper.setDirectory(packageTemplate.get);
-        // TODO: 09.07.2016 wrap pt
-        ptWrapper.setRootElement(dirWrapper);
+        ptWrapper.setPackageTemplate(packageTemplate);
+        ptWrapper.wrapGlobals();
+        ptWrapper.setRootElement(ptWrapper.wrapDirectory(packageTemplate.getDirectory(), null));
+        ptWrapper.setProject(project);
     }
 
     @Override

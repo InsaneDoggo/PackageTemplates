@@ -28,7 +28,6 @@ import java.awt.event.MouseEvent;
 public abstract class SelectPackageTemplateDialog extends BaseDialog {
 
     private JBList jbList;
-    private Project project;
     private TemplateList templateList;
 
     public abstract void onSuccess(PackageTemplate packageTemplate);
@@ -37,8 +36,6 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
 
     public SelectPackageTemplateDialog(Project project) {
         super(project);
-        this.project = project;
-        init();
         setTitle("Select File Template");
     }
 
@@ -49,10 +46,10 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
             return new ValidationInfo("Select item!", jbList);
         }
 
-        ValidationInfo validationInfo = TemplateValidator.isTemplateValid((PackageTemplate) jbList.getSelectedValue());
-        if (validationInfo != null) {
-            return new ValidationInfo(validationInfo.message, jbList);
-        }
+//        ValidationInfo validationInfo = TemplateValidator.isTemplateValid((PackageTemplate) jbList.getSelectedValue());
+//        if (validationInfo != null) {
+//            return new ValidationInfo(validationInfo.message, jbList);
+//        }
 
         return null;
     }
@@ -128,25 +125,27 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
     }
 
     private void onEditAction() {
-        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(project, ((PackageTemplate) jbList.getSelectedValue())) {
-            @Override
-            public void onSuccess(PackageTemplate packageTemplate) {
-                SaveUtil.getInstance().save();
-                System.out.println("onSuccess");
-            }
+        if (!jbList.isSelectionEmpty()) {
+            ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(project, ((PackageTemplate) jbList.getSelectedValue())) {
+                @Override
+                public void onSuccess(PackageTemplate packageTemplate) {
+                    SaveUtil.getInstance().save();
+                    System.out.println("onSuccess");
+                }
 
-            @Override
-            public void onFail() {
-                System.out.println("onFail");
-            }
-        };
-        dialog.show();
+                @Override
+                public void onFail() {
+                    System.out.println("onFail");
+                }
+            };
+            dialog.show();
+        }
     }
 
     private void onDeleteAction(JButton jbDelete) {
-        int confirmDialog = JOptionPane.showConfirmDialog(jbDelete, "Delete Template");
-        if (confirmDialog == JOptionPane.OK_OPTION) {
-            if (jbList.getSelectedIndex() != -1) {
+        if (!jbList.isSelectionEmpty()) {
+            int confirmDialog = JOptionPane.showConfirmDialog(jbDelete, "Delete Template");
+            if (confirmDialog == JOptionPane.OK_OPTION) {
                 templateList.remove(jbList.getSelectedValue());
                 SaveUtil.getInstance().save();
                 initJBList();

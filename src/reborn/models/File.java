@@ -9,7 +9,9 @@ import java.util.HashMap;
  */
 public class File extends BaseElement {
 
+    @Expose
     private String templateName;
+    @Expose
     private String extension;
     @Expose
     private HashMap<String, String> mapProperties;
@@ -36,5 +38,10 @@ public class File extends BaseElement {
 
     public void setMapProperties(HashMap<String, String> mapProperties) {
         this.mapProperties = mapProperties;
+    }
+
+    @Override
+    public boolean isDirectory() {
+        return false;
     }
 }

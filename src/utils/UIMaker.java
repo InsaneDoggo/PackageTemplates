@@ -187,11 +187,8 @@ public class UIMaker {
                 if (SwingUtilities.isRightMouseButton(mouseEvent)) {
                     switch (mode) {
                         case EDIT:
-                            createPopupForEditMode(mouseEvent, elementWrapper, project);
-                            break;
                         case CREATE:
                             createPopupForEditMode(mouseEvent, elementWrapper, project);
-//                            createDefaultPopup(mouseEvent, elementWrapper, project);
                             break;
                     }
                 }

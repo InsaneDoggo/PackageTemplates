@@ -53,7 +53,7 @@ public class NewPackageTemplateAction extends AnAction {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
                 System.out.println("SelectPackageTemplateDialog onSuccess");
-                showDialog(event, packageTemplate);
+                //showDialog(event, packageTemplate);
             }
 
             @Override
