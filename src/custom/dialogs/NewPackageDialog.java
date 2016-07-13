@@ -4,10 +4,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import models.InputBlock;
+import models.PackageTemplate;
 import org.jetbrains.annotations.Nullable;
+import reborn.wrappers.PackageTemplateWrapper;
 import utils.InputManager;
 import utils.StringTools;
 import utils.UIMaker;
+import utils.WrappersFactory;
 
 import javax.swing.*;
 import java.util.Map;
@@ -16,37 +19,18 @@ import java.util.Properties;
 /**
  * Created by CeH9 on 14.06.2016.
  */
-public abstract class NewPackageDialog extends DialogWrapper {
+public abstract class NewPackageDialog extends BaseDialog {
 
     public abstract void onSuccess();
     public abstract void onCancel();
 
-    JPanel panel;
-    InputManager inputManager;
+    PackageTemplateWrapper ptWrapper;
 
-    public NewPackageDialog(@Nullable Project project, String title, InputManager inputManager) {
+    public NewPackageDialog(@Nullable Project project, String title, PackageTemplate packageTemplate) {
         super(project);
-        this.inputManager = inputManager;
-        this.panel = inputManager.getPanel();
+        ptWrapper = WrappersFactory.wrapPackageTemplate(project, packageTemplate, PackageTemplateWrapper.ViewMode.USAGE);
         init();
         setTitle(title);
-    }
-
-    @Override
-    public void show() {
-        super.show();
-
-        switch (getExitCode()) {
-            case NewPackageDialog.OK_EXIT_CODE:
-                inputManager.collectGlobalVars();
-                saveVariablesFromDialog();
-                inputManager.getPackageTemplate().replaceNameVariable(inputManager);
-                onSuccess();
-                break;
-            case NewPackageDialog.CANCEL_EXIT_CODE:
-                onCancel();
-                break;
-        }
     }
 
     public void updateHighlight() {
@@ -55,7 +39,7 @@ public abstract class NewPackageDialog extends DialogWrapper {
                 continue;
             }
 
-            UIMaker.applyHighlightRange(inputBlock.getTfName().getText(), inputManager.getProject(), inputBlock.getTfName().getEditor());
+            UIMaker.applyHighlightRange(inputBlock.getTfName().getText(), project, inputBlock.getTfName().getEditor());
         }
     }
 
@@ -93,12 +77,6 @@ public abstract class NewPackageDialog extends DialogWrapper {
             }
         }
         return null;
-    }
-
-    @Nullable
-    @Override
-    protected JComponent createCenterPanel() {
-        return panel;
     }
 
 }

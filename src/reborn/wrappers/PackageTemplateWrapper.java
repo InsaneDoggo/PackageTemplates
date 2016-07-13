@@ -149,6 +149,15 @@ public class PackageTemplateWrapper {
     }
 
 
+
+    public void wrapPackageTemplate(PackageTemplateWrapper.ViewMode mode) {
+       setMode(PackageTemplateWrapper.ViewMode.EDIT);
+       setPackageTemplate(packageTemplate);
+       wrapGlobals();
+       setRootElement(wrapDirectory(packageTemplate.getDirectory(), null));
+       setProject(project);
+    }
+
     public DirectoryWrapper wrapDirectory(Directory directory, DirectoryWrapper parent) {
         DirectoryWrapper result = new DirectoryWrapper();
         result.setDirectory(directory);

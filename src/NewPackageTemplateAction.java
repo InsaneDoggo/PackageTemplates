@@ -10,6 +10,7 @@ import reborn.wrappers.PackageTemplateWrapper;
 import state.SaveUtil;
 import utils.FileWriter;
 import utils.InputManager;
+import utils.WrappersFactory;
 
 import java.util.ArrayList;
 
@@ -20,21 +21,6 @@ public class NewPackageTemplateAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
-
-//        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(event.getProject()) {
-//            @Override
-//            public void onSuccess(PackageTemplate packageTemplate) {
-//                SaveUtil.getInstance().getTemplateList().add(packageTemplate);
-//                SaveUtil.getInstance().save();
-//                System.out.println("onSuccess");
-//            }
-//
-//            @Override
-//            public void onFail() {
-//                System.out.println("onSuccess");
-//            }
-//        };
-
 
 //        ImpexDialog dialog = new ImpexDialog(event.getProject(), "Export Templates") {
 //            @Override
@@ -53,7 +39,7 @@ public class NewPackageTemplateAction extends AnAction {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
                 System.out.println("SelectPackageTemplateDialog onSuccess");
-                //showDialog(event, packageTemplate);
+                showDialog(event, packageTemplate);
             }
 
             @Override
@@ -64,25 +50,11 @@ public class NewPackageTemplateAction extends AnAction {
         dialog.show();
     }
 
-    private PackageTemplate fakePT() {
-        ArrayList<TemplateElement> listElements = new ArrayList<>();
-        ArrayList<TemplateElement> listElementsInner = new ArrayList<>();
-        PackageTemplate packageTemplate = new PackageTemplate("TestPT", "tipa description", listElements);
-
-        TemplateElement element = new TemplateElement("Pre${PACKAGE_TEMPLATE_NAME}Post", listElementsInner, packageTemplate.getTemplateElement());
-
-        listElements.add(new TemplateElement("Prost", "Prost", "java", packageTemplate.getTemplateElement()));
-        listElements.add(element);
-        listElementsInner.add(new TemplateElement("Prost", "Prost", "java", element));
-        listElementsInner.add(new TemplateElement("Slojn", "Slojn", "java", element));
-        return packageTemplate;
-    }
-
     private void showDialog(AnActionEvent event, PackageTemplate packageTemplate) {
-        InputManager inputManager = new InputManager(event, packageTemplate);
-        packageTemplate.getTemplateElement().makeInputBlock(inputManager);
+//        InputManager inputManager = new InputManager(event, packageTemplate);
+//        packageTemplate.getTemplateElement().makeInputBlock(inputManager);
 
-        NewPackageDialog dialog = new NewPackageDialog(event.getProject(), "New package from \"" + packageTemplate.getName() + "\"", inputManager) {
+        NewPackageDialog dialog = new NewPackageDialog(event.getProject(), "New package from \"" + packageTemplate.getName() + "\"", packageTemplate) {
             @Override
             public void onSuccess() {
                 createFiles(event, packageTemplate);
