@@ -31,6 +31,7 @@ public abstract class ElementWrapper extends BaseWrapper {
     public abstract boolean isDirectory();
     public abstract void replaceNameVariable(HashMap<String, String> mapVariables);
     public abstract ValidationInfo isNameValid(List<String> listAllTemplates);
+    public abstract ValidationInfo validateFields();
     public abstract void writeFile(PsiDirectory currentDir, Project project);
     public abstract void updateParents(DirectoryWrapper dwParent);
     public abstract void initNonSerializableFields();
@@ -55,4 +56,5 @@ public abstract class ElementWrapper extends BaseWrapper {
         //todo delete project?
         packageTemplateWrapper.reBuildView();
     }
+
 }

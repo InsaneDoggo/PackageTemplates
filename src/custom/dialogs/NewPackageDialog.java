@@ -6,11 +6,9 @@ import com.intellij.openapi.ui.ValidationInfo;
 import models.InputBlock;
 import models.PackageTemplate;
 import org.jetbrains.annotations.Nullable;
+import reborn.wrappers.GlobalVariableWrapper;
 import reborn.wrappers.PackageTemplateWrapper;
-import utils.InputManager;
-import utils.StringTools;
-import utils.UIMaker;
-import utils.WrappersFactory;
+import utils.*;
 
 import javax.swing.*;
 import java.util.Map;
@@ -68,15 +66,41 @@ public abstract class NewPackageDialog extends BaseDialog {
 
     @Override
     protected ValidationInfo doValidate() {
-        for (InputBlock block : inputManager.getListInputBlock()) {
-            if( block.getTfName().getText().trim().isEmpty() ){
-                return new ValidationInfo("Fill empty fields", block.getTfName());
-            }
-            if( !StringTools.isNameValid(block.getTfName().getText()) ){
-                return new ValidationInfo("Name contains illegal symbols", block.getTfName() );
+        ValidationInfo result;
+        result = TemplateValidator.validateTextField(ptWrapper.etfName, TemplateValidator.FieldType.PACKAGE_TEMPLATE_NAME);
+        if( result != null ){
+            return result;
+        }
+        result = TemplateValidator.validateTextField(ptWrapper.etfDescription, TemplateValidator.FieldType.PLAIN_TEXT);
+        if( result != null ){
+            return result;
+        }
+
+
+        for (GlobalVariableWrapper gvWrapper : ptWrapper.getListGlobalVariableWrapper()) {
+            result = TemplateValidator.validateTextField(ptWrapper.etfDescription, TemplateValidator.FieldType.GLOBAL_VARIABLE);
+            if( result != null ){
+                return result;
             }
         }
-        return null;
+
+        return ptWrapper.getRootElement().validateFields();
     }
 
+
+
+    @Override
+    void preShow() {
+
+    }
+
+    @Override
+    void onOKAction() {
+
+    }
+
+    @Override
+    void onCancelAction() {
+
+    }
 }

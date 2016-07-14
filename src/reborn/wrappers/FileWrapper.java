@@ -9,6 +9,7 @@ import reborn.models.BaseElement;
 import reborn.models.File;
 import utils.FileWriter;
 import utils.StringTools;
+import utils.TemplateValidator;
 import utils.UIMaker;
 
 import javax.swing.*;
@@ -70,6 +71,11 @@ public class FileWrapper extends ElementWrapper {
             return new ValidationInfo("Template \"" + getFile().getTemplateName() + "\" doesn't exist!");
         }
         return null;
+    }
+
+    @Override
+    public ValidationInfo validateFields() {
+        return TemplateValidator.validateTextField(etfName, TemplateValidator.FieldType.CLASS_NAME);
     }
 
     @Override

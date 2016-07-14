@@ -64,7 +64,7 @@ public class NewPackageTemplateAction extends AnAction {
             public void onCancel() {
             }
         };
-        dialog.updateHighlight();
+//        dialog.updateHighlight();
         dialog.show();
     }
 

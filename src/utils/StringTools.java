@@ -59,26 +59,6 @@ public class StringTools {
         return text.matches(PATTERN_ATTRIBUTE);
     }
 
-//    \d    A digit: [0-9]
-//    \D    A non-digit: [^0-9]
-//    \h    A horizontal whitespace character: [ \t\xA0\u1680\u180e\u2000-\u200a\u202f\u205f\u3000]
-//    \H    A non-horizontal whitespace character: [^\h]
-//    \s    A whitespace character: [ \t\n\x0B\f\r]
-//    \S    A non-whitespace character: [^\s]
-//    \v    A vertical whitespace character: [\n\x0B\f\r\x85\u2028\u2029]
-//    \V    A non-vertical whitespace character: [^\v]
-//    \w    A word character: [a-zA-Z_0-9]
-//    \W    A non-word character: [^\w]
-    public static boolean isNameValid(String text) {
-        if( text.matches(".*[^0-9a-zA-Z_}{\\$].*")){
-            return false;
-        }
-        if( text.substring(0,1).matches("\\d")){
-            return false;
-        }
-        return true;
-    }
-
     public static String wrapAsVariable(String name) {
         return String.format("%s%s%s", "${", name, "}");
     }

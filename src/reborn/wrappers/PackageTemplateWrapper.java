@@ -148,8 +148,6 @@ public class PackageTemplateWrapper {
         rootElement.collectDataFromFields();
     }
 
-
-
     public void wrapPackageTemplate(PackageTemplateWrapper.ViewMode mode) {
        setMode(PackageTemplateWrapper.ViewMode.EDIT);
        setPackageTemplate(packageTemplate);
