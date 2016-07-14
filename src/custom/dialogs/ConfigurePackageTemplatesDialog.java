@@ -10,6 +10,7 @@ import reborn.wrappers.DirectoryWrapper;
 import reborn.wrappers.GlobalVariableWrapper;
 import reborn.wrappers.PackageTemplateWrapper;
 import utils.GridBagFactory;
+import utils.WrappersFactory;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -29,49 +30,12 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
 
     public ConfigurePackageTemplatesDialog(Project project) {
         super(project);
-        ptWrapper = new PackageTemplateWrapper(project);
-
-        Directory directory = new Directory();
-        directory.setName("example");
-        directory.setListBaseElement(new ArrayList<>());
-        directory.setEnabled(true);
-        directory.setGroovyCode("");
-
-        PackageTemplate packageTemplate = new PackageTemplate();
-        packageTemplate.setMapGlobalVars(new HashMap<>());
-        packageTemplate.setListGlobalVariable(new ArrayList<>());
-        packageTemplate.setName("New Package Template");
-        packageTemplate.setDescription("");
-        packageTemplate.setDirectory(directory);
-
-        DirectoryWrapper dirWrapper = new DirectoryWrapper();
-        dirWrapper.setListElementWrapper(new ArrayList<>());
-        dirWrapper.setPackageTemplateWrapper(ptWrapper);
-        dirWrapper.setParent(null);
-        dirWrapper.setDirectory(directory);
-
-        GlobalVariable globalVariable = new GlobalVariable();
-        globalVariable.setName(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME);
-        globalVariable.setValue("Example");
-        globalVariable.setEnabled(true);
-        globalVariable.setGroovyCode("");
-
-        ptWrapper.setPackageTemplate(packageTemplate);
-        ptWrapper.setRootElement(dirWrapper);
-        ptWrapper.setProject(project);
-        ptWrapper.setMode(PackageTemplateWrapper.ViewMode.CREATE);
-        ptWrapper.setListGlobalVariableWrapper(new ArrayList<>());
-        ptWrapper.addGlobalVariable(new GlobalVariableWrapper(globalVariable));
+        WrappersFactory.createAndWrapPackageTemplate(project, PackageTemplateWrapper.ViewMode.CREATE);
     }
 
     public ConfigurePackageTemplatesDialog(Project project, PackageTemplate packageTemplate) {
         super(project);
-        ptWrapper = new PackageTemplateWrapper(project);
-        ptWrapper.setMode(PackageTemplateWrapper.ViewMode.EDIT);
-        ptWrapper.setPackageTemplate(packageTemplate);
-        ptWrapper.wrapGlobals();
-        ptWrapper.setRootElement(ptWrapper.wrapDirectory(packageTemplate.getDirectory(), null));
-        ptWrapper.setProject(project);
+        ptWrapper = WrappersFactory.wrapPackageTemplate(project, packageTemplate, PackageTemplateWrapper.ViewMode.EDIT);
     }
 
     @Override

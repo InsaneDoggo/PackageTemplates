@@ -9,6 +9,7 @@ import reborn.models.BaseElement;
 import reborn.models.Directory;
 import utils.FileWriter;
 import utils.GridBagFactory;
+import utils.TemplateValidator;
 import utils.UIMaker;
 
 import javax.swing.*;
@@ -68,6 +69,22 @@ public class DirectoryWrapper extends ElementWrapper {
                 return validationInfo;
             }
         }
+        return null;
+    }
+
+    @Override
+    public ValidationInfo validateFields() {
+        ValidationInfo result = TemplateValidator.validateTextField(etfName, TemplateValidator.FieldType.CLASS_NAME);
+        if(result != null){
+            return result;
+        }
+        for (ElementWrapper elementWrapper : listElementWrapper){
+            result = elementWrapper.validateFields();
+            if(result != null){
+                return result;
+            }
+        }
+
         return null;
     }
 
