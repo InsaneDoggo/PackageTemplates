@@ -21,6 +21,7 @@ import custom.dialogs.SelectFileTemplateDialog;
 import custom.impl.ClickListener;
 import models.InputBlock;
 import models.TextRange;
+import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.NotNull;
 import reborn.models.Directory;
 import reborn.models.File;
@@ -35,6 +36,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * Created by CeH9 on 16.06.2016.
@@ -189,6 +193,8 @@ public class UIMaker {
                         case EDIT:
                         case CREATE:
                             createPopupForEditMode(mouseEvent, elementWrapper, project);
+                            break;
+                        case USAGE:
                             break;
                     }
                 }

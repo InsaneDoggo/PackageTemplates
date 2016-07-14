@@ -56,8 +56,8 @@ public class NewPackageTemplateAction extends AnAction {
 
         NewPackageDialog dialog = new NewPackageDialog(event.getProject(), "New package from \"" + packageTemplate.getName() + "\"", packageTemplate) {
             @Override
-            public void onSuccess() {
-                createFiles(event, packageTemplate);
+            public void onSuccess(PackageTemplateWrapper ptWrapper) {
+                createFiles(event, ptWrapper);
             }
 
             @Override
@@ -68,10 +68,10 @@ public class NewPackageTemplateAction extends AnAction {
         dialog.show();
     }
 
-    private void createFiles(AnActionEvent event, PackageTemplate packageTemplate) {
+    private void createFiles(AnActionEvent event, PackageTemplateWrapper ptWrapper) {
         PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
         if (currentDir != null) {
-            packageTemplate.getTemplateElement().writeFile(currentDir, event.getProject());
+            ptWrapper.getRootElement().writeFile(currentDir, event.getProject());
         }
     }
 

@@ -10,26 +10,31 @@ import java.awt.*;
  */
 public class GridBagFactory {
 
+    @NotNull
+    private static Insets getDefaultInsets() {
+        return new Insets(4, 0, 4, 0);
+    }
 
     public static GridBag getBagForPackageTemplate() {
         return new GridBag()
-                .setDefaultInsets(new Insets(4, 0, 4, 0))
+                .setDefaultInsets(getDefaultInsets())
                 .setDefaultFill(GridBagConstraints.HORIZONTAL)
                 .setDefaultWeightX(0, 0)
                 .setDefaultWeightX(1, 1);
     }
 
+
     public static GridBag getBagForDirectory() {
         return new GridBag()
                 .setDefaultWeightX(0,0)
                 .setDefaultWeightX(1,1)
-                .setDefaultInsets(new Insets(4, 0, 4, 0))
+                .setDefaultInsets(getDefaultInsets())
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
     public static GridBag getBagForSelectDialog() {
         return new GridBag()
-                .setDefaultInsets(new Insets(4, 4, 4, 4))
+                .setDefaultInsets(getDefaultInsets())
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
@@ -43,7 +48,7 @@ public class GridBagFactory {
     public static GridBag getDefaultGridBag() {
         return new GridBag()
                 .setDefaultWeightX(1, 1)
-                .setDefaultInsets(new Insets(4, 0, 4, 0))
+                .setDefaultInsets(getDefaultInsets())
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
@@ -53,7 +58,7 @@ public class GridBagFactory {
 //                .setDefaultWeightX(0, 0.02)
                 .setDefaultWeightX(1, 0.5)
                 .setDefaultWeightX(2, 0.5)
-                .setDefaultInsets(new Insets(4, 0, 4, 0))
+                .setDefaultInsets(getDefaultInsets())
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 

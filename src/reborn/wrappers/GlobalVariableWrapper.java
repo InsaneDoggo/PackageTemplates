@@ -83,6 +83,10 @@ public class GlobalVariableWrapper {
         container.add(label, bag.nextLine().next().weightx(0));
         container.add(tfKey, bag.next().weightx(1));
         container.add(tfValue, bag.next().weightx(1));
+
+        if (ptWrapper.getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
+            tfKey.setEnabled(false);
+        }
     }
 
     @NotNull

@@ -128,26 +128,26 @@ public class DirectoryWrapper extends ElementWrapper {
     }
 
     @Override
-    public void buildView(Project project, JPanel container, GridBag bag, PackageTemplateWrapper.ViewMode mode) {
+    public void buildView(Project project, JPanel container, GridBag bag) {
         if (panel == null) {
             panel = new JPanel(new GridBagLayout());
         } else {
             panel.removeAll();
         }
 
-        createPackageView(project, container, bag, mode);
+        createPackageView(project, container, bag);
 
         gridBag = GridBagFactory.getBagForDirectory();
 
         for (ElementWrapper elementWrapper : getListElementWrapper()) {
-            elementWrapper.buildView(project, panel, gridBag, mode);
+            elementWrapper.buildView(project, panel, gridBag);
         }
 
         UIMaker.setLeftPadding(panel, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);
         container.add(panel, bag.nextLine().next().coverLine());
     }
 
-    private void createPackageView(Project project, JPanel container, GridBag bag, PackageTemplateWrapper.ViewMode mode) {
+    private void createPackageView(Project project, JPanel container, GridBag bag) {
         jlName = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
         jlName.setText("Directory");
         UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
@@ -157,7 +157,7 @@ public class DirectoryWrapper extends ElementWrapper {
         container.add(jlName, bag.nextLine().next());
         container.add(etfName, bag.next().coverLine(2));
 
-        UIMaker.addMouseListener(this, project, mode);
+        UIMaker.addMouseListener(this, project, getPackageTemplateWrapper().getMode());
     }
 
     @Override

@@ -1,5 +1,7 @@
 package reborn.wrappers;
 
+import com.intellij.ide.fileTemplates.FileTemplate;
+import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
@@ -7,14 +9,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.ui.GridBag;
 import reborn.models.BaseElement;
 import reborn.models.File;
-import utils.FileWriter;
-import utils.StringTools;
-import utils.TemplateValidator;
-import utils.UIMaker;
+import utils.*;
 
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -22,6 +23,7 @@ import java.util.List;
 public class FileWrapper extends ElementWrapper {
 
     private File file;
+    private CreateFromTemplatePanel panelVariables;
 
     public File getFile() {
         return file;
@@ -32,7 +34,7 @@ public class FileWrapper extends ElementWrapper {
     }
 
     @Override
-    public void buildView(Project project, JPanel container, GridBag bag, PackageTemplateWrapper.ViewMode mode) {
+    public void buildView(Project project, JPanel container, GridBag bag) {
         jlName = new JLabel(UIMaker.getIconByFileExtension(getFile().getExtension()), SwingConstants.LEFT);
         jlName.setText(getFile().getTemplateName());
         UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
@@ -42,7 +44,21 @@ public class FileWrapper extends ElementWrapper {
         container.add(jlName, bag.nextLine().next());
         container.add(etfName, bag.next().coverLine(2));
 
-        UIMaker.addMouseListener(this, project, PackageTemplateWrapper.ViewMode.EDIT);
+        UIMaker.addMouseListener(this, project, getPackageTemplateWrapper().getMode());
+
+        if (getPackageTemplateWrapper().getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
+            FileTemplate fileTemplate = AttributesHelper.getTemplate(getFile().getTemplateName());
+            if (fileTemplate != null) {
+                String[] unsetAttributes = AttributesHelper.getUnsetAttrs(fileTemplate, getPackageTemplateWrapper().getProject());
+                if (unsetAttributes != null && unsetAttributes.length > 0) {
+                    panelVariables = new CreateFromTemplatePanel(unsetAttributes, false, null);
+
+                    JComponent component = panelVariables.getComponent();
+                    UIMaker.setLeftPadding(component, UIMaker.PADDING);
+                    container.add(component, bag.nextLine().next().coverLine());
+                }
+            }
+        }
     }
 
     @Override
@@ -105,6 +121,21 @@ public class FileWrapper extends ElementWrapper {
     public void collectDataFromFields() {
         file.setTemplateName(jlName.getText());
         file.setName(etfName.getText());
+
+        if( getPackageTemplateWrapper().getMode() == PackageTemplateWrapper.ViewMode.USAGE ) {
+            getFile().setMapProperties(new HashMap<>());
+            if (panelVariables != null) {
+                Properties properties = new Properties();
+                properties = panelVariables.getProperties(properties);
+
+                for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+                    getFile().getMapProperties().put((String) entry.getKey(), (String) entry.getValue());
+                }
+            }
+            //add GLOBALS
+            getFile().getMapProperties().putAll(getPackageTemplateWrapper().getPackageTemplate().getMapGlobalVars());
+        }
+
     }
 
     @Override

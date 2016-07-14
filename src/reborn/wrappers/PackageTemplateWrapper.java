@@ -1,6 +1,7 @@
 package reborn.wrappers;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.util.ui.GridBag;
@@ -87,23 +88,26 @@ public class PackageTemplateWrapper {
             gridBag = GridBagFactory.getBagForPackageTemplate();
         }
 
-        // Header
-        JLabel jlName = new JLabel("Name");
-        JLabel jlDescription = new JLabel("Description");
-        UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
-        UIMaker.setRightPadding(jlDescription, UIMaker.PADDING_LABEL);
+        if (mode != ViewMode.USAGE) {
+            // Header
+            JLabel jlName = new JLabel("Name");
+            JLabel jlDescription = new JLabel("Description");
+            UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
+            UIMaker.setRightPadding(jlDescription, UIMaker.PADDING_LABEL);
 
-        etfName = UIMaker.getEditorTextField(packageTemplate.getName(), project);
-        etfDescription = UIMaker.getEditorTextField(packageTemplate.getDescription(), project);
+            etfName = UIMaker.getEditorTextField(packageTemplate.getName(), project);
+            etfDescription = UIMaker.getEditorTextField(packageTemplate.getDescription(), project);
 
-        panel.add(jlName, gridBag.nextLine().next());
-        panel.add(etfName, gridBag.next().coverLine(2));
-        panel.add(jlDescription, gridBag.nextLine().next());
-        panel.add(etfDescription, gridBag.next().coverLine(2));
+            panel.add(jlName, gridBag.nextLine().next());
+            panel.add(etfName, gridBag.next().coverLine(2));
+            panel.add(jlDescription, gridBag.nextLine().next());
+            panel.add(etfDescription, gridBag.next().coverLine(2));
+
+            panel.add(new SeparatorComponent(10), gridBag.nextLine().next().coverLine());
+        }
 
         // Globals
         JLabel jlGlobals = new JLabel("Global Variables", JLabel.CENTER);
-        panel.add(new SeparatorComponent(10), gridBag.nextLine().next().coverLine());
         panel.add(jlGlobals, gridBag.nextLine().next().fillCellHorizontally().coverLine());
 
         for (GlobalVariableWrapper variableWrapper : getListGlobalVariableWrapper()) {
@@ -112,7 +116,7 @@ public class PackageTemplateWrapper {
 
         // Files and Directories
         panel.add(new SeparatorComponent(10), gridBag.nextLine().next().coverLine());
-        rootElement.buildView(project, panel, gridBag, mode);
+        rootElement.buildView(project, panel, gridBag);
 
         return panel;
     }
@@ -138,8 +142,10 @@ public class PackageTemplateWrapper {
     }
 
     public void collectDataFromFields() {
-        packageTemplate.setName(etfName.getText());
-        packageTemplate.setDescription(etfDescription.getText());
+        if( getMode() != ViewMode.USAGE ) {
+            packageTemplate.setName(etfName.getText());
+            packageTemplate.setDescription(etfDescription.getText());
+        }
 
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
             variableWrapper.collectDataFromFields();
@@ -149,11 +155,11 @@ public class PackageTemplateWrapper {
     }
 
     public void wrapPackageTemplate(PackageTemplateWrapper.ViewMode mode) {
-       setMode(PackageTemplateWrapper.ViewMode.EDIT);
-       setPackageTemplate(packageTemplate);
-       wrapGlobals();
-       setRootElement(wrapDirectory(packageTemplate.getDirectory(), null));
-       setProject(project);
+        setMode(PackageTemplateWrapper.ViewMode.EDIT);
+        setPackageTemplate(packageTemplate);
+        wrapGlobals();
+        setRootElement(wrapDirectory(packageTemplate.getDirectory(), null));
+        setProject(project);
     }
 
     public DirectoryWrapper wrapDirectory(Directory directory, DirectoryWrapper parent) {
@@ -187,7 +193,7 @@ public class PackageTemplateWrapper {
 
     public void wrapGlobals() {
         listGlobalVariableWrapper = new ArrayList<>();
-        for(GlobalVariable globalVariable : packageTemplate.getListGlobalVariable()){
+        for (GlobalVariable globalVariable : packageTemplate.getListGlobalVariable()) {
             listGlobalVariableWrapper.add(new GlobalVariableWrapper(globalVariable));
         }
     }

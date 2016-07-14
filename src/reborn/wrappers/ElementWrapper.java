@@ -24,7 +24,7 @@ public abstract class ElementWrapper extends BaseWrapper {
     // check box
     //btn for groovy
 
-    public abstract void buildView(Project project, JPanel container, GridBag bag, PackageTemplateWrapper.ViewMode mode);
+    public abstract void buildView(Project project, JPanel container, GridBag bag);
     public abstract void removeMyself();
     public abstract void addElement(ElementWrapper element);
     public abstract BaseElement getElement();

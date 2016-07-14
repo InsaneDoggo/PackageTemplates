@@ -21,11 +21,11 @@ import java.util.Properties;
  */
 public abstract class NewPackageDialog extends BaseDialog {
 
-    public abstract void onSuccess();
+    public abstract void onSuccess(PackageTemplateWrapper ptWrapper);
 
     public abstract void onCancel();
 
-    PackageTemplateWrapper ptWrapper;
+    private PackageTemplateWrapper ptWrapper;
 
     public NewPackageDialog(@Nullable Project project, String title, PackageTemplate packageTemplate) {
         super(project);
@@ -70,13 +70,15 @@ public abstract class NewPackageDialog extends BaseDialog {
     @Override
     protected ValidationInfo doValidate() {
         ValidationInfo result;
-        result = TemplateValidator.validateTextField(ptWrapper.etfName, TemplateValidator.FieldType.PACKAGE_TEMPLATE_NAME);
-        if (result != null) {
-            return result;
-        }
-        result = TemplateValidator.validateTextField(ptWrapper.etfDescription, TemplateValidator.FieldType.PLAIN_TEXT);
-        if (result != null) {
-            return result;
+        if( ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.USAGE ) {
+            result = TemplateValidator.validateTextField(ptWrapper.etfName, TemplateValidator.FieldType.PACKAGE_TEMPLATE_NAME);
+            if (result != null) {
+                return result;
+            }
+            result = TemplateValidator.validateTextField(ptWrapper.etfDescription, TemplateValidator.FieldType.PLAIN_TEXT);
+            if (result != null) {
+                return result;
+            }
         }
 
         for (GlobalVariableWrapper gvWrapper : ptWrapper.getListGlobalVariableWrapper()) {
@@ -100,7 +102,8 @@ public abstract class NewPackageDialog extends BaseDialog {
     @Override
     void onOKAction() {
         // save fields
-        onSuccess();
+        ptWrapper.collectDataFromFields();
+        onSuccess(ptWrapper);
     }
 
     @Override
