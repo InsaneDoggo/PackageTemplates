@@ -80,8 +80,6 @@ public class TemplateValidator {
         }
 
         switch (fieldType) {
-            case CLASS_NAME:
-            case DIRECTORY_NAME:
             case PACKAGE_TEMPLATE_NAME:
                 if (!isNameValid(etField.getText(), PATTERN_CLASS_NAME_VALIDATION)) {
                     return new ValidationInfo(ILLEGAL_SYMBOLS, etField);
@@ -91,6 +89,8 @@ public class TemplateValidator {
                     return new ValidationInfo(STARTS_WITH_DIGIT, etField);
                 }
                 break;
+            case CLASS_NAME:
+            case DIRECTORY_NAME:
             case GLOBAL_VARIABLE:
                 if (!isNameValid(etField.getText(), PATTERN_GLOBAL_VARIABLE_VALIDATION)) {
                     return new ValidationInfo(ILLEGAL_SYMBOLS, etField);

@@ -7,10 +7,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.util.ui.GridBag;
 import reborn.models.BaseElement;
 import reborn.models.Directory;
-import utils.FileWriter;
-import utils.GridBagFactory;
-import utils.TemplateValidator;
-import utils.UIMaker;
+import utils.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,6 +53,8 @@ public class DirectoryWrapper extends ElementWrapper {
 
     @Override
     public void replaceNameVariable(HashMap<String, String> mapVariables) {
+        directory.setName(StringTools.replaceGlobalVariables(directory.getName(), mapVariables));
+
         for (ElementWrapper element : getListElementWrapper()) {
             element.replaceNameVariable(mapVariables);
         }

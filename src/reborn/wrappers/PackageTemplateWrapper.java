@@ -16,6 +16,7 @@ import utils.UIMaker;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Arsen on 07.07.2016.
@@ -147,8 +148,10 @@ public class PackageTemplateWrapper {
             packageTemplate.setDescription(etfDescription.getText());
         }
 
+        packageTemplate.setMapGlobalVars(new HashMap<>());
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
             variableWrapper.collectDataFromFields();
+            packageTemplate.getMapGlobalVars().put(variableWrapper.getGlobalVariable().getName(), variableWrapper.getGlobalVariable().getValue());
         }
 
         rootElement.collectDataFromFields();

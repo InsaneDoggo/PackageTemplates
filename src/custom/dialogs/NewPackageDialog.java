@@ -103,6 +103,7 @@ public abstract class NewPackageDialog extends BaseDialog {
     void onOKAction() {
         // save fields
         ptWrapper.collectDataFromFields();
+        ptWrapper.replaceNameVariable();
         onSuccess(ptWrapper);
     }
 
