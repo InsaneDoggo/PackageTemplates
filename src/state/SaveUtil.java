@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.intellij.openapi.components.ServiceManager;
 import models.PackageTemplate;
-import reborn.models.BaseElement;
-import reborn.models.deserializers.BaseElementConverter;
+import models.BaseElement;
+import models.serialization.BaseElementConverter;
 
 /**
  * Created by CeH9 on 26.06.2016.
@@ -45,7 +45,6 @@ public class SaveUtil {
         if (templateList == null) {
             templateList = new TemplateList();
         }
-//        initNonSerializableFields();
     }
 
     public void save() {
@@ -56,13 +55,6 @@ public class SaveUtil {
             state = new PackageTemplateState();
             state.value = gson.toJson(templateList, TemplateList.class);
             cfg.loadState(state);
-        }
-    }
-
-    private void initNonSerializableFields() {
-        for (PackageTemplate packageTemplate : templateList) {
-            packageTemplate.getTemplateElement().updateParents(null);
-            packageTemplate.getTemplateElement().initNonSerializableFields();
         }
     }
 

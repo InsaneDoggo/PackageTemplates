@@ -2,11 +2,10 @@ package utils;
 
 import com.intellij.openapi.project.Project;
 import models.PackageTemplate;
-import reborn.models.Directory;
-import reborn.models.GlobalVariable;
-import reborn.wrappers.DirectoryWrapper;
-import reborn.wrappers.GlobalVariableWrapper;
-import reborn.wrappers.PackageTemplateWrapper;
+import models.Directory;
+import models.GlobalVariable;
+import wrappers.DirectoryWrapper;
+import wrappers.PackageTemplateWrapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,17 +40,13 @@ public class WrappersFactory {
         packageTemplate.setDescription("");
         packageTemplate.setDirectory(directory);
 
-        DirectoryWrapper dirWrapper = new DirectoryWrapper();
-        dirWrapper.setListElementWrapper(new ArrayList<>());
-//        dirWrapper.setPackageTemplateWrapper(ptWrapper);
-        dirWrapper.setParent(null);
-        dirWrapper.setDirectory(directory);
-
         GlobalVariable globalVariable = new GlobalVariable();
         globalVariable.setName(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME);
         globalVariable.setValue("Example");
         globalVariable.setEnabled(true);
         globalVariable.setGroovyCode("");
+
+        packageTemplate.getListGlobalVariable().add(globalVariable);
 
         return wrapPackageTemplate(project, packageTemplate, mode);
     }

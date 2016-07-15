@@ -1,4 +1,4 @@
-package reborn.models;
+package models;
 
 import com.google.gson.annotations.Expose;
 

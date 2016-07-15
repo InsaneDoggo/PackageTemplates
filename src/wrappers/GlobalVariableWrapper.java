@@ -1,4 +1,4 @@
-package reborn.wrappers;
+package wrappers;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.JBMenuItem;
@@ -7,7 +7,7 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import custom.impl.ClickListener;
 import org.jetbrains.annotations.NotNull;
-import reborn.models.GlobalVariable;
+import models.GlobalVariable;
 import utils.UIMaker;
 
 import javax.swing.*;
@@ -15,7 +15,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.util.HashMap;
 
 import static utils.UIMaker.PADDING_LABEL;
 

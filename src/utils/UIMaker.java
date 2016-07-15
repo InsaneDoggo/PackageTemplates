@@ -16,19 +16,16 @@ import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
-import com.intellij.util.ui.GridBag;
 import custom.dialogs.SelectFileTemplateDialog;
 import custom.impl.ClickListener;
-import models.InputBlock;
+import models.Directory;
+import models.File;
 import models.TextRange;
-import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.NotNull;
-import reborn.models.Directory;
-import reborn.models.File;
-import reborn.wrappers.ElementWrapper;
-import reborn.wrappers.DirectoryWrapper;
-import reborn.wrappers.FileWrapper;
-import reborn.wrappers.PackageTemplateWrapper;
+import wrappers.DirectoryWrapper;
+import wrappers.ElementWrapper;
+import wrappers.FileWrapper;
+import wrappers.PackageTemplateWrapper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,9 +33,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Properties;
 
 /**
  * Created by CeH9 on 16.06.2016.
@@ -49,7 +43,6 @@ public class UIMaker {
     public static final int DEFAULT_PADDING = 0;
     public static final int PADDING = 28;
     public static final int PADDING_LABEL = 8;
-    public static final int DIALOG_MIN_WIDTH = 400;
 
     public static EditorTextField getEditorTextField(String defValue, Project project) {
         EditorTextField etfName = new EditorTextField();
@@ -133,57 +126,6 @@ public class UIMaker {
         ));
     }
 
-    public static JPanel getClassPanel(InputBlock inputBlock, int paddingScale, Icon icon) {
-        return getDefaultPanel(inputBlock, paddingScale, icon);
-    }
-
-    public static JPanel getDirectoryPanel(InputBlock inputBlock, int paddingScale) {
-        return getDefaultPanel(inputBlock, paddingScale, AllIcons.Nodes.Package);
-    }
-
-    public static JPanel getDefaultPanel(InputBlock inputBlock, int paddingScale, Icon icon) {
-        JPanel container = new JPanel(new GridBagLayout());
-        setLeftPadding(container, DEFAULT_PADDING + PADDING * paddingScale);
-
-        JLabel jLabel = new JLabel(icon, SwingConstants.LEFT);
-        if (!inputBlock.getElement().isDirectory()) {
-            jLabel.setText(inputBlock.getElement().getTemplateName());
-        }
-        inputBlock.getTfName().setText(inputBlock.getElement().getName());
-
-        GridBag bag = GridBagFactory.getDefaultGridBag();
-        container.add(jLabel, bag.nextLine().next().insets(0, 0, 0, 8));
-        container.add(inputBlock.getTfName(), bag.next());
-
-        return container;
-    }
-
-    public static void createClassView(FileWrapper fileWrapper, Project project, JPanel container, GridBag bag, PackageTemplateWrapper.ViewMode mode) {
-        fileWrapper.jlName = new JLabel(getIconByFileExtension(fileWrapper.getFile().getExtension()), SwingConstants.LEFT);
-        fileWrapper.jlName.setText(fileWrapper.getFile().getTemplateName());
-        setRightPadding(fileWrapper.jlName, PADDING_LABEL);
-
-        fileWrapper.etfName = getEditorTextField(fileWrapper.getFile().getName(), project);
-
-        container.add(fileWrapper.jlName, bag.nextLine().next());
-        container.add(fileWrapper.etfName, bag.next());
-
-        addMouseListener(fileWrapper, project, mode);
-    }
-
-    public static void createPackageView(DirectoryWrapper dirWrapper, Project project, JPanel container, GridBag bag, PackageTemplateWrapper.ViewMode mode) {
-        dirWrapper.jlName = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
-        dirWrapper.jlName.setText("Directory");
-        setRightPadding(dirWrapper.jlName, PADDING_LABEL);
-
-        dirWrapper.etfName = getEditorTextField(dirWrapper.getDirectory().getName(), project);
-
-        container.add(dirWrapper.jlName, bag.nextLine().next());
-        container.add(dirWrapper.etfName, bag.next());
-
-        addMouseListener(dirWrapper, project, mode);
-    }
-
     public static void addMouseListener(final ElementWrapper elementWrapper, Project project, PackageTemplateWrapper.ViewMode mode) {
         elementWrapper.jlName.addMouseListener(new ClickListener() {
             @Override
@@ -240,10 +182,6 @@ public class UIMaker {
             popupMenu.add(itemDelete);
         }
         popupMenu.show(elementWrapper.jlName, mouseEvent.getX(), mouseEvent.getY());
-    }
-
-    public static boolean isLeftClick(MouseEvent event) {
-        return SwingUtilities.isLeftMouseButton(event);
     }
 
     public static void addDirectory(ElementWrapper elementWrapper, Project project) {

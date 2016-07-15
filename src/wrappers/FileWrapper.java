@@ -1,4 +1,4 @@
-package reborn.wrappers;
+package wrappers;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
@@ -7,8 +7,8 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ui.GridBag;
-import reborn.models.BaseElement;
-import reborn.models.File;
+import models.BaseElement;
+import models.File;
 import utils.*;
 
 import javax.swing.*;

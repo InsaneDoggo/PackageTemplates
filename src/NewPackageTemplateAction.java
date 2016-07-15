@@ -1,18 +1,12 @@
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
-import custom.dialogs.ConfigurePackageTemplatesDialog;
 import custom.dialogs.NewPackageDialog;
 import custom.dialogs.SelectPackageTemplateDialog;
 import models.PackageTemplate;
-import models.TemplateElement;
-import reborn.wrappers.PackageTemplateWrapper;
+import wrappers.PackageTemplateWrapper;
 import state.SaveUtil;
 import utils.FileWriter;
-import utils.InputManager;
-import utils.WrappersFactory;
-
-import java.util.ArrayList;
 
 /**
  * Created by Arsen on 13.06.2016.
@@ -57,7 +51,10 @@ public class NewPackageTemplateAction extends AnAction {
         NewPackageDialog dialog = new NewPackageDialog(event.getProject(), "New package from \"" + packageTemplate.getName() + "\"", packageTemplate) {
             @Override
             public void onSuccess(PackageTemplateWrapper ptWrapper) {
-                createFiles(event, ptWrapper);
+                PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
+                if (currentDir != null) {
+                    ptWrapper.getRootElement().writeFile(currentDir, event.getProject());
+                }
             }
 
             @Override
@@ -66,13 +63,6 @@ public class NewPackageTemplateAction extends AnAction {
         };
 //        dialog.updateHighlight();
         dialog.show();
-    }
-
-    private void createFiles(AnActionEvent event, PackageTemplateWrapper ptWrapper) {
-        PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
-        if (currentDir != null) {
-            ptWrapper.getRootElement().writeFile(currentDir, event.getProject());
-        }
     }
 
 }

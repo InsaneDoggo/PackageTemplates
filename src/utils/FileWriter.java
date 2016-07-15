@@ -12,8 +12,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import reborn.wrappers.DirectoryWrapper;
-import reborn.wrappers.FileWrapper;
+import wrappers.DirectoryWrapper;
+import wrappers.FileWrapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class FileWriter {
     }
 
     public static PsiElement writeFile(PsiDirectory dir, FileWrapper fileWrapper) {
-        FileTemplate template = InputManager.getTemplate(fileWrapper.getFile().getTemplateName());
+        FileTemplate template = AttributesHelper.getTemplate(fileWrapper.getFile().getTemplateName());
 
         if (dir == null || template == null) {
             //todo print error

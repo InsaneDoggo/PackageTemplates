@@ -5,7 +5,7 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.Nullable;
-import reborn.wrappers.PackageTemplateWrapper;
+import wrappers.PackageTemplateWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,7 +1,7 @@
-package reborn.models.deserializers;
+package models.serialization;
 
 import com.google.gson.*;
-import reborn.models.BaseElement;
+import models.BaseElement;
 
 import java.lang.reflect.Type;
 

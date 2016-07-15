@@ -1,11 +1,11 @@
-package reborn.wrappers;
+package wrappers;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
-import reborn.models.BaseElement;
+import models.BaseElement;
 
 import javax.swing.*;
 import java.util.HashMap;

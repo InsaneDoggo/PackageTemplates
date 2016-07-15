@@ -2,20 +2,17 @@ package custom.dialogs;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.GridBag;
 import custom.impl.ReleaseListener;
-import reborn.wrappers.PackageTemplateWrapper;
-import state.SaveUtil;
-import state.TemplateList;
-import models.MyListModel;
+import models.TemplateListModel;
 import models.PackageTemplate;
 import org.jetbrains.annotations.NotNull;
+import state.SaveUtil;
+import state.TemplateList;
 import utils.GridBagFactory;
-import utils.TemplateValidator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -179,7 +176,7 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
 
     private void initJBList() {
         jbList.removeAll();
-        jbList.setModel(new MyListModel<>(templateList));
+        jbList.setModel(new TemplateListModel<>(templateList));
 
         jbList.setCellRenderer(new ListCellRendererWrapper<PackageTemplate>() {
             @Override

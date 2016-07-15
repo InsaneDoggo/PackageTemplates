@@ -37,10 +37,10 @@ public abstract class BaseDialog extends DialogWrapper {
         super.show();
 
         switch (getExitCode()) {
-            case ConfigurePackageTemplatesDialog.OK_EXIT_CODE:
+            case DialogWrapper.OK_EXIT_CODE:
                 onOKAction();
                 break;
-            case ConfigurePackageTemplatesDialog.CANCEL_EXIT_CODE:
+            case DialogWrapper.CANCEL_EXIT_CODE:
                 onCancelAction();
                 break;
         }

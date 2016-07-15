@@ -4,13 +4,9 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
-import models.PackageTemplate;
-import models.TemplateElement;
-import reborn.models.BaseElement;
-import reborn.wrappers.ElementWrapper;
-import reborn.wrappers.PackageTemplateWrapper;
+import wrappers.ElementWrapper;
+import wrappers.PackageTemplateWrapper;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 

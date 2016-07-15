@@ -3,18 +3,11 @@ package custom.dialogs;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.GridBag;
 import models.PackageTemplate;
-import models.TemplateContainer;
-import reborn.models.Directory;
-import reborn.models.GlobalVariable;
-import reborn.wrappers.DirectoryWrapper;
-import reborn.wrappers.GlobalVariableWrapper;
-import reborn.wrappers.PackageTemplateWrapper;
+import wrappers.PackageTemplateWrapper;
 import utils.GridBagFactory;
 import utils.WrappersFactory;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by CeH9 on 22.06.2016.
@@ -30,7 +23,7 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
 
     public ConfigurePackageTemplatesDialog(Project project) {
         super(project);
-        WrappersFactory.createAndWrapPackageTemplate(project, PackageTemplateWrapper.ViewMode.CREATE);
+        ptWrapper = WrappersFactory.createAndWrapPackageTemplate(project, PackageTemplateWrapper.ViewMode.CREATE);
     }
 
     public ConfigurePackageTemplatesDialog(Project project, PackageTemplate packageTemplate) {

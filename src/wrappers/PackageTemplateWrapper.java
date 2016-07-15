@@ -1,15 +1,14 @@
-package reborn.wrappers;
+package wrappers;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.util.ui.GridBag;
 import models.PackageTemplate;
-import reborn.models.BaseElement;
-import reborn.models.Directory;
-import reborn.models.File;
-import reborn.models.GlobalVariable;
+import models.BaseElement;
+import models.Directory;
+import models.File;
+import models.GlobalVariable;
 import utils.GridBagFactory;
 import utils.UIMaker;
 

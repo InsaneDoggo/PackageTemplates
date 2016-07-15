@@ -1,12 +1,12 @@
-package reborn.wrappers;
+package wrappers;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.util.ui.GridBag;
-import reborn.models.BaseElement;
-import reborn.models.Directory;
+import models.BaseElement;
+import models.Directory;
 import utils.*;
 
 import javax.swing.*;
