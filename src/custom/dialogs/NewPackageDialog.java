@@ -37,7 +37,7 @@ public abstract class NewPackageDialog extends BaseDialog {
 //                continue;
 //            }
 //
-//            UIMaker.applyHighlightRange(inputBlock.getTfName().getText(), project, inputBlock.getTfName().getEditor());
+//            UIHelper.applyHighlightRange(inputBlock.getTfName().getText(), project, inputBlock.getTfName().getEditor());
 //        }
 //    }
 

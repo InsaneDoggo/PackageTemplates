@@ -1,13 +1,23 @@
 package wrappers;
 
+import com.intellij.icons.AllIcons;
+import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.JBMenuItem;
+import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
+import custom.dialogs.SelectFileTemplateDialog;
+import custom.impl.ClickListener;
 import models.BaseElement;
+import utils.WrappersFactory;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,9 +62,107 @@ public abstract class ElementWrapper extends BaseWrapper {
         this.packageTemplateWrapper = packageTemplateWrapper;
     }
 
-    public void reBuild(Project project) {
-        //todo delete project?
+    public void reBuild() {
         packageTemplateWrapper.reBuildView();
+    }
+
+    public void addMouseListener() {
+        jlName.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                if (SwingUtilities.isRightMouseButton(mouseEvent)) {
+                    switch (getPackageTemplateWrapper().getMode()) {
+                        case EDIT:
+                        case CREATE:
+                            createPopupForEditMode(mouseEvent);
+                            break;
+                        case USAGE:
+                            break;
+                    }
+                }
+            }
+        });
+    }
+
+    private void createPopupForEditMode(MouseEvent mouseEvent) {
+        JPopupMenu popupMenu = new JBPopupMenu();
+
+        JMenuItem itemAddFile = new JBMenuItem("Add File", AllIcons.FileTypes.Text);
+        JMenuItem itemAddDirectory = new JBMenuItem("Add Directory", AllIcons.Nodes.Package);
+        JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
+
+        itemAddFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddFile();
+            }
+        });
+        itemAddDirectory.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addDirectory();
+            }
+        });
+        itemDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteElement();
+            }
+        });
+
+        popupMenu.add(itemAddFile);
+        popupMenu.add(itemAddDirectory);
+
+        // if not root element
+        if (getParent() != null) {
+            popupMenu.add(itemDelete);
+        }
+        popupMenu.show(jlName, mouseEvent.getX(), mouseEvent.getY());
+    }
+
+    public void addDirectory() {
+        getPackageTemplateWrapper().collectDataFromFields();
+
+        DirectoryWrapper dirParent;
+        if (isDirectory()) {
+            dirParent = ((DirectoryWrapper) this);
+        } else {
+            dirParent = getParent();
+        }
+
+        dirParent.addElement(WrappersFactory.createNewWrappedDirectory(dirParent));
+        dirParent.reBuild();
+    }
+
+    public void deleteElement() {
+        removeMyself();
+
+        getParent().getPackageTemplateWrapper().collectDataFromFields();
+        getParent().reBuild();
+    }
+
+    public void AddFile() {
+        SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(getPackageTemplateWrapper().getProject()) {
+            @Override
+            public void onSuccess(FileTemplate fileTemplate) {
+                getPackageTemplateWrapper().collectDataFromFields();
+
+                DirectoryWrapper parent;
+                if (isDirectory()) {
+                    parent = ((DirectoryWrapper) ElementWrapper.this);
+                } else {
+                    parent = getParent();
+                }
+                parent.addElement(WrappersFactory.createNewWrappedFile(parent, fileTemplate.getName(), fileTemplate.getExtension()));
+                parent.reBuild();
+            }
+
+            @Override
+            public void onCancel() {
+                System.out.println("onCancel");
+            }
+        };
+        dialog.show();
     }
 
 }

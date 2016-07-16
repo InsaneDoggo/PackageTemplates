@@ -1,10 +1,13 @@
 package utils;
 
 import com.intellij.openapi.project.Project;
+import models.File;
 import models.PackageTemplate;
 import models.Directory;
 import models.GlobalVariable;
+import org.jetbrains.annotations.NotNull;
 import wrappers.DirectoryWrapper;
+import wrappers.FileWrapper;
 import wrappers.PackageTemplateWrapper;
 
 import java.util.ArrayList;
@@ -49,6 +52,41 @@ public class WrappersFactory {
         packageTemplate.getListGlobalVariable().add(globalVariable);
 
         return wrapPackageTemplate(project, packageTemplate, mode);
+    }
+
+    @NotNull
+    public static DirectoryWrapper createNewWrappedDirectory(DirectoryWrapper parent) {
+        Directory dir = new Directory();
+        dir.setName("unnamed");
+        dir.setEnabled(true);
+        dir.setGroovyCode("");
+        dir.setListBaseElement(new ArrayList<>());
+
+        DirectoryWrapper dirWrapper = new DirectoryWrapper();
+        dirWrapper.setParent(parent);
+        dirWrapper.setDirectory(dir);
+        dirWrapper.setListElementWrapper(new ArrayList<>());
+        dirWrapper.setPackageTemplateWrapper(parent.getPackageTemplateWrapper());
+
+        return dirWrapper;
+    }
+
+    @NotNull
+    public static FileWrapper createNewWrappedFile(DirectoryWrapper parent, String templateName, String extension) {
+        FileWrapper fileWrapper = new FileWrapper();
+
+        File file = new File();
+        file.setName("Unnamed");
+        file.setTemplateName(templateName);
+        file.setExtension(extension);
+        file.setEnabled(true);
+        file.setGroovyCode("");
+
+        fileWrapper.setParent(parent);
+        fileWrapper.setFile(file);
+        fileWrapper.setPackageTemplateWrapper(parent.getPackageTemplateWrapper());
+
+        return fileWrapper;
     }
 
 }

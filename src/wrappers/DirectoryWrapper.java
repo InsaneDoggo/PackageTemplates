@@ -142,21 +142,21 @@ public class DirectoryWrapper extends ElementWrapper {
             elementWrapper.buildView(project, panel, gridBag);
         }
 
-        UIMaker.setLeftPadding(panel, UIMaker.PADDING + UIMaker.DEFAULT_PADDING);
+        UIHelper.setLeftPadding(panel, UIHelper.PADDING + UIHelper.DEFAULT_PADDING);
         container.add(panel, bag.nextLine().next().coverLine());
     }
 
     private void createPackageView(Project project, JPanel container, GridBag bag) {
         jlName = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
         jlName.setText("Directory");
-        UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
+        UIHelper.setRightPadding(jlName, UIHelper.PADDING_LABEL);
 
-        etfName = UIMaker.getEditorTextField(getDirectory().getName(), project);
+        etfName = UIHelper.getEditorTextField(getDirectory().getName(), project);
 
         container.add(jlName, bag.nextLine().next());
         container.add(etfName, bag.next().coverLine(2));
 
-        UIMaker.addMouseListener(this, project, getPackageTemplateWrapper().getMode());
+        addMouseListener();
     }
 
     @Override

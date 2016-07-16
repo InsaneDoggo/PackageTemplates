@@ -10,7 +10,7 @@ import models.Directory;
 import models.File;
 import models.GlobalVariable;
 import utils.GridBagFactory;
-import utils.UIMaker;
+import utils.UIHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -92,11 +92,11 @@ public class PackageTemplateWrapper {
             // Header
             JLabel jlName = new JLabel("Name");
             JLabel jlDescription = new JLabel("Description");
-            UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
-            UIMaker.setRightPadding(jlDescription, UIMaker.PADDING_LABEL);
+            UIHelper.setRightPadding(jlName, UIHelper.PADDING_LABEL);
+            UIHelper.setRightPadding(jlDescription, UIHelper.PADDING_LABEL);
 
-            etfName = UIMaker.getEditorTextField(packageTemplate.getName(), project);
-            etfDescription = UIMaker.getEditorTextField(packageTemplate.getDescription(), project);
+            etfName = UIHelper.getEditorTextField(packageTemplate.getName(), project);
+            etfDescription = UIHelper.getEditorTextField(packageTemplate.getDescription(), project);
 
             panel.add(jlName, gridBag.nextLine().next());
             panel.add(etfName, gridBag.next().coverLine(2));

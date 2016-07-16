@@ -8,12 +8,10 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.TabbedPaneImpl;
 import com.intellij.util.ui.GridBag;
-import icons.VcsLogIcons;
 import org.jetbrains.annotations.Nullable;
 import state.SaveUtil;
 import utils.FileWriter;
 import utils.GridBagFactory;
-import utils.UIMaker;
 
 import javax.swing.*;
 import java.awt.*;

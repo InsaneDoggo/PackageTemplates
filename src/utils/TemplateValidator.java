@@ -108,17 +108,11 @@ public class TemplateValidator {
 
 
     private static boolean isNameValid(String text, String pattern) {
-        if (text.matches(pattern)) {
-            return false;
-        }
-        return true;
+        return !text.matches(pattern);
     }
 
     private static boolean startsWithDigit(String text) {
-        if (text.substring(0, 1).matches("\\d")) {
-            return true;
-        }
-        return false;
+        return text.substring(0, 1).matches("\\d");
     }
 
 }

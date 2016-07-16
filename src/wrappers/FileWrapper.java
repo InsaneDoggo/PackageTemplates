@@ -35,16 +35,16 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public void buildView(Project project, JPanel container, GridBag bag) {
-        jlName = new JLabel(UIMaker.getIconByFileExtension(getFile().getExtension()), SwingConstants.LEFT);
+        jlName = new JLabel(UIHelper.getIconByFileExtension(getFile().getExtension()), SwingConstants.LEFT);
         jlName.setText(getFile().getTemplateName());
-        UIMaker.setRightPadding(jlName, UIMaker.PADDING_LABEL);
+        UIHelper.setRightPadding(jlName, UIHelper.PADDING_LABEL);
 
-        etfName = UIMaker.getEditorTextField(getFile().getName(), project);
+        etfName = UIHelper.getEditorTextField(getFile().getName(), project);
 
         container.add(jlName, bag.nextLine().next());
         container.add(etfName, bag.next().coverLine(2));
 
-        UIMaker.addMouseListener(this, project, getPackageTemplateWrapper().getMode());
+        addMouseListener();
 
         if (getPackageTemplateWrapper().getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
             FileTemplate fileTemplate = AttributesHelper.getTemplate(getFile().getTemplateName());
@@ -54,7 +54,7 @@ public class FileWrapper extends ElementWrapper {
                     panelVariables = new CreateFromTemplatePanel(unsetAttributes, false, null);
 
                     JComponent component = panelVariables.getComponent();
-                    UIMaker.setLeftPadding(component, UIMaker.PADDING);
+                    UIHelper.setLeftPadding(component, UIHelper.PADDING);
                     container.add(component, bag.nextLine().next().coverLine());
                 }
             }

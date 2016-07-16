@@ -8,7 +8,7 @@ import com.intellij.util.ui.GridBag;
 import custom.impl.ClickListener;
 import org.jetbrains.annotations.NotNull;
 import models.GlobalVariable;
-import utils.UIMaker;
+import utils.UIHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
-import static utils.UIMaker.PADDING_LABEL;
+import static utils.UIHelper.PADDING_LABEL;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -61,7 +61,7 @@ public class GlobalVariableWrapper {
 
         tfKey = new EditorTextField(globalVariable.getName());
         tfKey.setAlignmentX(Component.LEFT_ALIGNMENT);
-        UIMaker.setRightPadding(tfKey, PADDING_LABEL);
+        UIHelper.setRightPadding(tfKey, PADDING_LABEL);
 
         tfValue = new EditorTextField(globalVariable.getValue());
         tfValue.setAlignmentX(Component.LEFT_ALIGNMENT);
