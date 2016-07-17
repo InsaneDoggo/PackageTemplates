@@ -57,6 +57,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
 
     public void buildView(PackageTemplateWrapper ptWrapper, JPanel container, GridBag bag) {
         JLabel label = new JLabel(AllIcons.Nodes.Variable, JLabel.LEFT);
+        label.setDisabledIcon(label.getIcon());
         label.setText("variable");
 
         tfKey = new EditorTextField(globalVariable.getName());

@@ -45,6 +45,7 @@ public abstract class ElementWrapper extends BaseWrapper {
     public abstract void writeFile(PsiDirectory currentDir, Project project);
     public abstract void updateParents(DirectoryWrapper dwParent);
     public abstract void initNonSerializableFields();
+    public abstract void setEnabled(boolean isEnabled);
 
     public DirectoryWrapper getParent() {
         return parent;

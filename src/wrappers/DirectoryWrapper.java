@@ -8,6 +8,7 @@ import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GridBag;
 import models.BaseElement;
 import models.Directory;
+import org.jetbrains.annotations.NotNull;
 import utils.*;
 
 import javax.swing.*;
@@ -138,6 +139,7 @@ public class DirectoryWrapper extends ElementWrapper {
         }
 
         createPackageView(project, container, bag);
+        updateComponentsState();
 
         gridBag = GridBagFactory.getBagForDirectory();
 
@@ -151,18 +153,25 @@ public class DirectoryWrapper extends ElementWrapper {
 
     private void createPackageView(Project project, JPanel container, GridBag bag) {
         jlName = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
+        jlName.setDisabledIcon(jlName.getIcon());
         jlName.setText("Directory");
         UIHelper.setRightPadding(jlName, UIHelper.PADDING_LABEL);
 
         etfName = UIHelper.getEditorTextField(getDirectory().getName(), project);
 
+        container.add(createOptionsBlock(), bag.nextLine().next());
+        container.add(etfName, bag.next().coverLine(2));
+
+        addMouseListener();
+    }
+
+    @NotNull
+    private JPanel createOptionsBlock() {
         cbEnabled = new JBCheckBox();
         cbEnabled.setSelected(directory.isEnabled());
         cbEnabled.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
-                directory.setEnabled(cbEnabled.isSelected());
-
-                updateComponentsState();
+                setEnabled(cbEnabled.isSelected());
             }
         });
 
@@ -170,11 +179,19 @@ public class DirectoryWrapper extends ElementWrapper {
         GridBag optionsBag = GridBagFactory.getOptionsPanelGridBag();
         optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
         optionsPanel.add(jlName, optionsBag.next());
+        return optionsPanel;
+    }
 
-        container.add(optionsPanel, bag.nextLine().next());
-        container.add(etfName, bag.next().coverLine(2));
 
-        addMouseListener();
+    @Override
+    public void setEnabled(boolean isEnabled) {
+        System.out.println("dir code  " + hashCode());
+        directory.setEnabled(isEnabled);
+        updateComponentsState();
+
+        for (ElementWrapper elementWrapper : listElementWrapper){
+            elementWrapper.cbEnabled.setSelected(isEnabled);
+        }
     }
 
     @Override

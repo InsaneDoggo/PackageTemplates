@@ -6,12 +6,17 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GridBag;
 import models.BaseElement;
 import models.File;
+import org.jetbrains.annotations.NotNull;
 import utils.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,13 +41,15 @@ public class FileWrapper extends ElementWrapper {
     @Override
     public void buildView(Project project, JPanel container, GridBag bag) {
         jlName = new JLabel(UIHelper.getIconByFileExtension(getFile().getExtension()), SwingConstants.LEFT);
+        jlName.setDisabledIcon(jlName.getIcon());
         jlName.setText(getFile().getTemplateName());
         UIHelper.setRightPadding(jlName, UIHelper.PADDING_LABEL);
 
         etfName = UIHelper.getEditorTextField(getFile().getName(), project);
 
-        container.add(jlName, bag.nextLine().next());
+        container.add(createOptionsBlock(), bag.nextLine().next());
         container.add(etfName, bag.next().coverLine(2));
+        updateComponentsState();
 
         addMouseListener();
 
@@ -59,6 +66,24 @@ public class FileWrapper extends ElementWrapper {
                 }
             }
         }
+    }
+
+    @NotNull
+    private JPanel createOptionsBlock() {
+        JPanel optionsPanel = new JPanel(new GridBagLayout());
+        GridBag optionsBag = GridBagFactory.getOptionsPanelGridBag();
+
+        cbEnabled = new JBCheckBox();
+        cbEnabled.setSelected(file.isEnabled());
+        cbEnabled.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                setEnabled(cbEnabled.isSelected());
+            }
+        });
+
+        optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
+        optionsPanel.add(jlName, optionsBag.next());
+        return optionsPanel;
     }
 
     @Override
@@ -113,6 +138,14 @@ public class FileWrapper extends ElementWrapper {
     }
 
     @Override
+    public void setEnabled(boolean isEnabled) {
+        System.out.println("file code  " + hashCode());
+        cbEnabled.setSelected(isEnabled);
+        file.setEnabled(isEnabled);
+        updateComponentsState();
+    }
+
+    @Override
     public void removeMyself() {
         getParent().removeElement(this);
     }
@@ -145,7 +178,8 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public void updateComponentsState() {
-        // TODO: 17.07.2016 updateComponentsState
+        jlName.setEnabled(file.isEnabled());
+        etfName.setEnabled(file.isEnabled());
     }
 
 }
