@@ -28,10 +28,10 @@ public class PackageTemplateWrapper {
 
     private Project project;
 
-    public JPanel panel;
+    private JPanel panel;
     public EditorTextField etfName;
     public EditorTextField etfDescription;
-    public GridBag gridBag;
+    private GridBag gridBag;
 
     private PackageTemplate packageTemplate;
     private DirectoryWrapper rootElement;

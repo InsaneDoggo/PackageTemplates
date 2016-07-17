@@ -21,7 +21,7 @@ import static utils.UIHelper.PADDING_LABEL;
 /**
  * Created by CeH9 on 06.07.2016.
  */
-public class GlobalVariableWrapper {
+public class GlobalVariableWrapper extends BaseWrapper {
 
     private GlobalVariable globalVariable;
     private EditorTextField tfKey;
@@ -137,9 +137,20 @@ public class GlobalVariableWrapper {
         ptWrapper.reBuildView();
     }
 
+    @Override
     public void collectDataFromFields() {
         globalVariable.setName(tfKey.getText());
         globalVariable.setValue(tfValue.getText());
+    }
+
+    @Override
+    public void runGroovyScript() {
+
+    }
+
+    @Override
+    public void updateComponentsState() {
+        // TODO: 17.07.2016  updateComponentsState
     }
 
 }

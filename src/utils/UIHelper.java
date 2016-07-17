@@ -52,9 +52,10 @@ public class UIHelper {
             @Override
             public void customizeSettings(EditorEx editor) {
                 addHighlightListener(project, etfName, editor);
-                etfName.setText(etfName.getText());
+                applyHighlightRange(etfName.getText(), project, editor);
             }
         });
+
         etfName.setText(defValue);
         return etfName;
     }
@@ -76,7 +77,7 @@ public class UIHelper {
         });
     }
 
-    public static void applyHighlightRange(String text, Project project, Editor editor) {
+    private static void applyHighlightRange(String text, Project project, Editor editor) {
         if (project == null) {
             Logger.log("project = null");
             return;

@@ -62,4 +62,8 @@ public class GridBagFactory {
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
+    public static GridBag getOptionsPanelGridBag() {
+        return new GridBag()
+                .setDefaultFill(GridBagConstraints.HORIZONTAL);
+    }
 }

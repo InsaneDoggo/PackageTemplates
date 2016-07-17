@@ -140,7 +140,12 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public void runGroovyScript() {
+        // TODO: 17.07.2016 runGroovyScript
+    }
 
+    @Override
+    public void updateComponentsState() {
+        // TODO: 17.07.2016 updateComponentsState
     }
 
 }

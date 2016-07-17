@@ -4,6 +4,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GridBag;
 import models.BaseElement;
 import models.Directory;
@@ -11,6 +12,8 @@ import utils.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.*;
 import java.util.List;
 
@@ -74,12 +77,12 @@ public class DirectoryWrapper extends ElementWrapper {
     @Override
     public ValidationInfo validateFields() {
         ValidationInfo result = TemplateValidator.validateTextField(etfName, TemplateValidator.FieldType.CLASS_NAME);
-        if(result != null){
+        if (result != null) {
             return result;
         }
-        for (ElementWrapper elementWrapper : listElementWrapper){
+        for (ElementWrapper elementWrapper : listElementWrapper) {
             result = elementWrapper.validateFields();
-            if(result != null){
+            if (result != null) {
                 return result;
             }
         }
@@ -153,10 +156,31 @@ public class DirectoryWrapper extends ElementWrapper {
 
         etfName = UIHelper.getEditorTextField(getDirectory().getName(), project);
 
-        container.add(jlName, bag.nextLine().next());
+        cbEnabled = new JBCheckBox();
+        cbEnabled.setSelected(directory.isEnabled());
+        cbEnabled.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                directory.setEnabled(cbEnabled.isSelected());
+
+                updateComponentsState();
+            }
+        });
+
+        JPanel optionsPanel = new JPanel(new GridBagLayout());
+        GridBag optionsBag = GridBagFactory.getOptionsPanelGridBag();
+        optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
+        optionsPanel.add(jlName, optionsBag.next());
+
+        container.add(optionsPanel, bag.nextLine().next());
         container.add(etfName, bag.next().coverLine(2));
 
         addMouseListener();
+    }
+
+    @Override
+    public void updateComponentsState() {
+        jlName.setEnabled(directory.isEnabled());
+        etfName.setEnabled(directory.isEnabled());
     }
 
     @Override
