@@ -93,6 +93,10 @@ public class DirectoryWrapper extends ElementWrapper {
 
     @Override
     public void writeFile(PsiDirectory currentDir, Project project) {
+        if(!directory.isEnabled()){
+            return;
+        }
+
         PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this, project);
         if (subDirectory != null) {
             for (ElementWrapper element : getListElementWrapper()) {
@@ -185,7 +189,6 @@ public class DirectoryWrapper extends ElementWrapper {
 
     @Override
     public void setEnabled(boolean isEnabled) {
-        System.out.println("dir code  " + hashCode());
         directory.setEnabled(isEnabled);
         updateComponentsState();
 

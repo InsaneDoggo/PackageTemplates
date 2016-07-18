@@ -121,6 +121,10 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public void writeFile(PsiDirectory currentDir, Project project) {
+        if(!file.isEnabled()){
+            return;
+        }
+
         PsiElement psiElement = FileWriter.writeFile(currentDir, this);
         if (psiElement == null) {
             // TODO: 20.06.2016 error write file
@@ -139,7 +143,6 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public void setEnabled(boolean isEnabled) {
-        System.out.println("file code  " + hashCode());
         cbEnabled.setSelected(isEnabled);
         file.setEnabled(isEnabled);
         updateComponentsState();

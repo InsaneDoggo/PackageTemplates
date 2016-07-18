@@ -50,7 +50,7 @@ public class AttributesHelper {
         if (fileTemplate != null) {
             return fileTemplate;
         } else {
-            return FileTemplateManager.getDefaultInstance().getDefaultTemplate(name);
+            return FileTemplateManager.getDefaultInstance().getInternalTemplate(name);
         }
     }
 
