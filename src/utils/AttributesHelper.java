@@ -3,6 +3,7 @@ package utils;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.ArrayUtil;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.Nullable;
 import wrappers.PackageTemplateWrapper;
@@ -46,12 +47,13 @@ public class AttributesHelper {
 
     @Nullable
     public static FileTemplate getTemplate(String name) {
-        FileTemplate fileTemplate = FileTemplateManager.getDefaultInstance().getTemplate(name);
-        if (fileTemplate != null) {
-            return fileTemplate;
-        } else {
-            return FileTemplateManager.getDefaultInstance().getInternalTemplate(name);
-        }
+        FileTemplateManager ftm = FileTemplateManager.getDefaultInstance();
+
+        FileTemplate result = ftm.getTemplate(name);
+        if( result == null ) result = ftm.getInternalTemplate(name);
+        if( result == null ) result = ftm.getJ2eeTemplate(name);
+
+        return result;
     }
 
 }
