@@ -77,7 +77,7 @@ public class DirectoryWrapper extends ElementWrapper {
 
     @Override
     public ValidationInfo validateFields() {
-        ValidationInfo result = TemplateValidator.validateTextField(etfName, TemplateValidator.FieldType.CLASS_NAME);
+        ValidationInfo result = TemplateValidator.validateText(etfName, etfName.getText(), TemplateValidator.FieldType.CLASS_NAME);
         if (result != null) {
             return result;
         }

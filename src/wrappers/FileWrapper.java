@@ -116,7 +116,7 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public ValidationInfo validateFields() {
-        return TemplateValidator.validateTextField(etfName, TemplateValidator.FieldType.CLASS_NAME);
+        return TemplateValidator.validateText(etfName, etfName.getText(), TemplateValidator.FieldType.CLASS_NAME);
     }
 
     @Override

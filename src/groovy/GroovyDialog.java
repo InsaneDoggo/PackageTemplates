@@ -6,16 +6,21 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.ui.EditorTextField;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import custom.dialogs.BaseDialog;
+import custom.impl.ClickListener;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.GroovyLanguage;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
 import utils.GridBagFactory;
+import utils.TemplateValidator;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by Arsen on 19.07.2016.
@@ -30,13 +35,43 @@ public abstract class GroovyDialog extends BaseDialog {
         super(project);
     }
 
-    EditorTextField etfCode;
+    private EditorTextField etfCode;
+    private EditorTextField etfName;
+
 
     @Override
     public void preShow() {
         panel.setLayout(new GridBagLayout());
         GridBag gridBag = GridBagFactory.getBagForGroovyDialog();
 
+        createEditorField();
+
+        etfName = new EditorTextField("ExampleName");
+        JButton btnTry = new JButton("Try it");
+        JBLabel jlResult = new JBLabel("Result will be here..");
+
+        etfName.setAlignmentX(Component.CENTER_ALIGNMENT);
+        etfName.setAlignmentY(Component.CENTER_ALIGNMENT);
+        btnTry.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnTry.setAlignmentY(Component.CENTER_ALIGNMENT);
+        jlResult.setAlignmentX(Component.CENTER_ALIGNMENT);
+        jlResult.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+        btnTry.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                jlResult.setText(GroovyExecutor.runGroovy(etfCode.getText(), etfName.getText()));
+            }
+        });
+
+        panel.add(etfCode, gridBag.nextLine().next().weighty(1).fillCell());
+        panel.add(etfName, gridBag.nextLine().next());
+        panel.add(btnTry, gridBag.nextLine().next());
+        panel.add(jlResult, gridBag.nextLine().next());
+    }
+
+
+    private void createEditorField() {
         String code = "\nstatic String getModifiedName(String name) {\n" +
                 "   //A small Example:\n" +
                 "   return name.toLowerCase();\n" +
@@ -47,13 +82,11 @@ public abstract class GroovyDialog extends BaseDialog {
 
         etfCode = new EditorTextField(PsiDocumentManager.getInstance(project).getDocument(groovyFile), project, GroovyFileType.GROOVY_FILE_TYPE);
         etfCode.setOneLineMode(false);
-
-        panel.add(etfCode, gridBag.nextLine().next());
     }
 
     @Override
     public void onOKAction() {
-        onSuccess("dfd");
+        onSuccess(etfCode.getText());
     }
 
     @Override
@@ -63,6 +96,6 @@ public abstract class GroovyDialog extends BaseDialog {
 
     @Override
     protected ValidationInfo doValidate() {
-        return super.doValidate();
+        return GroovyExecutor.ValidateGroovyCode(etfCode, etfName.getText());
     }
 }

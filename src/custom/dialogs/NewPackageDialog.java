@@ -45,18 +45,18 @@ public abstract class NewPackageDialog extends BaseDialog {
     protected ValidationInfo doValidate() {
         ValidationInfo result;
         if( ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.USAGE ) {
-            result = TemplateValidator.validateTextField(ptWrapper.etfName, TemplateValidator.FieldType.PACKAGE_TEMPLATE_NAME);
+            result = TemplateValidator.validateText(ptWrapper.etfName, ptWrapper.etfName.getText(), TemplateValidator.FieldType.PACKAGE_TEMPLATE_NAME);
             if (result != null) {
                 return result;
             }
-            result = TemplateValidator.validateTextField(ptWrapper.etfDescription, TemplateValidator.FieldType.PLAIN_TEXT);
+            result = TemplateValidator.validateText(ptWrapper.etfDescription, ptWrapper.etfDescription.getText(), TemplateValidator.FieldType.PLAIN_TEXT);
             if (result != null) {
                 return result;
             }
         }
 
         for (GlobalVariableWrapper gvWrapper : ptWrapper.getListGlobalVariableWrapper()) {
-            result = TemplateValidator.validateTextField(gvWrapper.getTfValue(), TemplateValidator.FieldType.GLOBAL_VARIABLE);
+            result = TemplateValidator.validateText(gvWrapper.getTfValue(), gvWrapper.getTfValue().getText(), TemplateValidator.FieldType.GLOBAL_VARIABLE);
             if (result != null) {
                 return result;
             }
