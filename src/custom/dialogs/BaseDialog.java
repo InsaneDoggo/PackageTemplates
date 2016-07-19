@@ -14,8 +14,8 @@ import java.awt.*;
  */
 public abstract class BaseDialog extends DialogWrapper {
 
-    Project project;
-    JPanel panel;
+    public Project project;
+    public JPanel panel;
 
     private static final int PADDING = 10;
     private static final int MIN_WIDTH = 480;
@@ -27,9 +27,9 @@ public abstract class BaseDialog extends DialogWrapper {
         init();
     }
 
-    abstract void preShow();
-    abstract void onOKAction();
-    abstract void onCancelAction();
+    public abstract void preShow();
+    public abstract void onOKAction();
+    public abstract void onCancelAction();
 
     @Override
     public void show() {

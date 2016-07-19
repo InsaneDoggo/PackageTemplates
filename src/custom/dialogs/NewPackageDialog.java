@@ -67,14 +67,14 @@ public abstract class NewPackageDialog extends BaseDialog {
 
 
     @Override
-    void preShow() {
+    public void preShow() {
         panel.setLayout(new GridBagLayout());
         GridBag gridBag = GridBagFactory.getBagForConfigureDialog();
         panel.add(ptWrapper.buildView(), gridBag.nextLine().next());
     }
 
     @Override
-    void onOKAction() {
+    public void onOKAction() {
         // save fields
         ptWrapper.collectDataFromFields();
         ptWrapper.replaceNameVariable();
@@ -82,7 +82,7 @@ public abstract class NewPackageDialog extends BaseDialog {
     }
 
     @Override
-    void onCancelAction() {
+    public void onCancelAction() {
         onCancel();
     }
 }

@@ -20,17 +20,18 @@ public class CodeExecutor {
     }
 
     public static String runGroovy(String code, String variable){
-        String result = variable;
-        // Write your code here
-//        code = "result.toLowerCase();";
+        String sb = "String getModifiedName(String name) {\n" +
+                "   //TODO return modified 'name', Example:\n" +
+                "   return name.toLowerCase();\n" +
+                "}\n";
 
-        Object value = getShell().evaluate(String.format("String result = \"%s\";\n%s", variable, code));
+        //sb.append("%s\n return getModifiedName(\"%s\");");
 
-        return ((String) value);
+        return ((String) getShell().evaluate(String.format(sb, variable, code)));
     }
 
     public static void main(String[] args) {
-        String name = runGroovy("result.toLowerCase();", "PiOs");
+        String name = runGroovy("name.toLowerCase();", "PiOs");
 
         System.out.println("isValid " + TemplateValidator.isValidClassName(name));
     }

@@ -3,6 +3,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.psi.PsiDirectory;
 import custom.dialogs.NewPackageDialog;
 import custom.dialogs.SelectPackageTemplateDialog;
+import groovy.GroovyDialog;
 import models.PackageTemplate;
 import wrappers.PackageTemplateWrapper;
 import state.SaveUtil;
@@ -28,20 +29,34 @@ public class NewPackageTemplateAction extends AnAction {
 //            }
 //        };
 
-        SaveUtil.getInstance().load();
-        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
+//        SaveUtil.getInstance().load();
+//        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
+//            @Override
+//            public void onSuccess(PackageTemplate packageTemplate) {
+//                System.out.println("SelectPackageTemplateDialog onSuccess");
+//                showDialog(event, packageTemplate);
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                System.out.println("onCancel");
+//            }
+//        };
+//        dialog.show();
+
+
+        new GroovyDialog(event.getProject()) {
             @Override
-            public void onSuccess(PackageTemplate packageTemplate) {
-                System.out.println("SelectPackageTemplateDialog onSuccess");
-                showDialog(event, packageTemplate);
+            public void onSuccess(String name) {
+
             }
 
             @Override
             public void onCancel() {
-                System.out.println("onCancel");
+
             }
-        };
-        dialog.show();
+        }.show();
+
     }
 
     private void showDialog(AnActionEvent event, PackageTemplate packageTemplate) {

@@ -52,17 +52,17 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
     }
 
     @Override
-    void preShow() {
+    public void preShow() {
 
     }
 
     @Override
-    void onOKAction() {
+    public void onOKAction() {
         onSuccess((PackageTemplate) jbList.getSelectedValue());
     }
 
     @Override
-    void onCancelAction() {
+    public void onCancelAction() {
         onCancel();
     }
 

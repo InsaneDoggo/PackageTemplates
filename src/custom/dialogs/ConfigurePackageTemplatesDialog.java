@@ -32,7 +32,7 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
     }
 
     @Override
-    void preShow() {
+    public void preShow() {
         switch (ptWrapper.getMode()){
             case CREATE: setTitle("New Package Template"); break;
             case EDIT: setTitle("Edit Package Template"); break;
@@ -45,13 +45,13 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
     }
 
     @Override
-    void onOKAction() {
+    public void onOKAction() {
         ptWrapper.collectDataFromFields();
         onSuccess(ptWrapper.getPackageTemplate());
     }
 
     @Override
-    void onCancelAction() {
+    public void onCancelAction() {
         onFail();
     }
 }
