@@ -45,6 +45,13 @@ public class GridBagFactory {
                 .setDefaultWeightX(1);
     }
 
+    public static GridBag getBagForGroovyDialog() {
+        return new GridBag()
+                .setDefaultFill(GridBagConstraints.BOTH)
+                .setDefaultWeightX(1)
+                .setDefaultWeightY(1);
+    }
+
     @NotNull
     public static GridBag getDefaultGridBag() {
         return new GridBag()
