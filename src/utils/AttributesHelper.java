@@ -18,7 +18,7 @@ import java.util.Properties;
  */
 public class AttributesHelper {
 
-    public static final ArrayList<String> listAttributesToRemove = new ArrayList<String>() {{
+    private static final ArrayList<String> listAttributesToRemove = new ArrayList<String>() {{
         add(FileTemplate.ATTRIBUTE_NAME);
         add(FileTemplate.ATTRIBUTE_PACKAGE_NAME);
         add(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME);

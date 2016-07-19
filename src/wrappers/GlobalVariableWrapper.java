@@ -67,15 +67,19 @@ public class GlobalVariableWrapper extends BaseWrapper {
         tfValue = new EditorTextField(globalVariable.getValue());
         tfValue.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        label.addMouseListener(new ClickListener() {
-            @Override
-            public void mouseClicked(MouseEvent eventOuter) {
-                if (SwingUtilities.isRightMouseButton(eventOuter)) {
-                    JPopupMenu popupMenu = getPopupMenu(ptWrapper);
-                    popupMenu.show(label, eventOuter.getX(), eventOuter.getY());
+        if (ptWrapper.getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
+            tfKey.setEnabled(false);
+        } else {
+            label.addMouseListener(new ClickListener() {
+                @Override
+                public void mouseClicked(MouseEvent eventOuter) {
+                    if (SwingUtilities.isRightMouseButton(eventOuter)) {
+                        JPopupMenu popupMenu = getPopupMenu(ptWrapper);
+                        popupMenu.show(label, eventOuter.getX(), eventOuter.getY());
+                    }
                 }
-            }
-        });
+            });
+        }
 
         tfKey.setPreferredWidth(0);
         tfValue.setPreferredWidth(0);
@@ -84,9 +88,6 @@ public class GlobalVariableWrapper extends BaseWrapper {
         container.add(tfKey, bag.next().weightx(1));
         container.add(tfValue, bag.next().weightx(1));
 
-        if (ptWrapper.getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
-            tfKey.setEnabled(false);
-        }
     }
 
     @NotNull

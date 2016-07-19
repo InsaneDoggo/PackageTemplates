@@ -1,6 +1,7 @@
 package utils;
 
 import com.intellij.util.ui.GridBag;
+import com.intellij.util.ui.JBInsets;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -12,7 +13,7 @@ public class GridBagFactory {
 
     @NotNull
     private static Insets getDefaultInsets() {
-        return new Insets(4, 0, 4, 0);
+        return new JBInsets(4, 0, 4, 0);
     }
 
     public static GridBag getBagForPackageTemplate() {
@@ -34,7 +35,7 @@ public class GridBagFactory {
 
     public static GridBag getBagForSelectDialog() {
         return new GridBag()
-                .setDefaultInsets(getDefaultInsets())
+                .setDefaultInsets(new JBInsets(4, 6, 4, 6))
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
