@@ -10,8 +10,6 @@ import wrappers.PackageTemplateWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.intellij.ide.fileTemplates.FileTemplateManager.DEFAULT_TEMPLATES_CATEGORY;
-
 /**
  * Created by CeH9 on 14.06.2016.
  */
@@ -28,10 +26,11 @@ public class TemplateValidator {
 
         List<String> listAllTemplates = new ArrayList<>();
 
-        for (FileTemplate template : FileTemplateManager.getDefaultInstance().getTemplates(DEFAULT_TEMPLATES_CATEGORY)) {
-            //if( template.isDefault() ){
+        for (FileTemplate template : FileTemplateManager.getDefaultInstance().getTemplates(FileTemplateManager.DEFAULT_TEMPLATES_CATEGORY)) {
             listAllTemplates.add(template.getName());
-            //}
+        }
+        for (FileTemplate template : FileTemplateManager.getDefaultInstance().getTemplates(FileTemplateManager.J2EE_TEMPLATES_CATEGORY)) {
+            listAllTemplates.add(template.getName());
         }
 
         for (ElementWrapper element : ptWrapper.getRootElement().getListElementWrapper()) {
@@ -54,9 +53,9 @@ public class TemplateValidator {
     //    \w    A word character: [a-zA-Z_0-9]
     //    \W    A non-word character: [^\w]
 
-    private static final String PATTERN_CLASS_NAME_VALIDATION = ".*[^0-9a-zA-Z_].*";
-    private static final String PATTERN_PLAIN_TEXT_VALIDATION = ".*[^0-9a-zA-Z_=\\-+.)(].*";
-    private static final String PATTERN_GLOBAL_VARIABLE_VALIDATION = ".*[^0-9a-zA-Z_}{\\$].*";
+    public static final String PATTERN_CLASS_NAME_VALIDATION = ".*[^0-9a-zA-Z_].*";
+    public static final String PATTERN_PLAIN_TEXT_VALIDATION = ".*[^0-9a-zA-Z_=\\-+.)(].*";
+    public static final String PATTERN_GLOBAL_VARIABLE_VALIDATION = ".*[^0-9a-zA-Z_}{\\$].*";
 
     private static final String ILLEGAL_SYMBOLS = "Field contains illegal symbols";
     private static final String STARTS_WITH_DIGIT = "Name can't starts with digit";
@@ -77,7 +76,7 @@ public class TemplateValidator {
 
         switch (fieldType) {
             case PACKAGE_TEMPLATE_NAME:
-                if (!isNameValid(etField.getText(), PATTERN_CLASS_NAME_VALIDATION)) {
+                if (!isValidByPattern(etField.getText(), PATTERN_CLASS_NAME_VALIDATION)) {
                     return new ValidationInfo(ILLEGAL_SYMBOLS, etField);
                 }
                 // Starts with digit
@@ -88,7 +87,7 @@ public class TemplateValidator {
             case CLASS_NAME:
             case DIRECTORY_NAME:
             case GLOBAL_VARIABLE:
-                if (!isNameValid(etField.getText(), PATTERN_GLOBAL_VARIABLE_VALIDATION)) {
+                if (!isValidByPattern(etField.getText(), PATTERN_GLOBAL_VARIABLE_VALIDATION)) {
                     return new ValidationInfo(ILLEGAL_SYMBOLS, etField);
                 }
                 // Starts with digit
@@ -97,7 +96,7 @@ public class TemplateValidator {
                 }
                 break;
             case PLAIN_TEXT:
-                if (!isNameValid(etField.getText(), PATTERN_PLAIN_TEXT_VALIDATION)) {
+                if (!isValidByPattern(etField.getText(), PATTERN_PLAIN_TEXT_VALIDATION)) {
                     return new ValidationInfo(ILLEGAL_SYMBOLS, etField);
                 }
                 break;
@@ -107,12 +106,16 @@ public class TemplateValidator {
     }
 
 
-    private static boolean isNameValid(String text, String pattern) {
+    private static boolean isValidByPattern(String text, String pattern) {
         return !text.matches(pattern);
     }
 
     private static boolean startsWithDigit(String text) {
         return text.substring(0, 1).matches("\\d");
+    }
+
+    public static boolean isValidClassName(String name){
+        return isValidByPattern(name, PATTERN_CLASS_NAME_VALIDATION) && !TemplateValidator.startsWithDigit(name);
     }
 
 }
