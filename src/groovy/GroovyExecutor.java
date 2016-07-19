@@ -13,27 +13,30 @@ public class GroovyExecutor {
 
     private static GroovyShell shell;
 
-    public static GroovyShell getShell(){
-        if( shell == null ) {
+    public static GroovyShell getShell() {
+        if (shell == null) {
             shell = new GroovyShell(new Binding());
         }
 
         return shell;
     }
 
-    public static String runGroovy(String code, String variable){
+    public static String runGroovy(String code, String variable) {
         try {
             return ((String) getShell().evaluate(String.format("%s\n return getModifiedName(\"%s\");", code, variable)));
-        } catch (Exception e){
+        } catch (Exception e) {
             return e.getMessage();
         }
     }
 
-    public static ValidationInfo ValidateGroovyCode(EditorTextField etfCode, String variable){
+    public static ValidationInfo ValidateGroovyCode(EditorTextField etfCode, String variable) {
         try {
-            getShell().evaluate(String.format("%s\n return getModifiedName(\"%s\");", etfCode.getText(), variable));
-            return TemplateValidator.validateText(etfCode, etfCode.getText(), TemplateValidator.FieldType.CLASS_NAME);
-        } catch (Exception e){
+            return TemplateValidator.validateText(
+                    etfCode,
+                    (String) getShell().evaluate(String.format("%s\n return getModifiedName(\"%s\");", etfCode.getText(), variable)),
+                    TemplateValidator.FieldType.CLASS_NAME
+            );
+        } catch (Exception e) {
             return new ValidationInfo(e.getMessage());
         }
     }

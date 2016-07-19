@@ -66,7 +66,7 @@ public abstract class GroovyDialog extends BaseDialog {
 
         panel.add(etfCode, gridBag.nextLine().next().weighty(1).fillCell());
         panel.add(etfName, gridBag.nextLine().next());
-        panel.add(btnTry, gridBag.nextLine().next());
+        panel.add(btnTry, gridBag.nextLine().next().insets(4, 0, 4, 0));
         panel.add(jlResult, gridBag.nextLine().next());
     }
 
