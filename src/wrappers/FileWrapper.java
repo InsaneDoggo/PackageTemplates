@@ -10,6 +10,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GridBag;
 import groovy.GroovyDialog;
+import groovy.GroovyExecutor;
 import icons.JetgroovyIcons;
 import models.BaseElement;
 import models.File;
@@ -183,7 +184,9 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public void runGroovyScript() {
-        //todo
+        if( file.getGroovyCode() != null && !file.getGroovyCode().isEmpty() ){
+            file.setName(GroovyExecutor.runGroovy(file.getGroovyCode(), file.getName()));
+        }
     }
 
     @Override

@@ -17,15 +17,16 @@ public class GroovyExecutor {
         if (shell == null) {
             shell = new GroovyShell(new Binding());
         }
-
         return shell;
     }
 
+    private static final String GROOVY_CODE_PATTERN = "%s\n return getModifiedName(\"%s\");";
+
     public static String runGroovy(String code, String variable) {
         try {
-            return ((String) getShell().evaluate(String.format("%s\n return getModifiedName(\"%s\");", code, variable)));
+            return ((String) getShell().evaluate(String.format(GROOVY_CODE_PATTERN, code, variable)));
         } catch (Exception e) {
-            return e.getMessage();
+            return "GroovyScriptError";
         }
     }
 
@@ -33,18 +34,12 @@ public class GroovyExecutor {
         try {
             return TemplateValidator.validateText(
                     etfCode,
-                    (String) getShell().evaluate(String.format("%s\n return getModifiedName(\"%s\");", etfCode.getText(), variable)),
+                    (String) getShell().evaluate(String.format(GROOVY_CODE_PATTERN, etfCode.getText(), variable)),
                     TemplateValidator.FieldType.CLASS_NAME
             );
         } catch (Exception e) {
             return new ValidationInfo(e.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-        String name = runGroovy("name.toLowerCase();", "PiOs");
-
-        System.out.println("isValid " + TemplateValidator.isValidClassName(name));
     }
 
 }

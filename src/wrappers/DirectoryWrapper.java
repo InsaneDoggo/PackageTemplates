@@ -8,6 +8,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GridBag;
 import groovy.GroovyDialog;
+import groovy.GroovyExecutor;
 import icons.JetgroovyIcons;
 import models.BaseElement;
 import models.Directory;
@@ -221,7 +222,13 @@ public class DirectoryWrapper extends ElementWrapper {
 
     @Override
     public void runGroovyScript() {
+        if( directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty() ){
+            directory.setName(GroovyExecutor.runGroovy(directory.getGroovyCode(), directory.getName()));
+        }
 
+        for( ElementWrapper elementWrapper : listElementWrapper ){
+            elementWrapper.runGroovyScript();
+        }
     }
 
 }

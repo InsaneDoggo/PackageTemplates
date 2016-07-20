@@ -78,6 +78,7 @@ public abstract class NewPackageDialog extends BaseDialog {
         // save fields
         ptWrapper.collectDataFromFields();
         ptWrapper.replaceNameVariable();
+        ptWrapper.runElementsGroovyScript();
         onSuccess(ptWrapper);
     }
 

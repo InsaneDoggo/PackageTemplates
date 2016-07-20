@@ -128,7 +128,7 @@ public abstract class ElementWrapper extends BaseWrapper {
 
     private void addGroovyMenuItems(JPopupMenu popupMenu) {
         if (getElement().getGroovyCode() != null && !getElement().getGroovyCode().isEmpty()) {
-            JMenuItem itemEditGroovy = new JBMenuItem("Edit GroovyScript", JetgroovyIcons.Groovy.Class);
+            JMenuItem itemEditGroovy = new JBMenuItem("Edit GroovyScript", JetgroovyIcons.Groovy.Groovy_16x16);
             itemEditGroovy.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -151,7 +151,7 @@ public abstract class ElementWrapper extends BaseWrapper {
             });
             popupMenu.add(itemDeleteGroovy);
         } else {
-            JMenuItem itemAddGroovy = new JBMenuItem("Add GroovyScript", JetgroovyIcons.Groovy.Class);
+            JMenuItem itemAddGroovy = new JBMenuItem("Add GroovyScript", JetgroovyIcons.Groovy.Groovy_16x16);
             itemAddGroovy.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

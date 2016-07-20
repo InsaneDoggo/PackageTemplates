@@ -150,6 +150,9 @@ public class PackageTemplateWrapper {
         packageTemplate.setMapGlobalVars(new HashMap<>());
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
             variableWrapper.collectDataFromFields();
+            if( getMode() == ViewMode.USAGE ) {
+                variableWrapper.runGroovyScript();
+            }
             packageTemplate.getMapGlobalVars().put(variableWrapper.getGlobalVariable().getName(), variableWrapper.getGlobalVariable().getValue());
         }
 
@@ -198,6 +201,10 @@ public class PackageTemplateWrapper {
         for (GlobalVariable globalVariable : packageTemplate.getListGlobalVariable()) {
             listGlobalVariableWrapper.add(new GlobalVariableWrapper(globalVariable));
         }
+    }
+
+    public void runElementsGroovyScript() {
+        rootElement.runGroovyScript();
     }
 
 }

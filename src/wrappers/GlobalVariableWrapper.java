@@ -1,11 +1,15 @@
 package wrappers;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import custom.impl.ClickListener;
+import groovy.GroovyDialog;
+import groovy.GroovyExecutor;
+import icons.JetgroovyIcons;
 import org.jetbrains.annotations.NotNull;
 import models.GlobalVariable;
 import utils.UIHelper;
@@ -113,10 +117,52 @@ public class GlobalVariableWrapper extends BaseWrapper {
         });
 
         popupMenu.add(itemAddVariable);
+        addGroovyMenuItems(popupMenu, ptWrapper.getProject());
         if (!getGlobalVariable().getName().equals(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME)) {
             popupMenu.add(itemDelete);
         }
         return popupMenu;
+    }
+
+    private void addGroovyMenuItems(JPopupMenu popupMenu, Project project) {
+        if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
+            JMenuItem itemEditGroovy = new JBMenuItem("Edit GroovyScript", JetgroovyIcons.Groovy.Groovy_16x16);
+            itemEditGroovy.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new GroovyDialog(project, globalVariable.getGroovyCode()) {
+                        @Override
+                        public void onSuccess(String code) {
+                            globalVariable.setGroovyCode(code);
+                        }
+                    }.show();
+                }
+            });
+            popupMenu.add(itemEditGroovy);
+
+            JMenuItem itemDeleteGroovy = new JBMenuItem("Delete GroovyScript", AllIcons.Actions.Delete);
+            itemDeleteGroovy.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    globalVariable.setGroovyCode("");
+                }
+            });
+            popupMenu.add(itemDeleteGroovy);
+        } else {
+            JMenuItem itemAddGroovy = new JBMenuItem("Add GroovyScript", JetgroovyIcons.Groovy.Groovy_16x16);
+            itemAddGroovy.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new GroovyDialog(project) {
+                        @Override
+                        public void onSuccess(String code) {
+                            globalVariable.setGroovyCode(code);
+                        }
+                    }.show();
+                }
+            });
+            popupMenu.add(itemAddGroovy);
+        }
     }
 
     private void deleteVariable(PackageTemplateWrapper ptWrapper) {
@@ -147,7 +193,9 @@ public class GlobalVariableWrapper extends BaseWrapper {
 
     @Override
     public void runGroovyScript() {
-
+        if( globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty() ){
+            globalVariable.setValue(GroovyExecutor.runGroovy(globalVariable.getGroovyCode(), globalVariable.getValue()));
+        }
     }
 
     @Override
