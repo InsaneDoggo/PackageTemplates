@@ -3,11 +3,14 @@ package wrappers;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GridBag;
+import groovy.GroovyDialog;
+import icons.JetgroovyIcons;
 import models.BaseElement;
 import models.File;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +18,8 @@ import utils.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.HashMap;
@@ -81,6 +86,8 @@ public class FileWrapper extends ElementWrapper {
             }
         });
 
+
+        optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
         optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
         optionsPanel.add(jlName, optionsBag.next());
         return optionsPanel;
@@ -121,7 +128,7 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public void writeFile(PsiDirectory currentDir, Project project) {
-        if(!file.isEnabled()){
+        if (!file.isEnabled()) {
             return;
         }
 
@@ -158,7 +165,7 @@ public class FileWrapper extends ElementWrapper {
         file.setTemplateName(jlName.getText());
         file.setName(etfName.getText());
 
-        if( getPackageTemplateWrapper().getMode() == PackageTemplateWrapper.ViewMode.USAGE ) {
+        if (getPackageTemplateWrapper().getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
             getFile().setMapProperties(new HashMap<>());
             if (panelVariables != null) {
                 Properties properties = new Properties();
@@ -176,7 +183,7 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public void runGroovyScript() {
-        // TODO: 17.07.2016 runGroovyScript
+        //todo
     }
 
     @Override

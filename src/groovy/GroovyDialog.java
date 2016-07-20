@@ -27,9 +27,23 @@ import java.awt.event.MouseEvent;
  */
 public abstract class GroovyDialog extends BaseDialog {
 
-    public abstract void onSuccess(String name);
+    public abstract void onSuccess(String code);
 
-    public abstract void onCancel();
+    public void onCancel(){
+
+    }
+
+    private String code = "\nstatic String getModifiedName(String name) {\n" +
+            "   //A small Example:\n" +
+            "   return name.toLowerCase();\n" +
+            "}\n";
+
+    public GroovyDialog(@Nullable Project project, String code) {
+        super(project);
+        if (code != null) {
+            this.code = code;
+        }
+    }
 
     public GroovyDialog(@Nullable Project project) {
         super(project);
@@ -72,11 +86,6 @@ public abstract class GroovyDialog extends BaseDialog {
 
 
     private void createEditorField() {
-        String code = "\nstatic String getModifiedName(String name) {\n" +
-                "   //A small Example:\n" +
-                "   return name.toLowerCase();\n" +
-                "}\n";
-
         PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("GroovyCode", GroovyLanguage.INSTANCE, code);
         GroovyFile groovyFile = GroovyPsiElementFactory.getInstance(project).createGroovyFile(code, true, psiFile);
 

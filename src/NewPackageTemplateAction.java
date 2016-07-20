@@ -29,33 +29,33 @@ public class NewPackageTemplateAction extends AnAction {
 //            }
 //        };
 
-//        SaveUtil.getInstance().load();
-//        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
-//            @Override
-//            public void onSuccess(PackageTemplate packageTemplate) {
-//                System.out.println("SelectPackageTemplateDialog onSuccess");
-//                showDialog(event, packageTemplate);
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                System.out.println("onCancel");
-//            }
-//        };
-//        dialog.show();
-
-
-        new GroovyDialog(event.getProject()) {
+        SaveUtil.getInstance().load();
+        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
-            public void onSuccess(String name) {
-
+            public void onSuccess(PackageTemplate packageTemplate) {
+                System.out.println("SelectPackageTemplateDialog onSuccess");
+                showDialog(event, packageTemplate);
             }
 
             @Override
             public void onCancel() {
-
+                System.out.println("onCancel");
             }
-        }.show();
+        };
+        dialog.show();
+
+
+//        new GroovyDialog(event.getProject()) {
+//            @Override
+//            public void onSuccess(String name) {
+//
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//
+//            }
+//        }.show();
 
     }
 

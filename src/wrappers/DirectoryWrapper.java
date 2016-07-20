@@ -2,10 +2,13 @@ package wrappers;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GridBag;
+import groovy.GroovyDialog;
+import icons.JetgroovyIcons;
 import models.BaseElement;
 import models.Directory;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +16,8 @@ import utils.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.*;

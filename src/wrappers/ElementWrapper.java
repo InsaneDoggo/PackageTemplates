@@ -11,6 +11,8 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import custom.dialogs.SelectFileTemplateDialog;
 import custom.impl.ClickListener;
+import groovy.GroovyDialog;
+import icons.JetgroovyIcons;
 import models.BaseElement;
 import utils.WrappersFactory;
 
@@ -114,11 +116,55 @@ public abstract class ElementWrapper extends BaseWrapper {
         popupMenu.add(itemAddFile);
         popupMenu.add(itemAddDirectory);
 
+        addGroovyMenuItems(popupMenu);
+
         // if not root element
         if (getParent() != null) {
             popupMenu.add(itemDelete);
         }
+
         popupMenu.show(jlName, mouseEvent.getX(), mouseEvent.getY());
+    }
+
+    private void addGroovyMenuItems(JPopupMenu popupMenu) {
+        if (getElement().getGroovyCode() != null && !getElement().getGroovyCode().isEmpty()) {
+            JMenuItem itemEditGroovy = new JBMenuItem("Edit GroovyScript", JetgroovyIcons.Groovy.Class);
+            itemEditGroovy.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new GroovyDialog(getPackageTemplateWrapper().getProject(), getElement().getGroovyCode()) {
+                        @Override
+                        public void onSuccess(String code) {
+                            getElement().setGroovyCode(code);
+                        }
+                    }.show();
+                }
+            });
+            popupMenu.add(itemEditGroovy);
+
+            JMenuItem itemDeleteGroovy = new JBMenuItem("Delete GroovyScript", AllIcons.Actions.Delete);
+            itemDeleteGroovy.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    getElement().setGroovyCode("");
+                }
+            });
+            popupMenu.add(itemDeleteGroovy);
+        } else {
+            JMenuItem itemAddGroovy = new JBMenuItem("Add GroovyScript", JetgroovyIcons.Groovy.Class);
+            itemAddGroovy.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    new GroovyDialog(getPackageTemplateWrapper().getProject()) {
+                        @Override
+                        public void onSuccess(String code) {
+                            getElement().setGroovyCode(code);
+                        }
+                    }.show();
+                }
+            });
+            popupMenu.add(itemAddGroovy);
+        }
     }
 
     public void addDirectory() {
