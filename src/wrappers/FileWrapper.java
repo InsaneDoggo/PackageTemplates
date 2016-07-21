@@ -87,9 +87,20 @@ public class FileWrapper extends ElementWrapper {
             }
         });
 
+        JBCheckBox cbGroovy;
+        if (file.getGroovyCode() != null && !file.getGroovyCode().isEmpty()) {
+            cbGroovy = new JBCheckBox();
+            cbGroovy.setSelected(false);
+        } else {
+            cbGroovy = new JBCheckBox();
+            cbGroovy.setSelected(true);
+        }
+        cbGroovy.setEnabled(false);
+        JToolTip toolTip = cbGroovy.createToolTip();
+        toolTip.add(new JLabel("Selected when item has GroovyScript"));
 
         optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
-        optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
+        optionsPanel.add(cbGroovy, optionsBag.next());
         optionsPanel.add(jlName, optionsBag.next());
         return optionsPanel;
     }
