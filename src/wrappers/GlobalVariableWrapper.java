@@ -5,6 +5,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.EditorTextField;
+import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import custom.impl.ClickListener;
 import groovy.GroovyDialog;
@@ -12,13 +14,13 @@ import groovy.GroovyExecutor;
 import icons.JetgroovyIcons;
 import org.jetbrains.annotations.NotNull;
 import models.GlobalVariable;
+import utils.CustomIconLoader;
+import utils.GridBagFactory;
 import utils.UIHelper;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 import static utils.UIHelper.PADDING_LABEL;
 
@@ -30,6 +32,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
     private GlobalVariable globalVariable;
     private EditorTextField tfKey;
     private EditorTextField tfValue;
+    JLabel jlVariable;
 
     public GlobalVariableWrapper(GlobalVariable globalVariable) {
         this.globalVariable = globalVariable;
@@ -60,9 +63,9 @@ public class GlobalVariableWrapper extends BaseWrapper {
     }
 
     public void buildView(PackageTemplateWrapper ptWrapper, JPanel container, GridBag bag) {
-        JLabel label = new JLabel(AllIcons.Nodes.Variable, JLabel.LEFT);
-        label.setDisabledIcon(label.getIcon());
-        label.setText("variable");
+        jlVariable = new JLabel(AllIcons.Nodes.Variable, JLabel.LEFT);
+        jlVariable.setDisabledIcon(jlVariable.getIcon());
+        jlVariable.setText("variable");
 
         tfKey = new EditorTextField(globalVariable.getName());
         tfKey.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -74,12 +77,12 @@ public class GlobalVariableWrapper extends BaseWrapper {
         if (ptWrapper.getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
             tfKey.setEnabled(false);
         } else {
-            label.addMouseListener(new ClickListener() {
+            jlVariable.addMouseListener(new ClickListener() {
                 @Override
                 public void mouseClicked(MouseEvent eventOuter) {
                     if (SwingUtilities.isRightMouseButton(eventOuter)) {
                         JPopupMenu popupMenu = getPopupMenu(ptWrapper);
-                        popupMenu.show(label, eventOuter.getX(), eventOuter.getY());
+                        popupMenu.show(jlVariable, eventOuter.getX(), eventOuter.getY());
                     }
                 }
             });
@@ -88,10 +91,28 @@ public class GlobalVariableWrapper extends BaseWrapper {
         tfKey.setPreferredWidth(0);
         tfValue.setPreferredWidth(0);
 
-        container.add(label, bag.nextLine().next().weightx(0));
+        container.add(createOptionsBlock(), bag.nextLine().next().weightx(0));
         container.add(tfKey, bag.next().weightx(1));
         container.add(tfValue, bag.next().weightx(1));
 
+    }
+
+    @NotNull
+    private JPanel createOptionsBlock() {
+        JPanel optionsPanel = new JPanel(new GridBagLayout());
+        GridBag optionsBag = GridBagFactory.getOptionsPanelGridBag();
+
+        jlGroovy = new JBLabel();
+        if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
+            jlGroovy.setIcon(CustomIconLoader.Groovy);
+        } else {
+            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
+        }
+        jlGroovy.setToolTipText("Colored when item has GroovyScript");
+
+        optionsPanel.add(jlGroovy, optionsBag.nextLine().next().insets(0, 0, 0, 6));
+        optionsPanel.add(jlVariable, optionsBag.next());
+        return optionsPanel;
     }
 
     @NotNull
@@ -134,6 +155,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
                         @Override
                         public void onSuccess(String code) {
                             globalVariable.setGroovyCode(code);
+                            updateComponentsState();
                         }
                     }.show();
                 }
@@ -145,6 +167,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     globalVariable.setGroovyCode("");
+                    updateComponentsState();
                 }
             });
             popupMenu.add(itemDeleteGroovy);
@@ -157,6 +180,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
                         @Override
                         public void onSuccess(String code) {
                             globalVariable.setGroovyCode(code);
+                            updateComponentsState();
                         }
                     }.show();
                 }
@@ -193,14 +217,18 @@ public class GlobalVariableWrapper extends BaseWrapper {
 
     @Override
     public void runGroovyScript() {
-        if( globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty() ){
+        if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
             globalVariable.setValue(GroovyExecutor.runGroovy(globalVariable.getGroovyCode(), globalVariable.getValue()));
         }
     }
 
     @Override
     public void updateComponentsState() {
-        // TODO: 17.07.2016  updateComponentsState
+        if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
+            jlGroovy.setIcon(CustomIconLoader.Groovy);
+        } else {
+            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
+        }
     }
 
 }

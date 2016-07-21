@@ -53,7 +53,7 @@ public class GridBagFactory {
     }
 
     @NotNull
-    public static GridBag getDefaultGridBag() {
+    public static GridBag getGridBagForImpexDialog() {
         return new GridBag()
                 .setDefaultWeightX(1, 1)
                 .setDefaultInsets(getDefaultInsets())
@@ -73,7 +73,8 @@ public class GridBagFactory {
     public static GridBag getOptionsPanelGridBag() {
         return new GridBag()
                 .setDefaultWeightX(0,0)
-                .setDefaultWeightX(1,1)
+                .setDefaultWeightX(1,0)
+                .setDefaultWeightX(2,1)
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 }

@@ -76,7 +76,7 @@ public abstract class ImpexDialog extends DialogWrapper {
         tfbButton.addBrowseFolderListener("Export templates to", "", project,
                 new FileChooserDescriptor(false, true, false, false, false, false));
 
-        GridBag bag = GridBagFactory.getDefaultGridBag();
+        GridBag bag = GridBagFactory.getGridBagForImpexDialog();
 
         panelExport.add(tfbButton, bag.nextLine().next());
 

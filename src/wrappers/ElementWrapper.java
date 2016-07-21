@@ -136,6 +136,7 @@ public abstract class ElementWrapper extends BaseWrapper {
                         @Override
                         public void onSuccess(String code) {
                             getElement().setGroovyCode(code);
+                            updateComponentsState();
                         }
                     }.show();
                 }
@@ -147,6 +148,7 @@ public abstract class ElementWrapper extends BaseWrapper {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     getElement().setGroovyCode("");
+                    updateComponentsState();
                 }
             });
             popupMenu.add(itemDeleteGroovy);
@@ -159,6 +161,7 @@ public abstract class ElementWrapper extends BaseWrapper {
                         @Override
                         public void onSuccess(String code) {
                             getElement().setGroovyCode(code);
+                            updateComponentsState();
                         }
                     }.show();
                 }

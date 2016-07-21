@@ -6,6 +6,7 @@ import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import groovy.GroovyDialog;
 import groovy.GroovyExecutor;
@@ -185,9 +186,19 @@ public class DirectoryWrapper extends ElementWrapper {
             }
         });
 
+        jlGroovy = new JBLabel();
+        if (directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty()) {
+            jlGroovy.setIcon(CustomIconLoader.Groovy);
+        } else {
+            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
+        }
+        jlGroovy.setToolTipText("Colored when item has GroovyScript");
+        cbEnabled.setToolTipText("If checked, element will be created;");
+
         JPanel optionsPanel = new JPanel(new GridBagLayout());
         GridBag optionsBag = GridBagFactory.getOptionsPanelGridBag();
         optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
+        optionsPanel.add(jlGroovy, optionsBag.next().insets(0, 0, 0, 12));
         optionsPanel.add(jlName, optionsBag.next());
         return optionsPanel;
     }
@@ -205,6 +216,11 @@ public class DirectoryWrapper extends ElementWrapper {
 
     @Override
     public void updateComponentsState() {
+        if (directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty()) {
+            jlGroovy.setIcon(CustomIconLoader.Groovy);
+        } else {
+            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
+        }
         jlName.setEnabled(directory.isEnabled());
         etfName.setEnabled(directory.isEnabled());
     }

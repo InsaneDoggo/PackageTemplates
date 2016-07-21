@@ -5,9 +5,11 @@ import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import groovy.GroovyDialog;
 import groovy.GroovyExecutor;
@@ -87,20 +89,17 @@ public class FileWrapper extends ElementWrapper {
             }
         });
 
-        JBCheckBox cbGroovy;
+        jlGroovy = new JBLabel();
         if (file.getGroovyCode() != null && !file.getGroovyCode().isEmpty()) {
-            cbGroovy = new JBCheckBox();
-            cbGroovy.setSelected(false);
+            jlGroovy.setIcon(CustomIconLoader.Groovy);
         } else {
-            cbGroovy = new JBCheckBox();
-            cbGroovy.setSelected(true);
+            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
         }
-        cbGroovy.setEnabled(false);
-        JToolTip toolTip = cbGroovy.createToolTip();
-        toolTip.add(new JLabel("Selected when item has GroovyScript"));
+        jlGroovy.setToolTipText("Colored when item has GroovyScript");
+        cbEnabled.setToolTipText("If checked, element will be created;");
 
         optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
-        optionsPanel.add(cbGroovy, optionsBag.next());
+        optionsPanel.add(jlGroovy, optionsBag.next().insets(0, 0, 0, 12));
         optionsPanel.add(jlName, optionsBag.next());
         return optionsPanel;
     }
@@ -195,13 +194,18 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public void runGroovyScript() {
-        if( file.getGroovyCode() != null && !file.getGroovyCode().isEmpty() ){
+        if (file.getGroovyCode() != null && !file.getGroovyCode().isEmpty()) {
             file.setName(GroovyExecutor.runGroovy(file.getGroovyCode(), file.getName()));
         }
     }
 
     @Override
     public void updateComponentsState() {
+        if (file.getGroovyCode() != null && !file.getGroovyCode().isEmpty()) {
+            jlGroovy.setIcon(CustomIconLoader.Groovy);
+        } else {
+            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
+        }
         jlName.setEnabled(file.isEnabled());
         etfName.setEnabled(file.isEnabled());
     }
