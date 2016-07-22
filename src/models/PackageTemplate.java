@@ -20,7 +20,16 @@ public class PackageTemplate {
     private HashMap<String, String> mapGlobalVars;
     @Expose
     private ArrayList<GlobalVariable> listGlobalVariable;
+    @Expose
+    private boolean skipRootDirectory;
 
+    public boolean isSkipRootDirectory() {
+        return skipRootDirectory;
+    }
+
+    public void setSkipRootDirectory(boolean skipRootDirectory) {
+        this.skipRootDirectory = skipRootDirectory;
+    }
 
     public Directory getDirectory() {
         return directory;

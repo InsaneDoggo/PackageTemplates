@@ -119,7 +119,30 @@ public abstract class ElementWrapper extends BaseWrapper {
         addGroovyMenuItems(popupMenu);
 
         // if not root element
-        if (getParent() != null) {
+        if (getParent() == null) {
+            if( !getPackageTemplateWrapper().getPackageTemplate().isSkipRootDirectory() ) {
+                JMenuItem itemSkipRoot = new JBMenuItem("Don't create root directory", AllIcons.Nodes.Package);
+                itemSkipRoot.setToolTipText("Multiple file template feature");
+                itemSkipRoot.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        getPackageTemplateWrapper().getPackageTemplate().setSkipRootDirectory(true);
+                        //todo "<html><strike>Strike-through text</strike></html>"
+                    }
+                });
+                popupMenu.add(itemSkipRoot);
+            } else {
+                JMenuItem itemSkipRoot = new JBMenuItem("Enable root directory", AllIcons.Nodes.Package);
+                itemSkipRoot.setToolTipText("Multiple file template feature");
+                itemSkipRoot.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        getPackageTemplateWrapper().getPackageTemplate().setSkipRootDirectory(false);
+                    }
+                });
+                popupMenu.add(itemSkipRoot);
+            }
+        } else {
             popupMenu.add(itemDelete);
         }
 

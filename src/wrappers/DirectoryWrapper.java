@@ -100,14 +100,19 @@ public class DirectoryWrapper extends ElementWrapper {
 
     @Override
     public void writeFile(PsiDirectory currentDir, Project project) {
-        if(!directory.isEnabled()){
+        if (!directory.isEnabled()) {
             return;
         }
-
-        PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this, project);
-        if (subDirectory != null) {
+        if (getParent() == null && getPackageTemplateWrapper().getPackageTemplate().isSkipRootDirectory()) {
             for (ElementWrapper element : getListElementWrapper()) {
-                element.writeFile(subDirectory, project);
+                element.writeFile(currentDir, project);
+            }
+        } else {
+            PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this, project);
+            if (subDirectory != null) {
+                for (ElementWrapper element : getListElementWrapper()) {
+                    element.writeFile(subDirectory, project);
+                }
             }
         }
     }
@@ -203,13 +208,12 @@ public class DirectoryWrapper extends ElementWrapper {
         return optionsPanel;
     }
 
-
     @Override
     public void setEnabled(boolean isEnabled) {
         directory.setEnabled(isEnabled);
         updateComponentsState();
 
-        for (ElementWrapper elementWrapper : listElementWrapper){
+        for (ElementWrapper elementWrapper : listElementWrapper) {
             elementWrapper.cbEnabled.setSelected(isEnabled);
         }
     }
@@ -238,11 +242,11 @@ public class DirectoryWrapper extends ElementWrapper {
 
     @Override
     public void runGroovyScript() {
-        if( directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty() ){
+        if (directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty()) {
             directory.setName(GroovyExecutor.runGroovy(directory.getGroovyCode(), directory.getName()));
         }
 
-        for( ElementWrapper elementWrapper : listElementWrapper ){
+        for (ElementWrapper elementWrapper : listElementWrapper) {
             elementWrapper.runGroovyScript();
         }
     }

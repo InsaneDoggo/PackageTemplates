@@ -42,6 +42,7 @@ public class WrappersFactory {
         packageTemplate.setName("New Package Template");
         packageTemplate.setDescription("");
         packageTemplate.setDirectory(directory);
+        packageTemplate.setSkipRootDirectory(false);
 
         GlobalVariable globalVariable = new GlobalVariable();
         globalVariable.setName(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME);
