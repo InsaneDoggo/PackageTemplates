@@ -1,17 +1,12 @@
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.JavaDirectoryService;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
 import ui.dialogs.NewPackageDialog;
+import utils.Logger;
+import utils.TemplatesValidator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -32,23 +27,22 @@ public class SampleAction extends AnAction {
 //            PsiClass psiClass = JavaDirectoryService.getInstance().createClass(dir, "MegaFile", "Prost", false, getCustomProperties());
 //        }
 
-        showDialog(e.getProject());
+        ArrayList<String> templateNames = new ArrayList<>();
+        templateNames.add("Prost");
+        templateNames.add("Slojn");
 
-        System.out.println("Done!");
+        if(TemplatesValidator.isTemplatesValid(templateNames)){
+            showDialog(e.getProject());
+        }
     }
 
     private void showDialog(Project project) {
-        NewPackageDialog dialog = new NewPackageDialog(project, "My Dialog");
-        dialog.show();
-
-        switch(dialog.getExitCode()){
-            case NewPackageDialog.OK_EXIT_CODE:
-                System.out.println("OK_EXIT_CODE");
-                break;
-            case NewPackageDialog.CANCEL_EXIT_CODE:
-                System.out.println("CANCEL_EXIT_CODE");
-                break;
-        }
+        NewPackageDialog dialog = new NewPackageDialog(project, "My Dialog") {
+            @Override
+            public void onFinish(String result) {
+                Logger.log("onFinish " + result);
+            }
+        };
     }
 
     @NotNull
