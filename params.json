@@ -1,0 +1,6 @@
+{
+  "name": "Package Templates",
+  "tagline": "Plugin for Intellij IDEA",
+  "body": "### About\r\nPackage Templates is extension for [File Templates][1]. Plugin let you create the folder that already contain File Tamplates in one action! Note: Folder can be disabled in settings if you need files only.\r\n\r\n### Features\r\n* Multiple File templates\r\n* File templates into folder\r\n* Global Variables for File/Directory NAMES and for File content;\r\n* Modifying File/Directory/GlobalVariable NAMES via GroovyScript\r\n\r\n//todo tutorial..\r\n\r\n### Awards\r\nDo you like this plugin and think it's useful? Then you could star this project.\r\n![Star](webpage/images/star.png)\r\n\r\n[1]: https://www.jetbrains.com/help/idea/2016.1/file-and-code-templates.html",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
