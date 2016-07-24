@@ -4,6 +4,7 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
+import utils.Localizer;
 import utils.TemplateValidator;
 
 /**
@@ -26,7 +27,7 @@ public class GroovyExecutor {
         try {
             return ((String) getShell().evaluate(String.format(GROOVY_CODE_PATTERN, code, variable)));
         } catch (Exception e) {
-            return "GroovyScriptError";
+            return Localizer.get("GroovyScriptError");
         }
     }
 

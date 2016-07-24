@@ -16,6 +16,7 @@ import org.jetbrains.plugins.groovy.GroovyLanguage;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
 import utils.GridBagFactory;
+import utils.Localizer;
 import utils.TemplateValidator;
 
 import javax.swing.*;
@@ -60,9 +61,9 @@ public abstract class GroovyDialog extends BaseDialog {
 
         createEditorField();
 
-        etfName = new EditorTextField("ExampleName");
-        JButton btnTry = new JButton("Try it");
-        JBLabel jlResult = new JBLabel("Result will be here..");
+        etfName = new EditorTextField(Localizer.get("ExampleName"));
+        JButton btnTry = new JButton(Localizer.get("TryIt"));
+        JBLabel jlResult = new JBLabel(Localizer.get("ResultWillBeHere"));
 
         etfName.setAlignmentX(Component.CENTER_ALIGNMENT);
         etfName.setAlignmentY(Component.CENTER_ALIGNMENT);

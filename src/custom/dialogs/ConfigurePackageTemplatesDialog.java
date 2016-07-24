@@ -3,6 +3,7 @@ package custom.dialogs;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ui.GridBag;
 import models.PackageTemplate;
+import utils.Localizer;
 import wrappers.PackageTemplateWrapper;
 import utils.GridBagFactory;
 import utils.WrappersFactory;
@@ -34,8 +35,8 @@ public abstract class ConfigurePackageTemplatesDialog extends BaseDialog {
     @Override
     public void preShow() {
         switch (ptWrapper.getMode()){
-            case CREATE: setTitle("New Package Template"); break;
-            case EDIT: setTitle("Edit Package Template"); break;
+            case CREATE: setTitle(Localizer.get("NewPackageTemplate")); break;
+            case EDIT: setTitle(Localizer.get("EditPackageTemplate")); break;
         }
 
         panel.setLayout(new GridBagLayout());

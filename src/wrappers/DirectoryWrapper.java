@@ -2,15 +2,12 @@ package wrappers;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
-import groovy.GroovyDialog;
 import groovy.GroovyExecutor;
-import icons.JetgroovyIcons;
 import models.BaseElement;
 import models.Directory;
 import org.jetbrains.annotations.NotNull;
@@ -18,11 +15,10 @@ import utils.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -117,16 +113,6 @@ public class DirectoryWrapper extends ElementWrapper {
         }
     }
 
-    @Override
-    public void updateParents(DirectoryWrapper dwParent) {
-        //deprecated
-    }
-
-    @Override
-    public void initNonSerializableFields() {
-        //deprecated
-    }
-
     public void addElement(ElementWrapper element) {
         directory.getListBaseElement().add(element.getElement());
         listElementWrapper.add(element);
@@ -170,7 +156,7 @@ public class DirectoryWrapper extends ElementWrapper {
     private void createPackageView(Project project, JPanel container, GridBag bag) {
         jlName = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
         jlName.setDisabledIcon(jlName.getIcon());
-        jlName.setText("Directory");
+        jlName.setText(Localizer.get("Directory"));
         UIHelper.setRightPadding(jlName, UIHelper.PADDING_LABEL);
 
         etfName = UIHelper.getEditorTextField(getDirectory().getName(), project);
@@ -197,8 +183,8 @@ public class DirectoryWrapper extends ElementWrapper {
         } else {
             jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
         }
-        jlGroovy.setToolTipText("Colored when item has GroovyScript");
-        cbEnabled.setToolTipText("If checked, element will be created;");
+        jlGroovy.setToolTipText(Localizer.get("ColoredWhenItemHasGroovyScript"));
+        cbEnabled.setToolTipText(Localizer.get("IfCheckedElementWillBeCreated"));
 
         JPanel optionsPanel = new JPanel(new GridBagLayout());
         GridBag optionsBag = GridBagFactory.getOptionsPanelGridBag();
@@ -232,8 +218,6 @@ public class DirectoryWrapper extends ElementWrapper {
     @Override
     public void collectDataFromFields() {
         directory.setName(etfName.getText());
-//        directory.setGroovyCode("");
-//        directory.setEnabled(true);
 
         for (ElementWrapper elementWrapper : getListElementWrapper()) {
             elementWrapper.collectDataFromFields();

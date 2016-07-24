@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import state.SaveUtil;
 import state.TemplateList;
 import utils.GridBagFactory;
+import utils.Localizer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,14 +34,14 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
 
     public SelectPackageTemplateDialog(Project project) {
         super(project);
-        setTitle("Select File Template");
+        setTitle(Localizer.get("SelectFileTemplate"));
     }
 
 
     @Override
     protected ValidationInfo doValidate() {
         if (jbList.isSelectionEmpty()) {
-            return new ValidationInfo("Select item!", jbList);
+            return new ValidationInfo(Localizer.get("SelectItem"), jbList);
         }
 
 //        ValidationInfo validationInfo = TemplateValidator.isTemplateValid((PackageTemplate) jbList.getSelectedValue());
@@ -127,12 +128,10 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
                 @Override
                 public void onSuccess(PackageTemplate packageTemplate) {
                     SaveUtil.getInstance().save();
-                    System.out.println("onSuccess");
                 }
 
                 @Override
                 public void onFail() {
-                    System.out.println("onFail");
                 }
             };
             dialog.show();
@@ -141,7 +140,7 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
 
     private void onDeleteAction(JButton jbDelete) {
         if (!jbList.isSelectionEmpty()) {
-            int confirmDialog = JOptionPane.showConfirmDialog(jbDelete, "Delete Template");
+            int confirmDialog = JOptionPane.showConfirmDialog(jbDelete, Localizer.get("DeleteTemplate"));
             if (confirmDialog == JOptionPane.OK_OPTION) {
                 templateList.remove(jbList.getSelectedValue());
                 SaveUtil.getInstance().save();
@@ -161,7 +160,6 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
 
             @Override
             public void onFail() {
-                System.out.println("onFail");
             }
         };
         dialog.show();

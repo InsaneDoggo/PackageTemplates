@@ -16,6 +16,7 @@ import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBInsets;
 import models.TemplateForSearch;
 import org.jetbrains.annotations.NotNull;
+import utils.Localizer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +38,7 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper {
     public SelectFileTemplateDialog(Project project) {
         super(project);
         init();
-        setTitle("Select File Template");
+        setTitle(Localizer.get("SelectFileTemplate"));
     }
 
     @Override

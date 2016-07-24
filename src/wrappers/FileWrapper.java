@@ -3,17 +3,13 @@ package wrappers;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.intellij.openapi.util.IconLoader;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
-import groovy.GroovyDialog;
 import groovy.GroovyExecutor;
-import icons.JetgroovyIcons;
 import models.BaseElement;
 import models.File;
 import org.jetbrains.annotations.NotNull;
@@ -21,8 +17,6 @@ import utils.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.HashMap;
@@ -95,8 +89,8 @@ public class FileWrapper extends ElementWrapper {
         } else {
             jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
         }
-        jlGroovy.setToolTipText("Colored when item has GroovyScript");
-        cbEnabled.setToolTipText("If checked, element will be created;");
+        jlGroovy.setToolTipText(Localizer.get("ColoredWhenItemHasGroovyScript"));
+        cbEnabled.setToolTipText(Localizer.get("IfCheckedElementWillBeCreated"));
 
         optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
         optionsPanel.add(jlGroovy, optionsBag.next().insets(0, 0, 0, 12));
@@ -127,7 +121,7 @@ public class FileWrapper extends ElementWrapper {
     @Override
     public ValidationInfo isNameValid(List<String> listAllTemplates) {
         if (!listAllTemplates.contains(getFile().getTemplateName())) {
-            return new ValidationInfo("Template \"" + getFile().getTemplateName() + "\" doesn't exist!");
+            return new ValidationInfo(String.format(Localizer.get("TemplateSDoesntExist"), getFile().getTemplateName()));
         }
         return null;
     }
@@ -147,16 +141,6 @@ public class FileWrapper extends ElementWrapper {
         if (psiElement == null) {
             // TODO: 20.06.2016 error write file
         }
-    }
-
-    @Override
-    public void updateParents(DirectoryWrapper dwParent) {
-
-    }
-
-    @Override
-    public void initNonSerializableFields() {
-
     }
 
     @Override

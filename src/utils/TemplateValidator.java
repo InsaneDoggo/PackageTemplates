@@ -54,13 +54,13 @@ public class TemplateValidator {
     //    \w    A word character: [a-zA-Z_0-9]
     //    \W    A non-word character: [^\w]
 
-    public static final String PATTERN_CLASS_NAME_VALIDATION = ".*[^0-9a-zA-Z_].*";
-    public static final String PATTERN_PLAIN_TEXT_VALIDATION = ".*[^0-9a-zA-Z_=\\-+.)(].*";
-    public static final String PATTERN_GLOBAL_VARIABLE_VALIDATION = ".*[^0-9a-zA-Z_}{\\$].*";
+    private static final String PATTERN_CLASS_NAME_VALIDATION = ".*[^0-9a-zA-Z_].*";
+    private static final String PATTERN_PLAIN_TEXT_VALIDATION = ".*[^0-9a-zA-Z_=\\-+.)(].*";
+    private static final String PATTERN_GLOBAL_VARIABLE_VALIDATION = ".*[^0-9a-zA-Z_}{\\$].*";
 
-    private static final String ILLEGAL_SYMBOLS = "Field contains illegal symbols";
-    private static final String STARTS_WITH_DIGIT = "Name can't starts with digit";
-    private static final String EMPTY_FIELDS = "Fill empty fields";
+    private static final String ILLEGAL_SYMBOLS = Localizer.get("FieldContainsIllegalSymbols");
+    private static final String STARTS_WITH_DIGIT = Localizer.get("NameCantStartsWithDigit");
+    private static final String EMPTY_FIELDS = Localizer.get("FillEmptyFields");
 
     public enum FieldType {
         GLOBAL_VARIABLE,
@@ -115,7 +115,7 @@ public class TemplateValidator {
         return text.substring(0, 1).matches("\\d");
     }
 
-    public static boolean isValidClassName(String name){
+    public static boolean isValidClassName(String name) {
         return isValidByPattern(name, PATTERN_CLASS_NAME_VALIDATION) && !TemplateValidator.startsWithDigit(name);
     }
 

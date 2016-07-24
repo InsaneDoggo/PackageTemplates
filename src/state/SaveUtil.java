@@ -3,7 +3,6 @@ package state;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.intellij.openapi.components.ServiceManager;
-import models.PackageTemplate;
 import models.BaseElement;
 import models.serialization.BaseElementConverter;
 

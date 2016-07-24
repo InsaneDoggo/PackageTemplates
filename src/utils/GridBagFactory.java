@@ -60,16 +60,6 @@ public class GridBagFactory {
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
-    @NotNull
-    public static GridBag getGridBagForGlobals() {
-        return new GridBag()
-//                .setDefaultWeightX(0, 0.02)
-                .setDefaultWeightX(1, 0.5)
-                .setDefaultWeightX(2, 0.5)
-                .setDefaultInsets(getDefaultInsets())
-                .setDefaultFill(GridBagConstraints.HORIZONTAL);
-    }
-
     public static GridBag getOptionsPanelGridBag() {
         return new GridBag()
                 .setDefaultWeightX(0,0)

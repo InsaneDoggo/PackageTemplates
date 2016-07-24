@@ -79,7 +79,6 @@ public class UIHelper {
 
     private static void applyHighlightRange(String text, Project project, Editor editor) {
         if (project == null) {
-            Logger.log("project = null");
             return;
         }
 

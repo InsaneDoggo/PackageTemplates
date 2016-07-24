@@ -18,14 +18,11 @@ public class Localizer {
     public static ResourceBundle getBundle(Language lang) {
         if (bundle == null || currentLang != lang) {
             switch (lang) {
-                case DEFAULT:
-                    bundle = ResourceBundle.getBundle("/localization/MyResources", Locale.getDefault());
-                    currentLang = Language.DEFAULT;
-                    break;
                 case RU:
                     bundle = ResourceBundle.getBundle("/localization/MyResources_ru_RU", new Locale("ru_RU"));
                     currentLang = Language.RU;
                     break;
+                case DEFAULT:
                 case EN:
                     bundle = ResourceBundle.getBundle("/localization/MyResources_en_US", new Locale("en_US"));
                     currentLang = Language.EN;

@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import state.SaveUtil;
 import utils.FileWriter;
 import utils.GridBagFactory;
+import utils.Localizer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +57,7 @@ public abstract class ImpexDialog extends DialogWrapper {
     @Override
     protected ValidationInfo doValidate() {
         if (tfbButton.getText().isEmpty()) {
-            return new ValidationInfo("Fill empty fields");
+            return new ValidationInfo(Localizer.get("FillEmptyFields"));
         }
 
         return null;
@@ -73,15 +74,15 @@ public abstract class ImpexDialog extends DialogWrapper {
         panelExport.setLayout(new GridBagLayout());
 
         tfbButton = new TextFieldWithBrowseButton();
-        tfbButton.addBrowseFolderListener("Export templates to", "", project,
+        tfbButton.addBrowseFolderListener(Localizer.get("ExportTemplatesTo"), "", project,
                 new FileChooserDescriptor(false, true, false, false, false, false));
 
         GridBag bag = GridBagFactory.getGridBagForImpexDialog();
 
         panelExport.add(tfbButton, bag.nextLine().next());
 
-        tabContainer.addTab("Export", AllIcons.General.ExportSettings, panelExport);
-        tabContainer.addTab("Import", AllIcons.General.ImportSettings, new JPanel());
+        tabContainer.addTab(Localizer.get("Export"), AllIcons.General.ExportSettings, panelExport);
+        tabContainer.addTab(Localizer.get("Import"), AllIcons.General.ImportSettings, new JPanel());
         return tabContainer;
     }
 

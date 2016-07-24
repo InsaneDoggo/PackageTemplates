@@ -10,6 +10,7 @@ import models.Directory;
 import models.File;
 import models.GlobalVariable;
 import utils.GridBagFactory;
+import utils.Localizer;
 import utils.UIHelper;
 
 import javax.swing.*;
@@ -90,8 +91,8 @@ public class PackageTemplateWrapper {
 
         if (mode != ViewMode.USAGE) {
             // Header
-            JLabel jlName = new JLabel("Name");
-            JLabel jlDescription = new JLabel("Description");
+            JLabel jlName = new JLabel(Localizer.get("Name"));
+            JLabel jlDescription = new JLabel(Localizer.get("Description"));
             UIHelper.setRightPadding(jlName, UIHelper.PADDING_LABEL);
             UIHelper.setRightPadding(jlDescription, UIHelper.PADDING_LABEL);
 
@@ -107,7 +108,7 @@ public class PackageTemplateWrapper {
         }
 
         // Globals
-        JLabel jlGlobals = new JLabel("Global Variables", JLabel.CENTER);
+        JLabel jlGlobals = new JLabel(Localizer.get("GlobalVariables"), JLabel.CENTER);
         panel.add(jlGlobals, gridBag.nextLine().next().fillCellHorizontally().coverLine());
 
         for (GlobalVariableWrapper variableWrapper : getListGlobalVariableWrapper()) {

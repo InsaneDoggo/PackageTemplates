@@ -14,6 +14,7 @@ import custom.impl.ClickListener;
 import groovy.GroovyDialog;
 import icons.JetgroovyIcons;
 import models.BaseElement;
+import utils.Localizer;
 import utils.WrappersFactory;
 
 import javax.swing.*;
@@ -33,8 +34,6 @@ public abstract class ElementWrapper extends BaseWrapper {
     private DirectoryWrapper parent;
 
     private PackageTemplateWrapper packageTemplateWrapper;
-    // check box
-    //btn for groovy
 
     public abstract void buildView(Project project, JPanel container, GridBag bag);
     public abstract void removeMyself();
@@ -45,8 +44,6 @@ public abstract class ElementWrapper extends BaseWrapper {
     public abstract ValidationInfo isNameValid(List<String> listAllTemplates);
     public abstract ValidationInfo validateFields();
     public abstract void writeFile(PsiDirectory currentDir, Project project);
-    public abstract void updateParents(DirectoryWrapper dwParent);
-    public abstract void initNonSerializableFields();
     public abstract void setEnabled(boolean isEnabled);
 
     public DirectoryWrapper getParent() {
@@ -90,9 +87,9 @@ public abstract class ElementWrapper extends BaseWrapper {
     private void createPopupForEditMode(MouseEvent mouseEvent) {
         JPopupMenu popupMenu = new JBPopupMenu();
 
-        JMenuItem itemAddFile = new JBMenuItem("Add File", AllIcons.FileTypes.Text);
-        JMenuItem itemAddDirectory = new JBMenuItem("Add Directory", AllIcons.Nodes.Package);
-        JMenuItem itemDelete = new JBMenuItem("Delete", AllIcons.Actions.Delete);
+        JMenuItem itemAddFile = new JBMenuItem(Localizer.get("AddFile"), AllIcons.FileTypes.Text);
+        JMenuItem itemAddDirectory = new JBMenuItem(Localizer.get("AddDirectory"), AllIcons.Nodes.Package);
+        JMenuItem itemDelete = new JBMenuItem(Localizer.get("Delete"), AllIcons.Actions.Delete);
 
         itemAddFile.addActionListener(new ActionListener() {
             @Override
@@ -121,8 +118,8 @@ public abstract class ElementWrapper extends BaseWrapper {
         // if not root element
         if (getParent() == null) {
             if( !getPackageTemplateWrapper().getPackageTemplate().isSkipRootDirectory() ) {
-                JMenuItem itemSkipRoot = new JBMenuItem("Don't create root directory", AllIcons.Nodes.Package);
-                itemSkipRoot.setToolTipText("Multiple file template feature");
+                JMenuItem itemSkipRoot = new JBMenuItem(Localizer.get("DontCreateRootDirectory"), AllIcons.Nodes.Package);
+                itemSkipRoot.setToolTipText(Localizer.get("MultipleFileTemplateFeature"));
                 itemSkipRoot.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -132,8 +129,8 @@ public abstract class ElementWrapper extends BaseWrapper {
                 });
                 popupMenu.add(itemSkipRoot);
             } else {
-                JMenuItem itemSkipRoot = new JBMenuItem("Enable root directory", AllIcons.Nodes.Package);
-                itemSkipRoot.setToolTipText("Multiple file template feature");
+                JMenuItem itemSkipRoot = new JBMenuItem(Localizer.get("EnableRootDirectory"), AllIcons.Nodes.Package);
+                itemSkipRoot.setToolTipText(Localizer.get("MultipleFileTemplateFeature"));
                 itemSkipRoot.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -151,7 +148,7 @@ public abstract class ElementWrapper extends BaseWrapper {
 
     private void addGroovyMenuItems(JPopupMenu popupMenu) {
         if (getElement().getGroovyCode() != null && !getElement().getGroovyCode().isEmpty()) {
-            JMenuItem itemEditGroovy = new JBMenuItem("Edit GroovyScript", JetgroovyIcons.Groovy.Groovy_16x16);
+            JMenuItem itemEditGroovy = new JBMenuItem(Localizer.get("EditGroovyScript"), JetgroovyIcons.Groovy.Groovy_16x16);
             itemEditGroovy.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -166,7 +163,7 @@ public abstract class ElementWrapper extends BaseWrapper {
             });
             popupMenu.add(itemEditGroovy);
 
-            JMenuItem itemDeleteGroovy = new JBMenuItem("Delete GroovyScript", AllIcons.Actions.Delete);
+            JMenuItem itemDeleteGroovy = new JBMenuItem(Localizer.get("DeleteGroovyScript"), AllIcons.Actions.Delete);
             itemDeleteGroovy.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -176,7 +173,7 @@ public abstract class ElementWrapper extends BaseWrapper {
             });
             popupMenu.add(itemDeleteGroovy);
         } else {
-            JMenuItem itemAddGroovy = new JBMenuItem("Add GroovyScript", JetgroovyIcons.Groovy.Groovy_16x16);
+            JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddGroovyScript"), JetgroovyIcons.Groovy.Groovy_16x16);
             itemAddGroovy.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -232,7 +229,6 @@ public abstract class ElementWrapper extends BaseWrapper {
 
             @Override
             public void onCancel() {
-                System.out.println("onCancel");
             }
         };
         dialog.show();
