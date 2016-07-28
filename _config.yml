@@ -1,0 +1,11 @@
+# Setup
+name:         Package Templates
+tagline:      Plugin for Intellij IDEA
+baseurl:      ""
+
+# Gems
+gems:
+  - jekyll-paginate
+
+#Others
+markdown: kramdown
