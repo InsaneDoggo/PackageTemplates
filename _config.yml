@@ -1,7 +1,7 @@
 # Setup
 name:         Package Templates
 tagline:      Plugin for Intellij IDEA
-baseurl:      ""
+baseurl:      "/PackageTemplates"
 
 # Gems
 gems:
