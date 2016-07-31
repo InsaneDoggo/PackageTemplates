@@ -3,13 +3,14 @@ layout: default
 title: Package Templates
 ---
 
+<p>Documentation still in development!</p>
+
 <div id="home">
 	<h2>Features:</h2>
 	<ul class="posts">
 		{% assign listFeatures = site.pages | where:"category", "feature" %}
 		{% for page in listFeatures %}
 			<li><a href="{{ site.baseurl }}{{ page.page_link }}">{{ page.title }}</a></li>
-			{{ site.baseurl }}{{ page.page_link }}
 		{% endfor %}
 	</ul>
 
