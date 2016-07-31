@@ -4,10 +4,16 @@ title: Package Templates
 ---
 
 <div id="home">
-  <h1>Blog Posts</h1>
-  <ul class="posts">
-    {% for post in site.posts %}
-      <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></li>
-    {% endfor %}
-  </ul>
+	<h2>Features:</h2>
+	<ul class="posts">
+		{% assign listFeatures = site.pages | where:"category", "feature" %}
+		{% for page in listFeatures %}
+			<li><a href="{{ site.baseurl }}{{ page.page_link }}">{{ page.title }}</a></li>
+			{{ site.baseurl }}{{ page.page_link }}
+		{% endfor %}
+	</ul>
+
+	<a href="{{ site.baseurl }}/groovy" >Groovy Script</a>	
+
 </div>
+

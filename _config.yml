@@ -9,3 +9,6 @@ gems:
 
 #Others
 markdown: kramdown
+
+collections:
+- features
