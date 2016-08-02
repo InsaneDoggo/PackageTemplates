@@ -3,4 +3,4 @@ layout: page
 ---
 <p>Documentation still in development!</p>
 
-{% markdown %}{% include home.md %}{% endmarkdown %}
+{% include home.md %}
