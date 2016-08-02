@@ -6,6 +6,7 @@ baseurl:      "/PackageTemplates"
 # Gems
 gems:
   - jekyll-paginate
+  - markdown_converter
 
 #Others
 markdown: kramdown
