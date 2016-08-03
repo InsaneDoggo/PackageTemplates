@@ -71,37 +71,39 @@ public class TemplateValidator {
     }
 
     public static ValidationInfo validateText(JComponent jComponent, String text, FieldType fieldType) {
-        if (text.trim().isEmpty()) {
-            return new ValidationInfo(EMPTY_FIELDS, jComponent);
-        }
+        //todo uncomment
 
-        switch (fieldType) {
-            case PACKAGE_TEMPLATE_NAME:
-                if (!isValidByPattern(text, PATTERN_CLASS_NAME_VALIDATION)) {
-                    return new ValidationInfo(ILLEGAL_SYMBOLS, jComponent);
-                }
-                // Starts with digit
-                if (startsWithDigit(text)) {
-                    return new ValidationInfo(STARTS_WITH_DIGIT, jComponent);
-                }
-                break;
-            case CLASS_NAME:
-            case DIRECTORY_NAME:
-            case GLOBAL_VARIABLE:
-                if (!isValidByPattern(text, PATTERN_GLOBAL_VARIABLE_VALIDATION)) {
-                    return new ValidationInfo(ILLEGAL_SYMBOLS, jComponent);
-                }
-                // Starts with digit
-                if (startsWithDigit(text)) {
-                    return new ValidationInfo(STARTS_WITH_DIGIT, jComponent);
-                }
-                break;
-            case PLAIN_TEXT:
-                if (!isValidByPattern(text, PATTERN_PLAIN_TEXT_VALIDATION)) {
-                    return new ValidationInfo(ILLEGAL_SYMBOLS, jComponent);
-                }
-                break;
-        }
+//        if (text.trim().isEmpty()) {
+//            return new ValidationInfo(EMPTY_FIELDS, jComponent);
+//        }
+//
+//        switch (fieldType) {
+//            case PACKAGE_TEMPLATE_NAME:
+//                if (!isValidByPattern(text, PATTERN_CLASS_NAME_VALIDATION)) {
+//                    return new ValidationInfo(ILLEGAL_SYMBOLS, jComponent);
+//                }
+//                // Starts with digit
+//                if (startsWithDigit(text)) {
+//                    return new ValidationInfo(STARTS_WITH_DIGIT, jComponent);
+//                }
+//                break;
+//            case CLASS_NAME:
+//            case DIRECTORY_NAME:
+//            case GLOBAL_VARIABLE:
+//                if (!isValidByPattern(text, PATTERN_GLOBAL_VARIABLE_VALIDATION)) {
+//                    return new ValidationInfo(ILLEGAL_SYMBOLS, jComponent);
+//                }
+//                // Starts with digit
+//                if (startsWithDigit(text)) {
+//                    return new ValidationInfo(STARTS_WITH_DIGIT, jComponent);
+//                }
+//                break;
+//            case PLAIN_TEXT:
+//                if (!isValidByPattern(text, PATTERN_PLAIN_TEXT_VALIDATION)) {
+//                    return new ValidationInfo(ILLEGAL_SYMBOLS, jComponent);
+//                }
+//                break;
+//        }
 
         return null;
     }

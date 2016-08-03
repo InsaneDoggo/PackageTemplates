@@ -1,14 +1,14 @@
 package wrappers;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.util.ui.GridBag;
-import models.PackageTemplate;
-import models.BaseElement;
-import models.Directory;
-import models.File;
-import models.GlobalVariable;
+import custom.dialogs.FailedFilesDialog;
+import models.*;
+import utils.FileWriter;
 import utils.GridBagFactory;
 import utils.Localizer;
 import utils.UIHelper;
@@ -38,6 +38,7 @@ public class PackageTemplateWrapper {
     private DirectoryWrapper rootElement;
     private ArrayList<GlobalVariableWrapper> listGlobalVariableWrapper;
     private ViewMode mode;
+    private ArrayList<ElementWrapper> failedElements;
 
     public PackageTemplateWrapper(Project project) {
         this.project = project;
@@ -49,6 +50,14 @@ public class PackageTemplateWrapper {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public ArrayList<ElementWrapper> getFailedElements() {
+        return failedElements;
+    }
+
+    public void setFailedElements(ArrayList<ElementWrapper> failedElements) {
+        this.failedElements = failedElements;
     }
 
     public PackageTemplate getPackageTemplate() {
@@ -143,7 +152,7 @@ public class PackageTemplateWrapper {
     }
 
     public void collectDataFromFields() {
-        if( getMode() != ViewMode.USAGE ) {
+        if (getMode() != ViewMode.USAGE) {
             packageTemplate.setName(etfName.getText());
             packageTemplate.setDescription(etfDescription.getText());
         }
@@ -151,21 +160,13 @@ public class PackageTemplateWrapper {
         packageTemplate.setMapGlobalVars(new HashMap<>());
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
             variableWrapper.collectDataFromFields();
-            if( getMode() == ViewMode.USAGE ) {
+            if (getMode() == ViewMode.USAGE) {
                 variableWrapper.runGroovyScript();
             }
             packageTemplate.getMapGlobalVars().put(variableWrapper.getGlobalVariable().getName(), variableWrapper.getGlobalVariable().getValue());
         }
 
         rootElement.collectDataFromFields();
-    }
-
-    public void wrapPackageTemplate(PackageTemplateWrapper.ViewMode mode) {
-        setMode(PackageTemplateWrapper.ViewMode.EDIT);
-        setPackageTemplate(packageTemplate);
-        wrapGlobals();
-        setRootElement(wrapDirectory(packageTemplate.getDirectory(), null));
-        setProject(project);
     }
 
     public DirectoryWrapper wrapDirectory(Directory directory, DirectoryWrapper parent) {
@@ -206,6 +207,29 @@ public class PackageTemplateWrapper {
 
     public void runElementsGroovyScript() {
         rootElement.runGroovyScript();
+    }
+
+    public void writeTemplate(AnActionEvent event) {
+        PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
+        if (currentDir != null) {
+            failedElements = new ArrayList<>();
+            rootElement.writeFile(currentDir, event.getProject());
+        }
+
+        if (!failedElements.isEmpty()) {
+            //show dialog
+            new FailedFilesDialog(event, Localizer.get("ErrorDialog"), this) {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            }.show();
+        }
     }
 
 }

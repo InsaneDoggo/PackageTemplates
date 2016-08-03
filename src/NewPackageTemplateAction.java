@@ -48,10 +48,7 @@ public class NewPackageTemplateAction extends AnAction {
         new NewPackageDialog(event, String.format(Localizer.get("NewPackageFromS"),packageTemplate.getName()), packageTemplate) {
             @Override
             public void onSuccess(PackageTemplateWrapper ptWrapper) {
-                PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
-                if (currentDir != null) {
-                    ptWrapper.getRootElement().writeFile(currentDir, event.getProject());
-                }
+                ptWrapper.writeTemplate(event);
             }
 
             @Override

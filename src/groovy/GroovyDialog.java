@@ -17,7 +17,6 @@ import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
 import utils.GridBagFactory;
 import utils.Localizer;
-import utils.TemplateValidator;
 
 import javax.swing.*;
 import java.awt.*;

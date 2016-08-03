@@ -100,6 +100,7 @@ public class DirectoryWrapper extends ElementWrapper {
             return;
         }
         if (getParent() == null && getPackageTemplateWrapper().getPackageTemplate().isSkipRootDirectory()) {
+            // Only files without Directory
             for (ElementWrapper element : getListElementWrapper()) {
                 element.writeFile(currentDir, project);
             }
@@ -109,6 +110,8 @@ public class DirectoryWrapper extends ElementWrapper {
                 for (ElementWrapper element : getListElementWrapper()) {
                     element.writeFile(subDirectory, project);
                 }
+            } else {
+                getPackageTemplateWrapper().getFailedElements().add(this);
             }
         }
     }

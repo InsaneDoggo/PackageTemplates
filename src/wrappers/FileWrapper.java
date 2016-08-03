@@ -139,7 +139,7 @@ public class FileWrapper extends ElementWrapper {
 
         PsiElement psiElement = FileWriter.writeFile(currentDir, this);
         if (psiElement == null) {
-            // TODO: 20.06.2016 error write file
+            getPackageTemplateWrapper().getFailedElements().add(this);
         }
     }
 
