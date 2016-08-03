@@ -1,15 +1,16 @@
 package custom.dialogs;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDirectory;
 import com.intellij.util.ui.GridBag;
 import models.PackageTemplate;
 import org.jetbrains.annotations.Nullable;
+import utils.*;
 import wrappers.GlobalVariableWrapper;
 import wrappers.PackageTemplateWrapper;
-import utils.GridBagFactory;
-import utils.TemplateValidator;
-import utils.WrappersFactory;
 
 import java.awt.*;
 
@@ -23,28 +24,21 @@ public abstract class NewPackageDialog extends BaseDialog {
     public abstract void onCancel();
 
     private PackageTemplateWrapper ptWrapper;
+    AnActionEvent event;
 
-    public NewPackageDialog(@Nullable Project project, String title, PackageTemplate packageTemplate) {
-        super(project);
-        ptWrapper = WrappersFactory.wrapPackageTemplate(project, packageTemplate, PackageTemplateWrapper.ViewMode.USAGE);
+
+    public NewPackageDialog(AnActionEvent event, String title, PackageTemplate packageTemplate) {
+        super(event.getProject());
+        this.event = event;
+        ptWrapper = WrappersFactory.wrapPackageTemplate(event.getProject(), packageTemplate, PackageTemplateWrapper.ViewMode.USAGE);
         init();
         setTitle(title);
     }
 
-//    public void updateHighlight() {
-//        for (InputBlock inputBlock : inputManager.getListInputBlock()) {
-//            if(inputBlock.getTfName().getEditor() == null){
-//                continue;
-//            }
-//
-//            UIHelper.applyHighlightRange(inputBlock.getTfName().getText(), project, inputBlock.getTfName().getEditor());
-//        }
-//    }
-
     @Override
     protected ValidationInfo doValidate() {
         ValidationInfo result;
-        if( ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.USAGE ) {
+        if (ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
             result = TemplateValidator.validateText(ptWrapper.etfName, ptWrapper.etfName.getText(), TemplateValidator.FieldType.PACKAGE_TEMPLATE_NAME);
             if (result != null) {
                 return result;
@@ -62,7 +56,25 @@ public abstract class NewPackageDialog extends BaseDialog {
             }
         }
 
-        return ptWrapper.getRootElement().validateFields();
+        result = ptWrapper.getRootElement().validateFields();
+        if (result != null) {
+            return result;
+        }
+
+        // save fields
+        ptWrapper.collectDataFromFields();
+        ptWrapper.replaceNameVariable();
+        ptWrapper.runElementsGroovyScript();
+
+        PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
+        if (currentDir != null) {
+            VirtualFile existingFile = currentDir.getVirtualFile().findChild(ptWrapper.getRootElement().getDirectory().getName());
+            if (existingFile != null) {
+                return new ValidationInfo(String.format(Localizer.get("DirectoryAlreadyExist"), ptWrapper.getRootElement().getDirectory().getName()));
+            }
+        }
+
+        return null;
     }
 
 
@@ -75,10 +87,6 @@ public abstract class NewPackageDialog extends BaseDialog {
 
     @Override
     public void onOKAction() {
-        // save fields
-        ptWrapper.collectDataFromFields();
-        ptWrapper.replaceNameVariable();
-        ptWrapper.runElementsGroovyScript();
         onSuccess(ptWrapper);
     }
 

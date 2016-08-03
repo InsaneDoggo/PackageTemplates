@@ -43,12 +43,15 @@ public class FileWriter {
             //todo print error
             return null;
         }
+
         final PsiDirectory[] directory = new PsiDirectory[1];
 
         CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> {
             try {
                 directory[0] = dir.createSubdirectory(dirWrapper.getDirectory().getName());
-            } catch (Exception ex) {Logger.log(ex.getMessage());}
+            } catch (Exception ex) {
+                Logger.log(ex.getMessage());
+            }
         }), null, null);
 
         if(directory[0] == null){
@@ -81,9 +84,9 @@ public class FileWriter {
         return element;
     }
 
-    public static boolean exportFile(String path, String fileName, String content){
+    public static boolean exportFile(String path, String fileName, String content) {
         try {
-            FileUtil.writeToFile(new File(path+"/"+fileName),content);
+            FileUtil.writeToFile(new File(path + "/" + fileName), content);
         } catch (IOException e) {
             //todo print error
             System.out.println(e.getMessage());
