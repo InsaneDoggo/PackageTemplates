@@ -11,13 +11,14 @@ import models.TemplateListModel;
 import models.PackageTemplate;
 import org.jetbrains.annotations.NotNull;
 import state.SaveUtil;
-import state.TemplateList;
+import state.models.StateModel;
 import utils.GridBagFactory;
 import utils.Localizer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 
 /**
@@ -26,7 +27,7 @@ import java.awt.event.MouseEvent;
 public abstract class SelectPackageTemplateDialog extends BaseDialog {
 
     private JBList jbList;
-    private TemplateList templateList;
+    private ArrayList<PackageTemplate> templateList;
 
     public abstract void onSuccess(PackageTemplate packageTemplate);
 
@@ -74,7 +75,8 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
         root.setEnabled(false);
 
 
-        templateList = SaveUtil.getInstance().getTemplateList();
+        StateModel stateModel = SaveUtil.getInstance().getStateModel();
+        templateList = stateModel.getListPackageTemplate();
         jbList = new JBList();
         initJBList();
 

@@ -5,6 +5,12 @@ import com.google.gson.GsonBuilder;
 import com.intellij.openapi.components.ServiceManager;
 import models.BaseElement;
 import models.serialization.BaseElementConverter;
+import state.export.Exporter;
+import state.export.models.ExportBundle;
+import state.models.StateModel;
+import state.models.StateWrapper;
+
+import java.util.ArrayList;
 
 /**
  * Created by CeH9 on 26.06.2016.
@@ -22,7 +28,7 @@ public class SaveUtil {
         return instance;
     }
 
-    private TemplateList templateList;
+    private StateModel stateModel;
     private Gson gson;
     private Config cfg;
 
@@ -37,35 +43,37 @@ public class SaveUtil {
     }
 
     public void load() {
-        PackageTemplateState state = cfg.getState();
+        //todo check versions
+        StateWrapper state = cfg.getState();
         if( state != null ){
-            templateList = gson.fromJson(state.value, TemplateList.class);
+            stateModel = gson.fromJson(state.value, StateModel.class);
         }
-        if (templateList == null) {
-            templateList = new TemplateList();
+        preventNPE();
+    }
+
+    private void preventNPE() {
+        if (stateModel.getListPackageTemplate() == null) {
+            stateModel.setListPackageTemplate(new ArrayList<>());
         }
     }
 
     public void save() {
-        PackageTemplateState state = cfg.getState();
+        StateWrapper state = cfg.getState();
         if( state != null ) {
-            state.value = gson.toJson(templateList, TemplateList.class);
+            state.value = gson.toJson(stateModel, StateModel.class);
         } else {
-            state = new PackageTemplateState();
-            state.value = gson.toJson(templateList, TemplateList.class);
+            state = new StateWrapper();
+            state.value = gson.toJson(stateModel, StateModel.class);
             cfg.loadState(state);
         }
     }
 
-    public TemplateList getTemplateList() {
-        return templateList;
+    public StateModel getStateModel() {
+        return stateModel;
     }
 
     public String getTemplatesForExport() {
-        return gson.toJson(templateList, TemplateList.class);
+        return gson.toJson(Exporter.StateModelToExpString(stateModel), ExportBundle.class);
     }
 
-    public void setTemplateList(TemplateList templateList) {
-        this.templateList = templateList;
-    }
 }
