@@ -49,14 +49,16 @@ public abstract class FailedFilesDialog extends BaseDialog {
     @Override
     public void preShow() {
         panel.setLayout(new GridBagLayout());
-        GridBag gridBag = GridBagFactory.getBagForConfigureDialog();
+        GridBag gridBag = GridBagFactory.getBagForFailedFilesDialog();
+
+        panel.add(new JBLabel(Localizer.get("NextElementsHaventBeenCreated")), gridBag.nextLine().next());
 
         for (ElementWrapper eWrapper : ptWrapper.getFailedElements()){
             JBLabel label;
             if( eWrapper.isDirectory() ){
-                label = new JBLabel(eWrapper.getElement().getName(), AllIcons.Nodes.Package, SwingConstants.CENTER );
+                label = new JBLabel(eWrapper.getElement().getName(), AllIcons.Nodes.Package, SwingConstants.LEFT );
             } else {
-                label = new JBLabel(eWrapper.getElement().getName(), UIHelper.getIconByFileExtension(((FileWrapper) eWrapper).getFile().getExtension()), SwingConstants.CENTER);
+                label = new JBLabel(eWrapper.getElement().getName(), UIHelper.getIconByFileExtension(((FileWrapper) eWrapper).getFile().getExtension()), SwingConstants.LEFT);
             }
             panel.add(label, gridBag.nextLine().next());
         }
