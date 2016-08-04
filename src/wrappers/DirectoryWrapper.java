@@ -107,6 +107,7 @@ public class DirectoryWrapper extends ElementWrapper {
         } else {
             PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this, project);
             if (subDirectory != null) {
+                getPackageTemplateWrapper().getWrittenElements().add(subDirectory);
                 for (ElementWrapper element : getListElementWrapper()) {
                     element.writeFile(subDirectory, project);
                 }

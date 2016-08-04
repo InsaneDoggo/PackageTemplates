@@ -1,17 +1,18 @@
 package wrappers;
 
+import com.google.common.collect.Lists;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiElement;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.util.ui.GridBag;
 import custom.dialogs.FailedFilesDialog;
 import models.*;
-import utils.FileWriter;
-import utils.GridBagFactory;
-import utils.Localizer;
-import utils.UIHelper;
+import utils.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +40,7 @@ public class PackageTemplateWrapper {
     private ArrayList<GlobalVariableWrapper> listGlobalVariableWrapper;
     private ViewMode mode;
     private ArrayList<ElementWrapper> failedElements;
+    private ArrayList<PsiElement> writtenElements;
 
     public PackageTemplateWrapper(Project project) {
         this.project = project;
@@ -50,6 +52,14 @@ public class PackageTemplateWrapper {
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public ArrayList<PsiElement> getWrittenElements() {
+        return writtenElements;
+    }
+
+    public void setWrittenElements(ArrayList<PsiElement> writtenElements) {
+        this.writtenElements = writtenElements;
     }
 
     public ArrayList<ElementWrapper> getFailedElements() {
@@ -213,6 +223,7 @@ public class PackageTemplateWrapper {
         PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
         if (currentDir != null) {
             failedElements = new ArrayList<>();
+            writtenElements = new ArrayList<>();
             rootElement.writeFile(currentDir, event.getProject());
         }
 
@@ -220,12 +231,19 @@ public class PackageTemplateWrapper {
             //show dialog
             new FailedFilesDialog(event, Localizer.get("ErrorDialog"), this) {
                 @Override
-                public void onSuccess() {
-
-                }
+                public void onSuccess() {}
 
                 @Override
                 public void onCancel() {
+                    CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> {
+                        try {
+                            for (PsiElement item : Lists.reverse(writtenElements)) {
+                                item.delete();
+                            }
+                        } catch (Exception ex) {
+                            Logger.log(ex.getMessage());
+                        }
+                    }), null, null);
 
                 }
             }.show();

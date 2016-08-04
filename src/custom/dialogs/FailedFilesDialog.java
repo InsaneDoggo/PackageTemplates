@@ -8,6 +8,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import models.PackageTemplate;
+import org.jetbrains.annotations.NotNull;
 import utils.*;
 import wrappers.ElementWrapper;
 import wrappers.FileWrapper;
@@ -27,24 +28,14 @@ public abstract class FailedFilesDialog extends BaseDialog {
     public abstract void onCancel();
 
     private PackageTemplateWrapper ptWrapper;
-    AnActionEvent event;
 
 
     public FailedFilesDialog(AnActionEvent event, String title, PackageTemplateWrapper ptWrapper) {
         super(event.getProject());
-        this.event = event;
         this.ptWrapper = ptWrapper;
         init();
         setTitle(title);
     }
-
-    @Override
-    protected ValidationInfo doValidate() {
-        ValidationInfo result;
-
-        return null;
-    }
-
 
     @Override
     public void preShow() {
@@ -62,7 +53,6 @@ public abstract class FailedFilesDialog extends BaseDialog {
             }
             panel.add(label, gridBag.nextLine().next());
         }
-
     }
 
     @Override

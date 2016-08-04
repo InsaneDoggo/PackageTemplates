@@ -140,6 +140,8 @@ public class FileWrapper extends ElementWrapper {
         PsiElement psiElement = FileWriter.writeFile(currentDir, this);
         if (psiElement == null) {
             getPackageTemplateWrapper().getFailedElements().add(this);
+        } else {
+            getPackageTemplateWrapper().getWrittenElements().add(psiElement);
         }
     }
 
