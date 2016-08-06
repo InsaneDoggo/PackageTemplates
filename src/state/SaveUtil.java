@@ -43,18 +43,12 @@ public class SaveUtil {
     }
 
     public void load() {
-        //todo check versions
         StateWrapper state = cfg.getState();
         if( state != null ){
             stateModel = gson.fromJson(state.value, StateModel.class);
+            MigrationHelper.checkVersion(stateModel);
         }
         preventNPE();
-    }
-
-    private void preventNPE() {
-        if (stateModel.getListPackageTemplate() == null) {
-            stateModel.setListPackageTemplate(new ArrayList<>());
-        }
     }
 
     public void save() {
@@ -75,5 +69,12 @@ public class SaveUtil {
     public String getTemplatesForExport() {
         return gson.toJson(Exporter.StateModelToExpString(stateModel), ExportBundle.class);
     }
+
+    private void preventNPE() {
+        if (stateModel.getListPackageTemplate() == null) {
+            stateModel.setListPackageTemplate(new ArrayList<>());
+        }
+    }
+
 
 }
