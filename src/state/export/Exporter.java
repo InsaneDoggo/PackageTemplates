@@ -1,5 +1,6 @@
 package state.export;
 
+import state.export.models.ExportBundle;
 import state.models.StateModel;
 
 /**
@@ -7,9 +8,9 @@ import state.models.StateModel;
  */
 public class Exporter {
 
-    public static String StateModelToExpString(StateModel stateModel){
+    public static ExportBundle stateModelToExpString(StateModel stateModel){
         //todo return ExportBundle
-        return "";
+        return null;
     }
 
 }

@@ -28,8 +28,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-                serviceInterface="stateModel.Config"
-                serviceImplementation="stateModel.Config"/>
+                serviceInterface="state.Config"
+                serviceImplementation="state.Config"/>
     </extensions>
 
     <actions>

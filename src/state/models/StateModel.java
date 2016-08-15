@@ -1,5 +1,6 @@
 package state.models;
 
+import com.google.gson.annotations.Expose;
 import models.PackageTemplate;
 
 import java.util.ArrayList;
@@ -8,8 +9,9 @@ import java.util.ArrayList;
  * Created by CeH9 on 05.08.2016.
  */
 public class StateModel {
-
+    @Expose
     private long modelVersion;
+    @Expose
     private ArrayList<PackageTemplate> listPackageTemplate;
 
     public long getModelVersion() {

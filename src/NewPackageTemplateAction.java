@@ -1,14 +1,13 @@
+import com.intellij.ide.fileTemplates.FileTemplate;
+import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.psi.PsiDirectory;
 import custom.dialogs.NewPackageDialog;
 import custom.dialogs.SelectPackageTemplateDialog;
-import groovy.GroovyDialog;
 import models.PackageTemplate;
+import state.SaveUtil;
 import utils.Localizer;
 import wrappers.PackageTemplateWrapper;
-import state.SaveUtil;
-import utils.FileWriter;
 
 /**
  * Created by Arsen on 13.06.2016.
@@ -17,18 +16,6 @@ public class NewPackageTemplateAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
-
-//        ImpexDialog dialog = new ImpexDialog(event.getProject(), "Export Templates") {
-//            @Override
-//            public void onSuccess() {
-//                System.out.println("onSuccess");
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                System.out.println("onCancel");
-//            }
-//        };
 
         SaveUtil.getInstance().load();
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
@@ -42,6 +29,7 @@ public class NewPackageTemplateAction extends AnAction {
             }
         };
         dialog.show();
+
     }
 
     private void showDialog(AnActionEvent event, PackageTemplate packageTemplate) {

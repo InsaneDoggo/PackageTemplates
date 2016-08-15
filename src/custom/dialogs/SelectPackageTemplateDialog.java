@@ -93,6 +93,7 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
         JButton jbAdd = getIconButton(AllIcons.General.Add);
         JButton jbDelete = getIconButton(AllIcons.General.Remove);
         JButton jbEdit = getIconButton(AllIcons.Modules.Edit);
+        JButton jbExport = getIconButton(AllIcons.Graph.Export);
 
         jbAdd.addMouseListener(new ReleaseListener() {
             @Override
@@ -116,12 +117,44 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
                 }
             }
         });
+        jbExport.addMouseListener(new ReleaseListener() {
+            @Override
+            public void mouseReleased(MouseEvent event) {
+                if (SwingUtilities.isLeftMouseButton(event)) {
+                    onExportAction();
+                }
+            }
+        });
 
         container.add(jbAdd, bag.nextLine().next());
         container.add(jbDelete, bag.next());
         container.add(jbEdit, bag.next());
+        container.add(jbExport, bag.next());
 
         return container;
+    }
+
+    private void onExportAction() {
+        if (!jbList.isSelectionEmpty()) {
+
+            ImpexDialog dialog = new ImpexDialog(project, "Export Templates") {
+                @Override
+                public void onSuccess() {
+                    System.out.println("onSuccess");
+                }
+
+                @Override
+                public void onCancel() {
+                    System.out.println("onCancel");
+                }
+            };
+            dialog.show();
+
+//            templateList.remove(jbList.getSelectedValue());
+//            SaveUtil.getInstance().save();
+//            initJBList();
+
+        }
     }
 
     private void onEditAction() {

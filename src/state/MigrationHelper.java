@@ -19,7 +19,7 @@ public class MigrationHelper {
 //            stateModel.setModelVersion(2);
 //        }
 
-        SaveUtil.getInstance().save();
+//        SaveUtil.getInstance().save();
     }
 
 }

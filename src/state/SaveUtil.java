@@ -44,22 +44,35 @@ public class SaveUtil {
 
     public void load() {
         StateWrapper state = cfg.getState();
-        if( state != null ){
+        if (state != null) {
             stateModel = gson.fromJson(state.value, StateModel.class);
-            MigrationHelper.checkVersion(stateModel);
+            if (stateModel != null) {
+                MigrationHelper.checkVersion(stateModel);
+                preventNPE();
+            } else {
+                initNewState(state);
+            }
+        } else {
+            initNewState();
         }
-        preventNPE();
     }
 
     public void save() {
         StateWrapper state = cfg.getState();
-        if( state != null ) {
+        if (state != null) {
             state.value = gson.toJson(stateModel, StateModel.class);
-        } else {
-            state = new StateWrapper();
-            state.value = gson.toJson(stateModel, StateModel.class);
-            cfg.loadState(state);
         }
+    }
+
+    private void initNewState() {
+        initNewState(new StateWrapper());
+    }
+    private void initNewState(StateWrapper state) {
+        stateModel = new StateModel();
+        stateModel.setModelVersion(MigrationHelper.CURRENT_MODEL_VERSION);
+
+        preventNPE();
+        state.value = gson.toJson(stateModel, StateModel.class);
     }
 
     public StateModel getStateModel() {
@@ -67,7 +80,7 @@ public class SaveUtil {
     }
 
     public String getTemplatesForExport() {
-        return gson.toJson(Exporter.StateModelToExpString(stateModel), ExportBundle.class);
+        return gson.toJson(Exporter.stateModelToExpString(stateModel), ExportBundle.class);
     }
 
     private void preventNPE() {
