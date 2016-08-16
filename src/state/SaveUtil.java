@@ -9,6 +9,7 @@ import state.export.Exporter;
 import state.export.models.ExportBundle;
 import state.models.StateModel;
 import state.models.StateWrapper;
+import utils.GsonFactory;
 
 import java.util.ArrayList;
 
@@ -33,11 +34,7 @@ public class SaveUtil {
     private Config cfg;
 
     public SaveUtil() {
-        gson = new GsonBuilder()
-                .registerTypeAdapter(BaseElement.class, new BaseElementConverter())
-                .excludeFieldsWithoutExposeAnnotation()
-                .setPrettyPrinting()
-                .create();
+        gson = GsonFactory.getInstance();
 
         cfg = ServiceManager.getService(Config.class);
     }

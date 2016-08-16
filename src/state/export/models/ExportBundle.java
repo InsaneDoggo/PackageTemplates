@@ -1,5 +1,6 @@
 package state.export.models;
 
+import com.google.gson.annotations.Expose;
 import models.PackageTemplate;
 
 import java.util.ArrayList;
@@ -9,9 +10,10 @@ import java.util.ArrayList;
  */
 public class ExportBundle {
 
+    @Expose
     private long modelVersion;
-    private ArrayList<PackageTemplate> listPackageTemplate;
-    private ArrayList<ExpFileTemplate> listExpFileTemplate;
+    @Expose
+    private ArrayList<ExpPackageTemplate> listPackageTemplate;
 
     public long getModelVersion() {
         return modelVersion;
@@ -21,19 +23,11 @@ public class ExportBundle {
         this.modelVersion = modelVersion;
     }
 
-    public ArrayList<PackageTemplate> getListPackageTemplate() {
+    public ArrayList<ExpPackageTemplate> getListPackageTemplate() {
         return listPackageTemplate;
     }
 
-    public void setListPackageTemplate(ArrayList<PackageTemplate> listPackageTemplate) {
+    public void setListPackageTemplate(ArrayList<ExpPackageTemplate> listPackageTemplate) {
         this.listPackageTemplate = listPackageTemplate;
-    }
-
-    public ArrayList<ExpFileTemplate> getListExpFileTemplate() {
-        return listExpFileTemplate;
-    }
-
-    public void setListExpFileTemplate(ArrayList<ExpFileTemplate> listExpFileTemplate) {
-        this.listExpFileTemplate = listExpFileTemplate;
     }
 }

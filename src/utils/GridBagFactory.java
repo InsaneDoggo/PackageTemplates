@@ -11,14 +11,11 @@ import java.awt.*;
  */
 public class GridBagFactory {
 
-    @NotNull
-    private static Insets getDefaultInsets() {
-        return new JBInsets(4, 0, 4, 0);
-    }
+    private static Insets defaultInsets = new JBInsets(4, 0, 4, 0);
 
     public static GridBag getBagForPackageTemplate() {
         return new GridBag()
-                .setDefaultInsets(getDefaultInsets())
+                .setDefaultInsets(defaultInsets)
                 .setDefaultFill(GridBagConstraints.HORIZONTAL)
                 .setDefaultWeightX(0, 0)
                 .setDefaultWeightX(1, 1);
@@ -29,7 +26,7 @@ public class GridBagFactory {
         return new GridBag()
                 .setDefaultWeightX(0,0)
                 .setDefaultWeightX(1,1)
-                .setDefaultInsets(getDefaultInsets())
+                .setDefaultInsets(defaultInsets)
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
@@ -48,7 +45,7 @@ public class GridBagFactory {
     public static GridBag getBagForFailedFilesDialog() {
         return new GridBag()
                 .setDefaultFill(GridBagConstraints.HORIZONTAL)
-                .setDefaultInsets(getDefaultInsets())
+                .setDefaultInsets(defaultInsets)
                 .setDefaultWeightX(1);
     }
 
@@ -63,7 +60,7 @@ public class GridBagFactory {
     public static GridBag getGridBagForImpexDialog() {
         return new GridBag()
                 .setDefaultWeightX(1, 1)
-                .setDefaultInsets(getDefaultInsets())
+                .setDefaultInsets(defaultInsets)
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 

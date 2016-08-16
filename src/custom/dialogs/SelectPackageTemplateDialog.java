@@ -135,26 +135,23 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
     }
 
     private void onExportAction() {
-        if (!jbList.isSelectionEmpty()) {
+        ImpexDialog dialog = new ImpexDialog(project, "Export Templates") {
+            @Override
+            public void onSuccess() {
+                System.out.println("onSuccess");
+            }
 
-            ImpexDialog dialog = new ImpexDialog(project, "Export Templates") {
-                @Override
-                public void onSuccess() {
-                    System.out.println("onSuccess");
-                }
-
-                @Override
-                public void onCancel() {
-                    System.out.println("onCancel");
-                }
-            };
-            dialog.show();
+            @Override
+            public void onCancel() {
+                System.out.println("onCancel");
+            }
+        };
+        dialog.show();
 
 //            templateList.remove(jbList.getSelectedValue());
 //            SaveUtil.getInstance().save();
 //            initJBList();
 
-        }
     }
 
     private void onEditAction() {
