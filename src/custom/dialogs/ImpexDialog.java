@@ -1,15 +1,17 @@
 package custom.dialogs;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.intellij.ui.CollapsiblePanel;
 import com.intellij.ui.TabbedPaneImpl;
+import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.util.ui.GridBag;
+import custom.view.SpoilerPane;
+import javafx.scene.layout.VBox;
 import models.PackageTemplate;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import state.SaveUtil;
@@ -23,6 +25,11 @@ import utils.Localizer;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+
+import static com.intellij.icons.AllIcons.General.ExportSettings;
+import static com.intellij.icons.AllIcons.General.ImportSettings;
+import static com.intellij.icons.AllIcons.Nodes.CollapseNode;
+import static com.intellij.icons.AllIcons.Nodes.ExpandNode;
 
 /**
  * Created by CeH9 on 04.07.2016.
@@ -73,12 +80,13 @@ public abstract class ImpexDialog extends DialogWrapper {
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        TabbedPaneImpl tabContainer = new TabbedPaneImpl(SwingConstants.TOP);
-        tabContainer.setMinimumSize(new Dimension(640, 480));
+        TabbedPaneImpl tabContainer = new TabbedPaneImpl(JTabbedPane.TOP);
+//        tabContainer.setMinimumSize(new Dimension(640, 480));
         tabContainer.setKeyboardNavigation(TabbedPaneImpl.DEFAULT_PREV_NEXT_SHORTCUTS);
+        tabContainer.setAlignmentY(Component.TOP_ALIGNMENT);
 
-        tabContainer.addTab(Localizer.get("Export"), AllIcons.General.ExportSettings, getExportTab());
-        tabContainer.addTab(Localizer.get("Import"), AllIcons.General.ImportSettings, new JPanel());
+        tabContainer.addTab(Localizer.get("Export"), ExportSettings, getExportTab());
+        tabContainer.addTab(Localizer.get("Import"), ImportSettings, new JPanel());
         return tabContainer;
     }
 
@@ -106,22 +114,22 @@ public abstract class ImpexDialog extends DialogWrapper {
                 content.add(eftWrapper.jlName, gBag.next());
             }
 
-            CollapsiblePanel collapsiblePanel = new CollapsiblePanel(
-                    content,
-                    true,
-                    true,
-                    AllIcons.Nodes.CollapseNode,
-                    AllIcons.Nodes.ExpandNode,
-                    "   " + pt.getName()
-            );
+            SpoilerPane spoilerPane = new SpoilerPane(content, ExpandNode, CollapseNode, pt.getName());
+//            spoilerPane.init();
 
             panelExport.add(eptWrapper.cbInclude, bag.nextLine().next().anchor(GridBagConstraints.NORTH));
 //            panelExport.add(eptWrapper.jlName, bag.next());
-            panelExport.add(collapsiblePanel, bag.next().insets(0, 24, 0, 0));
+            panelExport.add(spoilerPane, bag.next().insets(0, 24, 0, 0));
         }
 
         //panelExport.add(tfbButton, bag.nextLine().next());
-        return panelExport;
+        return wrapInDummyPanel(panelExport);
+    }
+
+    private JPanel wrapInDummyPanel(JPanel content) {
+        JPanel panel = new JPanel(new MigLayout());
+        panel.add(content);
+        return panel;
     }
 
 }

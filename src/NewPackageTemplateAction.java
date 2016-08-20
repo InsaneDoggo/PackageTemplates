@@ -2,6 +2,7 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import custom.dialogs.ImpexDialog;
 import custom.dialogs.NewPackageDialog;
 import custom.dialogs.SelectPackageTemplateDialog;
 import models.PackageTemplate;
@@ -16,16 +17,29 @@ public class NewPackageTemplateAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
-
         SaveUtil.getInstance().load();
-        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
+//        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
+//            @Override
+//            public void onSuccess(PackageTemplate packageTemplate) {
+//                showDialog(event, packageTemplate);
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//            }
+//        };
+//        dialog.show();
+
+
+        ImpexDialog dialog = new ImpexDialog(event.getProject(), "Export Templates") {
             @Override
-            public void onSuccess(PackageTemplate packageTemplate) {
-                showDialog(event, packageTemplate);
+            public void onSuccess() {
+                System.out.println("onSuccess");
             }
 
             @Override
             public void onCancel() {
+                System.out.println("onCancel");
             }
         };
         dialog.show();

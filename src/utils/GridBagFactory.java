@@ -24,8 +24,8 @@ public class GridBagFactory {
 
     public static GridBag getBagForDirectory() {
         return new GridBag()
-                .setDefaultWeightX(0,0)
-                .setDefaultWeightX(1,1)
+                .setDefaultWeightX(0, 0)
+                .setDefaultWeightX(1, 1)
                 .setDefaultInsets(defaultInsets)
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
@@ -52,7 +52,7 @@ public class GridBagFactory {
     public static GridBag getBagForGroovyDialog() {
         return new GridBag()
                 .setDefaultFill(GridBagConstraints.HORIZONTAL)
-                .setDefaultInsets(new JBInsets(4,4,4,4))
+                .setDefaultInsets(new JBInsets(4, 4, 4, 4))
                 .setDefaultWeightX(1);
     }
 
@@ -66,9 +66,18 @@ public class GridBagFactory {
 
     public static GridBag getOptionsPanelGridBag() {
         return new GridBag()
-                .setDefaultWeightX(0,0)
-                .setDefaultWeightX(1,0)
-                .setDefaultWeightX(2,1)
+                .setDefaultWeightX(0, 0)
+                .setDefaultWeightX(1, 0)
+                .setDefaultWeightX(2, 1)
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
+    }
+
+    public static GridBag getBagForSpoiler() {
+        return new GridBag()
+                .setDefaultInsets(new JBInsets(4,4,4,4))
+                .anchor(GridBagConstraints.NORTH)
+                .setDefaultFill(GridBagConstraints.HORIZONTAL)
+                .setDefaultWeightX(0, 0)
+                .setDefaultWeightX(1, 1);
     }
 }
