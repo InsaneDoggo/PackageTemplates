@@ -31,7 +31,6 @@ public class SpoilerPane extends JPanel {
         jbToggle.setOpaque(false);
         jbToggle.setBorderPainted(false);
         jbToggle.setBorder(new EmptyBorder(0, 0, 0, 0));
-        jbToggle.setMargin(new JBInsets(16, 16, 16, 16));
         jlTitle = new JBLabel(title);
 
         init();
@@ -44,7 +43,7 @@ public class SpoilerPane extends JPanel {
         this.setBackground(content.getBackground());
 
         add(jbToggle, bag.nextLine().next().fillCellVertically());
-        add(jlTitle, bag.next().fillCellVertically());
+        add(jlTitle, bag.next().fillCellVertically().anchor(GridBagConstraints.NORTHWEST));
         setCollapsed(true);
 
         this.jbToggle.addActionListener(e -> setCollapsed(!isCollapsed));
