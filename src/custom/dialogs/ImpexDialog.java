@@ -11,6 +11,7 @@ import com.intellij.util.ui.GridBag;
 import custom.view.SpoilerPane;
 import javafx.scene.layout.VBox;
 import models.PackageTemplate;
+import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -92,14 +93,11 @@ public abstract class ImpexDialog extends DialogWrapper {
 
     @NotNull
     private JPanel getExportTab() {
-        JPanel panelExport = new JPanel();
-        panelExport.setLayout(new GridBagLayout());
-        GridBag bag = GridBagFactory.getGridBagForImpexDialog();
+        JPanel panelExport = new JPanel(new MigLayout());
 
         tfbButton = new TextFieldWithBrowseButton();
         tfbButton.addBrowseFolderListener(Localizer.get("ExportTemplatesTo"), "", project,
                 new FileChooserDescriptor(false, true, false, false, false, false));
-
 
         StateModel stateModel = SaveUtil.getInstance().getStateModel();
         listExpPackageTemplateWrapper = new ArrayList<>();
@@ -107,19 +105,17 @@ public abstract class ImpexDialog extends DialogWrapper {
             ExpPackageTemplateWrapper eptWrapper = new ExpPackageTemplateWrapper(true, pt);
             listExpPackageTemplateWrapper.add(eptWrapper);
 
-            JPanel content = new JPanel(new GridBagLayout());
-            GridBag gBag = GridBagFactory.getGridBagForImpexDialog();
+            // File templates
+            JPanel content = new JPanel(new MigLayout());
             for (ExpFileTemplateWrapper eftWrapper : eptWrapper.getListExpFileTemplateWrapper()) {
-                content.add(eftWrapper.cbInclude, gBag.nextLine().next());
-                content.add(eftWrapper.jlName, gBag.next());
+                content.add(eftWrapper.cbInclude, new CC());
+                content.add(eftWrapper.jlName, new CC().wrap().gapX("8", "0"));
             }
 
+            // Package Template
+            panelExport.add(eptWrapper.cbInclude, new CC().alignY("top"));
             SpoilerPane spoilerPane = new SpoilerPane(content, ExpandNode, CollapseNode, pt.getName());
-//            spoilerPane.init();
-
-            panelExport.add(eptWrapper.cbInclude, bag.nextLine().next().anchor(GridBagConstraints.NORTH));
-//            panelExport.add(eptWrapper.jlName, bag.next());
-            panelExport.add(spoilerPane, bag.next().insets(0, 24, 0, 0));
+            panelExport.add(spoilerPane, new CC().wrap().alignY("top").gapX("8", "0"));
         }
 
         //panelExport.add(tfbButton, bag.nextLine().next());
@@ -128,7 +124,7 @@ public abstract class ImpexDialog extends DialogWrapper {
 
     private JPanel wrapInDummyPanel(JPanel content) {
         JPanel panel = new JPanel(new MigLayout());
-        panel.add(content);
+        panel.add(content, new CC().grow().alignY("top"));
         return panel;
     }
 

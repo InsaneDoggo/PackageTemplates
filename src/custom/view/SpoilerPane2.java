@@ -2,7 +2,6 @@ package custom.view;
 
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
-import net.miginfocom.swing.MigLayout;
 import utils.GridBagFactory;
 
 import javax.swing.*;
@@ -12,17 +11,18 @@ import java.awt.*;
 /**
  * Created by Arsen on 16.08.2016.
  */
-public class SpoilerPane extends JPanel {
+public class SpoilerPane2 extends JPanel {
 
     private JButton jbToggle;
     private JComponent content;
     private Icon iconExpand;
     private Icon iconCollapse;
     private JBLabel jlTitle;
+    private GridBag bag;
 
     // CollapsiblePanel
 
-    public SpoilerPane(JComponent content, Icon iconExpand, Icon iconCollapse, String title) {
+    public SpoilerPane2(JComponent content, Icon iconExpand, Icon iconCollapse, String title) {
         this.content = content;
         this.iconExpand = iconExpand;
         this.iconCollapse = iconCollapse;
@@ -36,13 +36,13 @@ public class SpoilerPane extends JPanel {
     }
 
     public void init() {
-        setLayout(new MigLayout());
+        setLayout(new GridBagLayout());
+        bag = GridBagFactory.getBagForSpoiler();
+
         this.setBackground(content.getBackground());
 
-//        add(jbToggle, bag.nextLine().next().fillCellVertically());
-        add(jbToggle, "");
-//        add(jlTitle, bag.next().fillCellVertically().anchor(GridBagConstraints.NORTHWEST));
-        add(jlTitle, ", wrap");
+        add(jbToggle, bag.nextLine().next().fillCellVertically());
+        add(jlTitle, bag.next().fillCellVertically().anchor(GridBagConstraints.NORTHWEST));
         setCollapsed(true);
 
         this.jbToggle.addActionListener(e -> setCollapsed(!isCollapsed));
@@ -58,8 +58,7 @@ public class SpoilerPane extends JPanel {
                     remove(content);
                 }
             } else {
-//                add(content, bag.nextLine().next().coverLine().setLine(1));
-                add(content, "cell 0 1, span");
+                add(content, bag.nextLine().next().coverLine().setLine(1));
             }
 
             isCollapsed = collapse;
