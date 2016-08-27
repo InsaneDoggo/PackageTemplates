@@ -1,4 +1,4 @@
-package core.state.export.models;
+package core.state.impex.models;
 
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
@@ -8,26 +8,16 @@ import com.intellij.ui.components.JBLabel;
  */
 public class ExpFileTemplateWrapper {
 
-    private boolean isSelected;
     private ExpFileTemplate template;
 
     public JBCheckBox cbInclude;
     public JBLabel jlName;
 
     public ExpFileTemplateWrapper(boolean isSelected, ExpFileTemplate template) {
-        this.isSelected = isSelected;
         this.template = template;
 
         cbInclude = new JBCheckBox("", isSelected);
         jlName = new JBLabel(template.getName());
-    }
-
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
     }
 
     public ExpFileTemplate getTemplate() {

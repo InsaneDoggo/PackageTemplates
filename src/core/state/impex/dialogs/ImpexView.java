@@ -1,6 +1,6 @@
-package core.state.export.dialogs;
+package core.state.impex.dialogs;
 
-import core.state.export.models.ExpPackageTemplateWrapper;
+import core.state.impex.models.ExpPackageTemplateWrapper;
 
 import java.util.ArrayList;
 

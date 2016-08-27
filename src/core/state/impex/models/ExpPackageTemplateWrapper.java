@@ -1,4 +1,4 @@
-package core.state.export.models;
+package core.state.impex.models;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ui.components.JBCheckBox;
@@ -87,5 +87,15 @@ public class ExpPackageTemplateWrapper {
 
     public String getName() {
         return epTemplate.getPackageTemplate().getName();
+    }
+
+    public ExpPackageTemplate getTemplateForExport() {
+        for(ExpFileTemplateWrapper item : listExpFileTemplateWrapper ){
+            if(item.cbInclude.isSelected()){
+                epTemplate.getListExpFileTemplate().add(item.getTemplate());
+            }
+        }
+
+        return epTemplate;
     }
 }

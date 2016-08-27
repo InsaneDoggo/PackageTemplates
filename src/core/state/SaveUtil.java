@@ -2,8 +2,8 @@ package core.state;
 
 import com.google.gson.Gson;
 import com.intellij.openapi.components.ServiceManager;
-import core.state.export.Exporter;
-import core.state.export.models.ExportBundle;
+import core.state.impex.Exporter;
+import core.state.impex.models.ExportBundle;
 import core.state.models.StateModel;
 import core.state.models.StateWrapper;
 import global.utils.GsonFactory;

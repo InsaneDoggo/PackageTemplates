@@ -1,4 +1,4 @@
-package core.state.export.dialogs;
+package core.state.impex.dialogs;
 
 import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.project.Project;
@@ -8,13 +8,11 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.TabbedPaneImpl;
 import com.intellij.ui.components.JBScrollPane;
 import global.views.SpoilerPane;
-import global.models.PackageTemplate;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import core.state.export.models.ExpFileTemplateWrapper;
-import core.state.export.models.ExpPackageTemplateWrapper;
+import core.state.impex.models.ExpFileTemplateWrapper;
+import core.state.impex.models.ExpPackageTemplateWrapper;
 import global.utils.Localizer;
 
 import javax.swing.*;
@@ -53,7 +51,7 @@ public abstract class ImpexDialog extends DialogWrapper implements ImpexView {
     @Override
     public void show() {
         super.show();
-        presenter.onExit(getExitCode(), tfbButton.getText());
+        presenter.onExit(getExitCode());
     }
 
     @Override
@@ -88,7 +86,6 @@ public abstract class ImpexDialog extends DialogWrapper implements ImpexView {
         tfbButton = new TextFieldWithBrowseButton();
         tfbButton.addBrowseFolderListener(Localizer.get("ExportTemplatesTo"), "", project,
                 new FileChooserDescriptor(false, true, false, false, false, false));
-
 
         for (ExpPackageTemplateWrapper eptWrapper : listExpPackageTemplateWrapper) {
             // File templates

@@ -10,7 +10,7 @@ import com.intellij.util.ui.GridBag;
 import global.listeners.ReleaseListener;
 import global.models.TemplateListModel;
 import global.models.PackageTemplate;
-import core.state.export.dialogs.ImpexDialog;
+import core.state.impex.dialogs.ImpexDialog;
 import org.jetbrains.annotations.NotNull;
 import core.state.SaveUtil;
 import core.state.models.StateModel;

@@ -1,6 +1,6 @@
-package core.state.export;
+package core.state.impex;
 
-import core.state.export.models.ExportBundle;
+import core.state.impex.models.ExportBundle;
 import core.state.models.StateModel;
 
 /**

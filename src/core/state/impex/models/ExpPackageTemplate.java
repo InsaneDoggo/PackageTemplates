@@ -1,4 +1,4 @@
-package core.state.export.models;
+package core.state.impex.models;
 
 import com.google.gson.annotations.Expose;
 import global.models.PackageTemplate;

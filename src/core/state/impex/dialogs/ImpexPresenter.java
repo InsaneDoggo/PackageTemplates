@@ -1,8 +1,10 @@
-package core.state.export.dialogs;
+package core.state.impex.dialogs;
 
 import com.intellij.openapi.ui.ValidationInfo;
+import core.state.MigrationHelper;
 import core.state.SaveUtil;
-import core.state.export.models.ExpPackageTemplateWrapper;
+import core.state.impex.models.ExpPackageTemplateWrapper;
+import core.state.impex.models.ExportBundle;
 import core.state.models.StateModel;
 import global.models.PackageTemplate;
 import global.utils.FileWriter;
@@ -36,19 +38,33 @@ public class ImpexPresenter {
     public void onCreateCenterPanel() {
         listExpPackageTemplateWrapper = new ArrayList<>();
         for (PackageTemplate pt : stateModel.getListPackageTemplate()) {
-            ExpPackageTemplateWrapper eptWrapper = new ExpPackageTemplateWrapper(true, pt);
-            listExpPackageTemplateWrapper.add(eptWrapper);
+            listExpPackageTemplateWrapper.add(new ExpPackageTemplateWrapper(true, pt));
         }
 
         view.addExportTab(listExpPackageTemplateWrapper);
         view.addImportTab();
     }
 
-    public void onExit(int exitCode, String savePath) {
+    public void exportTemplates(String savePath){
+        FileWriter.exportFile(savePath, "Templates.json", getContent());
+    }
+
+    private String getContent() {
+        ExportBundle bundle = new ExportBundle();
+        bundle.setModelVersion(MigrationHelper.CURRENT_MODEL_VERSION);
+        bundle.setListPackageTemplate(new ArrayList<>());
+
+        for(ExpPackageTemplateWrapper item : listExpPackageTemplateWrapper){
+            if( item.cbInclude.isSelected()){
+                bundle.getListPackageTemplate().add(item.getTemplateForExport());
+            }
+        }
+        return null;
+    }
+
+    public void onExit(int exitCode) {
         switch (exitCode) {
             case ImpexDialog.OK_EXIT_CODE:
-                String content = SaveUtil.getInstance().getTemplatesForExport();
-                FileWriter.exportFile(savePath, "Templates.json", content);
                 view.onSuccess();
                 break;
             case ImpexDialog.CANCEL_EXIT_CODE:
