@@ -28,14 +28,14 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-                serviceInterface="state.Config"
-                serviceImplementation="state.Config"/>
+                serviceInterface="core.state.Config"
+                serviceImplementation="core.state.Config"/>
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
         <action id="PackageTemplate"
-                class="NewPackageTemplateAction"
+                class="core.actions.newPackageTemplate.NewPackageTemplateAction"
                 text="New PackageTemplate">
             <add-to-group group-id="ProjectViewPopupMenu"
                           anchor="first"/>
