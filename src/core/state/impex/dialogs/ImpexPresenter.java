@@ -6,8 +6,10 @@ import core.state.SaveUtil;
 import core.state.impex.models.ExpPackageTemplateWrapper;
 import core.state.impex.models.ExportBundle;
 import core.state.models.StateModel;
+import global.Const;
 import global.models.PackageTemplate;
 import global.utils.FileWriter;
+import global.utils.GsonFactory;
 import global.utils.Localizer;
 
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ public class ImpexPresenter {
         stateModel = SaveUtil.getInstance().getStateModel();
     }
 
-    public ValidationInfo doValidate(String savePath){
+    public ValidationInfo doValidate(String savePath) {
         if (savePath.isEmpty()) {
             return new ValidationInfo(Localizer.get("FillEmptyFields"));
         }
@@ -45,8 +47,8 @@ public class ImpexPresenter {
         view.addImportTab();
     }
 
-    public void exportTemplates(String savePath){
-        FileWriter.exportFile(savePath, "Templates.json", getContent());
+    public void exportTemplates(String savePath) {
+        FileWriter.exportFile(savePath, Const.EXPORT_FILE_NAME, getContent());
     }
 
     private String getContent() {
@@ -54,22 +56,12 @@ public class ImpexPresenter {
         bundle.setModelVersion(MigrationHelper.CURRENT_MODEL_VERSION);
         bundle.setListPackageTemplate(new ArrayList<>());
 
-        for(ExpPackageTemplateWrapper item : listExpPackageTemplateWrapper){
-            if( item.cbInclude.isSelected()){
+        for (ExpPackageTemplateWrapper item : listExpPackageTemplateWrapper) {
+            if (item.cbInclude.isSelected()) {
                 bundle.getListPackageTemplate().add(item.getTemplateForExport());
             }
         }
-        return null;
-    }
 
-    public void onExit(int exitCode) {
-        switch (exitCode) {
-            case ImpexDialog.OK_EXIT_CODE:
-                view.onSuccess();
-                break;
-            case ImpexDialog.CANCEL_EXIT_CODE:
-                view.onCancel();
-                break;
-        }
+        return GsonFactory.getInstance().toJson(bundle, ExportBundle.class);
     }
 }

@@ -28,7 +28,7 @@ public class BaseElementConverter implements JsonSerializer<BaseElement>, JsonDe
     @Override
     public JsonElement serialize(BaseElement item, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonElement jsonEle = jsonSerializationContext.serialize(item, item.getClass());
-        jsonEle.getAsJsonObject().addProperty(CLASS_META_KEY, item.getClass().getCanonicalName());
+        jsonEle.getAsJsonObject().addProperty(CLASS_META_KEY, item.getClass().getSimpleName());
         return jsonEle;
     }
 }

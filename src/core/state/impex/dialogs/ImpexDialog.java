@@ -49,14 +49,25 @@ public abstract class ImpexDialog extends DialogWrapper implements ImpexView {
     }
 
     @Override
-    public void show() {
-        super.show();
-        presenter.onExit(getExitCode());
+    protected ValidationInfo doValidate() {
+        return presenter.doValidate(tfbButton.getText());
     }
 
     @Override
-    protected ValidationInfo doValidate() {
-        return presenter.doValidate(tfbButton.getText());
+    protected void doOKAction() {
+        System.out.println("doOKAction");
+        //todo my action
+        presenter.exportTemplates(tfbButton.getText());
+        super.doOKAction();
+        onSuccess();
+    }
+
+    @Override
+    public void doCancelAction() {
+        System.out.println("doCancelAction");
+        //todo my action
+        super.doCancelAction();
+        onCancel();
     }
 
     private TabbedPaneImpl tabContainer;
@@ -82,6 +93,7 @@ public abstract class ImpexDialog extends DialogWrapper implements ImpexView {
     @Override
     public void addExportTab(ArrayList<ExpPackageTemplateWrapper> listExpPackageTemplateWrapper) {
         JPanel panelExport = new JPanel(new MigLayout());
+        panelExport.setMinimumSize(new Dimension(480, 480));
 
         tfbButton = new TextFieldWithBrowseButton();
         tfbButton.addBrowseFolderListener(Localizer.get("ExportTemplatesTo"), "", project,

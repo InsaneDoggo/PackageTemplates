@@ -14,6 +14,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.FileWrapper;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +55,7 @@ public class FileWriter {
             }
         }), null, null);
 
-        if(directory[0] == null){
+        if (directory[0] == null) {
             //todo print error
         }
 
@@ -86,14 +87,28 @@ public class FileWriter {
 
     public static boolean exportFile(String path, String fileName, String content) {
         try {
-            FileUtil.writeToFile(new File(path + "/" + fileName), content);
+            File file = createFile(path, fileName);
+
+            FileUtil.writeToFile(file, content);
         } catch (IOException e) {
             //todo print error
             System.out.println(e.getMessage());
             return false;
         }
-
         return true;
+    }
+
+    @NotNull
+    private static File createFile(String path, String fileName) {
+        File file = new File(path + "/" + fileName);
+
+        while (file.exists() && !file.isDirectory()){
+            System.out.println("Exist");
+            //todo overwrite or change name dialog
+            break;
+        }
+
+        return file;
     }
 
 }
