@@ -1,8 +1,11 @@
 package global;
 
+import global.models.File;
+
 /**
  * Created by Arsen on 04.09.2016.
  */
 public interface Const {
     String EXPORT_FILE_NAME = "Templates.json";
+    String MODELS_PACKAGE_PATH = File.class.getCanonicalName().substring(0, File.class.getCanonicalName().length() - File.class.getSimpleName().length());
 }

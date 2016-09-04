@@ -40,6 +40,18 @@ public class ExpPackageTemplateWrapper {
         jlName = new JBLabel(pt.getName());
     }
 
+    public ExpPackageTemplateWrapper(boolean isSelected, ExpPackageTemplate ept) {
+        this.isSelected = isSelected;
+        epTemplate = ept;
+        listExpFileTemplateWrapper = new ArrayList<>();
+        for (ExpFileTemplate efTemplate : epTemplate.getListExpFileTemplate()){
+            listExpFileTemplateWrapper.add(new ExpFileTemplateWrapper(true, efTemplate));
+        }
+
+        cbInclude = new JBCheckBox("", isSelected);
+        jlName = new JBLabel(ept.getPackageTemplate().getName());
+    }
+
     public boolean isSelected() {
         return isSelected;
     }

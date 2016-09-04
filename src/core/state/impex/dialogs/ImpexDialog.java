@@ -1,28 +1,24 @@
 package core.state.impex.dialogs;
 
-import com.intellij.openapi.fileChooser.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.TabbedPaneImpl;
 import com.intellij.ui.components.JBScrollPane;
-import global.views.SpoilerPane;
+import core.state.impex.models.ExpPackageTemplateWrapper;
+import global.utils.Localizer;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
-import core.state.impex.models.ExpFileTemplateWrapper;
-import core.state.impex.models.ExpPackageTemplateWrapper;
-import global.utils.Localizer;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.ArrayList;
 
 import static com.intellij.icons.AllIcons.General.ExportSettings;
 import static com.intellij.icons.AllIcons.General.ImportSettings;
-import static com.intellij.icons.AllIcons.Nodes.CollapseNode;
-import static com.intellij.icons.AllIcons.Nodes.ExpandNode;
 
 /**
  * Created by CeH9 on 04.07.2016.
@@ -35,8 +31,6 @@ public abstract class ImpexDialog extends DialogWrapper implements ImpexView {
     public abstract void onCancel();
 
     private Project project;
-    private TextFieldWithBrowseButton tfbButton;
-
     private ImpexPresenter presenter;
 
     public ImpexDialog(@Nullable Project project, String title) {
@@ -50,22 +44,18 @@ public abstract class ImpexDialog extends DialogWrapper implements ImpexView {
 
     @Override
     protected ValidationInfo doValidate() {
-        return presenter.doValidate(tfbButton.getText());
+        return presenter.doValidate(exportTab.getBtnPath().getText());
     }
 
     @Override
     protected void doOKAction() {
-        System.out.println("doOKAction");
-        //todo my action
-        presenter.exportTemplates(tfbButton.getText());
+        presenter.exportTemplates(exportTab.getBtnPath().getText());
         super.doOKAction();
         onSuccess();
     }
 
     @Override
     public void doCancelAction() {
-        System.out.println("doCancelAction");
-        //todo my action
         super.doCancelAction();
         onCancel();
     }
@@ -76,45 +66,41 @@ public abstract class ImpexDialog extends DialogWrapper implements ImpexView {
     @Override
     protected JComponent createCenterPanel() {
         tabContainer = new TabbedPaneImpl(JTabbedPane.TOP);
-        tabContainer.setMinimumSize(new Dimension(640, 480));
         tabContainer.setKeyboardNavigation(TabbedPaneImpl.DEFAULT_PREV_NEXT_SHORTCUTS);
         tabContainer.setAlignmentY(Component.TOP_ALIGNMENT);
+
+        tabContainer.addChangeListener(e -> {
+            String title = tabContainer.getTitleAt(tabContainer.getSelectedIndex());
+
+            if(title.equals(Localizer.get("Import"))){
+                presenter.setCurrentTab(ImpexPresenter.TabType.IMPORT);
+                return;
+            }
+            if(title.equals(Localizer.get("Export"))){
+                presenter.setCurrentTab(ImpexPresenter.TabType.EXPORT);
+                return;
+            }
+        });
 
         presenter.onCreateCenterPanel();
 
         return new JBScrollPane(tabContainer);
     }
 
+    private ImportTab importTab;
+
     @Override
     public void addImportTab() {
-        tabContainer.addTab(Localizer.get("Import"), ImportSettings, new JPanel());
+        importTab = new ImportTab(project);
+        tabContainer.addTab(Localizer.get("Import"), ImportSettings, wrapInDummyPanel(importTab.getPanel()));
     }
+
+    private ExportTab exportTab;
 
     @Override
     public void addExportTab(ArrayList<ExpPackageTemplateWrapper> listExpPackageTemplateWrapper) {
-        JPanel panelExport = new JPanel(new MigLayout());
-        panelExport.setMinimumSize(new Dimension(480, 480));
-
-        tfbButton = new TextFieldWithBrowseButton();
-        tfbButton.addBrowseFolderListener(Localizer.get("ExportTemplatesTo"), "", project,
-                new FileChooserDescriptor(false, true, false, false, false, false));
-
-        for (ExpPackageTemplateWrapper eptWrapper : listExpPackageTemplateWrapper) {
-            // File templates
-            JPanel content = new JPanel(new MigLayout());
-            for (ExpFileTemplateWrapper eftWrapper : eptWrapper.getListExpFileTemplateWrapper()) {
-                content.add(eftWrapper.cbInclude, new CC());
-                content.add(eftWrapper.jlName, new CC().wrap().gapX("8", "0"));
-            }
-
-            // Package Template
-            panelExport.add(eptWrapper.cbInclude, new CC().alignY("top"));
-            SpoilerPane spoilerPane = new SpoilerPane(content, ExpandNode, CollapseNode, eptWrapper.getName());
-            panelExport.add(spoilerPane, new CC().wrap().alignY("top").gapX("8", "0"));
-        }
-
-        panelExport.add(tfbButton, new CC().spanX().wrap().gapY("12", "12"));
-        tabContainer.addTab(Localizer.get("Export"), ExportSettings, wrapInDummyPanel(panelExport));
+        exportTab = new ExportTab(project, listExpPackageTemplateWrapper);
+        tabContainer.addTab(Localizer.get("Export"), ExportSettings, wrapInDummyPanel(exportTab.getPanel()));
     }
 
     private JPanel wrapInDummyPanel(JPanel content) {

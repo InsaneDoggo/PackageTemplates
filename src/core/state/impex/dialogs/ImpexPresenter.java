@@ -29,6 +29,21 @@ public class ImpexPresenter {
     }
 
     public ValidationInfo doValidate(String savePath) {
+        switch (curTab){
+            case IMPORT:
+                return validateExport(savePath);
+            case EXPORT:
+                return validateImport();
+        }
+        return null;
+    }
+
+    private ValidationInfo validateImport() {
+        // TODO: 04.09.2016  validateImport
+        return null;
+    }
+
+    private ValidationInfo validateExport(String savePath) {
         if (savePath.isEmpty()) {
             return new ValidationInfo(Localizer.get("FillEmptyFields"));
         }
@@ -43,8 +58,8 @@ public class ImpexPresenter {
             listExpPackageTemplateWrapper.add(new ExpPackageTemplateWrapper(true, pt));
         }
 
-        view.addExportTab(listExpPackageTemplateWrapper);
         view.addImportTab();
+        view.addExportTab(listExpPackageTemplateWrapper);
     }
 
     public void exportTemplates(String savePath) {
@@ -64,4 +79,13 @@ public class ImpexPresenter {
 
         return GsonFactory.getInstance().toJson(bundle, ExportBundle.class);
     }
+
+    public enum TabType {IMPORT, EXPORT}
+
+    TabType curTab;
+
+    public void setCurrentTab(TabType type) {
+        curTab = type;
+    }
+
 }

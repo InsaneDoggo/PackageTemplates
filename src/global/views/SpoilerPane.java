@@ -1,6 +1,7 @@
 package global.views;
 
 import com.intellij.ui.components.JBLabel;
+import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -37,9 +38,9 @@ public class SpoilerPane extends JPanel {
         this.setBackground(content.getBackground());
 
 //        add(jbToggle, bag.nextLine().next().fillCellVertically());
-        add(jbToggle, "");
+        add(jbToggle, new CC().alignX("left"));
 //        add(jlTitle, bag.next().fillCellVertically().anchor(GridBagConstraints.NORTHWEST));
-        add(jlTitle, ", wrap");
+        add(jlTitle, new CC().wrap().alignX("left"));
         setCollapsed(true);
 
         this.jbToggle.addActionListener(e -> setCollapsed(!isCollapsed));

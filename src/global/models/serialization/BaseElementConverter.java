@@ -1,6 +1,7 @@
 package global.models.serialization;
 
 import com.google.gson.*;
+import global.Const;
 import global.models.BaseElement;
 
 import java.lang.reflect.Type;
@@ -17,7 +18,7 @@ public class BaseElementConverter implements JsonSerializer<BaseElement>, JsonDe
         JsonObject jsonObj = jsonElement.getAsJsonObject();
         String className = jsonObj.get(CLASS_META_KEY).getAsString();
         try {
-            Class<?> clz = Class.forName(className);
+            Class<?> clz = Class.forName(Const.MODELS_PACKAGE_PATH + className);
             return jsonDeserializationContext.deserialize(jsonElement, clz);
         } catch (ClassNotFoundException e) {
             throw new JsonParseException(e);

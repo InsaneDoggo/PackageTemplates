@@ -37,7 +37,7 @@ public abstract class FailedFilesDialog extends BaseDialog {
         panel.setLayout(new GridBagLayout());
         GridBag gridBag = GridBagFactory.getBagForFailedFilesDialog();
 
-        panel.add(new JBLabel(Localizer.get("NextElementsHaventBeenCreated")), gridBag.nextLine().next().insets(4,0,16,0));
+        panel.add(new JBLabel(Localizer.get("notification.NextElementsHaventBeenCreated")), gridBag.nextLine().next().insets(4,0,16,0));
 
         for (ElementWrapper eWrapper : ptWrapper.getFailedElements()){
             JBLabel label;
@@ -49,7 +49,7 @@ public abstract class FailedFilesDialog extends BaseDialog {
             panel.add(label, gridBag.nextLine().next());
         }
 
-        panel.add(new JBLabel(Localizer.get("NotePressCancelToDeleteCreatedFiles")), gridBag.nextLine().next().insets(16,0,4,0));
+        panel.add(new JBLabel(Localizer.get("notification.NotePressCancelToDeleteCreatedFiles")), gridBag.nextLine().next().insets(16,0,4,0));
     }
 
     @Override
