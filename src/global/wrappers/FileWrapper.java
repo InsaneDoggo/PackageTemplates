@@ -60,7 +60,9 @@ public class FileWrapper extends ElementWrapper {
             if (fileTemplate != null) {
                 String[] unsetAttributes = AttributesHelper.getUnsetAttrs(fileTemplate, getPackageTemplateWrapper().getProject());
                 if (unsetAttributes != null && unsetAttributes.length > 0) {
-                    panelVariables = new CreateFromTemplatePanel(unsetAttributes, false, null);
+                    panelVariables = new CreateFromTemplatePanel(
+                            AttributesHelper.getNonGlobalAttributes(unsetAttributes, getPackageTemplateWrapper().getPackageTemplate().getListGlobalVariable())
+                            , false, null);
 
                     JComponent component = panelVariables.getComponent();
                     UIHelper.setLeftPadding(component, UIHelper.PADDING);

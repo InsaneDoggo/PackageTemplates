@@ -18,13 +18,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Arsen on 07.07.2016.
  */
 public class PackageTemplateWrapper {
 
-    public static final java.lang.String ATTRIBUTE_BASE_NAME = "BASE_NAME";
+    public static final String ATTRIBUTE_BASE_NAME = "BASE_NAME";
+    public static final String PATTERN_BASE_NAME = "${"+ATTRIBUTE_BASE_NAME+"}";
 
     public enum ViewMode {EDIT, CREATE, USAGE}
 
@@ -171,6 +173,11 @@ public class PackageTemplateWrapper {
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
             variableWrapper.collectDataFromFields();
             if (getMode() == ViewMode.USAGE) {
+                // Replace ${BASE_NAME}
+                if (!variableWrapper.getGlobalVariable().getName().equals(ATTRIBUTE_BASE_NAME)) {
+                    variableWrapper.replaceBaseName(packageTemplate.getMapGlobalVars().get(ATTRIBUTE_BASE_NAME));
+                }
+                // Groovy
                 variableWrapper.runGroovyScript();
             }
             packageTemplate.getMapGlobalVars().put(variableWrapper.getGlobalVariable().getName(), variableWrapper.getGlobalVariable().getValue());

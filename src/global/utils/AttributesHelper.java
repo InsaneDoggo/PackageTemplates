@@ -3,14 +3,12 @@ package global.utils;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
+import global.models.GlobalVariable;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.Nullable;
 import global.wrappers.PackageTemplateWrapper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by CeH9 on 15.07.2016.
@@ -55,4 +53,23 @@ public class AttributesHelper {
         return result;
     }
 
+    public static String[] getNonGlobalAttributes(String[] unsetAttributes, ArrayList<GlobalVariable> listGlobalVariable) {
+        List<String> listUnset = new ArrayList<>(Arrays.asList(unsetAttributes));
+        List<String> listGlobals = new ArrayList<>();
+
+        for (GlobalVariable variable : listGlobalVariable){
+            listGlobals.add(variable.getName());
+        }
+
+        Iterator<String> iterator = listUnset.iterator();
+
+        while (iterator.hasNext()) {
+            String next = iterator.next();
+            if (listGlobals.contains(next)) {
+                iterator.remove();
+            }
+        }
+
+        return listUnset.toArray(new String[listUnset.size()]);
+    }
 }

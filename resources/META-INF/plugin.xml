@@ -37,8 +37,9 @@
         <action id="PackageTemplate"
                 class="core.actions.newPackageTemplate.NewPackageTemplateAction"
                 text="New PackageTemplate">
-            <add-to-group group-id="ProjectViewPopupMenu"
-                          anchor="first"/>
+            <add-to-group group-id="NewGroup"
+                          relative-to-action="NewFile"
+                          anchor="before"/>
         </action>
     </actions>
 

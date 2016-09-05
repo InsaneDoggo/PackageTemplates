@@ -18,31 +18,31 @@ public class NewPackageTemplateAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent event) {
         SaveUtil.getInstance().load();
-//        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
-//            @Override
-//            public void onSuccess(PackageTemplate packageTemplate) {
-//                showDialog(event, packageTemplate);
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//            }
-//        };
-//        dialog.show();
-
-
-        ImpexDialog dialog = new ImpexDialog(event.getProject(), "Export Templates") {
+        SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
-            public void onSuccess() {
-                System.out.println("onSuccess");
+            public void onSuccess(PackageTemplate packageTemplate) {
+                showDialog(event, packageTemplate);
             }
 
             @Override
             public void onCancel() {
-                System.out.println("onCancel");
             }
         };
         dialog.show();
+
+
+//        ImpexDialog dialog = new ImpexDialog(event.getProject(), "Export Templates") {
+//            @Override
+//            public void onSuccess() {
+//                System.out.println("onSuccess");
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                System.out.println("onCancel");
+//            }
+//        };
+//        dialog.show();
 
     }
 

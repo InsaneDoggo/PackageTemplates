@@ -23,6 +23,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 import static global.utils.UIHelper.PADDING_LABEL;
+import static global.wrappers.PackageTemplateWrapper.ATTRIBUTE_BASE_NAME;
+import static global.wrappers.PackageTemplateWrapper.PATTERN_BASE_NAME;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -139,7 +141,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
 
         popupMenu.add(itemAddVariable);
         addGroovyMenuItems(popupMenu, ptWrapper.getProject());
-        if (!getGlobalVariable().getName().equals(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME)) {
+        if (!getGlobalVariable().getName().equals(ATTRIBUTE_BASE_NAME)) {
             popupMenu.add(itemDelete);
         }
         return popupMenu;
@@ -231,4 +233,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
         }
     }
 
+    public void replaceBaseName(String baseName) {
+        globalVariable.setValue(globalVariable.getValue().replace(PATTERN_BASE_NAME, baseName));
+    }
 }
