@@ -60,8 +60,8 @@ public class ExpPackageTemplateWrapper {
         return listExpFileTemplateWrapper;
     }
 
-    private ArrayList<ExpFileTemplate> getListFileTemplates(PackageTemplate pt) {
-        ArrayList<ExpFileTemplate> result = new ArrayList<>();
+    private Set<ExpFileTemplate> getListFileTemplates(PackageTemplate pt) {
+        Set<ExpFileTemplate> result = new HashSet<>();
 
         Set<String> names = new HashSet<>();
         initFileTemplateNames(names, pt.getDirectory());
@@ -69,11 +69,11 @@ public class ExpPackageTemplateWrapper {
         for (String name : names) {
             FileTemplate fileTemplate = AttributesHelper.getTemplate(name);
             if (fileTemplate == null) {
-                System.out.println("Skip null :" + name);
+                //System.out.println("Skip null :" + name);
                 continue;
             }
             if (fileTemplate.isDefault()) {
-                System.out.println("Skip Default :" + name);
+                //System.out.println("Skip Default :" + name);
                 continue;
             }
             result.add(new ExpFileTemplate(

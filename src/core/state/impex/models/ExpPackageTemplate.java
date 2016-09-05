@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import global.models.PackageTemplate;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Created by Arsen on 16.08.2016.
@@ -13,9 +14,9 @@ public class ExpPackageTemplate {
     @Expose
     private PackageTemplate packageTemplate;
     @Expose
-    private ArrayList<ExpFileTemplate> listExpFileTemplate;
+    private Set<ExpFileTemplate> listExpFileTemplate;
 
-    public ExpPackageTemplate(PackageTemplate packageTemplate, ArrayList<ExpFileTemplate> listExpFileTemplate) {
+    public ExpPackageTemplate(PackageTemplate packageTemplate, Set<ExpFileTemplate> listExpFileTemplate) {
         this.packageTemplate = packageTemplate;
         this.listExpFileTemplate = listExpFileTemplate;
     }
@@ -28,11 +29,11 @@ public class ExpPackageTemplate {
         this.packageTemplate = packageTemplate;
     }
 
-    public ArrayList<ExpFileTemplate> getListExpFileTemplate() {
+    public Set<ExpFileTemplate> getListExpFileTemplate() {
         return listExpFileTemplate;
     }
 
-    public void setListExpFileTemplate(ArrayList<ExpFileTemplate> listExpFileTemplate) {
+    public void setListExpFileTemplate(Set<ExpFileTemplate> listExpFileTemplate) {
         this.listExpFileTemplate = listExpFileTemplate;
     }
 }
