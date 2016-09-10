@@ -22,6 +22,8 @@ public class PackageTemplate {
     private ArrayList<GlobalVariable> listGlobalVariable;
     @Expose
     private boolean skipRootDirectory;
+    @Expose
+    private boolean skipDefiningNames;
 
     public boolean isSkipRootDirectory() {
         return skipRootDirectory;
@@ -69,5 +71,13 @@ public class PackageTemplate {
 
     public void setListGlobalVariable(ArrayList<GlobalVariable> listGlobalVariable) {
         this.listGlobalVariable = listGlobalVariable;
+    }
+
+    public boolean isSkipDefiningNames() {
+        return skipDefiningNames;
+    }
+
+    public void setSkipDefiningNames(boolean skipDefiningNames) {
+        this.skipDefiningNames = skipDefiningNames;
     }
 }

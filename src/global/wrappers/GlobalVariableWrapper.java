@@ -90,6 +90,11 @@ public class GlobalVariableWrapper extends BaseWrapper {
             });
         }
 
+        // Lock modifying BASE_NAME
+        if (getGlobalVariable().getName().equals(ATTRIBUTE_BASE_NAME)) {
+            tfKey.setEnabled(false);
+        }
+
         tfKey.setPreferredWidth(0);
         tfValue.setPreferredWidth(0);
 

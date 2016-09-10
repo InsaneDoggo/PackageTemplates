@@ -32,6 +32,7 @@ public abstract class ElementWrapper extends BaseWrapper {
     public JLabel jlName;
     public EditorTextField etfName;
     private DirectoryWrapper parent;
+    private Exception writeException;
 
     private PackageTemplateWrapper packageTemplateWrapper;
 
@@ -234,4 +235,11 @@ public abstract class ElementWrapper extends BaseWrapper {
         dialog.show();
     }
 
+    public Exception getWriteException() {
+        return writeException;
+    }
+
+    public void setWriteException(Exception writeException) {
+        this.writeException = writeException;
+    }
 }

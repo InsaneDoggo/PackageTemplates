@@ -1,10 +1,12 @@
 package global.wrappers;
 
 import com.google.common.collect.Lists;
+import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.EditorTextField;
@@ -19,6 +21,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by Arsen on 07.07.2016.
@@ -26,7 +29,17 @@ import java.util.Map;
 public class PackageTemplateWrapper {
 
     public static final String ATTRIBUTE_BASE_NAME = "BASE_NAME";
-    public static final String PATTERN_BASE_NAME = "${"+ATTRIBUTE_BASE_NAME+"}";
+    public static final String PATTERN_BASE_NAME = "${" + ATTRIBUTE_BASE_NAME + "}";
+
+    private Properties defaultProperties;
+
+    public void initDefaultProperties() {
+        defaultProperties = FileTemplateManager.getInstance(getProject()).getDefaultProperties();
+    }
+
+    public Properties getDefaultProperties() {
+        return defaultProperties;
+    }
 
     public enum ViewMode {EDIT, CREATE, USAGE}
 
@@ -226,19 +239,21 @@ public class PackageTemplateWrapper {
         rootElement.runGroovyScript();
     }
 
-    public void writeTemplate(AnActionEvent event) {
-        PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
+    public void writeTemplate(Project project, VirtualFile virtualFile) {
+        PsiDirectory currentDir = FileWriter.findCurrentDirectory(project, virtualFile);
         if (currentDir != null) {
             failedElements = new ArrayList<>();
             writtenElements = new ArrayList<>();
-            rootElement.writeFile(currentDir, event.getProject());
+            initDefaultProperties();
+            rootElement.writeFile(currentDir, project);
         }
 
         if (!failedElements.isEmpty()) {
             //show dialog
-            new FailedFilesDialog(event, Localizer.get("ErrorDialog"), this) {
+            new FailedFilesDialog(project, Localizer.get("ErrorDialog"), this) {
                 @Override
-                public void onSuccess() {}
+                public void onSuccess() {
+                }
 
                 @Override
                 public void onCancel() {

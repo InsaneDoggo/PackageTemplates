@@ -3,6 +3,11 @@ package global.dialogs;
 import base.BaseDialog;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.diff.impl.processing.HorizontalDiffSplitter;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.JBSplitter;
+import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import global.utils.*;
@@ -25,8 +30,8 @@ public abstract class FailedFilesDialog extends BaseDialog {
     private PackageTemplateWrapper ptWrapper;
 
 
-    public FailedFilesDialog(AnActionEvent event, String title, PackageTemplateWrapper ptWrapper) {
-        super(event.getProject());
+    public FailedFilesDialog(Project project, String title, PackageTemplateWrapper ptWrapper) {
+        super(project);
         this.ptWrapper = ptWrapper;
         init();
         setTitle(title);
@@ -37,7 +42,8 @@ public abstract class FailedFilesDialog extends BaseDialog {
         panel.setLayout(new GridBagLayout());
         GridBag gridBag = GridBagFactory.getBagForFailedFilesDialog();
 
-        panel.add(new JBLabel(Localizer.get("notification.NextElementsHaventBeenCreated")), gridBag.nextLine().next().insets(4,0,16,0));
+        panel.add(new JBLabel(Localizer.get("notification.NextElementsHaventBeenCreated")), gridBag.nextLine().next());
+        panel.add(new SeparatorComponent(), gridBag.nextLine().next());
 
         for (ElementWrapper eWrapper : ptWrapper.getFailedElements()){
             JBLabel label;
@@ -47,9 +53,14 @@ public abstract class FailedFilesDialog extends BaseDialog {
                 label = new JBLabel(eWrapper.getElement().getName(), UIHelper.getIconByFileExtension(((FileWrapper) eWrapper).getFile().getExtension()), SwingConstants.LEFT);
             }
             panel.add(label, gridBag.nextLine().next());
+            if(eWrapper.getWriteException() != null && eWrapper.getWriteException().getMessage() != null){
+                JBLabel labelException = new JBLabel("Error message: " + eWrapper.getWriteException().getMessage());
+                panel.add(labelException, gridBag.nextLine().next().insets(0,32,0,0));
+            }
         }
 
-        panel.add(new JBLabel(Localizer.get("notification.NotePressCancelToDeleteCreatedFiles")), gridBag.nextLine().next().insets(16,0,4,0));
+        panel.add(new SeparatorComponent(), gridBag.nextLine().next());
+        panel.add(new JBLabel(Localizer.get("notification.NotePressCancelToDeleteCreatedFiles")), gridBag.nextLine().next());
     }
 
     @Override

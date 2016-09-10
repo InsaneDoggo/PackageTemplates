@@ -2,9 +2,11 @@ package core.actions.newPackageTemplate;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.newPackageTemplate.dialogs.ImplementPackageTemplateDialog;
 import core.actions.newPackageTemplate.dialogs.SelectPackageTemplateDialog;
-import core.state.impex.dialogs.ImpexDialog;
 import global.models.PackageTemplate;
 import core.state.SaveUtil;
 import global.utils.Localizer;
@@ -15,13 +17,17 @@ import global.wrappers.PackageTemplateWrapper;
  */
 public class NewPackageTemplateAction extends AnAction {
 
+    private VirtualFile virtualFile;
+
     @Override
     public void actionPerformed(AnActionEvent event) {
+        virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
+
         SaveUtil.getInstance().load();
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
-                showDialog(event, packageTemplate);
+                showDialog(project, packageTemplate);
             }
 
             @Override
@@ -46,11 +52,12 @@ public class NewPackageTemplateAction extends AnAction {
 
     }
 
-    private void showDialog(AnActionEvent event, PackageTemplate packageTemplate) {
-        new ImplementPackageTemplateDialog(event, String.format(Localizer.get("NewPackageFromS"),packageTemplate.getName()), packageTemplate) {
+    private void showDialog(Project project, PackageTemplate packageTemplate) {
+        new ImplementPackageTemplateDialog(project, String.format(Localizer.get("NewPackageFromS"),
+                packageTemplate.getName()), packageTemplate, virtualFile) {
             @Override
             public void onSuccess(PackageTemplateWrapper ptWrapper) {
-                ptWrapper.writeTemplate(event);
+                ptWrapper.writeTemplate(project, virtualFile);
             }
 
             @Override

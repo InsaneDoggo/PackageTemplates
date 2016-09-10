@@ -1,14 +1,12 @@
-<idea-plugin version="2">
-    <id>com.supaplugin</id>
+<idea-plugin version="1">
+    <id>com.supaplugin2</id>
     <version>1.0</version>
     <name>PackageTemplate</name>
-    <vendor email="support@supaplugin.com"
-            url="http://www.supaplugin.com">YourCompany
-    </vendor>
+    <vendor email="support@supaplugin.com" url="http://www.supaplugin.com">YourCompany</vendor>
 
     <description><![CDATA[
       Tool for create "package templates".<br>
-      <em>Plugin in Beta</em>
+      <em>Plugin in Development</em>
     ]]></description>
 
     <change-notes><![CDATA[
@@ -32,10 +30,18 @@
                 serviceImplementation="core.state.Config"/>
     </extensions>
 
+    <application-components>
+        <component>
+            <implementation-class>core.actions.generator.AppComponent</implementation-class>
+        </component>
+    </application-components>
+
     <actions>
         <!-- Add your actions here -->
         <action id="PackageTemplate"
                 class="core.actions.newPackageTemplate.NewPackageTemplateAction"
+                description="Package Templates management"
+                icon="/icons/package_templates.png"
                 text="New PackageTemplate">
             <add-to-group group-id="NewGroup"
                           relative-to-action="NewFile"

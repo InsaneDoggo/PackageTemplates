@@ -111,8 +111,6 @@ public class DirectoryWrapper extends ElementWrapper {
                 for (ElementWrapper element : getListElementWrapper()) {
                     element.writeFile(subDirectory, project);
                 }
-            } else {
-                getPackageTemplateWrapper().getFailedElements().add(this);
             }
         }
     }

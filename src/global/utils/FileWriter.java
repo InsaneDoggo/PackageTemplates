@@ -27,14 +27,13 @@ import java.util.Properties;
  */
 public class FileWriter {
 
-    public static PsiDirectory findCurrentDirectory(AnActionEvent e) {
-        VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+    public static PsiDirectory findCurrentDirectory(Project project,VirtualFile file) {
 
-        if (file != null && e.getProject() != null) {
+        if (file != null && project != null) {
             if (file.isDirectory()) {
-                return PsiManager.getInstance(e.getProject()).findDirectory(file);
+                return PsiManager.getInstance(project).findDirectory(file);
             } else {
-                return PsiManager.getInstance(e.getProject()).findDirectory(file.getParent());
+                return PsiManager.getInstance(project).findDirectory(file.getParent());
             }
         }
 
@@ -54,12 +53,10 @@ public class FileWriter {
                 directory[0] = dir.createSubdirectory(dirWrapper.getDirectory().getName());
             } catch (Exception ex) {
                 Logger.log(ex.getMessage());
+                dirWrapper.setWriteException(ex);
+                dirWrapper.getPackageTemplateWrapper().getFailedElements().add(dirWrapper);
             }
         }), null, null);
-
-        if (directory[0] == null) {
-            //todo print error
-        }
 
         return directory[0];
     }
@@ -73,17 +70,20 @@ public class FileWriter {
         }
 
         Properties properties = new Properties();
+        properties.putAll(fileWrapper.getPackageTemplateWrapper().getDefaultProperties());
         properties.putAll(fileWrapper.getFile().getMapProperties());
 
         PsiElement element;
         try {
             element = FileTemplateUtil.createFromTemplate(template, fileWrapper.getFile().getName(), properties, dir);
         } catch (Exception e) {
-            //todo print error
             Logger.log(e.getMessage());
+            fileWrapper.setWriteException(e);
+            fileWrapper.getPackageTemplateWrapper().getFailedElements().add(fileWrapper);
             return null;
         }
 
+        fileWrapper.getPackageTemplateWrapper().getWrittenElements().add(element);
         return element;
     }
 

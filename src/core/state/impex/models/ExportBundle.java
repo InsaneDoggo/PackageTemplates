@@ -1,6 +1,7 @@
 package core.state.impex.models;
 
 import com.google.gson.annotations.Expose;
+import core.state.models.UserSettings;
 
 import java.util.ArrayList;
 

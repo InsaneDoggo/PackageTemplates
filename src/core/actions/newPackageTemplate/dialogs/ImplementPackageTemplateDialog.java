@@ -1,7 +1,7 @@
 package core.actions.newPackageTemplate.dialogs;
 
 import base.BaseDialog;
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
@@ -23,13 +23,13 @@ public abstract class ImplementPackageTemplateDialog extends BaseDialog {
     public abstract void onCancel();
 
     private PackageTemplateWrapper ptWrapper;
-    private AnActionEvent event;
+    private VirtualFile virtualFile;
 
 
-    public ImplementPackageTemplateDialog(AnActionEvent event, String title, PackageTemplate packageTemplate) {
-        super(event.getProject());
-        this.event = event;
-        ptWrapper = WrappersFactory.wrapPackageTemplate(event.getProject(), packageTemplate, PackageTemplateWrapper.ViewMode.USAGE);
+    public ImplementPackageTemplateDialog(Project project, String title, PackageTemplate packageTemplate, VirtualFile virtualFile) {
+        super(project);
+        this.virtualFile = virtualFile;
+        ptWrapper = WrappersFactory.wrapPackageTemplate(project, packageTemplate, PackageTemplateWrapper.ViewMode.USAGE);
         init();
         setTitle(title);
     }
@@ -65,7 +65,7 @@ public abstract class ImplementPackageTemplateDialog extends BaseDialog {
         ptWrapper.replaceNameVariable();
         ptWrapper.runElementsGroovyScript();
 
-        PsiDirectory currentDir = FileWriter.findCurrentDirectory(event);
+        PsiDirectory currentDir = FileWriter.findCurrentDirectory(project, virtualFile);
         if (currentDir != null) {
             VirtualFile existingFile = currentDir.getVirtualFile().findChild(ptWrapper.getRootElement().getDirectory().getName());
             if (existingFile != null) {

@@ -12,6 +12,8 @@ public class StateModel {
     @Expose
     private long modelVersion;
     @Expose
+    private UserSettings userSettings;
+    @Expose
     private ArrayList<PackageTemplate> listPackageTemplate;
 
     public long getModelVersion() {
@@ -28,5 +30,13 @@ public class StateModel {
 
     public void setListPackageTemplate(ArrayList<PackageTemplate> listPackageTemplate) {
         this.listPackageTemplate = listPackageTemplate;
+    }
+
+    public UserSettings getUserSettings() {
+        return userSettings;
+    }
+
+    public void setUserSettings(UserSettings userSettings) {
+        this.userSettings = userSettings;
     }
 }
