@@ -4,7 +4,9 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.ui.ValidationInfo;
 import global.wrappers.ElementWrapper;
+import global.wrappers.GlobalVariableWrapper;
 import global.wrappers.PackageTemplateWrapper;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -69,6 +71,7 @@ public class TemplateValidator {
         PLAIN_TEXT
     }
 
+    @Nullable
     public static ValidationInfo validateText(JComponent jComponent, String text, FieldType fieldType) {
         //todo uncomment
 
@@ -107,7 +110,6 @@ public class TemplateValidator {
         return null;
     }
 
-
     private static boolean isValidByPattern(String text, String pattern) {
         return !text.matches(pattern);
     }
@@ -118,6 +120,28 @@ public class TemplateValidator {
 
     public static boolean isValidClassName(String name) {
         return isValidByPattern(name, PATTERN_CLASS_NAME_VALIDATION) && !TemplateValidator.startsWithDigit(name);
+    }
+
+    @Nullable
+    public static ValidationInfo validatePackageTemplateProperties(PackageTemplateWrapper ptWrapper) {
+        ValidationInfo result;
+        if (ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
+            result = TemplateValidator.validateText(ptWrapper.etfName, ptWrapper.etfName.getText(), TemplateValidator.FieldType.PACKAGE_TEMPLATE_NAME);
+            if(result != null) return result;
+            result = TemplateValidator.validateText(ptWrapper.etfDescription, ptWrapper.etfDescription.getText(), TemplateValidator.FieldType.PLAIN_TEXT);
+            if(result != null) return result;
+        }
+        return null;
+    }
+
+    @Nullable
+    public static ValidationInfo validateGlobalVariables(PackageTemplateWrapper ptWrapper) {
+        ValidationInfo result;
+        for (GlobalVariableWrapper gvWrapper : ptWrapper.getListGlobalVariableWrapper()) {
+            result = TemplateValidator.validateText(gvWrapper.getTfValue(), gvWrapper.getTfValue().getText(), TemplateValidator.FieldType.GLOBAL_VARIABLE);
+            if(result != null) return result;
+        }
+        return null;
     }
 
 }

@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import core.actions.newPackageTemplate.dialogs.ImplementPackageTemplateDialog;
+import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import core.actions.newPackageTemplate.dialogs.SelectPackageTemplateDialog;
 import global.models.PackageTemplate;
 import core.state.SaveUtil;
@@ -53,7 +53,7 @@ public class NewPackageTemplateAction extends AnAction {
     }
 
     private void showDialog(Project project, PackageTemplate packageTemplate) {
-        new ImplementPackageTemplateDialog(project, String.format(Localizer.get("NewPackageFromS"),
+        new ImplementDialog(project, String.format(Localizer.get("NewPackageFromS"),
                 packageTemplate.getName()), packageTemplate, virtualFile) {
             @Override
             public void onSuccess(PackageTemplateWrapper ptWrapper) {

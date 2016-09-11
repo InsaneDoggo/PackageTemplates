@@ -12,6 +12,7 @@ import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBInsets;
+import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import global.models.TemplateForSearch;
 import org.jetbrains.annotations.NotNull;
 import global.utils.Localizer;
@@ -44,10 +45,10 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper {
         super.show();
 
         switch (getExitCode()) {
-            case ImplementPackageTemplateDialog.OK_EXIT_CODE:
+            case ImplementDialog.OK_EXIT_CODE:
                 onSuccess(((TemplateForSearch) comboBox.getSelectedItem()).getTemplate());
                 break;
-            case ImplementPackageTemplateDialog.CANCEL_EXIT_CODE:
+            case ImplementDialog.CANCEL_EXIT_CODE:
                 onCancel();
                 break;
         }
