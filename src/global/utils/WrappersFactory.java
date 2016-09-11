@@ -1,10 +1,7 @@
 package global.utils;
 
 import com.intellij.openapi.project.Project;
-import global.models.File;
-import global.models.PackageTemplate;
-import global.models.Directory;
-import global.models.GlobalVariable;
+import global.models.*;
 import org.jetbrains.annotations.NotNull;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.FileWrapper;
@@ -31,6 +28,7 @@ public class WrappersFactory {
 
     public static PackageTemplateWrapper createAndWrapPackageTemplate(Project project, PackageTemplateWrapper.ViewMode mode) {
         Directory directory = new Directory();
+        directory.setWriteBehavior(WriteBehavior.CREATE_IF_NOT_EXIST);
         directory.setName("example");
         directory.setListBaseElement(new ArrayList<>());
         directory.setEnabled(true);
@@ -58,6 +56,7 @@ public class WrappersFactory {
     @NotNull
     public static DirectoryWrapper createNewWrappedDirectory(DirectoryWrapper parent) {
         Directory dir = new Directory();
+        dir.setWriteBehavior(WriteBehavior.FROM_PARENT);
         dir.setName("unnamed");
         dir.setEnabled(true);
         dir.setGroovyCode("");
@@ -77,6 +76,7 @@ public class WrappersFactory {
         FileWrapper fileWrapper = new FileWrapper();
 
         File file = new File();
+        file.setWriteBehavior(WriteBehavior.FROM_PARENT);
         file.setName("Unnamed");
         file.setTemplateName(templateName);
         file.setExtension(extension);

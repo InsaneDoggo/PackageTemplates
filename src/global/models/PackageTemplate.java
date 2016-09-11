@@ -1,6 +1,7 @@
 package global.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,20 +11,15 @@ import java.util.HashMap;
  */
 public class PackageTemplate {
 
-    @Expose
-    private String name;
-    @Expose
-    private String description;
-    @Expose
-    private Directory directory;
-    @Expose
-    private HashMap<String, String> mapGlobalVars;
-    @Expose
-    private ArrayList<GlobalVariable> listGlobalVariable;
-    @Expose
-    private boolean skipRootDirectory;
-    @Expose
-    private boolean skipDefiningNames;
+    @Expose @SerializedName("name") private String name;
+    @Expose @SerializedName("description") private String description;
+    @Expose @SerializedName("directory") private Directory directory;
+    @Expose @SerializedName("mapGlobalVars") private HashMap<String, String> mapGlobalVars;
+    @Expose @SerializedName("listGlobalVariable") private ArrayList<GlobalVariable> listGlobalVariable;
+    @Expose @SerializedName("postGeneratedResults") private PostGeneratedResults postGeneratedResults;
+    @Expose @SerializedName("skipRootDirectory") private boolean skipRootDirectory;
+    @Expose @SerializedName("skipDefiningNames") private boolean skipDefiningNames;
+    @Expose @SerializedName("shouldRegisterAction") private boolean shouldRegisterAction;
 
     public boolean isSkipRootDirectory() {
         return skipRootDirectory;
@@ -79,5 +75,21 @@ public class PackageTemplate {
 
     public void setSkipDefiningNames(boolean skipDefiningNames) {
         this.skipDefiningNames = skipDefiningNames;
+    }
+
+    public boolean isShouldRegisterAction() {
+        return shouldRegisterAction;
+    }
+
+    public void setShouldRegisterAction(boolean shouldRegisterAction) {
+        this.shouldRegisterAction = shouldRegisterAction;
+    }
+
+    public PostGeneratedResults getPostGeneratedResults() {
+        return postGeneratedResults;
+    }
+
+    public void setPostGeneratedResults(PostGeneratedResults postGeneratedResults) {
+        this.postGeneratedResults = postGeneratedResults;
     }
 }

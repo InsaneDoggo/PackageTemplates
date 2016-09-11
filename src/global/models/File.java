@@ -1,6 +1,7 @@
 package global.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 
@@ -9,12 +10,9 @@ import java.util.HashMap;
  */
 public class File extends BaseElement {
 
-    @Expose
-    private String templateName;
-    @Expose
-    private String extension;
-    @Expose
-    private HashMap<String, String> mapProperties;
+    @Expose @SerializedName("templateName") private String templateName;
+    @Expose @SerializedName("extension") private String extension;
+    @Expose @SerializedName("mapProperties") private HashMap<String, String> mapProperties;
 
     public String getTemplateName() {
         return templateName;
@@ -44,4 +42,5 @@ public class File extends BaseElement {
     public boolean isDirectory() {
         return false;
     }
+
 }

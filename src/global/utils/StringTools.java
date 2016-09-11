@@ -62,4 +62,9 @@ public class StringTools {
     public static String wrapAsVariable(String name) {
         return String.format("%s%s%s", "${", name, "}");
     }
+
+    public static String formatActionName(String name) {
+        return name.replace(" ", "_").trim();
+    }
+
 }

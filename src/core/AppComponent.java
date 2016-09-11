@@ -4,6 +4,10 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.components.ApplicationComponent;
 import core.actions.generator.BaseAction;
+import core.state.SaveUtil;
+import global.Const;
+import global.models.PackageTemplate;
+import global.utils.StringTools;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -17,17 +21,17 @@ public class AppComponent implements ApplicationComponent {
     public void initComponent() {
         ActionManager am = ActionManager.getInstance();
         DefaultActionGroup group = (DefaultActionGroup) am.getAction("WindowMenu");
+        ArrayList<PackageTemplate> listPackageTemplate = SaveUtil.getInstance().getStateModel().getListPackageTemplate();
 
-        ArrayList<BaseAction> listBaseAction = new ArrayList<>();
-        listBaseAction.add(new BaseAction("AcOne"));
-        listBaseAction.add(new BaseAction("AcTwo"));
-        listBaseAction.add(new BaseAction("AcThree"));
-        listBaseAction.add(new BaseAction("AcFour"));
+        for(PackageTemplate pt : listPackageTemplate){
+            if(!pt.isShouldRegisterAction()){
+                continue;
+            }
 
-        for( BaseAction action : listBaseAction){
-            am.registerAction(action.getName() + "Action", action);
-            group.addSeparator();
-            group.add(action);
+            BaseAction action = new BaseAction(StringTools.formatActionName(pt.getName()));
+            am.registerAction(action.getName() + Const.ACTION_PREFIX, action);
+//            group.addSeparator();
+//            group.add(action);
         }
     }
 
@@ -40,6 +44,6 @@ public class AppComponent implements ApplicationComponent {
     @Override
     public String getComponentName() {
 //        return Localizer.get("plugin.name");
-        return "MegaAction";
+        return "PackageTemplatesComponent";
     }
 }

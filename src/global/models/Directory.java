@@ -1,6 +1,7 @@
 package global.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
@@ -9,8 +10,7 @@ import java.util.ArrayList;
  */
 public class Directory extends BaseElement {
 
-    @Expose
-    private ArrayList<BaseElement> listBaseElement;
+    @Expose @SerializedName("listBaseElement") private ArrayList<BaseElement> listBaseElement;
 
     public ArrayList<BaseElement> getListBaseElement() {
         return listBaseElement;
@@ -24,4 +24,5 @@ public class Directory extends BaseElement {
     public boolean isDirectory() {
         return true;
     }
+
 }
