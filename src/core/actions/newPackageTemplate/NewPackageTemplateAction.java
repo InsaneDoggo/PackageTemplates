@@ -31,9 +31,9 @@ public class NewPackageTemplateAction extends AnAction {
             @Override
             public void onSuccess(PackageTemplate pt) {
                 if (pt.isSkipDefiningNames()) {
-                    executeTemplateSilently(pt);
+                    executeTemplateSilently(pt, project, virtualFile);
                 } else {
-                    showDialog(pt);
+                    showDialog(pt, project, virtualFile);
                 }
             }
 
@@ -57,7 +57,7 @@ public class NewPackageTemplateAction extends AnAction {
 //        dialog.show();
     }
 
-    private void executeTemplateSilently(PackageTemplate pt) {
+    public static void executeTemplateSilently(PackageTemplate pt, Project project, VirtualFile virtualFile) {
         PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.USAGE);
         ptWrapper.prepareGlobals();
         ptWrapper.addGlobalVariablesToFileTemplates();
@@ -66,7 +66,7 @@ public class NewPackageTemplateAction extends AnAction {
         ptWrapper.writeTemplate(project, virtualFile);
     }
 
-    private void showDialog(PackageTemplate packageTemplate) {
+    public static void showDialog(PackageTemplate packageTemplate, Project project, VirtualFile virtualFile) {
         new ImplementDialog(project, String.format(Localizer.get("NewPackageFromS"),
                 packageTemplate.getName()), packageTemplate, virtualFile) {
             @Override

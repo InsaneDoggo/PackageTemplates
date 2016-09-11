@@ -27,8 +27,7 @@ public class AppComponent implements ApplicationComponent {
             if(!pt.isShouldRegisterAction()){
                 continue;
             }
-
-            BaseAction action = new BaseAction(StringTools.formatActionName(pt.getName()));
+            BaseAction action = new BaseAction(StringTools.formatActionName(pt.getName()), pt);
             am.registerAction(action.getName() + Const.ACTION_PREFIX, action);
 //            group.addSeparator();
 //            group.add(action);

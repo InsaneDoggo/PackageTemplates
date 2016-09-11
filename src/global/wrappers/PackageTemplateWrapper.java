@@ -11,11 +11,15 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
+import com.intellij.ui.components.JBCheckBox;
+import com.intellij.util.ui.CheckBox;
 import com.intellij.util.ui.GridBag;
 import global.dialogs.FailedFilesDialog;
 import global.models.*;
 import global.utils.*;
 import global.visitors.AddGlobalVariablesVisitor;
+import net.miginfocom.layout.CC;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -49,6 +53,9 @@ public class PackageTemplateWrapper {
     private JPanel panel;
     public EditorTextField etfName;
     public EditorTextField etfDescription;
+    public JCheckBox cbShouldRegisterAction;
+    public JCheckBox cbSkipDefiningNames;
+    public JCheckBox cbSkipRootDirectory;
     private GridBag gridBag;
 
     private PackageTemplate packageTemplate;
@@ -124,6 +131,9 @@ public class PackageTemplateWrapper {
             gridBag = GridBagFactory.getBagForPackageTemplate();
         }
 
+        // Properties
+        JPanel jpProperties = new JPanel(new MigLayout());
+
         if (mode != ViewMode.USAGE) {
             // Header
             JLabel jlName = new JLabel(Localizer.get("Name"));
@@ -139,8 +149,20 @@ public class PackageTemplateWrapper {
             panel.add(jlDescription, gridBag.nextLine().next());
             panel.add(etfDescription, gridBag.next().coverLine(2));
 
-            panel.add(new SeparatorComponent(10), gridBag.nextLine().next().coverLine());
+            // Properties
+            cbShouldRegisterAction = new JBCheckBox(Localizer.get("property.ShouldRegisterAction"), packageTemplate.isShouldRegisterAction());
+            cbSkipDefiningNames = new JBCheckBox(Localizer.get("property.SkipDefiningNames"), packageTemplate.isSkipDefiningNames());
+            jpProperties.add(cbShouldRegisterAction, new CC().wrap().spanX());
+            jpProperties.add(cbSkipDefiningNames, new CC().wrap().spanX());
         }
+
+        // Properties
+        cbSkipRootDirectory = new JBCheckBox(Localizer.get("property.SkipRootDirectory"), packageTemplate.isSkipRootDirectory());
+        jpProperties.add(cbSkipRootDirectory, new CC().wrap().spanX());
+        panel.add(jpProperties, gridBag.nextLine().next().coverLine());
+
+        panel.add(new SeparatorComponent(10), gridBag.nextLine().next().coverLine());
+
 
         // Globals
         JLabel jlGlobals = new JLabel(Localizer.get("GlobalVariables"), JLabel.CENTER);
@@ -181,7 +203,10 @@ public class PackageTemplateWrapper {
         if (getMode() != ViewMode.USAGE) {
             packageTemplate.setName(etfName.getText());
             packageTemplate.setDescription(etfDescription.getText());
+            packageTemplate.setShouldRegisterAction(cbShouldRegisterAction.isSelected());
+            packageTemplate.setSkipDefiningNames(cbSkipDefiningNames.isSelected());
         }
+        packageTemplate.setSkipRootDirectory(cbSkipRootDirectory.isSelected());
 
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
             variableWrapper.collectDataFromFields();
