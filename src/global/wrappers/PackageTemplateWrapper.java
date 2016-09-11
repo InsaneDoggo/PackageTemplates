@@ -190,7 +190,10 @@ public class PackageTemplateWrapper {
         rootElement.collectDataFromFields();
     }
 
-    public void afterCollect(){
+    /**
+     * Replace BASE_NAME and Run Groovy
+     */
+    public void prepareGlobals() {
         packageTemplate.setMapGlobalVars(new HashMap<>());
 
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
@@ -206,7 +209,7 @@ public class PackageTemplateWrapper {
         }
     }
 
-    public void addGlobalVariables(){
+    public void addGlobalVariablesToFileTemplates() {
         rootElement.accept(new AddGlobalVariablesVisitor());
     }
 

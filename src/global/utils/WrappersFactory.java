@@ -82,6 +82,7 @@ public class WrappersFactory {
         file.setExtension(extension);
         file.setEnabled(true);
         file.setGroovyCode("");
+        file.setMapProperties(new HashMap<>());
 
         fileWrapper.setParent(parent);
         fileWrapper.setFile(file);

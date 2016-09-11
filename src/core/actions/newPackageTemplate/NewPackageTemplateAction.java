@@ -10,6 +10,7 @@ import core.actions.newPackageTemplate.dialogs.SelectPackageTemplateDialog;
 import global.models.PackageTemplate;
 import core.state.SaveUtil;
 import global.utils.Localizer;
+import global.utils.WrappersFactory;
 import global.wrappers.PackageTemplateWrapper;
 
 /**
@@ -18,16 +19,22 @@ import global.wrappers.PackageTemplateWrapper;
 public class NewPackageTemplateAction extends AnAction {
 
     private VirtualFile virtualFile;
+    private Project project;
 
     @Override
     public void actionPerformed(AnActionEvent event) {
         virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
+        project = event.getProject();
 
         SaveUtil.getInstance().load();
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
-            public void onSuccess(PackageTemplate packageTemplate) {
-                showDialog(project, packageTemplate);
+            public void onSuccess(PackageTemplate pt) {
+                if (pt.isSkipDefiningNames()) {
+                    executeTemplateSilently(pt);
+                } else {
+                    showDialog(pt);
+                }
             }
 
             @Override
@@ -35,7 +42,6 @@ public class NewPackageTemplateAction extends AnAction {
             }
         };
         dialog.show();
-
 
 //        ImpexDialog dialog = new ImpexDialog(event.getProject(), "Export Templates") {
 //            @Override
@@ -49,10 +55,18 @@ public class NewPackageTemplateAction extends AnAction {
 //            }
 //        };
 //        dialog.show();
-
     }
 
-    private void showDialog(Project project, PackageTemplate packageTemplate) {
+    private void executeTemplateSilently(PackageTemplate pt) {
+        PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.USAGE);
+        ptWrapper.prepareGlobals();
+        ptWrapper.addGlobalVariablesToFileTemplates();
+        ptWrapper.replaceNameVariable();
+        ptWrapper.runElementsGroovyScript();
+        ptWrapper.writeTemplate(project, virtualFile);
+    }
+
+    private void showDialog(PackageTemplate packageTemplate) {
         new ImplementDialog(project, String.format(Localizer.get("NewPackageFromS"),
                 packageTemplate.getName()), packageTemplate, virtualFile) {
             @Override

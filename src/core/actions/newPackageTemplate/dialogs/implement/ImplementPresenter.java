@@ -58,12 +58,10 @@ public class ImplementPresenter implements IFaceImplementPresenter {
     }
 
     private void prepareFields() {
-        // save fields
         ptWrapper.collectDataFromFields();
-        ptWrapper.afterCollect();
-        // Must be ready:  packageTemplate.getMapGlobalVars()
+        ptWrapper.prepareGlobals();
+        ptWrapper.addGlobalVariablesToFileTemplates();
         ptWrapper.replaceNameVariable();
-        // Must be ready:  .name
         ptWrapper.runElementsGroovyScript();
     }
 
