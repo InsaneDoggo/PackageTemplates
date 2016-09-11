@@ -28,7 +28,6 @@ import java.util.Properties;
 public class FileWriter {
 
     public static PsiDirectory findCurrentDirectory(Project project,VirtualFile file) {
-
         if (file != null && project != null) {
             if (file.isDirectory()) {
                 return PsiManager.getInstance(project).findDirectory(file);

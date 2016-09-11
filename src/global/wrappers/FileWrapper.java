@@ -12,6 +12,7 @@ import com.intellij.util.ui.GridBag;
 import core.groovy.GroovyExecutor;
 import global.models.BaseElement;
 import global.models.File;
+import global.visitors.ElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import global.utils.*;
 
@@ -31,6 +32,11 @@ public class FileWrapper extends ElementWrapper {
 
     private File file;
     private CreateFromTemplatePanel panelVariables;
+
+    @Override
+    public void accept(ElementVisitor visitor) {
+        visitor.visit(this);
+    }
 
     public File getFile() {
         return file;
@@ -60,8 +66,8 @@ public class FileWrapper extends ElementWrapper {
             if (fileTemplate != null) {
                 String[] unsetAttributes = AttributesHelper.getUnsetAttrs(fileTemplate, getPackageTemplateWrapper().getProject());
                 if (unsetAttributes != null && unsetAttributes.length > 0) {
-                    panelVariables = new CreateFromTemplatePanel(
-                            AttributesHelper.getNonGlobalAttributes(unsetAttributes, getPackageTemplateWrapper().getPackageTemplate().getListGlobalVariable())
+                    panelVariables = new CreateFromTemplatePanel(AttributesHelper.getNonGlobalAttributes(
+                            unsetAttributes, getPackageTemplateWrapper().getPackageTemplate().getListGlobalVariable())
                             , false, null);
 
                     JComponent component = panelVariables.getComponent();
@@ -169,10 +175,7 @@ public class FileWrapper extends ElementWrapper {
                     getFile().getMapProperties().put((String) entry.getKey(), (String) entry.getValue());
                 }
             }
-            //add GLOBALS
-            getFile().getMapProperties().putAll(getPackageTemplateWrapper().getPackageTemplate().getMapGlobalVars());
         }
-
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.intellij.util.ui.GridBag;
 import global.dialogs.FailedFilesDialog;
 import global.models.*;
 import global.utils.*;
+import global.visitors.AddGlobalVariablesVisitor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -182,9 +183,17 @@ public class PackageTemplateWrapper {
             packageTemplate.setDescription(etfDescription.getText());
         }
 
-        packageTemplate.setMapGlobalVars(new HashMap<>());
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
             variableWrapper.collectDataFromFields();
+        }
+
+        rootElement.collectDataFromFields();
+    }
+
+    public void afterCollect(){
+        packageTemplate.setMapGlobalVars(new HashMap<>());
+
+        for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
             if (getMode() == ViewMode.USAGE) {
                 // Replace ${BASE_NAME}
                 if (!variableWrapper.getGlobalVariable().getName().equals(ATTRIBUTE_BASE_NAME)) {
@@ -195,8 +204,10 @@ public class PackageTemplateWrapper {
             }
             packageTemplate.getMapGlobalVars().put(variableWrapper.getGlobalVariable().getName(), variableWrapper.getGlobalVariable().getValue());
         }
+    }
 
-        rootElement.collectDataFromFields();
+    public void addGlobalVariables(){
+        rootElement.accept(new AddGlobalVariablesVisitor());
     }
 
     public DirectoryWrapper wrapDirectory(Directory directory, DirectoryWrapper parent) {

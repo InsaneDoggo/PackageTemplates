@@ -2,7 +2,10 @@ package global.utils;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiDirectory;
 import global.wrappers.ElementWrapper;
 import global.wrappers.GlobalVariableWrapper;
 import global.wrappers.PackageTemplateWrapper;
@@ -123,7 +126,7 @@ public class TemplateValidator {
     }
 
     @Nullable
-    public static ValidationInfo validatePackageTemplateProperties(PackageTemplateWrapper ptWrapper) {
+    public static ValidationInfo validateProperties(PackageTemplateWrapper ptWrapper) {
         ValidationInfo result;
         if (ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
             result = TemplateValidator.validateText(ptWrapper.etfName, ptWrapper.etfName.getText(), TemplateValidator.FieldType.PACKAGE_TEMPLATE_NAME);
@@ -140,6 +143,20 @@ public class TemplateValidator {
         for (GlobalVariableWrapper gvWrapper : ptWrapper.getListGlobalVariableWrapper()) {
             result = TemplateValidator.validateText(gvWrapper.getTfValue(), gvWrapper.getTfValue().getText(), TemplateValidator.FieldType.GLOBAL_VARIABLE);
             if(result != null) return result;
+        }
+        return null;
+    }
+
+    public static ValidationInfo checkExisting(PackageTemplateWrapper ptWrapper, VirtualFile virtualFile, Project project) {
+        PsiDirectory currentDir = FileWriter.findCurrentDirectory(project, virtualFile);
+        if (currentDir != null) {
+            VirtualFile existingFile = currentDir.getVirtualFile().findChild(ptWrapper.getRootElement().getDirectory().getName());
+            if (existingFile != null) {
+                return new ValidationInfo(String.format(
+                        Localizer.get("DirectoryAlreadyExist"),
+                        ptWrapper.getRootElement().getDirectory().getName()
+                ));
+            }
         }
         return null;
     }

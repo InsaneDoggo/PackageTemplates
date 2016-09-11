@@ -3,15 +3,10 @@ package core.actions.newPackageTemplate.dialogs.implement;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
 import global.models.PackageTemplate;
-import global.utils.FileWriter;
-import global.utils.Localizer;
 import global.utils.TemplateValidator;
 import global.utils.WrappersFactory;
-import global.wrappers.GlobalVariableWrapper;
 import global.wrappers.PackageTemplateWrapper;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by Arsen on 11.09.2016.
@@ -48,32 +43,27 @@ public class ImplementPresenter implements IFaceImplementPresenter {
     @Override
     public ValidationInfo doValidate() {
         ValidationInfo result;
-        result = TemplateValidator.validatePackageTemplateProperties(ptWrapper);
+        result = TemplateValidator.validateProperties(ptWrapper);
         if (result != null) return result;
 
         result = TemplateValidator.validateGlobalVariables(ptWrapper);
         if (result != null) return result;
 
         result = ptWrapper.getRootElement().validateFields();
-        if(result != null) return result;
+        if (result != null) return result;
 
-        saveFields();
+        prepareFields();
 
-        PsiDirectory currentDir = FileWriter.findCurrentDirectory(project, virtualFile);
-        if (currentDir != null) {
-            VirtualFile existingFile = currentDir.getVirtualFile().findChild(ptWrapper.getRootElement().getDirectory().getName());
-            if (existingFile != null) {
-                return new ValidationInfo(String.format(Localizer.get("DirectoryAlreadyExist"), ptWrapper.getRootElement().getDirectory().getName()));
-            }
-        }
-
-        return null;
+        return TemplateValidator.checkExisting(ptWrapper, virtualFile, project);
     }
 
-    private void saveFields() {
+    private void prepareFields() {
         // save fields
         ptWrapper.collectDataFromFields();
+        ptWrapper.afterCollect();
+        // Must be ready:  packageTemplate.getMapGlobalVars()
         ptWrapper.replaceNameVariable();
+        // Must be ready:  .name
         ptWrapper.runElementsGroovyScript();
     }
 

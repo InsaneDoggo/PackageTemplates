@@ -1,10 +1,9 @@
-package core.actions.generator;
+package core;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import global.utils.Localizer;
+import core.actions.generator.BaseAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

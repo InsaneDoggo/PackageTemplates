@@ -10,6 +10,7 @@ import com.intellij.util.ui.GridBag;
 import core.groovy.GroovyExecutor;
 import global.models.BaseElement;
 import global.models.Directory;
+import global.visitors.ElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import global.utils.*;
 
@@ -31,6 +32,11 @@ public class DirectoryWrapper extends ElementWrapper {
     private GridBag gridBag;
 
     private ArrayList<ElementWrapper> listElementWrapper;
+
+    @Override
+    public void accept(ElementVisitor visitor) {
+        visitor.visit(this);
+    }
 
     public Directory getDirectory() {
         return directory;

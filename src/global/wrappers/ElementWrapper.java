@@ -12,6 +12,7 @@ import com.intellij.util.ui.GridBag;
 import core.actions.newPackageTemplate.dialogs.SelectFileTemplateDialog;
 import global.listeners.ClickListener;
 import core.groovy.GroovyDialog;
+import global.visitors.ElementVisitor;
 import icons.JetgroovyIcons;
 import global.models.BaseElement;
 import global.utils.Localizer;
@@ -36,6 +37,7 @@ public abstract class ElementWrapper extends BaseWrapper {
 
     private PackageTemplateWrapper packageTemplateWrapper;
 
+    public abstract void accept(ElementVisitor visitor);
     public abstract void buildView(Project project, JPanel container, GridBag bag);
     public abstract void removeMyself();
     public abstract void addElement(ElementWrapper element);

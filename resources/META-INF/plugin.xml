@@ -32,7 +32,7 @@
 
     <application-components>
         <component>
-            <implementation-class>core.actions.generator.AppComponent</implementation-class>
+            <implementation-class>core.AppComponent</implementation-class>
         </component>
     </application-components>
 
