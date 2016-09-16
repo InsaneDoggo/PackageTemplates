@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
-import core.actions.newPackageTemplate.dialogs.SelectPackageTemplateDialog;
+import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
 import global.models.PackageTemplate;
 import core.state.SaveUtil;
 import global.utils.Localizer;

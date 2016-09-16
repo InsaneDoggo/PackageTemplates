@@ -4,11 +4,9 @@ import base.BaseDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
 import com.intellij.util.ui.GridBag;
 import global.models.PackageTemplate;
 import global.utils.*;
-import global.wrappers.GlobalVariableWrapper;
 import global.wrappers.PackageTemplateWrapper;
 
 import java.awt.*;
@@ -21,14 +19,13 @@ public abstract class ImplementDialog extends BaseDialog implements ImplementVie
     public abstract void onSuccess(PackageTemplateWrapper ptWrapper);
     public abstract void onCancel();
 
-    private IFaceImplementPresenter presenter;
-
+    private ImplementPresenter presenter;
 
     public ImplementDialog(Project project, String title, PackageTemplate packageTemplate, VirtualFile virtualFile) {
         super(project);
         init();
         setTitle(title);
-        presenter = new ImplementPresenter(this, packageTemplate, virtualFile, project);
+        presenter = new ImplementPresenterImpl(this, packageTemplate, virtualFile, project);
     }
 
     @Override
@@ -57,4 +54,5 @@ public abstract class ImplementDialog extends BaseDialog implements ImplementVie
     public void onCancelAction() {
         presenter.onCancelAction();
     }
+
 }

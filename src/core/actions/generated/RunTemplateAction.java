@@ -1,11 +1,8 @@
-package core.actions.generator;
+package core.actions.generated;
 
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.newPackageTemplate.NewPackageTemplateAction;
 import global.models.PackageTemplate;
@@ -14,14 +11,12 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Created by Arsen on 11.09.2016.
  */
-public class BaseAction extends AnAction {
+public class RunTemplateAction extends BaseAction {
 
-    private String name;
     private PackageTemplate packageTemplate;
 
-    public BaseAction(@Nullable String name, PackageTemplate packageTemplate) {
+    public RunTemplateAction(@Nullable String name, PackageTemplate packageTemplate) {
         super(name);
-        this.name = name;
         this.packageTemplate = packageTemplate;
     }
 
@@ -39,7 +34,4 @@ public class BaseAction extends AnAction {
 
     }
 
-    public String getName() {
-        return name;
-    }
 }

@@ -9,7 +9,7 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
-import core.actions.newPackageTemplate.dialogs.SelectFileTemplateDialog;
+import core.actions.newPackageTemplate.dialogs.select.fileTemplate.SelectFileTemplateDialog;
 import global.listeners.ClickListener;
 import core.groovy.GroovyDialog;
 import global.visitors.ElementVisitor;

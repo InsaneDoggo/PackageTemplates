@@ -1,4 +1,4 @@
-package core.actions.newPackageTemplate.dialogs;
+package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
 import base.BaseDialog;
 import com.intellij.icons.AllIcons;
@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.GridBag;
+import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
 import global.listeners.ReleaseListener;
 import global.models.TemplateListModel;
 import global.models.PackageTemplate;
@@ -158,7 +159,7 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
 
     private void onEditAction() {
         if (!jbList.isSelectionEmpty()) {
-            ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(project, ((PackageTemplate) jbList.getSelectedValue())) {
+            ConfigureDialog dialog = new ConfigureDialog(project, ((PackageTemplate) jbList.getSelectedValue())) {
                 @Override
                 public void onSuccess(PackageTemplate packageTemplate) {
                     SaveUtil.getInstance().save();
@@ -184,7 +185,7 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
     }
 
     private void onAddAction() {
-        ConfigurePackageTemplatesDialog dialog = new ConfigurePackageTemplatesDialog(project) {
+        ConfigureDialog dialog = new ConfigureDialog(project) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
                 templateList.add(packageTemplate);

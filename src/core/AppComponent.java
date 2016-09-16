@@ -3,7 +3,7 @@ package core;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.components.ApplicationComponent;
-import core.actions.generator.BaseAction;
+import core.actions.generated.RunTemplateAction;
 import core.state.SaveUtil;
 import global.Const;
 import global.models.PackageTemplate;
@@ -27,7 +27,7 @@ public class AppComponent implements ApplicationComponent {
             if(!pt.isShouldRegisterAction()){
                 continue;
             }
-            BaseAction action = new BaseAction(StringTools.formatActionName(pt.getName()), pt);
+            RunTemplateAction action = new RunTemplateAction(StringTools.formatActionName(pt.getName()), pt);
             am.registerAction(action.getName() + Const.ACTION_PREFIX, action);
 //            group.addSeparator();
 //            group.add(action);

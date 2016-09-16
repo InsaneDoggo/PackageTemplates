@@ -1,4 +1,4 @@
-package core.actions.newPackageTemplate.dialogs;
+package core.actions.newPackageTemplate.dialogs.select.fileTemplate;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
@@ -26,18 +26,18 @@ import java.util.ArrayList;
 /**
  * Created by CeH9 on 24.06.2016.
  */
-public abstract class SelectFileTemplateDialog extends DialogWrapper {
+public abstract class SelectFileTemplateDialog extends DialogWrapper implements SelectFileTemplateView {
 
     private ComboBox comboBox;
+    private SelectFileTemplatePresenter presenter;
 
     public abstract void onSuccess(FileTemplate fileTemplate);
-
     public abstract void onCancel();
 
     public SelectFileTemplateDialog(Project project) {
         super(project);
         init();
-        setTitle(Localizer.get("SelectFileTemplate"));
+        presenter = new SelectFileTemplatePresenterImpl(this);
     }
 
     @Override
@@ -46,13 +46,16 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper {
 
         switch (getExitCode()) {
             case ImplementDialog.OK_EXIT_CODE:
-                onSuccess(((TemplateForSearch) comboBox.getSelectedItem()).getTemplate());
+                presenter.onSuccess(((TemplateForSearch) comboBox.getSelectedItem()).getTemplate());
                 break;
             case ImplementDialog.CANCEL_EXIT_CODE:
-                onCancel();
+                presenter.onCancel();
                 break;
         }
     }
+
+    private JBCheckBox cbAddInternal;
+    private JBCheckBox cbAddJ2EE;
 
     @Override
     protected JComponent createCenterPanel() {
@@ -62,7 +65,7 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper {
 
         JPanel options = new JPanel(new GridBagLayout());
         GridBag bag = new GridBag()
-                .setDefaultInsets(new JBInsets(0,4,0,4))
+                .setDefaultInsets(new JBInsets(0, 4, 0, 4))
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
 
         cbAddInternal = new JBCheckBox("Internal");
@@ -87,7 +90,7 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper {
         comboBox = getSelector();
 
         root.add(options);
-        root.add(Box.createRigidArea(new Dimension(0,10)));
+        root.add(Box.createRigidArea(new Dimension(0, 10)));
         root.add(comboBox);
 
         root.setMinimumSize(new Dimension(300, root.getMinimumSize().height));
@@ -97,12 +100,7 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper {
 
     @NotNull
     private ComboBox getSelector() {
-        FileTemplate[] fileTemplates = getFileTemplates();
-
-        ArrayList<TemplateForSearch> listTemplateForSearch = new ArrayList<>(fileTemplates.length);
-        for (FileTemplate template : fileTemplates) {
-            listTemplateForSearch.add(new TemplateForSearch(template));
-        }
+        ArrayList<TemplateForSearch> listTemplateForSearch = presenter.getListTemplateForSearch(cbAddInternal.isSelected(), cbAddJ2EE.isSelected());
 
         ComboBox comboBox = new ComboBox(listTemplateForSearch.toArray());
         comboBox.setRenderer(new ListCellRendererWrapper<TemplateForSearch>() {
@@ -119,18 +117,4 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper {
         return comboBox;
     }
 
-    JBCheckBox cbAddInternal;
-    JBCheckBox cbAddJ2EE;
-
-    private FileTemplate[] getFileTemplates() {
-        FileTemplateManager ftm = FileTemplateManager.getDefaultInstance();
-        FileTemplate[] result = ftm.getAllTemplates();
-
-        if (cbAddInternal.isSelected())
-            result = ArrayUtil.mergeArrays(result, ftm.getInternalTemplates());
-        if (cbAddJ2EE.isSelected())
-            result = ArrayUtil.mergeArrays(result, ftm.getTemplates(FileTemplateManager.J2EE_TEMPLATES_CATEGORY));
-
-        return result;
-    }
 }
