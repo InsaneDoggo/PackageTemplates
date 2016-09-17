@@ -23,6 +23,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -158,6 +160,10 @@ public class PackageTemplateWrapper {
 
         // Properties
         cbSkipRootDirectory = new JBCheckBox(Localizer.get("property.SkipRootDirectory"), packageTemplate.isSkipRootDirectory());
+        cbSkipRootDirectory.addItemListener(e -> {
+            collectDataFromFields();
+            reBuildView();
+        });
         jpProperties.add(cbSkipRootDirectory, new CC().wrap().spanX());
         panel.add(jpProperties, gridBag.nextLine().next().coverLine());
 

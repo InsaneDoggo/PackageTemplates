@@ -18,9 +18,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.font.TextAttribute;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -214,6 +216,14 @@ public class DirectoryWrapper extends ElementWrapper {
 
     @Override
     public void updateComponentsState() {
+        if(getParent() == null){
+            if(getPackageTemplateWrapper().getPackageTemplate().isSkipRootDirectory()){
+                Map attributes = jlName.getFont().getAttributes();
+                attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+                jlName.setFont(new Font(attributes));
+            }
+        }
+
         if (directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty()) {
             jlGroovy.setIcon(CustomIconLoader.Groovy);
         } else {
