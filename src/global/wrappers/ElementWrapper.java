@@ -103,10 +103,8 @@ public abstract class ElementWrapper extends BaseWrapper {
 
         addGroovyMenuItems(popupMenu);
 
-        // if root element
-        if (getParent() == null) {
-            // todo strike text
-        } else {
+        // if NOT root element
+        if (getParent() != null) {
             popupMenu.add(itemDelete);
         }
 

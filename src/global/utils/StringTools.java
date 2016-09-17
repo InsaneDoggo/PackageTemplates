@@ -14,6 +14,7 @@ public class StringTools {
 
     public static final String PATTERN_ATTRIBUTE = ".*\\$\\{([_a-zA-Z0-9]*)\\}.*";
     public static final String EMPTY_NAME = "UNNAMED";
+    public static final String UNKNOWN_GLOBAL = "UNKNOWN_GLOBAL";
 
     public static String replaceGlobalVariables(String text, Map<String, String> mapGlobals) {
         Pattern pattern = Pattern.compile(PATTERN_ATTRIBUTE);
@@ -23,7 +24,7 @@ public class StringTools {
             String var = mapGlobals.get(matcher.group(1));
             if (var == null) {
                 // TODO: 20.06.2016 print error, var isn't global
-                var = "";
+                var = UNKNOWN_GLOBAL;
             }
             text = text.replace(String.format("${%s}", matcher.group(1)), var);
             matcher = pattern.matcher(text);
@@ -51,20 +52,8 @@ public class StringTools {
         return result;
     }
 
-    public static String formatConst(String text) {
-        return text.replace("_", " ");
-    }
-
     public static boolean containsVariable(String text) {
         return text.matches(PATTERN_ATTRIBUTE);
-    }
-
-    public static String wrapAsVariable(String name) {
-        return String.format("%s%s%s", "${", name, "}");
-    }
-
-    public static String formatActionName(String name) {
-        return name.replace(" ", "_").trim();
     }
 
 }

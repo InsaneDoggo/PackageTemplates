@@ -122,7 +122,8 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog implements 
         container.add(jbAdd, bag.nextLine().next());
         container.add(jbDelete, bag.next());
         container.add(jbEdit, bag.next());
-        container.add(jbExport, bag.next());
+        //todo uncomment & complete export action
+//        container.add(jbExport, bag.next());
 
         return container;
     }

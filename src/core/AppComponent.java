@@ -20,14 +20,14 @@ public class AppComponent implements ApplicationComponent {
     @Override
     public void initComponent() {
         ActionManager am = ActionManager.getInstance();
-        DefaultActionGroup group = (DefaultActionGroup) am.getAction("WindowMenu");
+//        DefaultActionGroup group = (DefaultActionGroup) am.getAction("WindowMenu");
         ArrayList<PackageTemplate> listPackageTemplate = SaveUtil.getInstance().getStateModel().getListPackageTemplate();
 
         for(PackageTemplate pt : listPackageTemplate){
             if(!pt.isShouldRegisterAction()){
                 continue;
             }
-            RunTemplateAction action = new RunTemplateAction(StringTools.formatActionName(pt.getName()), pt);
+            RunTemplateAction action = new RunTemplateAction(pt.getName(), pt);
             am.registerAction(action.getName() + Const.ACTION_PREFIX, action);
 //            group.addSeparator();
 //            group.add(action);
@@ -42,7 +42,6 @@ public class AppComponent implements ApplicationComponent {
     @NotNull
     @Override
     public String getComponentName() {
-//        return Localizer.get("plugin.name");
         return "PackageTemplatesComponent";
     }
 }
