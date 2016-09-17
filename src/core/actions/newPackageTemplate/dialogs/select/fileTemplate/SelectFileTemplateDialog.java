@@ -37,7 +37,6 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper implements 
     public SelectFileTemplateDialog(Project project) {
         super(project);
         init();
-        presenter = new SelectFileTemplatePresenterImpl(this);
     }
 
     @Override
@@ -59,6 +58,8 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper implements 
 
     @Override
     protected JComponent createCenterPanel() {
+        presenter = new SelectFileTemplatePresenterImpl(this);
+
         JPanel root = new JPanel();
         root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
         root.setAlignmentY(Component.TOP_ALIGNMENT);

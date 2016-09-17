@@ -7,40 +7,32 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.GridBag;
-import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
 import global.listeners.ReleaseListener;
-import global.models.TemplateListModel;
 import global.models.PackageTemplate;
-import core.state.impex.dialogs.ImpexDialog;
-import org.jetbrains.annotations.NotNull;
-import core.state.SaveUtil;
-import core.state.models.StateModel;
+import global.models.TemplateListModel;
 import global.utils.GridBagFactory;
 import global.utils.Localizer;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-
 
 /**
  * Created by CeH9 on 24.06.2016.
  */
-public abstract class SelectPackageTemplateDialog extends BaseDialog {
-
-    private JBList jbList;
-    private ArrayList<PackageTemplate> templateList;
+public abstract class SelectPackageTemplateDialog extends BaseDialog implements SelectPackageTemplateView {
 
     public abstract void onSuccess(PackageTemplate packageTemplate);
 
     public abstract void onCancel();
 
+    private JBList jbList;
+    private SelectPackageTemplatePresenter presenter;
+
     public SelectPackageTemplateDialog(Project project) {
         super(project);
-        setTitle(Localizer.get("SelectFileTemplate"));
     }
-
 
     @Override
     protected ValidationInfo doValidate() {
@@ -48,40 +40,29 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
             return new ValidationInfo(Localizer.get("SelectItem"), jbList);
         }
 
-//        ValidationInfo validationInfo = TemplateValidator.isTemplateValid((PackageTemplate) jbList.getSelectedValue());
-//        if (validationInfo != null) {
-//            return new ValidationInfo(validationInfo.message, jbList);
-//        }
-
-        return null;
-    }
-
-    @Override
-    public void preShow() {
-
+        return presenter.doValidate((PackageTemplate) jbList.getSelectedValue(), jbList);
     }
 
     @Override
     public void onOKAction() {
-        onSuccess((PackageTemplate) jbList.getSelectedValue());
+        presenter.onSuccess((PackageTemplate) jbList.getSelectedValue());
     }
 
     @Override
     public void onCancelAction() {
-        onCancel();
+        presenter.onCancel();
     }
 
     @Override
     protected JComponent createCenterPanel() {
+        presenter = new SelectPackageTemplatePresenterImpl(this, project);
+
         JSplitPane root = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         root.setMinimumSize(new Dimension(400, 300));
         root.setEnabled(false);
 
-
-        StateModel stateModel = SaveUtil.getInstance().getStateModel();
-        templateList = stateModel.getListPackageTemplate();
         jbList = new JBList();
-        initJBList();
+        presenter.loadTemplates();
 
         root.add(getControls());
         root.add(jbList);
@@ -138,66 +119,23 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
     }
 
     private void onExportAction() {
-        ImpexDialog dialog = new ImpexDialog(project, "Export Templates") {
-            @Override
-            public void onSuccess() {
-                System.out.println("onSuccess");
-            }
-
-            @Override
-            public void onCancel() {
-                System.out.println("onCancel");
-            }
-        };
-        dialog.show();
-
-//            templateList.remove(jbList.getSelectedValue());
-//            SaveUtil.getInstance().save();
-//            initJBList();
-
+        presenter.onExportAction();
     }
 
     private void onEditAction() {
         if (!jbList.isSelectionEmpty()) {
-            ConfigureDialog dialog = new ConfigureDialog(project, ((PackageTemplate) jbList.getSelectedValue())) {
-                @Override
-                public void onSuccess(PackageTemplate packageTemplate) {
-                    SaveUtil.getInstance().save();
-                }
-
-                @Override
-                public void onFail() {
-                }
-            };
-            dialog.show();
+            presenter.onEditAction((PackageTemplate) jbList.getSelectedValue());
         }
     }
 
     private void onDeleteAction(JButton jbDelete) {
         if (!jbList.isSelectionEmpty()) {
-            int confirmDialog = JOptionPane.showConfirmDialog(jbDelete, Localizer.get("DeleteTemplate"));
-            if (confirmDialog == JOptionPane.OK_OPTION) {
-                templateList.remove(jbList.getSelectedValue());
-                SaveUtil.getInstance().save();
-                initJBList();
-            }
+            presenter.onDeleteAction(jbDelete, (PackageTemplate) jbList.getSelectedValue());
         }
     }
 
     private void onAddAction() {
-        ConfigureDialog dialog = new ConfigureDialog(project) {
-            @Override
-            public void onSuccess(PackageTemplate packageTemplate) {
-                templateList.add(packageTemplate);
-                SaveUtil.getInstance().save();
-                initJBList();
-            }
-
-            @Override
-            public void onFail() {
-            }
-        };
-        dialog.show();
+        presenter.onAddAction();
     }
 
     @NotNull
@@ -207,9 +145,10 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog {
         return jButton;
     }
 
-    private void initJBList() {
+    @Override
+    public void setTemplatesList(TemplateListModel<PackageTemplate> list) {
         jbList.removeAll();
-        jbList.setModel(new TemplateListModel<>(templateList));
+        jbList.setModel(list);
 
         jbList.setCellRenderer(new ListCellRendererWrapper<PackageTemplate>() {
             @Override

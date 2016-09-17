@@ -27,7 +27,7 @@ public abstract class BaseDialog extends DialogWrapper {
         init();
     }
 
-    public abstract void preShow();
+    public void preShow(){}
     public abstract void onOKAction();
     public abstract void onCancelAction();
 

@@ -7,7 +7,6 @@ import global.wrappers.PackageTemplateWrapper;
  * Created by Arsen on 16.09.2016.
  */
 public interface SelectFileTemplateView {
-    void buildView(PackageTemplateWrapper ptWrapper);
     void onSuccess(FileTemplate fileTemplate);
     void setTitle(String title);
     void onCancel();

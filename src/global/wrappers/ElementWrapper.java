@@ -94,54 +94,18 @@ public abstract class ElementWrapper extends BaseWrapper {
         JMenuItem itemAddDirectory = new JBMenuItem(Localizer.get("AddDirectory"), AllIcons.Nodes.Package);
         JMenuItem itemDelete = new JBMenuItem(Localizer.get("Delete"), AllIcons.Actions.Delete);
 
-        itemAddFile.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AddFile();
-            }
-        });
-        itemAddDirectory.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addDirectory();
-            }
-        });
-        itemDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteElement();
-            }
-        });
+        itemAddFile.addActionListener(e -> AddFile());
+        itemAddDirectory.addActionListener(e -> addDirectory());
+        itemDelete.addActionListener(e -> deleteElement());
 
         popupMenu.add(itemAddFile);
         popupMenu.add(itemAddDirectory);
 
         addGroovyMenuItems(popupMenu);
 
-        // if not root element
+        // if root element
         if (getParent() == null) {
-            if( !getPackageTemplateWrapper().getPackageTemplate().isSkipRootDirectory() ) {
-                JMenuItem itemSkipRoot = new JBMenuItem(Localizer.get("DontCreateRootDirectory"), AllIcons.Nodes.Package);
-                itemSkipRoot.setToolTipText(Localizer.get("MultipleFileTemplateFeature"));
-                itemSkipRoot.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        getPackageTemplateWrapper().getPackageTemplate().setSkipRootDirectory(true);
-                        //todo "<html><strike>Strike-through text</strike></html>"
-                    }
-                });
-                popupMenu.add(itemSkipRoot);
-            } else {
-                JMenuItem itemSkipRoot = new JBMenuItem(Localizer.get("EnableRootDirectory"), AllIcons.Nodes.Package);
-                itemSkipRoot.setToolTipText(Localizer.get("MultipleFileTemplateFeature"));
-                itemSkipRoot.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        getPackageTemplateWrapper().getPackageTemplate().setSkipRootDirectory(false);
-                    }
-                });
-                popupMenu.add(itemSkipRoot);
-            }
+            // todo strike text
         } else {
             popupMenu.add(itemDelete);
         }
