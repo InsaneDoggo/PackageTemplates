@@ -6,6 +6,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
+import core.state.SaveUtil;
+import global.models.PackageTemplate;
 import global.wrappers.ElementWrapper;
 import global.wrappers.GlobalVariableWrapper;
 import global.wrappers.PackageTemplateWrapper;
@@ -62,9 +64,9 @@ public class TemplateValidator {
     private static final String PATTERN_PLAIN_TEXT_VALIDATION = ".*[^0-9a-zA-Z_=\\-+.)(].*";
     private static final String PATTERN_GLOBAL_VARIABLE_VALIDATION = ".*[^0-9a-zA-Z_}{\\$].*";
 
-    private static final String ILLEGAL_SYMBOLS = Localizer.get("FieldContainsIllegalSymbols");
-    private static final String STARTS_WITH_DIGIT = Localizer.get("NameCantStartsWithDigit");
-    private static final String EMPTY_FIELDS = Localizer.get("FillEmptyFields");
+    private static final String ILLEGAL_SYMBOLS = Localizer.get("warning.FieldContainsIllegalSymbols");
+    private static final String STARTS_WITH_DIGIT = Localizer.get("warning.NameCantStartsWithDigit");
+    private static final String EMPTY_FIELDS = Localizer.get("warning.FillEmptyFields");
 
     public enum FieldType {
         GLOBAL_VARIABLE,
@@ -78,23 +80,27 @@ public class TemplateValidator {
     public static ValidationInfo validateText(JComponent jComponent, String text, FieldType fieldType) {
         //todo uncomment
 
-//        if (text.trim().isEmpty()) {
-//            return new ValidationInfo(EMPTY_FIELDS, jComponent);
-//        }
-//
-//        switch (fieldType) {
-//            case PACKAGE_TEMPLATE_NAME:
-//                if (!isValidByPattern(text, PATTERN_CLASS_NAME_VALIDATION)) {
-//                    return new ValidationInfo(ILLEGAL_SYMBOLS, jComponent);
+        switch (fieldType) {
+            case PACKAGE_TEMPLATE_NAME:
+                if (text.trim().isEmpty()) {
+                    return new ValidationInfo(EMPTY_FIELDS, jComponent);
+                }
+
+                if (!isValidByPattern(text, PATTERN_CLASS_NAME_VALIDATION)) {
+                    return new ValidationInfo(ILLEGAL_SYMBOLS, jComponent);
+                }
+                // Starts with digit
+                if (startsWithDigit(text)) {
+                    return new ValidationInfo(STARTS_WITH_DIGIT, jComponent);
+                }
+
+                break;
+            case CLASS_NAME:
+            case DIRECTORY_NAME:
+            case GLOBAL_VARIABLE:
+//                if (text.trim().isEmpty()) {
+//                    return new ValidationInfo(EMPTY_FIELDS, jComponent);
 //                }
-//                // Starts with digit
-//                if (startsWithDigit(text)) {
-//                    return new ValidationInfo(STARTS_WITH_DIGIT, jComponent);
-//                }
-//                break;
-//            case CLASS_NAME:
-//            case DIRECTORY_NAME:
-//            case GLOBAL_VARIABLE:
 //                if (!isValidByPattern(text, PATTERN_GLOBAL_VARIABLE_VALIDATION)) {
 //                    return new ValidationInfo(ILLEGAL_SYMBOLS, jComponent);
 //                }
@@ -103,14 +109,30 @@ public class TemplateValidator {
 //                    return new ValidationInfo(STARTS_WITH_DIGIT, jComponent);
 //                }
 //                break;
-//            case PLAIN_TEXT:
+            case PLAIN_TEXT:
+//                if (text.trim().isEmpty()) {
+//                    return new ValidationInfo(EMPTY_FIELDS, jComponent);
+//                }
 //                if (!isValidByPattern(text, PATTERN_PLAIN_TEXT_VALIDATION)) {
 //                    return new ValidationInfo(ILLEGAL_SYMBOLS, jComponent);
 //                }
-//                break;
-//        }
+                break;
+        }
 
         return null;
+    }
+
+    public static boolean isPackageTemplateNameUnique(String text) {
+        ArrayList<PackageTemplate> listPackageTemplate = SaveUtil.getInstance().getStateModel().getListPackageTemplate();
+        if(listPackageTemplate == null || listPackageTemplate.isEmpty()){
+            return true;
+        }
+
+        for(PackageTemplate pt : listPackageTemplate){
+            if(pt.getName().equals(text)) return false;
+        }
+
+        return true;
     }
 
     private static boolean isValidByPattern(String text, String pattern) {
@@ -130,9 +152,9 @@ public class TemplateValidator {
         ValidationInfo result;
         if (ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
             result = TemplateValidator.validateText(ptWrapper.etfName, ptWrapper.etfName.getText(), TemplateValidator.FieldType.PACKAGE_TEMPLATE_NAME);
-            if(result != null) return result;
+            if (result != null) return result;
             result = TemplateValidator.validateText(ptWrapper.etfDescription, ptWrapper.etfDescription.getText(), TemplateValidator.FieldType.PLAIN_TEXT);
-            if(result != null) return result;
+            if (result != null) return result;
         }
         return null;
     }
@@ -142,7 +164,7 @@ public class TemplateValidator {
         ValidationInfo result;
         for (GlobalVariableWrapper gvWrapper : ptWrapper.getListGlobalVariableWrapper()) {
             result = TemplateValidator.validateText(gvWrapper.getTfValue(), gvWrapper.getTfValue().getText(), TemplateValidator.FieldType.GLOBAL_VARIABLE);
-            if(result != null) return result;
+            if (result != null) return result;
         }
         return null;
     }
@@ -153,7 +175,7 @@ public class TemplateValidator {
             VirtualFile existingFile = currentDir.getVirtualFile().findChild(ptWrapper.getRootElement().getDirectory().getName());
             if (existingFile != null) {
                 return new ValidationInfo(String.format(
-                        Localizer.get("DirectoryAlreadyExist"),
+                        Localizer.get("warning.DirectoryAlreadyExist"),
                         ptWrapper.getRootElement().getDirectory().getName()
                 ));
             }

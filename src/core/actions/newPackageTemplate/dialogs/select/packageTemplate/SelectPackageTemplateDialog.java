@@ -62,7 +62,16 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog implements 
         root.setEnabled(false);
 
         jbList = new JBList();
+        jbList.setCellRenderer(new ListCellRendererWrapper<PackageTemplate>() {
+            @Override
+            public void customize(JList list, PackageTemplate template, int index, boolean selected, boolean hasFocus) {
+                if (template != null) {
+                    setText(template.getName());
+                }
+            }
+        });
         presenter.loadTemplates();
+        jbList.setSelectedIndex(0);
 
         root.add(getControls());
         root.add(jbList);
@@ -149,15 +158,6 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog implements 
     public void setTemplatesList(TemplateListModel<PackageTemplate> list) {
         jbList.removeAll();
         jbList.setModel(list);
-
-        jbList.setCellRenderer(new ListCellRendererWrapper<PackageTemplate>() {
-            @Override
-            public void customize(JList list, PackageTemplate template, int index, boolean selected, boolean hasFocus) {
-                if (template != null) {
-                    setText(template.getName());
-                }
-            }
-        });
     }
 
 }

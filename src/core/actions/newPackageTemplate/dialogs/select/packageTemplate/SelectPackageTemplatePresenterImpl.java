@@ -90,6 +90,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
                 SaveUtil.getInstance().save();
+                loadTemplates();
             }
 
             @Override

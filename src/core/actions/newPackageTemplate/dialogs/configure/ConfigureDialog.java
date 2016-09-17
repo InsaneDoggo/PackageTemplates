@@ -2,10 +2,12 @@ package core.actions.newPackageTemplate.dialogs.configure;
 
 import base.BaseDialog;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.util.ui.GridBag;
 import global.models.PackageTemplate;
 import global.utils.GridBagFactory;
 import global.wrappers.PackageTemplateWrapper;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
@@ -40,6 +42,12 @@ public abstract class ConfigureDialog extends BaseDialog implements ConfigureVie
         panel.setLayout(new GridBagLayout());
         GridBag gridBag = GridBagFactory.getBagForConfigureDialog();
         panel.add(ptWrapper.buildView(), gridBag.nextLine().next());
+    }
+
+    @Nullable
+    @Override
+    protected ValidationInfo doValidate() {
+        return presenter.doValidate();
     }
 
     @Override

@@ -45,7 +45,7 @@ public class ImpexPresenter {
 
     private ValidationInfo validateExport(String savePath) {
         if (savePath.isEmpty()) {
-            return new ValidationInfo(Localizer.get("FillEmptyFields"));
+            return new ValidationInfo(Localizer.get("warning.FillEmptyFields"));
         }
         return null;
     }

@@ -43,8 +43,6 @@ public class ImplementPresenterImpl implements ImplementPresenter {
     @Override
     public ValidationInfo doValidate() {
         ValidationInfo result;
-        result = TemplateValidator.validateProperties(ptWrapper);
-        if (result != null) return result;
 
         result = TemplateValidator.validateGlobalVariables(ptWrapper);
         if (result != null) return result;

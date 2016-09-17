@@ -129,7 +129,7 @@ public class FileWrapper extends ElementWrapper {
     @Override
     public ValidationInfo isNameValid(List<String> listAllTemplates) {
         if (!listAllTemplates.contains(getFile().getTemplateName())) {
-            return new ValidationInfo(String.format(Localizer.get("TemplateSDoesntExist"), getFile().getTemplateName()));
+            return new ValidationInfo(String.format(Localizer.get("warning.TemplateSDoesntExist"), getFile().getTemplateName()));
         }
         return null;
     }
