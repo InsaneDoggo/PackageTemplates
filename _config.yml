@@ -4,8 +4,9 @@ tagline:      Plugin for Intellij IDEA
 baseurl:      "/PackageTemplates"
 
 collections:
--  tutorials:
-     output: true
+  tutorials:
+    output: true
+    permalink: /tutorials/:path/
 
 # Gems
 gems:
