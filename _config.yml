@@ -7,6 +7,15 @@ collections:
   tutorials:
     output: true
     permalink: /tutorials/:path/
+        
+
+defaults:
+  - scope:
+      path: ""
+      type: tutorials
+    values:
+      layout: tutorial
+      css: tutorials.css
 
 # Gems
 gems:
