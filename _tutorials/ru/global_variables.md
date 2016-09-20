@@ -8,6 +8,10 @@ lang: ru
 #### Синтаксис
 **Example<font class="variable">${VARIABLE_NAME}</font>File**
 
+Чтобы добавить(удалить) глобальную переменную воспользуйтесь ПКМ.
+
+![add_global_variable]({{ site.baseurl }}/images/tutorial/add_global_variable.png){: .image}
+
 #### Где работает
 * В тексте [File Templates][2]
 * В названиях директорий
