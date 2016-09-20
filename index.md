@@ -1,11 +1,9 @@
 ---
 layout: page
+title: Package Templates
 ---
-## Documentation still in development!
 
-<!-- {% assign list = site.data.links %}
-{% for item in list %}
-* {{ item.key }} {{ item.value }} {% endfor %} -->
+**Documentation still in development!**
 
 ![en]({{ site.baseurl }}/images/lang/en.png) [English][1]<br>
 ![ru]({{ site.baseurl }}/images/lang/ru.png) [Русский][2]

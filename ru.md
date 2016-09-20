@@ -1,5 +1,6 @@
 ---
 layout: page
+title: Package Templates
 lang: ru
 ---
 

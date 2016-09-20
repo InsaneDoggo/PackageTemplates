@@ -10,7 +10,7 @@ lang: ru
 
 Чтобы добавить(удалить) глобальную переменную воспользуйтесь ПКМ.
 
-![add_global_variable]({{ site.baseurl }}/images/tutorial/add_global_variable.png){: .image}
+![add_global_variable]({{ site.baseurl }}/images/tutorial/add_global_variable.png){: .imageFragment}
 
 #### Где работает
 * В тексте [File Templates][2]

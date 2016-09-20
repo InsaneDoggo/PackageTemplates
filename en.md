@@ -1,5 +1,6 @@
 ---
 layout: page
+title: Package Templates
 lang: en
 ---
 <p>Documentation still in development!</p>

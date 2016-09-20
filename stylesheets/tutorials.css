@@ -3,9 +3,13 @@
 	color: #9400D3;
 }
 
-.image{
-	border: 2px dashed #383d3f;
+.image,
+.imageFragment {
 	display: block;
     margin-left: auto;
     margin-right: auto
+}
+
+.imageFragment{
+	border: 2px dashed #383d3f;
 }
