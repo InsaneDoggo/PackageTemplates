@@ -1,20 +1,18 @@
 ---
 layout: page
+lang: ru
 ---
 
 ### Описание
 Package Templates это плагин реализующий Multipe [File Templates][1]. Он позволяет создавать шаблоны, состоящие из директорий и File Tamplates.
 
-### Инструкция
-{% assign listTutorials = site.tutorials %}
+### Подробнее:
+{% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" %}
 {% for tutorial in listTutorials %}
-* [{{ tutorial.title }}]({{ site.baseurl }}{{ tutorial.url }})
-{% endfor %}
-* File templates into folder
-//todo tutorials..
+* [{{ tutorial.title }}]({{ site.baseurl }}{{ tutorial.url }}){% endfor %}
 
 ### Запланированные фичи
-* блабла..
+блабла..
 
 ### Awards
 Понравился плагин? Ставь лойс: <a class="github-button" href="https://github.com/CeH9/PackageTemplates" data-icon="octicon-star" data-count-href="/CeH9/PackageTemplates/stargazers" data-count-api="/repos/CeH9/PackageTemplates#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star CeH9/PackageTemplates on GitHub">Star</a>

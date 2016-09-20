@@ -1,24 +1,16 @@
 ---
 layout: page
+lang: en
 ---
 <p>Documentation still in development!</p>
 
 ### About
 Package Templates is extension for [File Templates][1]. Plugin let you create the folder that already contain File Tamplates in one action! Note: Folder can be disabled in settings if you need files only.
 
-### Test
-<p>{% assign listTutorials = site.tutorials %}
-{% for tutorial in listTutorials %}
-	<a href="{{ site.baseurl }}/pages/{{ page.name | replace: ".md", ""}}">{{ tutorial.title }}</a><br>
-{% endfor %}</p>
-
 ### Tutorials
-<ul class="posts">
-	{% assign listFeatures = site.pages | where:"category", "feature" %}
-	{% for page in listFeatures %}
-		<li><a href="{{ site.baseurl }}/pages/{{ page.name | replace: ".md", ""}}">{{ page.title }}</a></li>
-	{% endfor %}
-</ul>
+{% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" %}
+{% for tutorial in listTutorials %}
+* [{{ tutorial.title }}]({{ site.baseurl }}{{ tutorial.url }}){% endfor %}
 * File templates into folder
 //todo tutorials..
 

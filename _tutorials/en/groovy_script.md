@@ -1,7 +1,6 @@
 ---
-layout: post
 title: Groovy Script
-category: feature
+lang: en
 ---
 
 ### Hey, dude!
