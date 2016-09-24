@@ -5,7 +5,7 @@ lang: ru
 ---
 
 ### Описание
-Package Templates это плагин реализующий Multipe [File Templates][1]. Он позволяет создавать шаблоны, состоящие из директорий и File Tamplates.
+Package Templates это плагин реализующий Multiple [File Templates][1]. Он позволяет создавать шаблоны, состоящие из директорий и File Tamplates.
 
 ### Подробнее:
 {% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" | sort: 'order' %}
