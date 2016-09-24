@@ -3,3 +3,5 @@ file_templates: https://www.jetbrains.com/help/idea/2016.2/file-and-code-templat
 
 tutorial_global_variables_ru: /tutorials/ru/global_variables/
 tutorial_groovy_script_ru: /tutorials/ru/groovy_script/
+
+tutorials: /tutorials/

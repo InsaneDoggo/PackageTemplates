@@ -13,3 +13,15 @@
 .imageFragment{
 	border: 2px dashed #383d3f;
 }
+
+.prevUrl{
+	margin-right: 48px;
+}
+.nextUrl{
+	margin-left: 48px;
+}
+
+#footerNavigation{
+	display: table;
+    margin: 0 auto;
+}

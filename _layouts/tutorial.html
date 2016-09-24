@@ -1,21 +1,25 @@
 ---
 layout: default
 ---
-
-<p><a href="{{site.baseurl}}/{{ page.lang }}">{{ site.data.i18n.home[page.lang] }}</a></p>
-{% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" | sort: 'order' %}
-
-page.order: {{ page.order }}<br>
-listTutorials.size: {{ listTutorials.size }}<br>
-
-{% if page.order > 0 %}
-{% assign  %}
-{% assign nextTutorial =  listTutorials | where_exp:"item", "item.order == page.lang" %}
-{% endif %}<br>
-{% if page.order < listTutorials.size %}prev{% endif %}<br>
-
-<!-- {% assign nextTutorial = listTutorials | where:"order", page.order %} -->
-
+{% assign tutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" | sort: 'order' %}
+{% assign nextOrder = page.order | plus: 1 %}
+{% assign prevOrder = page.order | minus: 1 %}
+{% assign nextTutorial = tutorials | where:"order", nextOrder | first %}
+{% assign prevTutorial = tutorials | where:"order", prevOrder | first %}
 <h2>{{ page.title }}</h2>
 
 {{ content }}
+
+<br><hr>
+<!-- Предыдущий -->
+<div><div id="footerNavigation"div>
+{% if prevTutorial %}
+	<a class="prevUrl" href="{{ site.baseurl }}{{ prevTutorial.url }}">{{ site.data.i18n.prev[page.lang] }}</a> 
+{% endif %}
+<!-- Содержание -->
+<a href="{{ site.baseurl }}/{{ page.lang }}">{{ site.data.i18n.tableOfContents[page.lang] }}</a>
+<!-- Следующий -->
+{% if nextTutorial %}
+	<a class="nextUrl" href="{{ site.baseurl }}{{ nextTutorial.url }}">{{ site.data.i18n.next[page.lang] }}</a>
+{% endif %}
+</div></div>

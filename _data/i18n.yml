@@ -1,6 +1,9 @@
-home:
+tableOfContents:
   ru: Содержание
   en: Table of contents
-test:
-  ru: тест
-  en: test
+prev:
+  ru: Предыдущая
+  en: Prev
+next:
+  ru: Следующая
+  en: Next
