@@ -1,7 +1,7 @@
 ---
 title: Groovy Script
 lang: ru
-order: 4
+order: 20
 ---
 
 [Groovy][1] Script позволяет модифицировать:
@@ -27,4 +27,4 @@ order: 4
 ![groovy_dialog]({{ site.baseurl }}/images/tutorial/groovy_dialog.png){: .imageFragment}
 
 [1]: http://www.groovy-lang.org/
-[2]: {{site.baseurl}}{{ site.data.links.tutorial_global_variables_ru }}
+[2]: {{ site.baseurl}}{{ site.data.links.tutorial_global_variables[page.lang] }}

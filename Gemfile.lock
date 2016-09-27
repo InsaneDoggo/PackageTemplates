@@ -65,10 +65,6 @@ GEM
       shellany (~> 0.0)
       thor (>= 0.18.1)
     guard-compat (1.2.1)
-    guard-jekyll-plus (2.0.2)
-      guard (~> 2.10, >= 2.10.3)
-      guard-compat (~> 1.1)
-      jekyll (>= 1.0.0)
     guard-livereload (2.5.2)
       em-websocket (~> 0.5)
       guard (~> 2.8)
@@ -168,6 +164,7 @@ GEM
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     unicode-display_width (1.1.1)
+    wdm (0.1.1)
 
 PLATFORMS
   x64-mingw32
@@ -175,9 +172,9 @@ PLATFORMS
 DEPENDENCIES
   github-pages
   guard
-  guard-jekyll-plus
   guard-livereload
   jekyll
+  wdm (>= 0.1.0)
 
 BUNDLED WITH
    1.12.5

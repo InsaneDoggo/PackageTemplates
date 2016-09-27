@@ -1,7 +1,7 @@
 ---
 title: Multiple File Templates
 lang: ru
-order: 3
+order: 20
 ---
 
 ### Hey, dude!
