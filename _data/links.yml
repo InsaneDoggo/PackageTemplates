@@ -1,15 +1,27 @@
 file_template_variables: https://www.jetbrains.com/help/idea/2016.2/file-template-variables.html
 file_templates: https://www.jetbrains.com/help/idea/2016.2/file-and-code-templates.html
+shortcuts: https://www.jetbrains.com/help/idea/2016.2/configuring-keyboard-shortcuts.html#d2040983e232
+shortcuts_actions: https://www.jetbrains.com/help/idea/2016.2/keymap.html#d1413854e312
+jetbrains: https://www.jetbrains.com/
+plugin_from_disk: https://www.jetbrains.com/help/idea/2016.2/installing-plugin-from-disk.html
+plugin_from_repository: https://www.jetbrains.com/help/idea/2016.2/installing-updating-and-uninstalling-repository-plugins.html
+
+github_releases: https://github.com/CeH9/PackageTemplates/releases
 
 tutorials: /tutorials/
 
 tutorial_presettings:
   ru: /tutorials/ru/presettings/
   en: /tutorials/en/presettings/
-
 tutorial_global_variables:
   ru: /tutorials/ru/global_variables/
   en: /tutorials/en/global_variables/
 tutorial_groovy_script:
   ru: /tutorials/ru/groovy_script/
   en: /tutorials/en/groovy_script/
+tutorial_create_template:
+  ru: /tutorials/ru/create_template/
+  en: /tutorials/en/create_template/
+tutorial_shortcuts:
+  ru: /tutorials/ru/shortcuts/
+  en: /tutorials/en/shortcuts/
