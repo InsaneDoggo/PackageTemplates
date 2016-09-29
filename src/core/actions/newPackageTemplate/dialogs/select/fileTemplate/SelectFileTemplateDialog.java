@@ -1,7 +1,6 @@
 package core.actions.newPackageTemplate.dialogs.select.fileTemplate;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
@@ -9,13 +8,11 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBCheckBox;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBInsets;
 import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import global.models.TemplateForSearch;
 import org.jetbrains.annotations.NotNull;
-import global.utils.Localizer;
 
 import javax.swing.*;
 import java.awt.*;

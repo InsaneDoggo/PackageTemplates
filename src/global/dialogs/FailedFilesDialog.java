@@ -2,15 +2,12 @@ package global.dialogs;
 
 import base.BaseDialog;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.diff.impl.processing.HorizontalDiffSplitter;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.JBSplitter;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import global.utils.*;
+import global.utils.Localizer;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
 import global.wrappers.PackageTemplateWrapper;

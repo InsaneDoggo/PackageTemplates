@@ -10,6 +10,8 @@ import com.intellij.util.ui.GridBag;
 import core.groovy.GroovyExecutor;
 import global.models.BaseElement;
 import global.models.Directory;
+import global.utils.Localizer;
+import icons.PluginIcons;
 import global.visitors.ElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import global.utils.*;
@@ -189,9 +191,9 @@ public class DirectoryWrapper extends ElementWrapper {
 
         jlGroovy = new JBLabel();
         if (directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(CustomIconLoader.Groovy);
+            jlGroovy.setIcon(PluginIcons.GROOVY);
         } else {
-            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
+            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
         }
         jlGroovy.setToolTipText(Localizer.get("ColoredWhenItemHasGroovyScript"));
         cbEnabled.setToolTipText(Localizer.get("IfCheckedElementWillBeCreated"));
@@ -225,9 +227,9 @@ public class DirectoryWrapper extends ElementWrapper {
         }
 
         if (directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(CustomIconLoader.Groovy);
+            jlGroovy.setIcon(PluginIcons.GROOVY);
         } else {
-            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
+            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
         }
         jlName.setEnabled(directory.isEnabled());
         etfName.setEnabled(directory.isEnabled());

@@ -1,4 +1,4 @@
-<idea-plugin version="1">
+<idea-plugin version="10">
     <id>com.supaplugin2</id>
     <version>1.0</version>
     <name>PackageTemplate</name>
@@ -41,8 +41,8 @@
         <action id="PackageTemplate"
                 class="core.actions.newPackageTemplate.NewPackageTemplateAction"
                 description="Package Templates management"
-                icon="/icons/package_templates.png"
-                text="Open PackageTemplate Dialog">
+                icon="PluginIcons.PACKAGE_TEMPLATES"
+                text="PackageTemplates">
             <add-to-group group-id="NewGroup"
                           relative-to-action="NewFile"
                           anchor="before"/>

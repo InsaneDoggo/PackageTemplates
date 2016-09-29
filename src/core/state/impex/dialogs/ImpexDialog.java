@@ -12,8 +12,6 @@ import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.ArrayList;
 

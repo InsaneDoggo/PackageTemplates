@@ -10,10 +10,10 @@ import com.intellij.util.ui.GridBag;
 import global.listeners.ClickListener;
 import core.groovy.GroovyDialog;
 import core.groovy.GroovyExecutor;
+import icons.PluginIcons;
 import icons.JetgroovyIcons;
 import org.jetbrains.annotations.NotNull;
 import global.models.GlobalVariable;
-import global.utils.CustomIconLoader;
 import global.utils.GridBagFactory;
 import global.utils.Localizer;
 import global.utils.UIHelper;
@@ -111,9 +111,9 @@ public class GlobalVariableWrapper extends BaseWrapper {
 
         jlGroovy = new JBLabel();
         if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(CustomIconLoader.Groovy);
+            jlGroovy.setIcon(PluginIcons.GROOVY);
         } else {
-            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
+            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
         }
         jlGroovy.setToolTipText(Localizer.get("ColoredWhenItemHasGroovyScript"));
 
@@ -232,9 +232,9 @@ public class GlobalVariableWrapper extends BaseWrapper {
     @Override
     public void updateComponentsState() {
         if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(CustomIconLoader.Groovy);
+            jlGroovy.setIcon(PluginIcons.GROOVY);
         } else {
-            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
+            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
         }
     }
 

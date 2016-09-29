@@ -12,6 +12,8 @@ import com.intellij.util.ui.GridBag;
 import core.groovy.GroovyExecutor;
 import global.models.BaseElement;
 import global.models.File;
+import global.utils.Localizer;
+import icons.PluginIcons;
 import global.visitors.ElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import global.utils.*;
@@ -93,9 +95,9 @@ public class FileWrapper extends ElementWrapper {
 
         jlGroovy = new JBLabel();
         if (file.getGroovyCode() != null && !file.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(CustomIconLoader.Groovy);
+            jlGroovy.setIcon(PluginIcons.GROOVY);
         } else {
-            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
+            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
         }
         jlGroovy.setToolTipText(Localizer.get("ColoredWhenItemHasGroovyScript"));
         cbEnabled.setToolTipText(Localizer.get("IfCheckedElementWillBeCreated"));
@@ -188,9 +190,9 @@ public class FileWrapper extends ElementWrapper {
     @Override
     public void updateComponentsState() {
         if (file.getGroovyCode() != null && !file.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(CustomIconLoader.Groovy);
+            jlGroovy.setIcon(PluginIcons.GROOVY);
         } else {
-            jlGroovy.setIcon(CustomIconLoader.GroovyDisabled);
+            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
         }
         jlName.setEnabled(file.isEnabled());
         etfName.setEnabled(file.isEnabled());

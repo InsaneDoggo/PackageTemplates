@@ -15,6 +15,7 @@ import com.intellij.util.ui.GridBag;
 import global.dialogs.FailedFilesDialog;
 import global.models.*;
 import global.utils.*;
+import global.utils.Localizer;
 import global.visitors.AddGlobalVariablesVisitor;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
@@ -217,7 +218,7 @@ public class PackageTemplateWrapper {
     }
 
     /**
-     * Replace BASE_NAME and Run Groovy
+     * Replace BASE_NAME and Run GROOVY
      */
     public void prepareGlobals() {
         packageTemplate.setMapGlobalVars(new HashMap<>());
@@ -228,7 +229,7 @@ public class PackageTemplateWrapper {
                 if (!variableWrapper.getGlobalVariable().getName().equals(ATTRIBUTE_BASE_NAME)) {
                     variableWrapper.replaceBaseName(packageTemplate.getMapGlobalVars().get(ATTRIBUTE_BASE_NAME));
                 }
-                // Groovy
+                // GROOVY
                 variableWrapper.runGroovyScript();
             }
             packageTemplate.getMapGlobalVars().put(variableWrapper.getGlobalVariable().getName(), variableWrapper.getGlobalVariable().getValue());
