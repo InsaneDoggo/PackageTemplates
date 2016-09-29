@@ -17,7 +17,7 @@
     <idea-version since-build="141.0"/>
 
     <depends>com.intellij.modules.lang</depends>
-    <depends>com.intellij.modules.java</depends>
+    <!--<depends>com.intellij.modules.java</depends>-->
     <depends>org.intellij.groovy</depends>
     <!--<depends>com.intellij.modules.platform</depends>-->
     <!--<depends>com.intellij.modules.vcs</depends>-->
