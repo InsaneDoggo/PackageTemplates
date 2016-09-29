@@ -2,10 +2,11 @@ package core.groovy;
 
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
 import global.utils.Localizer;
 import global.utils.TemplateValidator;
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
+
 
 /**
  * Created by CeH9 on 19.07.2016.
@@ -36,7 +37,7 @@ public class GroovyExecutor {
             return TemplateValidator.validateText(
                     etfCode,
                     (String) getShell().evaluate(String.format(GROOVY_CODE_PATTERN, etfCode.getText(), variable)),
-                    TemplateValidator.FieldType.CLASS_NAME
+                    TemplateValidator.FieldType.GROOVY_SCRIPT
             );
         } catch (Exception e) {
             return new ValidationInfo(e.getMessage());

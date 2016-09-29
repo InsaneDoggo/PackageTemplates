@@ -1,6 +1,7 @@
 package global.utils;
 
-import com.google.common.base.Charsets;
+
+import org.apache.commons.codec.Charsets;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

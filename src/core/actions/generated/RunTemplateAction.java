@@ -5,8 +5,11 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.newPackageTemplate.NewPackageTemplateAction;
+import core.state.SaveUtil;
 import global.models.PackageTemplate;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 
 /**
  * Created by Arsen on 11.09.2016.
@@ -26,12 +29,29 @@ public class RunTemplateAction extends BaseAction {
         VirtualFile virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         Project project = event.getProject();
 
+        packageTemplate = getPackageTemplateByName(packageTemplate.getName());
+        if(packageTemplate == null){
+            // TODO: 29.09.2016 template not found msg
+            return;
+        }
+
         if (packageTemplate.isSkipDefiningNames()) {
             NewPackageTemplateAction.executeTemplateSilently(packageTemplate, project, virtualFile);
         } else {
             NewPackageTemplateAction.showDialog(packageTemplate, project, virtualFile);
         }
 
+    }
+
+    @Nullable
+    private PackageTemplate getPackageTemplateByName(String name) {
+        ArrayList<PackageTemplate> list = SaveUtil.getInstance().getStateModel().getListPackageTemplate();
+        for(PackageTemplate pt : list){
+            if(pt.getName().equals(name)){
+                return pt;
+            }
+        }
+        return null;
     }
 
 }

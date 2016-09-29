@@ -42,7 +42,7 @@
                 class="core.actions.newPackageTemplate.NewPackageTemplateAction"
                 description="Package Templates management"
                 icon="/icons/package_templates.png"
-                text="New PackageTemplate">
+                text="Open PackageTemplate Dialog">
             <add-to-group group-id="NewGroup"
                           relative-to-action="NewFile"
                           anchor="before"/>

@@ -13,10 +13,10 @@ import core.actions.newPackageTemplate.dialogs.select.fileTemplate.SelectFileTem
 import global.listeners.ClickListener;
 import core.groovy.GroovyDialog;
 import global.visitors.ElementVisitor;
-import icons.JetgroovyIcons;
 import global.models.BaseElement;
 import global.utils.Localizer;
 import global.utils.WrappersFactory;
+import icons.JetgroovyIcons;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

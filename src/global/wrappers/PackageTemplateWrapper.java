@@ -2,7 +2,6 @@ package global.wrappers;
 
 import com.google.common.collect.Lists;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
@@ -12,7 +11,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBCheckBox;
-import com.intellij.util.ui.CheckBox;
 import com.intellij.util.ui.GridBag;
 import global.dialogs.FailedFilesDialog;
 import global.models.*;
@@ -23,11 +21,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -153,7 +148,7 @@ public class PackageTemplateWrapper {
 
             // Properties
             cbShouldRegisterAction = new JBCheckBox(Localizer.get("property.ShouldRegisterAction"), packageTemplate.isShouldRegisterAction());
-            cbSkipDefiningNames = new JBCheckBox(Localizer.get("property.SkipDefiningNames"), packageTemplate.isSkipDefiningNames());
+            cbSkipDefiningNames = new JBCheckBox(Localizer.get("property.SkipPresettings"), packageTemplate.isSkipDefiningNames());
             jpProperties.add(cbShouldRegisterAction, new CC().wrap().spanX());
             jpProperties.add(cbSkipDefiningNames, new CC().wrap().spanX());
         }

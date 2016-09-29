@@ -37,7 +37,7 @@ public class WrappersFactory {
         PackageTemplate packageTemplate = new PackageTemplate();
         packageTemplate.setMapGlobalVars(new HashMap<>());
         packageTemplate.setListGlobalVariable(new ArrayList<>());
-        packageTemplate.setName("New Package Template");
+        packageTemplate.setName("New_Package_Template");
         packageTemplate.setDescription("");
         packageTemplate.setDirectory(directory);
         packageTemplate.setSkipRootDirectory(false);

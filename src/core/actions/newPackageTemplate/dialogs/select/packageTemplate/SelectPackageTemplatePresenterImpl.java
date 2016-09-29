@@ -26,7 +26,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     public SelectPackageTemplatePresenterImpl(SelectPackageTemplateView view, Project project) {
         this.view = view;
         this.project = project;
-        view.setTitle(Localizer.get("SelectFileTemplate"));
+        view.setTitle(Localizer.get("SelectPackageTemplate"));
     }
 
 

@@ -1,5 +1,6 @@
 package core.state.impex.models;
 
+
 import com.google.gson.annotations.Expose;
 
 /**
@@ -7,14 +8,11 @@ import com.google.gson.annotations.Expose;
  */
 public class ExpFileTemplate {
 
-    @Expose
-    private String name;
+    @Expose private String name;
     @Expose
     private String extension;
-    @Expose
-    private String description;
-    @Expose
-    private String text;
+    @Expose private String description;
+    @Expose private String text;
 
     public ExpFileTemplate(String name, String extension, String description, String text) {
         this.name = name;
