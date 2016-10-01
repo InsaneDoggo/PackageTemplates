@@ -1,8 +1,8 @@
 <idea-plugin version="10">
-    <id>com.supaplugin2</id>
+    <id>dev.senya.packagetemplates</id>
     <version>1.0</version>
     <name>PackageTemplate</name>
-    <vendor email="support@supaplugin.com" url="http://www.supaplugin.com">YourCompany</vendor>
+    <vendor email="senya.dev@gmail.com" url="http://ceh9.github.io/PackageTemplates/">CeH9</vendor>
 
     <description><![CDATA[
       Tool for create "package templates".<br>
@@ -13,6 +13,8 @@
       No changes.<br>
     ]]>
     </change-notes>
+
+    <resource-bundle>localization.MyResources</resource-bundle>
 
     <idea-version since-build="141.0"/>
 
@@ -42,7 +44,7 @@
                 class="core.actions.newPackageTemplate.NewPackageTemplateAction"
                 description="Package Templates management"
                 icon="PluginIcons.PACKAGE_TEMPLATES"
-                text="PackageTemplates">
+                text="Package Template">
             <add-to-group group-id="NewGroup"
                           relative-to-action="NewFile"
                           anchor="before"/>

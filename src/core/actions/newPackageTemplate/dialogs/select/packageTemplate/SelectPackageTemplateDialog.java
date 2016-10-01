@@ -13,6 +13,7 @@ import global.models.TemplateListModel;
 import global.utils.GridBagFactory;
 import global.utils.Localizer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,6 +52,28 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog implements 
     @Override
     public void onCancelAction() {
         presenter.onCancel();
+    }
+
+    @NotNull
+    @Override
+    protected Action getOKAction() {
+        Action action = super.getOKAction();
+        action.putValue(Action.NAME, Localizer.get("action.Select"));
+        return action;
+    }
+
+    @NotNull
+    @Override
+    protected Action getCancelAction() {
+        Action action = super.getCancelAction();
+        action.putValue(Action.NAME, Localizer.get("action.Cancel"));
+        return action;
+    }
+
+    @Nullable
+    @Override
+    public JComponent getPreferredFocusedComponent() {
+        return jbList;
     }
 
     @Override
