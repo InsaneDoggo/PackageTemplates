@@ -1,7 +1,7 @@
 ---
 title: Groovy Скрпит
 lang: ru
-order: 20
+order: 6
 ---
 
 [Groovy][1] Скрипт позволяет модифицировать:

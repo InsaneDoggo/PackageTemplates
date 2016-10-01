@@ -8,6 +8,11 @@ plugin_from_repository: https://www.jetbrains.com/help/idea/2016.2/installing-up
 
 github_releases: https://github.com/CeH9/PackageTemplates/releases
 
+mailto_plugin: mailto:senya.dev@gmail.com?subject=Package%20Templates
+mailto_developer: mailto:doter.ua@gmail.com
+forum_plugin: https://intellij-support.jetbrains.com/hc/en-us/community/topics/200366979-IntelliJ-IDEA-Open-API-and-Plugin-Development
+github_todo_project: https://github.com/CeH9/PackageTemplates/projects/1
+
 tutorials: /tutorials/
 
 tutorial_presettings:
