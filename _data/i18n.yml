@@ -1,3 +1,6 @@
+# Usage: 
+# {{ site.data.i18n.example[key] }}
+
 tableOfContents:
   ru: Содержание
   en: Table of contents

@@ -1,2 +1,7 @@
+# Non translatable values
+# Usage: 
+# {{ site.data.const.example }}
+
 main_action_name: Package Template
 option_skip_settings: Skip Presettings
+button_select: Select

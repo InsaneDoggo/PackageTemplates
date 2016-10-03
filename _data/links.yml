@@ -1,3 +1,8 @@
+# Usage: 
+# {{ site.data.links.example }}
+# {{ site.data.links.exampleCollection[key] }}
+
+# JetBrains
 file_template_variables: https://www.jetbrains.com/help/idea/2016.2/file-template-variables.html
 file_templates: https://www.jetbrains.com/help/idea/2016.2/file-and-code-templates.html
 shortcuts: https://www.jetbrains.com/help/idea/2016.2/configuring-keyboard-shortcuts.html#d2040983e232
@@ -6,15 +11,19 @@ jetbrains: https://www.jetbrains.com/
 plugin_from_disk: https://www.jetbrains.com/help/idea/2016.2/installing-plugin-from-disk.html
 plugin_from_repository: https://www.jetbrains.com/help/idea/2016.2/installing-updating-and-uninstalling-repository-plugins.html
 
-github_releases: https://github.com/CeH9/PackageTemplates/releases
+forum_plugin: https://intellij-support.jetbrains.com/hc/en-us/community/topics/200366979-IntelliJ-IDEA-Open-API-and-Plugin-Development
 
+# GitHub
+github_releases: https://github.com/CeH9/PackageTemplates/releases
+github_todo_project: https://github.com/CeH9/PackageTemplates/projects/1
+
+# Mails
 mailto_plugin: mailto:senya.dev@gmail.com?subject=Package%20Templates
 mailto_developer: mailto:doter.ua@gmail.com
-forum_plugin: https://intellij-support.jetbrains.com/hc/en-us/community/topics/200366979-IntelliJ-IDEA-Open-API-and-Plugin-Development
-github_todo_project: https://github.com/CeH9/PackageTemplates/projects/1
 
 tutorials: /tutorials/
 
+# tutorials by lang key: example[page.lang]
 tutorial_presettings:
   ru: /tutorials/ru/presettings/
   en: /tutorials/en/presettings/

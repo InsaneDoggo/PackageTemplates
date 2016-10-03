@@ -12,7 +12,7 @@ order: 2
 
 ![select_package_template]({{ site.baseurl }}/images/tutorial/select_package_template.png){: .image}
 
-Чтобы воспользоваться шаблоном выделите его и нажмите **OK**
+Чтобы воспользоваться шаблоном выделите его и нажмите **{{ site.data.const.button_select }}**
 
 
 [1]: {{ site.baseurl}}{{ site.data.links.tutorial_shortcuts[page.lang] }}
