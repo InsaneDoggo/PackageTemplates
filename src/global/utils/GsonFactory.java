@@ -22,4 +22,9 @@ public class GsonFactory {
         }
         return instance;
     }
+
+    public static <T> T cloneObject(T object, Class<T> type){
+        return getInstance().fromJson(getInstance().toJson(object, type), type);
+    }
+
 }

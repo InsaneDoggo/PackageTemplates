@@ -1,6 +1,7 @@
 package global.utils;
 
 import global.models.TextRange;
+import global.wrappers.PackageTemplateWrapper;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -12,9 +13,11 @@ import java.util.regex.Pattern;
  */
 public class StringTools {
 
-    public static final String PATTERN_ATTRIBUTE = ".*\\$\\{([_a-zA-Z0-9]*)\\}.*";
     public static final String EMPTY_NAME = "UNNAMED";
     public static final String UNKNOWN_GLOBAL = "UNKNOWN_GLOBAL";
+
+    public static final String PATTERN_ATTRIBUTE = "\\$\\{([_a-zA-Z0-9]*)\\}";
+    public static final String PATTERN_BASE_NAME = "\\$\\{(" + PackageTemplateWrapper.ATTRIBUTE_BASE_NAME + ")\\}";
 
     public static String replaceGlobalVariables(String text, Map<String, String> mapGlobals) {
         Pattern pattern = Pattern.compile(PATTERN_ATTRIBUTE);
@@ -35,25 +38,12 @@ public class StringTools {
         return text;
     }
 
-    public static final String VAR_PREFIX = "${";
-    public static final String VAR_POSTFIX = "}";
-
-    public static ArrayList<TextRange> findVariable(String text) {
-        Pattern pattern = Pattern.compile(PATTERN_ATTRIBUTE);
-        Matcher matcher = pattern.matcher(text);
-        ArrayList<TextRange> result = new ArrayList<>();
-
-        while (matcher.find()) {
-            result.add(new TextRange(matcher.start(1)- VAR_PREFIX.length(), matcher.end(1)+ VAR_POSTFIX.length()));
-            text = text.replace(String.format("%s%s%s", VAR_PREFIX, matcher.group(1), VAR_POSTFIX), "a");
-            matcher = pattern.matcher(text);
-        }
-
-        return result;
+    public static boolean containsVariable(String text) {
+        return text.matches(greedy(PATTERN_ATTRIBUTE));
     }
 
-    public static boolean containsVariable(String text) {
-        return text.matches(PATTERN_ATTRIBUTE);
+    private static String greedy(String text) {
+        return ".*" +  text + ".*";
     }
 
 }

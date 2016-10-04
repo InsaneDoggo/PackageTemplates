@@ -1,18 +1,11 @@
 package global.utils;
 
-import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.codeInsight.template.impl.TemplateColors;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
-import global.models.TextRange;
+import global.utils.highligt.HighlightHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,44 +27,13 @@ public class UIHelper {
         etfName.addSettingsProvider(new EditorSettingsProvider() {
             @Override
             public void customizeSettings(EditorEx editor) {
-                addHighlightListener(project, etfName, editor);
-                applyHighlightRange(etfName.getText(), project, editor);
+                HighlightHelper.addHighlightListener(project, etfName, editor, StringTools.PATTERN_ATTRIBUTE);
+                HighlightHelper.applyHighlightRange(HighlightHelper.findResults(etfName.getText(), StringTools.PATTERN_ATTRIBUTE), project, editor);
             }
         });
 
         etfName.setText(defValue);
         return etfName;
-    }
-
-    private static void addHighlightListener(final Project project, final EditorTextField etfName, EditorEx editor) {
-        etfName.addDocumentListener(new DocumentListener() {
-            @Override
-            public void beforeDocumentChange(DocumentEvent event) {
-            }
-
-            @Override
-            public void documentChanged(DocumentEvent event) {
-                if (editor == null || !StringTools.containsVariable(event.getDocument().getText())) {
-                    return;
-                }
-                //highlight text
-                applyHighlightRange(event.getDocument().getText(), project, editor);
-            }
-        });
-    }
-
-    private static void applyHighlightRange(String text, Project project, Editor editor) {
-        if (project == null) {
-            return;
-        }
-
-        EditorColorsScheme scheme = editor.getColorsScheme();
-        TextAttributes attributes = scheme.getAttributes(TemplateColors.TEMPLATE_VARIABLE_ATTRIBUTES);
-
-        for (TextRange textRange : StringTools.findVariable(text)) {
-            HighlightManager.getInstance(project).addRangeHighlight(
-                    editor, textRange.getBegin(), textRange.getEnd(), attributes, true, null);
-        }
     }
 
     public static void setLeftPadding(JComponent component, int padding) {

@@ -1,15 +1,19 @@
 package global.wrappers;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
+import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import global.listeners.ClickListener;
 import core.groovy.GroovyDialog;
 import core.groovy.GroovyExecutor;
+import global.utils.StringTools;
+import global.utils.highligt.HighlightHelper;
 import icons.PluginIcons;
 import icons.JetgroovyIcons;
 import org.jetbrains.annotations.NotNull;
@@ -75,6 +79,15 @@ public class GlobalVariableWrapper extends BaseWrapper {
 
         tfValue = new EditorTextField(globalVariable.getValue());
         tfValue.setAlignmentX(Component.LEFT_ALIGNMENT);
+        if (!globalVariable.getName().equals(ATTRIBUTE_BASE_NAME)) {
+            tfValue.addSettingsProvider(new EditorSettingsProvider() {
+                @Override
+                public void customizeSettings(EditorEx editor) {
+                    HighlightHelper.addHighlightListener(ptWrapper.getProject(), tfValue, editor, StringTools.PATTERN_BASE_NAME);
+                    HighlightHelper.applyHighlightRange(HighlightHelper.findResults(tfValue.getText(), StringTools.PATTERN_BASE_NAME), ptWrapper.getProject(), editor);
+                }
+            });
+        }
 
         if (ptWrapper.getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
             tfKey.setEnabled(false);

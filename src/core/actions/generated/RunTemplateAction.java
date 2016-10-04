@@ -7,6 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.newPackageTemplate.NewPackageTemplateAction;
 import core.state.SaveUtil;
 import global.models.PackageTemplate;
+import global.utils.GsonFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,11 +30,13 @@ public class RunTemplateAction extends BaseAction {
         VirtualFile virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         Project project = event.getProject();
 
-        packageTemplate = getPackageTemplateByName(packageTemplate.getName());
-        if(packageTemplate == null){
+        PackageTemplate pt = getPackageTemplateByName(packageTemplate.getName());
+        if(pt == null){
             // TODO: 29.09.2016 template not found msg
+            System.out.println("action: pt == null");
             return;
         }
+        packageTemplate = GsonFactory.cloneObject(pt, PackageTemplate.class);
 
         if (packageTemplate.isSkipDefiningNames()) {
             NewPackageTemplateAction.executeTemplateSilently(packageTemplate, project, virtualFile);
