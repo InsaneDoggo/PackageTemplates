@@ -7,7 +7,6 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
-import core.groovy.GroovyExecutor;
 import global.models.BaseElement;
 import global.models.Directory;
 import global.utils.Localizer;
@@ -22,7 +21,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.font.TextAttribute;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,15 +67,6 @@ public class DirectoryWrapper extends ElementWrapper {
     }
 
     @Override
-    public void replaceNameVariable(HashMap<String, String> mapVariables) {
-        directory.setName(StringTools.replaceGlobalVariables(directory.getName(), mapVariables));
-
-        for (ElementWrapper element : getListElementWrapper()) {
-            element.replaceNameVariable(mapVariables);
-        }
-    }
-
-    @Override
     public ValidationInfo isNameValid(List<String> listAllTemplates) {
         for (ElementWrapper element : getListElementWrapper()) {
             ValidationInfo validationInfo = element.isNameValid(listAllTemplates);
@@ -102,27 +91,6 @@ public class DirectoryWrapper extends ElementWrapper {
         }
 
         return null;
-    }
-
-    @Override
-    public void writeFile(PsiDirectory currentDir, Project project) {
-        if (!directory.isEnabled()) {
-            return;
-        }
-        if (getParent() == null && getPackageTemplateWrapper().getPackageTemplate().isSkipRootDirectory()) {
-            // Only files without Directory
-            for (ElementWrapper element : getListElementWrapper()) {
-                element.writeFile(currentDir, project);
-            }
-        } else {
-            PsiDirectory subDirectory = FileWriter.writeDirectory(currentDir, this, project);
-            if (subDirectory != null) {
-                getPackageTemplateWrapper().getWrittenElements().add(subDirectory);
-                for (ElementWrapper element : getListElementWrapper()) {
-                    element.writeFile(subDirectory, project);
-                }
-            }
-        }
     }
 
     public void addElement(ElementWrapper element) {
@@ -233,26 +201,6 @@ public class DirectoryWrapper extends ElementWrapper {
         }
         jlName.setEnabled(directory.isEnabled());
         etfName.setEnabled(directory.isEnabled());
-    }
-
-    @Override
-    public void collectDataFromFields() {
-        directory.setName(etfName.getText());
-
-        for (ElementWrapper elementWrapper : getListElementWrapper()) {
-            elementWrapper.collectDataFromFields();
-        }
-    }
-
-    @Override
-    public void runGroovyScript() {
-        if (directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty()) {
-            directory.setName(GroovyExecutor.runGroovy(directory.getGroovyCode(), directory.getName()));
-        }
-
-        for (ElementWrapper elementWrapper : listElementWrapper) {
-            elementWrapper.runGroovyScript();
-        }
     }
 
 }

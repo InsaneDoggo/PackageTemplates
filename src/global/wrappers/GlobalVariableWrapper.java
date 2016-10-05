@@ -229,13 +229,11 @@ public class GlobalVariableWrapper extends BaseWrapper {
         ptWrapper.reBuildView();
     }
 
-    @Override
     public void collectDataFromFields() {
         globalVariable.setName(tfKey.getText());
         globalVariable.setValue(tfValue.getText());
     }
 
-    @Override
     public void runGroovyScript() {
         if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
             globalVariable.setValue(GroovyExecutor.runGroovy(globalVariable.getGroovyCode(), globalVariable.getValue()));

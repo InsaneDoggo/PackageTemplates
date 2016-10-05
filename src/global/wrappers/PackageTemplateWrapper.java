@@ -16,7 +16,7 @@ import global.dialogs.FailedFilesDialog;
 import global.models.*;
 import global.utils.*;
 import global.utils.Localizer;
-import global.visitors.AddGlobalVariablesVisitor;
+import global.visitors.*;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 
@@ -198,7 +198,7 @@ public class PackageTemplateWrapper {
     }
 
     public void replaceNameVariable() {
-        rootElement.replaceNameVariable(packageTemplate.getMapGlobalVars());
+        rootElement.accept(new ReplaceNameVariableVisitor(packageTemplate.getMapGlobalVars()));
     }
 
     public void collectDataFromFields() {
@@ -214,7 +214,7 @@ public class PackageTemplateWrapper {
             variableWrapper.collectDataFromFields();
         }
 
-        rootElement.collectDataFromFields();
+        rootElement.accept(new СollectDataFromFieldsVisitor());
     }
 
     /**
@@ -277,7 +277,7 @@ public class PackageTemplateWrapper {
     }
 
     public void runElementsGroovyScript() {
-        rootElement.runGroovyScript();
+        rootElement.accept(new RunGroovyScriptVisitor());
     }
 
     public void writeTemplate(Project project, VirtualFile virtualFile) {
@@ -286,7 +286,7 @@ public class PackageTemplateWrapper {
             failedElements = new ArrayList<>();
             writtenElements = new ArrayList<>();
             initDefaultProperties();
-            rootElement.writeFile(currentDir, project);
+            rootElement.accept(new WriteElementVisitor(currentDir, project));
         }
 
         if (!failedElements.isEmpty()) {

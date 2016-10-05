@@ -12,8 +12,6 @@ public abstract class BaseWrapper {
     JBCheckBox cbEnabled;
     JLabel jlGroovy;
 
-    public abstract void collectDataFromFields();
-    public abstract void runGroovyScript();
     public abstract void updateComponentsState();
 
 }

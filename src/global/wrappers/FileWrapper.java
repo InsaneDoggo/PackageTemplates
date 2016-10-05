@@ -33,7 +33,7 @@ import java.util.Properties;
 public class FileWrapper extends ElementWrapper {
 
     private File file;
-    private CreateFromTemplatePanel panelVariables;
+    public CreateFromTemplatePanel panelVariables;
 
     @Override
     public void accept(ElementVisitor visitor) {
@@ -124,11 +124,6 @@ public class FileWrapper extends ElementWrapper {
     }
 
     @Override
-    public void replaceNameVariable(HashMap<String, String> mapVariables) {
-        getFile().setName(StringTools.replaceGlobalVariables(getFile().getName(), mapVariables));
-    }
-
-    @Override
     public ValidationInfo isNameValid(List<String> listAllTemplates) {
         if (!listAllTemplates.contains(getFile().getTemplateName())) {
             return new ValidationInfo(String.format(Localizer.get("warning.TemplateSDoesntExist"), getFile().getTemplateName()));
@@ -142,15 +137,6 @@ public class FileWrapper extends ElementWrapper {
     }
 
     @Override
-    public void writeFile(PsiDirectory currentDir, Project project) {
-        if (!file.isEnabled()) {
-            return;
-        }
-
-        PsiElement psiElement = FileWriter.writeFile(currentDir, this);
-    }
-
-    @Override
     public void setEnabled(boolean isEnabled) {
         cbEnabled.setSelected(isEnabled);
         file.setEnabled(isEnabled);
@@ -160,31 +146,6 @@ public class FileWrapper extends ElementWrapper {
     @Override
     public void removeMyself() {
         getParent().removeElement(this);
-    }
-
-    @Override
-    public void collectDataFromFields() {
-        file.setTemplateName(jlName.getText());
-        file.setName(etfName.getText());
-
-        if (getPackageTemplateWrapper().getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
-            getFile().setMapProperties(new HashMap<>());
-            if (panelVariables != null) {
-                Properties properties = new Properties();
-                properties = panelVariables.getProperties(properties);
-
-                for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-                    getFile().getMapProperties().put((String) entry.getKey(), (String) entry.getValue());
-                }
-            }
-        }
-    }
-
-    @Override
-    public void runGroovyScript() {
-        if (file.getGroovyCode() != null && !file.getGroovyCode().isEmpty()) {
-            file.setName(GroovyExecutor.runGroovy(file.getGroovyCode(), file.getName()));
-        }
     }
 
     @Override

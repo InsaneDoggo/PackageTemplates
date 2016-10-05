@@ -43,10 +43,8 @@ public abstract class ElementWrapper extends BaseWrapper {
     public abstract void addElement(ElementWrapper element);
     public abstract BaseElement getElement();
     public abstract boolean isDirectory();
-    public abstract void replaceNameVariable(HashMap<String, String> mapVariables);
     public abstract ValidationInfo isNameValid(List<String> listAllTemplates);
     public abstract ValidationInfo validateFields();
-    public abstract void writeFile(PsiDirectory currentDir, Project project);
     public abstract void setEnabled(boolean isEnabled);
 
     public DirectoryWrapper getParent() {
