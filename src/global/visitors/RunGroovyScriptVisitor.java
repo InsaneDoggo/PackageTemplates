@@ -1,5 +1,6 @@
 package global.visitors;
 
+import base.ElementVisitor;
 import core.groovy.GroovyExecutor;
 import global.models.Directory;
 import global.models.File;

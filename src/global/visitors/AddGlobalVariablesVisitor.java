@@ -1,5 +1,6 @@
 package global.visitors;
 
+import base.ElementVisitor;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;

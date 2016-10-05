@@ -72,12 +72,4 @@ public class GridBagFactory {
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
-    public static GridBag getBagForSpoiler() {
-        return new GridBag()
-                .setDefaultInsets(new JBInsets(4,4,4,4))
-                .anchor(GridBagConstraints.NORTH)
-                .setDefaultFill(GridBagConstraints.HORIZONTAL)
-                .setDefaultWeightX(0, 0)
-                .setDefaultWeightX(1, 1);
-    }
 }

@@ -3,7 +3,6 @@ package global.wrappers;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
@@ -11,7 +10,7 @@ import global.models.BaseElement;
 import global.models.Directory;
 import global.utils.Localizer;
 import icons.PluginIcons;
-import global.visitors.ElementVisitor;
+import base.ElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import global.utils.*;
 

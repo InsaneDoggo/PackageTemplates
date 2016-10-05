@@ -1,8 +1,8 @@
 package global.visitors;
 
+import base.ElementVisitor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import global.models.Directory;
 import global.models.File;
 import global.utils.FileWriter;

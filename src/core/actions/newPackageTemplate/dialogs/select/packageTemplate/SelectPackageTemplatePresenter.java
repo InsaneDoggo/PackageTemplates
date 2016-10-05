@@ -18,11 +18,14 @@ public interface SelectPackageTemplatePresenter {
 
     void loadTemplates();
 
-    void onDeleteAction(JButton jbDelete, PackageTemplate selectedValue);
+    void onDeleteAction(PackageTemplate selectedValue);
 
     void onAddAction();
 
     void onEditAction(PackageTemplate packageTemplate);
 
     void onExportAction();
+
+    void onSettingsAction();
+
 }

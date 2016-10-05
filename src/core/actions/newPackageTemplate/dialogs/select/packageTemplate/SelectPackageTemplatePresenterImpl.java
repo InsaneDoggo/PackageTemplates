@@ -3,6 +3,7 @@ package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
+import core.settings.SettingsDialog;
 import core.state.SaveUtil;
 import core.state.impex.dialogs.ImpexDialog;
 import core.state.models.StateModel;
@@ -58,8 +59,8 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     }
 
     @Override
-    public void onDeleteAction(JButton jbDelete, PackageTemplate selectedValue) {
-        int confirmDialog = JOptionPane.showConfirmDialog(jbDelete, Localizer.get("DeleteTemplate"));
+    public void onDeleteAction(PackageTemplate selectedValue) {
+        int confirmDialog = JOptionPane.showConfirmDialog(((SelectPackageTemplateDialog) view).panel, Localizer.get("DeleteTemplate"));
         if (confirmDialog == JOptionPane.OK_OPTION) {
             templateList.remove(selectedValue);
             SaveUtil.getInstance().save();
@@ -113,6 +114,12 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
                 System.out.println("onCancel");
             }
         };
+        dialog.show();
+    }
+
+    @Override
+    public void onSettingsAction() {
+        SettingsDialog dialog = new SettingsDialog(project);
         dialog.show();
     }
 }

@@ -7,6 +7,8 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.ui.components.JBList;
 import com.intellij.util.ui.GridBag;
+import core.actions.newPackageTemplate.dialogs.select.packageTemplate.controls.Control;
+import core.actions.newPackageTemplate.dialogs.select.packageTemplate.controls.ControlsAdapter;
 import global.listeners.ReleaseListener;
 import global.models.PackageTemplate;
 import global.models.TemplateListModel;
@@ -18,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 /**
  * Created by CeH9 on 24.06.2016.
@@ -106,76 +109,58 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog implements 
         JPanel container = new JPanel(new GridBagLayout());
         GridBag bag = GridBagFactory.getBagForSelectDialog();
 
-        JButton jbAdd = getIconButton(AllIcons.General.Add);
-        JButton jbDelete = getIconButton(AllIcons.General.Remove);
-        JButton jbEdit = getIconButton(AllIcons.Modules.Edit);
-        JButton jbExport = getIconButton(AllIcons.Graph.Export);
-
-        jbAdd.addMouseListener(new ReleaseListener() {
-            @Override
-            public void mouseReleased(MouseEvent event) {
-                onAddAction();
-            }
-        });
-        jbDelete.addMouseListener(new ReleaseListener() {
-            @Override
-            public void mouseReleased(MouseEvent event) {
-                if (SwingUtilities.isLeftMouseButton(event)) {
-                    onDeleteAction(jbDelete);
-                }
-            }
-        });
-        jbEdit.addMouseListener(new ReleaseListener() {
-            @Override
-            public void mouseReleased(MouseEvent event) {
-                if (SwingUtilities.isLeftMouseButton(event)) {
-                    onEditAction();
-                }
-            }
-        });
-        jbExport.addMouseListener(new ReleaseListener() {
-            @Override
-            public void mouseReleased(MouseEvent event) {
-                if (SwingUtilities.isLeftMouseButton(event)) {
-                    onExportAction();
-                }
-            }
-        });
-
-        container.add(jbAdd, bag.nextLine().next());
-        container.add(jbDelete, bag.next());
-        container.add(jbEdit, bag.next());
-        //todo uncomment & complete export action
-//        container.add(jbExport, bag.next());
+        ControlsAdapter controlsAdapter = new ControlsAdapter(container, createActionButtons(), bag);
+        controlsAdapter.buildView();
 
         return container;
     }
 
-    private void onExportAction() {
-        presenter.onExportAction();
-    }
+    private ArrayList<Control> createActionButtons() {
+        ArrayList<Control> listControls = new ArrayList<>();
 
-    private void onEditAction() {
-        if (!jbList.isSelectionEmpty()) {
-            presenter.onEditAction((PackageTemplate) jbList.getSelectedValue());
-        }
-    }
-
-    private void onDeleteAction(JButton jbDelete) {
-        if (!jbList.isSelectionEmpty()) {
-            presenter.onDeleteAction(jbDelete, (PackageTemplate) jbList.getSelectedValue());
-        }
-    }
-
-    private void onAddAction() {
-        presenter.onAddAction();
-    }
-
-    @NotNull
-    private JButton getIconButton(Icon icon) {
-        JButton jButton = new JButton(icon);
-        jButton.setBorder(BorderFactory.createEmptyBorder());
-        return jButton;
+        listControls.add(new Control(AllIcons.General.Add, new ReleaseListener() {
+            @Override
+            public void mouseReleased(MouseEvent event) {
+                presenter.onAddAction();
+            }
+        }));
+        listControls.add(new Control(AllIcons.General.Remove, new ReleaseListener() {
+            @Override
+            public void mouseReleased(MouseEvent event) {
+                if (SwingUtilities.isLeftMouseButton(event)) {
+                    if (!jbList.isSelectionEmpty()) {
+                        presenter.onDeleteAction((PackageTemplate) jbList.getSelectedValue());
+                    }
+                }
+            }
+        }));
+        listControls.add(new Control(AllIcons.Modules.Edit, new ReleaseListener() {
+            @Override
+            public void mouseReleased(MouseEvent event) {
+                if (SwingUtilities.isLeftMouseButton(event)) {
+                    if (!jbList.isSelectionEmpty()) {
+                        presenter.onEditAction((PackageTemplate) jbList.getSelectedValue());
+                    }
+                }
+            }
+        }));
+//        listControls.add(new Control(AllIcons.Graph.Export, new ReleaseListener() {
+//            @Override
+//            public void mouseReleased(MouseEvent event) {
+//                if (SwingUtilities.isLeftMouseButton(event)) {
+//                    presenter.onExportAction();
+//                }
+//            }
+//        }));
+        listControls.add(new Control(AllIcons.General.Settings, new ReleaseListener() {
+            @Override
+            public void mouseReleased(MouseEvent event) {
+                if (SwingUtilities.isLeftMouseButton(event)) {
+                    presenter.onSettingsAction();
+                }
+            }
+        }));
+        return listControls;
     }
 
     @Override

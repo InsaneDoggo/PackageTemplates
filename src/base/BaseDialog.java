@@ -28,8 +28,8 @@ public abstract class BaseDialog extends DialogWrapper {
     }
 
     public void preShow(){}
-    public abstract void onOKAction();
-    public abstract void onCancelAction();
+    public void onOKAction(){}
+    public void onCancelAction(){}
 
     @Override
     public void show() {

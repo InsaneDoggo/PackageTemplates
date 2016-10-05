@@ -4,17 +4,14 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
-import core.groovy.GroovyExecutor;
 import global.models.BaseElement;
 import global.models.File;
 import global.utils.Localizer;
 import icons.PluginIcons;
-import global.visitors.ElementVisitor;
+import base.ElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import global.utils.*;
 
@@ -22,10 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by CeH9 on 06.07.2016.

@@ -6,13 +6,12 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import core.actions.newPackageTemplate.dialogs.select.fileTemplate.SelectFileTemplateDialog;
 import global.listeners.ClickListener;
 import core.groovy.GroovyDialog;
-import global.visitors.ElementVisitor;
+import base.ElementVisitor;
 import global.models.BaseElement;
 import global.utils.Localizer;
 import global.utils.WrappersFactory;
@@ -22,7 +21,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.util.HashMap;
 import java.util.List;
 
 /**
