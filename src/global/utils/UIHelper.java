@@ -24,12 +24,9 @@ public class UIHelper {
         EditorTextField etfName = new EditorTextField();
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        etfName.addSettingsProvider(new EditorSettingsProvider() {
-            @Override
-            public void customizeSettings(EditorEx editor) {
-                HighlightHelper.addHighlightListener(project, etfName, editor, StringTools.PATTERN_ATTRIBUTE);
-                HighlightHelper.applyHighlightRange(HighlightHelper.findResults(etfName.getText(), StringTools.PATTERN_ATTRIBUTE), project, editor);
-            }
+        etfName.addSettingsProvider(editor -> {
+            HighlightHelper.addHighlightListener(project, etfName, editor, StringTools.PATTERN_ATTRIBUTE);
+            HighlightHelper.applyHighlightRange(HighlightHelper.findResults(etfName.getText(), StringTools.PATTERN_ATTRIBUTE), project, editor);
         });
 
         etfName.setText(defValue);
@@ -54,17 +51,9 @@ public class UIHelper {
         ));
     }
 
-    public static void setHorizontalPadding(JComponent component, int padding) {
-        component.setBorder(BorderFactory.createEmptyBorder(
-                DEFAULT_PADDING,
-                padding,
-                DEFAULT_PADDING,
-                padding
-        ));
-    }
-
     public static Icon getIconByFileExtension(String extension) {
         return FileTypeManager.getInstance().getFileTypeByExtension(extension).getIcon();
     }
+
 
 }

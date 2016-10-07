@@ -1,60 +1,74 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
-import base.BaseDialog;
-import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.ui.components.JBList;
-import com.intellij.util.ui.GridBag;
-import core.actions.newPackageTemplate.dialogs.select.packageTemplate.controls.Control;
-import core.actions.newPackageTemplate.dialogs.select.packageTemplate.controls.ControlsAdapter;
-import global.listeners.ReleaseListener;
+import com.intellij.ui.AnActionButton;
+import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.treeStructure.Tree;
+import com.intellij.util.PlatformIcons;
+import com.intellij.util.containers.HashMap;
+import core.actions.newPackageTemplate.dialogs.select.packageTemplate.tree.PackageTemplateCellRender;
+import global.Const;
 import global.models.PackageTemplate;
-import global.models.TemplateListModel;
-import global.utils.GridBagFactory;
 import global.utils.Localizer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by CeH9 on 24.06.2016.
  */
-public abstract class SelectPackageTemplateDialog extends BaseDialog implements SelectPackageTemplateView {
+public abstract class SelectPackageTemplateDialog extends DialogWrapper implements SelectPackageTemplateView, TreeSelectionListener {
+
+    private static final int MIN_WIDTH = 600;
+    private static final int MIN_HEIGHT = 520;
 
     public abstract void onSuccess(PackageTemplate packageTemplate);
 
     public abstract void onCancel();
 
-    private JBList jbList;
+    private JPanel panel;
+    private Tree tree;
+    private Project project;
+    private PackageTemplate selectedTemplate;
     private SelectPackageTemplatePresenter presenter;
 
-    public SelectPackageTemplateDialog(Project project) {
+    protected SelectPackageTemplateDialog(@Nullable Project project) {
         super(project);
+        presenter = new SelectPackageTemplatePresenterImpl(this, project);
+        this.project = project;
+        groups = new HashMap<>();
+        init();
     }
 
     @Override
     protected ValidationInfo doValidate() {
-        if (jbList.isSelectionEmpty()) {
-            return new ValidationInfo(Localizer.get("SelectItem"), jbList);
+        return presenter.doValidate(selectedTemplate, tree);
+    }
+
+    @Override
+    public void show() {
+        super.show();
+
+        switch (getExitCode()) {
+            case DialogWrapper.OK_EXIT_CODE:
+                presenter.onSuccess(selectedTemplate);
+                break;
+            case DialogWrapper.CANCEL_EXIT_CODE:
+                presenter.onCancel();
+                break;
         }
-
-        return presenter.doValidate((PackageTemplate) jbList.getSelectedValue(), jbList);
-    }
-
-    @Override
-    public void onOKAction() {
-        presenter.onSuccess((PackageTemplate) jbList.getSelectedValue());
-    }
-
-    @Override
-    public void onCancelAction() {
-        presenter.onCancel();
     }
 
     @NotNull
@@ -76,97 +90,108 @@ public abstract class SelectPackageTemplateDialog extends BaseDialog implements 
     @Nullable
     @Override
     public JComponent getPreferredFocusedComponent() {
-        return jbList;
+        return tree;
     }
 
     @Override
     protected JComponent createCenterPanel() {
-        presenter = new SelectPackageTemplatePresenterImpl(this, project);
+        createTree();
+        ToolbarDecorator tbDecorator = ToolbarDecorator
+                .createDecorator(tree)
+                .setAddAction(action -> presenter.onAddAction(action))
+                .setRemoveAction(anActionButton -> presenter.onDeleteAction(selectedTemplate))
+                .setEditAction(anActionButton -> presenter.onEditAction(selectedTemplate))
+                .addExtraAction(new AnActionButton("Export", PlatformIcons.EXPORT_ICON) {
+                    @Override
+                    public void actionPerformed(AnActionEvent e) {
+                        presenter.onExportAction();
+                    }
+                })
+                .addExtraAction(new AnActionButton("Setting", PlatformIcons.SHOW_SETTINGS_ICON) {
+                    @Override
+                    public void actionPerformed(AnActionEvent e) {
+                        presenter.onSettingsAction();
+                    }
+                });
 
-        JSplitPane root = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        root.setMinimumSize(new Dimension(400, 300));
-        root.setEnabled(false);
+        panel = tbDecorator.createPanel();
+        panel.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 
-        jbList = new JBList();
-        jbList.setCellRenderer(new ListCellRendererWrapper<PackageTemplate>() {
-            @Override
-            public void customize(JList list, PackageTemplate template, int index, boolean selected, boolean hasFocus) {
-                if (template != null) {
-                    setText(template.getName());
-                }
-            }
-        });
+        return panel;
+    }
+
+    private DefaultMutableTreeNode rootNode;
+    private HashMap<String, DefaultMutableTreeNode> groups;
+
+    private Tree createTree() {
+        rootNode = new DefaultMutableTreeNode("Package Templates");
+        presenter.setTreeRootNode(rootNode);
+        presenter.setGroups(groups);
         presenter.loadTemplates();
-        jbList.setSelectedIndex(0);
 
-        root.add(getControls());
-        root.add(jbList);
+        tree = new Tree(rootNode);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree.setRootVisible(false);
+        tree.setCellRenderer(new PackageTemplateCellRender());
+        tree.addTreeSelectionListener(this);
 
-        return root;
-    }
+        DefaultMutableTreeNode nodeToSelect = groups.get(Const.NODE_GROUP_DEFAULT);
+        if (nodeToSelect.getChildCount() > 0) {
+            nodeToSelect = (DefaultMutableTreeNode) nodeToSelect.getFirstChild();
+            selectedTemplate = (PackageTemplate) nodeToSelect.getUserObject();
+        }
+        tree.setSelectionPath(new TreePath(((DefaultTreeModel) tree.getModel()).getPathToRoot(nodeToSelect)));
 
-    private Component getControls() {
-        JPanel container = new JPanel(new GridBagLayout());
-        GridBag bag = GridBagFactory.getBagForSelectDialog();
-
-        ControlsAdapter controlsAdapter = new ControlsAdapter(container, createActionButtons(), bag);
-        controlsAdapter.buildView();
-
-        return container;
-    }
-
-    private ArrayList<Control> createActionButtons() {
-        ArrayList<Control> listControls = new ArrayList<>();
-
-        listControls.add(new Control(AllIcons.General.Add, new ReleaseListener() {
-            @Override
-            public void mouseReleased(MouseEvent event) {
-                presenter.onAddAction();
-            }
-        }));
-        listControls.add(new Control(AllIcons.General.Remove, new ReleaseListener() {
-            @Override
-            public void mouseReleased(MouseEvent event) {
-                if (SwingUtilities.isLeftMouseButton(event)) {
-                    if (!jbList.isSelectionEmpty()) {
-                        presenter.onDeleteAction((PackageTemplate) jbList.getSelectedValue());
-                    }
-                }
-            }
-        }));
-        listControls.add(new Control(AllIcons.Modules.Edit, new ReleaseListener() {
-            @Override
-            public void mouseReleased(MouseEvent event) {
-                if (SwingUtilities.isLeftMouseButton(event)) {
-                    if (!jbList.isSelectionEmpty()) {
-                        presenter.onEditAction((PackageTemplate) jbList.getSelectedValue());
-                    }
-                }
-            }
-        }));
-//        listControls.add(new Control(AllIcons.Graph.Export, new ReleaseListener() {
-//            @Override
-//            public void mouseReleased(MouseEvent event) {
-//                if (SwingUtilities.isLeftMouseButton(event)) {
-//                    presenter.onExportAction();
-//                }
-//            }
-//        }));
-        listControls.add(new Control(AllIcons.General.Settings, new ReleaseListener() {
-            @Override
-            public void mouseReleased(MouseEvent event) {
-                if (SwingUtilities.isLeftMouseButton(event)) {
-                    presenter.onSettingsAction();
-                }
-            }
-        }));
-        return listControls;
+        return tree;
     }
 
     @Override
-    public void setTemplatesList(TemplateListModel<PackageTemplate> list) {
-        jbList.removeAll();
-        jbList.setModel(list);
+    public void setTemplatesList(List<PackageTemplate> list) {
+        rootNode.removeAllChildren();
+        groups.clear();
+        addGroupToTree(Const.NODE_GROUP_DEFAULT);
+
+        for (PackageTemplate pt : list) {
+            DefaultMutableTreeNode group;
+            if (pt.getGroupName() == null) {
+                group = groups.get(Const.NODE_GROUP_DEFAULT);
+            } else {
+                group = groups.get(pt.getGroupName());
+                if (group == null) {
+                    group = addGroupToTree(pt.getGroupName());
+                }
+            }
+            group.add(new DefaultMutableTreeNode(pt));
+        }
     }
 
+    @Override
+    public void reloadTree() {
+        ((DefaultTreeModel) tree.getModel()).reload();
+    }
+
+    @Override
+    public DefaultMutableTreeNode addGroupToTree(String name) {
+        DefaultMutableTreeNode group = new DefaultMutableTreeNode(name);
+        rootNode.add(group);
+        groups.put(name, group);
+        return group;
+    }
+
+    @Override
+    public void valueChanged(TreeSelectionEvent event) {
+        //This method is useful only when the selection model allows a single selection.
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+
+        if (node == null) {
+            return;
+        }
+
+        Object userObject = node.getUserObject();
+        if (userObject instanceof PackageTemplate) {
+            selectedTemplate = (PackageTemplate) userObject;
+        } else {
+            selectedTemplate = null;
+        }
+    }
 }

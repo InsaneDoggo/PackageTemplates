@@ -1,19 +1,25 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.openapi.ui.*;
+import com.intellij.ui.AnActionButton;
+import com.intellij.util.containers.HashMap;
 import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
 import core.settings.SettingsDialog;
 import core.state.SaveUtil;
 import core.state.impex.dialogs.ImpexDialog;
 import core.state.models.StateModel;
 import global.models.PackageTemplate;
-import global.models.TemplateListModel;
 import global.utils.Localizer;
+import icons.PluginIcons;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * Created by Arsen on 17.09.2016.
@@ -23,6 +29,8 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     private SelectPackageTemplateView view;
     private Project project;
     private ArrayList<PackageTemplate> templateList;
+    private DefaultMutableTreeNode rootNode;
+    private HashMap<String, DefaultMutableTreeNode> groups;
 
     public SelectPackageTemplatePresenterImpl(SelectPackageTemplateView view, Project project) {
         this.view = view;
@@ -37,6 +45,10 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 //        if (validationInfo != null) {
 //            return new ValidationInfo(validationInfo.message, jbList);
 //        }
+
+        if(packageTemplate == null){
+            return new ValidationInfo(Localizer.get("warning.SelectTemplate"), component);
+        }
 
         return null;
     }
@@ -55,12 +67,16 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     public void loadTemplates() {
         StateModel stateModel = SaveUtil.getInstance().getStateModel();
         templateList = stateModel.getListPackageTemplate();
-        view.setTemplatesList(new TemplateListModel<>(templateList));
+        view.setTemplatesList(templateList);
     }
 
     @Override
     public void onDeleteAction(PackageTemplate selectedValue) {
-        int confirmDialog = JOptionPane.showConfirmDialog(((SelectPackageTemplateDialog) view).panel, Localizer.get("DeleteTemplate"));
+        if (selectedValue == null) {
+            return;
+        }
+
+        int confirmDialog = JOptionPane.showConfirmDialog(((SelectPackageTemplateDialog) view).getRootPane(), Localizer.get("DeleteTemplate"));
         if (confirmDialog == JOptionPane.OK_OPTION) {
             templateList.remove(selectedValue);
             SaveUtil.getInstance().save();
@@ -69,7 +85,54 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     }
 
     @Override
-    public void onAddAction() {
+    public void onAddAction(AnActionButton anActionButton) {
+        JPopupMenu popupMenu = new JBPopupMenu();
+
+        JMenuItem itemNewTemplate = new JBMenuItem(Localizer.get("popup.item.NewPackageTemplate"), PluginIcons.PACKAGE_TEMPLATES);
+        JMenuItem itemNewGroup = new JBMenuItem(Localizer.get("popup.item.NewGroup"), AllIcons.Nodes.Package);
+
+        itemNewTemplate.addActionListener(e -> newTemplate());
+        itemNewGroup.addActionListener(e -> newGroup());
+
+        popupMenu.add(itemNewTemplate);
+        popupMenu.add(itemNewGroup);
+
+        popupMenu.show(anActionButton.getContextComponent(), 0,  0);
+    }
+
+    @Override
+    public void newGroup() {
+        String name = Messages.showInputDialog(project, Localizer.get("message.EnterName"),
+                Localizer.get("title.NewGroup"), Messages.getQuestionIcon(), "", new InputValidator() {
+            @Override
+            public boolean checkInput(String inputString) {
+                return !inputString.isEmpty() && isGroupUnique(inputString);
+            }
+
+            @Override
+            public boolean canClose(String inputString) {
+                return checkInput(inputString);
+            }
+        });
+        view.addGroupToTree(name);
+        view.reloadTree();
+    }
+
+    private boolean isGroupUnique(String name) {
+        for(Map.Entry<String, DefaultMutableTreeNode> entry : groups.entrySet())
+            if(entry.getKey().equals(name)){
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void setGroups(HashMap<String, DefaultMutableTreeNode> groups) {
+        this.groups = groups;
+    }
+
+    @Override
+    public void newTemplate() {
         ConfigureDialog dialog = new ConfigureDialog(project) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
@@ -86,7 +149,16 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     }
 
     @Override
+    public void setTreeRootNode(DefaultMutableTreeNode rootNode) {
+        this.rootNode = rootNode;
+    }
+
+    @Override
     public void onEditAction(PackageTemplate packageTemplate) {
+        if (packageTemplate == null) {
+            return;
+        }
+
         ConfigureDialog dialog = new ConfigureDialog(project, packageTemplate) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {

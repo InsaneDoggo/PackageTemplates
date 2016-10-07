@@ -1,10 +1,13 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
 import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.ui.AnActionButton;
+import com.intellij.util.containers.HashMap;
 import global.models.PackageTemplate;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * Created by Arsen on 17.09.2016.
@@ -20,7 +23,7 @@ public interface SelectPackageTemplatePresenter {
 
     void onDeleteAction(PackageTemplate selectedValue);
 
-    void onAddAction();
+    void onAddAction(AnActionButton anActionButton);
 
     void onEditAction(PackageTemplate packageTemplate);
 
@@ -28,4 +31,11 @@ public interface SelectPackageTemplatePresenter {
 
     void onSettingsAction();
 
+    void newGroup();
+
+    void newTemplate();
+
+    void setTreeRootNode(DefaultMutableTreeNode rootNode);
+
+    void setGroups(HashMap<String, DefaultMutableTreeNode> groups);
 }

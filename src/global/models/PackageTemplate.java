@@ -14,6 +14,7 @@ public class PackageTemplate {
     @Expose @SerializedName("name") private String name;
     @Expose @SerializedName("description") private String description;
     @Expose @SerializedName("directory") private Directory directory;
+    @Expose @SerializedName("groupName") private String groupName;
     @Expose @SerializedName("mapGlobalVars") private HashMap<String, String> mapGlobalVars;
     @Expose @SerializedName("listGlobalVariable") private ArrayList<GlobalVariable> listGlobalVariable;
     @Expose @SerializedName("postGeneratedResults") private PostGeneratedResults postGeneratedResults;
@@ -91,5 +92,13 @@ public class PackageTemplate {
 
     public void setPostGeneratedResults(PostGeneratedResults postGeneratedResults) {
         this.postGeneratedResults = postGeneratedResults;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

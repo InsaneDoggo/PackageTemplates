@@ -1,7 +1,9 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
 import global.models.PackageTemplate;
-import global.models.TemplateListModel;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.List;
 
 /**
  * Created by Arsen on 17.09.2016.
@@ -14,5 +16,9 @@ public interface SelectPackageTemplateView {
 
     void onCancel();
 
-    void setTemplatesList(TemplateListModel<PackageTemplate> list);
+    void setTemplatesList(List<PackageTemplate> list);
+
+    DefaultMutableTreeNode addGroupToTree(String name);
+
+    void reloadTree();
 }
