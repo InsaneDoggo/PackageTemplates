@@ -18,11 +18,13 @@ public interface SelectPackageTemplateView {
 
     void setTemplatesList(List<PackageTemplate> list);
 
+    void nodesWereRemoved(DefaultMutableTreeNode node, int[] childIndices, DefaultMutableTreeNode[] removedChildren);
+
+    void nodesWereInserted(DefaultMutableTreeNode group, int[] index);
+
     DefaultMutableTreeNode addGroupToTree(String name);
 
-    void reloadTree();
+    void nodeChanged(DefaultMutableTreeNode node);
 
-    void notifyNodeChanged(DefaultMutableTreeNode node);
-
-    void removeGroupFromTree(DefaultMutableTreeNode groupNode);
+    void selectNode(DefaultMutableTreeNode node);
 }

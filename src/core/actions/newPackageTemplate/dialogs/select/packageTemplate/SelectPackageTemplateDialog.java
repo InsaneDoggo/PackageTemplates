@@ -19,10 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
+import javax.swing.tree.*;
 import java.awt.*;
 import java.util.List;
 
@@ -100,7 +97,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                 .createDecorator(tree)
                 .setAddAction(action -> presenter.onAddAction(action, selectedNode))
                 .setRemoveAction(anActionButton -> presenter.onDeleteAction(selectedNode))
-                .setEditAction(anActionButton -> presenter.onEditAction(selectedTemplate))
+                .setEditAction(anActionButton -> presenter.onEditAction(selectedTemplate, selectedNode))
                 .addExtraAction(new AnActionButton("Export", PlatformIcons.EXPORT_ICON) {
                     @Override
                     public void actionPerformed(AnActionEvent e) {
@@ -140,7 +137,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
             nodeToSelect = (DefaultMutableTreeNode) nodeToSelect.getFirstChild();
             selectedTemplate = (PackageTemplate) nodeToSelect.getUserObject();
         }
-        tree.setSelectionPath(new TreePath(((DefaultTreeModel) tree.getModel()).getPathToRoot(nodeToSelect)));
+        selectNode(nodeToSelect);
 
         return tree;
     }
@@ -166,13 +163,22 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     }
 
     @Override
-    public void reloadTree() {
-        ((DefaultTreeModel) tree.getModel()).reload();
+    public void nodesWereInserted(DefaultMutableTreeNode group, int[] indexes) {
+        ((DefaultTreeModel) tree.getModel()).nodesWereInserted(group, indexes);
     }
 
     @Override
-    public void notifyNodeChanged(DefaultMutableTreeNode node) {
-        ((DefaultTreeModel) tree.getModel()).nodeChanged();
+    public void nodesWereRemoved(DefaultMutableTreeNode node, int[] childIndices, DefaultMutableTreeNode[] removedChildren) {
+        ((DefaultTreeModel) tree.getModel()).nodesWereRemoved(node, childIndices, removedChildren);
+    }
+    @Override
+    public void nodeChanged(DefaultMutableTreeNode node) {
+        ((DefaultTreeModel) tree.getModel()).nodeChanged(node);
+    }
+
+    @Override
+    public void selectNode(DefaultMutableTreeNode node) {
+        tree.setSelectionPath(new TreePath(((DefaultTreeModel) tree.getModel()).getPathToRoot(node)));
     }
 
     @Override
@@ -181,12 +187,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         rootNode.add(group);
         groups.put(name, group);
         return group;
-    }
-
-    @Override
-    public void removeGroupFromTree(DefaultMutableTreeNode groupNode) {
-        groups.remove(groupNode.getUserObject().toString());
-        groupNode.removeFromParent();
     }
 
     private DefaultMutableTreeNode selectedNode;
