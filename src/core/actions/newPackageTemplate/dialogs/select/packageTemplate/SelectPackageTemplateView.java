@@ -21,4 +21,8 @@ public interface SelectPackageTemplateView {
     DefaultMutableTreeNode addGroupToTree(String name);
 
     void reloadTree();
+
+    void notifyNodeChanged(DefaultMutableTreeNode node);
+
+    void removeGroupFromTree(DefaultMutableTreeNode groupNode);
 }

@@ -71,27 +71,54 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     }
 
     @Override
-    public void onDeleteAction(PackageTemplate selectedValue) {
-        if (selectedValue == null) {
+    public void onDeleteAction(DefaultMutableTreeNode selectedNode) {
+        Object userObject = selectedNode.getUserObject();
+        if (userObject == null) {
             return;
         }
 
-        int confirmDialog = JOptionPane.showConfirmDialog(((SelectPackageTemplateDialog) view).getRootPane(), Localizer.get("DeleteTemplate"));
-        if (confirmDialog == JOptionPane.OK_OPTION) {
-            templateList.remove(selectedValue);
-            SaveUtil.getInstance().save();
-            loadTemplates();
+        if(userObject instanceof  PackageTemplate){
+            int confirmDialog = JOptionPane.showConfirmDialog(((SelectPackageTemplateDialog) view).getRootPane(), Localizer.get("DeleteTemplate"));
+            if (confirmDialog == JOptionPane.OK_OPTION) {
+                templateList.remove(userObject);
+                SaveUtil.getInstance().save();
+                selectedNode.removeFromParent();
+                view.reloadTree();
+            }
+            return;
+        }
+        if (userObject instanceof  String){
+            int confirmDialog = JOptionPane.showConfirmDialog(((SelectPackageTemplateDialog) view).getRootPane(), Localizer.get("DeleteGroup"));
+            if (confirmDialog == JOptionPane.OK_OPTION) {
+                deleteGroupChildren(selectedNode);
+                SaveUtil.getInstance().save();
+                view.removeGroupFromTree(selectedNode);
+                view.reloadTree();
+            }
+            return;
+        }
+    }
+
+    private void deleteGroupChildren(DefaultMutableTreeNode groupNode) {
+        Enumeration children = groupNode.children();
+        while (children.hasMoreElements()){
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) children.nextElement();
+            Object userObject = node.getUserObject();
+            if(userObject instanceof  PackageTemplate){
+                System.out.println("Remove: " + ((PackageTemplate) userObject).getName());
+                templateList.remove(userObject);
+            }
         }
     }
 
     @Override
-    public void onAddAction(AnActionButton anActionButton) {
+    public void onAddAction(AnActionButton anActionButton, DefaultMutableTreeNode selectedNode) {
         JPopupMenu popupMenu = new JBPopupMenu();
 
         JMenuItem itemNewTemplate = new JBMenuItem(Localizer.get("popup.item.NewPackageTemplate"), PluginIcons.PACKAGE_TEMPLATES);
         JMenuItem itemNewGroup = new JBMenuItem(Localizer.get("popup.item.NewGroup"), AllIcons.Nodes.Package);
 
-        itemNewTemplate.addActionListener(e -> newTemplate());
+        itemNewTemplate.addActionListener(e -> newTemplate(selectedNode));
         itemNewGroup.addActionListener(e -> newGroup());
 
         popupMenu.add(itemNewTemplate);
@@ -132,13 +159,22 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     }
 
     @Override
-    public void newTemplate() {
+    public void newTemplate(DefaultMutableTreeNode selectedNode) {
         ConfigureDialog dialog = new ConfigureDialog(project) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
+                DefaultMutableTreeNode groupNode;
+                if( selectedNode.getUserObject() instanceof String ){
+                    groupNode = (DefaultMutableTreeNode) selectedNode.getParent();
+                } else {
+                    groupNode = selectedNode;
+                }
+
+                packageTemplate.setGroupName(groupNode.getUserObject().toString());
                 templateList.add(packageTemplate);
                 SaveUtil.getInstance().save();
-                loadTemplates();
+                view.setTemplatesList(templateList);
+                view.notifyNodeChanged(groupNode);
             }
 
             @Override

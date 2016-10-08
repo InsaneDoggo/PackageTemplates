@@ -98,8 +98,8 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         createTree();
         ToolbarDecorator tbDecorator = ToolbarDecorator
                 .createDecorator(tree)
-                .setAddAction(action -> presenter.onAddAction(action))
-                .setRemoveAction(anActionButton -> presenter.onDeleteAction(selectedTemplate))
+                .setAddAction(action -> presenter.onAddAction(action, selectedNode))
+                .setRemoveAction(anActionButton -> presenter.onDeleteAction(selectedNode))
                 .setEditAction(anActionButton -> presenter.onEditAction(selectedTemplate))
                 .addExtraAction(new AnActionButton("Export", PlatformIcons.EXPORT_ICON) {
                     @Override
@@ -171,6 +171,11 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     }
 
     @Override
+    public void notifyNodeChanged(DefaultMutableTreeNode node) {
+        ((DefaultTreeModel) tree.getModel()).nodeChanged();
+    }
+
+    @Override
     public DefaultMutableTreeNode addGroupToTree(String name) {
         DefaultMutableTreeNode group = new DefaultMutableTreeNode(name);
         rootNode.add(group);
@@ -179,15 +184,23 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     }
 
     @Override
+    public void removeGroupFromTree(DefaultMutableTreeNode groupNode) {
+        groups.remove(groupNode.getUserObject().toString());
+        groupNode.removeFromParent();
+    }
+
+    private DefaultMutableTreeNode selectedNode;
+
+    @Override
     public void valueChanged(TreeSelectionEvent event) {
         //This method is useful only when the selection model allows a single selection.
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+        selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
-        if (node == null) {
+        if (selectedNode == null) {
             return;
         }
 
-        Object userObject = node.getUserObject();
+        Object userObject = selectedNode.getUserObject();
         if (userObject instanceof PackageTemplate) {
             selectedTemplate = (PackageTemplate) userObject;
         } else {

@@ -13,6 +13,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * Created by Arsen on 17.09.2016.
  */
 public interface SelectPackageTemplatePresenter {
+
     ValidationInfo doValidate(PackageTemplate packageTemplate, @Nullable JComponent component);
 
     void onSuccess(PackageTemplate selectedValue);
@@ -21,9 +22,9 @@ public interface SelectPackageTemplatePresenter {
 
     void loadTemplates();
 
-    void onDeleteAction(PackageTemplate selectedValue);
+    void onDeleteAction(DefaultMutableTreeNode selectedNode);
 
-    void onAddAction(AnActionButton anActionButton);
+    void onAddAction(AnActionButton anActionButton, DefaultMutableTreeNode selectedNode);
 
     void onEditAction(PackageTemplate packageTemplate);
 
@@ -33,7 +34,7 @@ public interface SelectPackageTemplatePresenter {
 
     void newGroup();
 
-    void newTemplate();
+    void newTemplate(DefaultMutableTreeNode selectedNode);
 
     void setTreeRootNode(DefaultMutableTreeNode rootNode);
 
