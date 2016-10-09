@@ -2,8 +2,10 @@ package core.state.util;
 
 import core.state.models.StateModel;
 import global.models.PackageTemplate;
+import global.utils.i18n.Language;
 
 /**
+ * Хелпер для взаимодествия с конфигом
  * Created by Arsen on 09.10.2016.
  */
 public class StateEditor {
@@ -29,6 +31,11 @@ public class StateEditor {
 
     public StateEditor addPackageTemplate(PackageTemplate pt) {
         model().getListPackageTemplate().add(pt);
+        return this;
+    }
+
+    public StateEditor setLanguage(Language lang) {
+        model().getUserSettings().setLanguage(lang);
         return this;
     }
 }

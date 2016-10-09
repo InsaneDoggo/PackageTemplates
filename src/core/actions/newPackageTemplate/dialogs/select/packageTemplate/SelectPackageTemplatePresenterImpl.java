@@ -148,9 +148,11 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
                         return checkInput(inputString);
                     }
                 });
-        DefaultMutableTreeNode groupNode = view.addGroupToTree(name);
-        view.nodesWereInserted(rootNode, new int[]{rootNode.getIndex(groupNode)});
-        view.selectNode(groupNode);
+        if (name != null && !name.isEmpty()) {
+            DefaultMutableTreeNode groupNode = view.addGroupToTree(name);
+            view.nodesWereInserted(rootNode, new int[]{rootNode.getIndex(groupNode)});
+            view.selectNode(groupNode);
+        }
     }
 
     private boolean isGroupUnique(String name) {

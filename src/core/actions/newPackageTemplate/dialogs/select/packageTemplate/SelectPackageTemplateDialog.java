@@ -10,6 +10,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.HashMap;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.tree.PackageTemplateCellRender;
+import core.state.util.SaveUtil;
 import global.Const;
 import global.models.PackageTemplate;
 import global.utils.i18n.Localizer;
@@ -21,6 +22,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -147,6 +149,10 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         rootNode.removeAllChildren();
         groups.clear();
         addGroupToTree(Const.NODE_GROUP_DEFAULT);
+        HashSet<String> groupNames = SaveUtil.getInstance().getStateModel().getUserSettings().getGroupNames();
+        for (String name : groupNames){
+            addGroupToTree(name);
+        }
 
         for (PackageTemplate pt : list) {
             DefaultMutableTreeNode group;
@@ -171,6 +177,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     public void nodesWereRemoved(DefaultMutableTreeNode node, int[] childIndices, DefaultMutableTreeNode[] removedChildren) {
         ((DefaultTreeModel) tree.getModel()).nodesWereRemoved(node, childIndices, removedChildren);
     }
+
     @Override
     public void nodeChanged(DefaultMutableTreeNode node) {
         ((DefaultTreeModel) tree.getModel()).nodeChanged(node);
