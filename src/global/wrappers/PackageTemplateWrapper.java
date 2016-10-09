@@ -15,7 +15,7 @@ import com.intellij.util.ui.GridBag;
 import global.dialogs.FailedFilesDialog;
 import global.models.*;
 import global.utils.*;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 import global.visitors.*;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;

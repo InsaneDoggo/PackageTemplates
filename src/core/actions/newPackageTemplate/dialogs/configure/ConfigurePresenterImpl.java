@@ -3,7 +3,7 @@ package core.actions.newPackageTemplate.dialogs.configure;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import global.models.PackageTemplate;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 import global.utils.TemplateValidator;
 import global.utils.WrappersFactory;
 import global.wrappers.PackageTemplateWrapper;

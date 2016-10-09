@@ -6,7 +6,7 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.TabbedPaneImpl;
 import com.intellij.ui.components.JBScrollPane;
 import core.state.impex.models.ExpPackageTemplateWrapper;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;

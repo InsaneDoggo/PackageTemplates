@@ -16,7 +16,7 @@ import org.jetbrains.plugins.groovy.GroovyLanguage;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
 import global.utils.GridBagFactory;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 
 import javax.swing.*;
 import java.awt.*;

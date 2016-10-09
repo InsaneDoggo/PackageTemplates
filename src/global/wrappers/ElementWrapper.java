@@ -13,7 +13,7 @@ import global.listeners.ClickListener;
 import core.groovy.GroovyDialog;
 import base.ElementVisitor;
 import global.models.BaseElement;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 import global.utils.WrappersFactory;
 import icons.JetgroovyIcons;
 

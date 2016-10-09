@@ -1,6 +1,6 @@
 package core.settings;
 
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 
 /**
  * Created by Arsen on 16.09.2016.

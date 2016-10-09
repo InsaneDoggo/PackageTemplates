@@ -8,7 +8,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import global.models.BaseElement;
 import global.models.Directory;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 import icons.PluginIcons;
 import base.ElementVisitor;
 import org.jetbrains.annotations.NotNull;

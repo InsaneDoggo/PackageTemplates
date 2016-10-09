@@ -2,7 +2,7 @@ package core.groovy;
 
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 import global.utils.TemplateValidator;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;

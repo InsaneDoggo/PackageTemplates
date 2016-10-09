@@ -19,7 +19,7 @@ import icons.JetgroovyIcons;
 import org.jetbrains.annotations.NotNull;
 import global.models.GlobalVariable;
 import global.utils.GridBagFactory;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 import global.utils.UIHelper;
 
 import javax.swing.*;

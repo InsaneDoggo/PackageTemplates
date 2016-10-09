@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import core.state.impex.models.ExpFileTemplateWrapper;
 import core.state.impex.models.ExpPackageTemplateWrapper;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 import global.views.SpoilerPane;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;

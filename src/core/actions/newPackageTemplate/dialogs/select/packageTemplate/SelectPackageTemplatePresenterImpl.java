@@ -7,11 +7,12 @@ import com.intellij.ui.AnActionButton;
 import com.intellij.util.containers.HashMap;
 import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
 import core.settings.SettingsDialog;
-import core.state.SaveUtil;
+import core.state.util.SaveUtil;
 import core.state.impex.dialogs.ImpexDialog;
 import core.state.models.StateModel;
+import core.state.util.StateEditor;
 import global.models.PackageTemplate;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 import icons.PluginIcons;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +29,6 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 
     private SelectPackageTemplateView view;
     private Project project;
-    private ArrayList<PackageTemplate> templateList;
     private DefaultMutableTreeNode rootNode;
     private HashMap<String, DefaultMutableTreeNode> groups;
 
@@ -65,9 +65,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 
     @Override
     public void loadTemplates() {
-        StateModel stateModel = SaveUtil.getInstance().getStateModel();
-        templateList = stateModel.getListPackageTemplate();
-        view.setTemplatesList(templateList);
+        view.setTemplatesList(SaveUtil.getInstance().getStateModel().getListPackageTemplate());
     }
 
     @Override
@@ -80,8 +78,9 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
         if (userObject instanceof PackageTemplate) {
             int confirmDialog = JOptionPane.showConfirmDialog(((SelectPackageTemplateDialog) view).getRootPane(), Localizer.get("DeleteTemplate"));
             if (confirmDialog == JOptionPane.OK_OPTION) {
-                templateList.remove(userObject);
-                SaveUtil.getInstance().save();
+                SaveUtil.getInstance().editor()
+                        .removePackageTemplate((PackageTemplate) userObject)
+                        .save();
                 removeNode(selectedNode);
             }
             return;
@@ -90,7 +89,9 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             int confirmDialog = JOptionPane.showConfirmDialog(((SelectPackageTemplateDialog) view).getRootPane(), Localizer.get("DeleteGroup"));
             if (confirmDialog == JOptionPane.OK_OPTION) {
                 deleteGroupChildren(selectedNode);
-                SaveUtil.getInstance().save();
+                SaveUtil.getInstance().editor()
+                        .removeGroupName(selectedNode.getUserObject().toString())
+                        .save();
                 groups.remove(selectedNode.getUserObject().toString());
                 removeNode(selectedNode);
             }
@@ -111,8 +112,8 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) children.nextElement();
             Object userObject = node.getUserObject();
             if (userObject instanceof PackageTemplate) {
-                System.out.println("Remove: " + ((PackageTemplate) userObject).getName());
-                templateList.remove(userObject);
+                SaveUtil.getInstance().editor()
+                        .removePackageTemplate((PackageTemplate) userObject);
             }
         }
     }
@@ -178,8 +179,9 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
                 }
 
                 packageTemplate.setGroupName(groupNode.getUserObject().toString());
-                templateList.add(packageTemplate);
-                SaveUtil.getInstance().save();
+                SaveUtil.getInstance().editor()
+                        .addPackageTemplate(packageTemplate)
+                        .save();
                 DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(packageTemplate);
                 groupNode.add(newChild);
                 view.nodesWereInserted(groupNode, new int[]{groupNode.getIndex(newChild)});
@@ -208,7 +210,6 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
                 SaveUtil.getInstance().save();
-//                loadTemplates();
                 view.nodeChanged(selectedNode);
             }
 

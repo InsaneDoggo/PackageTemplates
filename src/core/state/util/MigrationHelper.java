@@ -1,4 +1,4 @@
-package core.state;
+package core.state.util;
 
 import core.state.impex.models.ExpPackageTemplate;
 import core.state.impex.models.ExportBundle;

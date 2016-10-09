@@ -7,7 +7,7 @@ import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import global.utils.*;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
 import global.wrappers.PackageTemplateWrapper;

@@ -12,7 +12,7 @@ import com.intellij.util.containers.HashMap;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.tree.PackageTemplateCellRender;
 import global.Const;
 import global.models.PackageTemplate;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,6 +1,7 @@
 package core.state.models;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import global.models.PackageTemplate;
 
 import java.util.ArrayList;
@@ -9,12 +10,10 @@ import java.util.ArrayList;
  * Created by CeH9 on 05.08.2016.
  */
 public class StateModel {
-    @Expose
-    private long modelVersion;
-    @Expose
-    private UserSettings userSettings;
-    @Expose
-    private ArrayList<PackageTemplate> listPackageTemplate;
+
+    @Expose @SerializedName("modelVersion") private long modelVersion;
+    @Expose @SerializedName("userSettings") private UserSettings userSettings;
+    @Expose @SerializedName("listPackageTemplate") private ArrayList<PackageTemplate> listPackageTemplate;
 
     public long getModelVersion() {
         return modelVersion;

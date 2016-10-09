@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.newPackageTemplate.NewPackageTemplateAction;
-import core.state.SaveUtil;
+import core.state.util.SaveUtil;
 import global.models.PackageTemplate;
 import global.utils.GsonFactory;
 import org.jetbrains.annotations.Nullable;

@@ -8,13 +8,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
 import global.models.PackageTemplate;
-import core.state.SaveUtil;
-import global.utils.Localizer;
+import core.state.util.SaveUtil;
+import global.utils.i18n.Localizer;
 import global.utils.WrappersFactory;
 import global.wrappers.PackageTemplateWrapper;
-import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * Created by Arsen on 13.06.2016.

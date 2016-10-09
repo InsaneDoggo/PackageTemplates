@@ -1,8 +1,8 @@
 package core.state.impex.dialogs;
 
 import com.intellij.openapi.ui.ValidationInfo;
-import core.state.MigrationHelper;
-import core.state.SaveUtil;
+import core.state.util.MigrationHelper;
+import core.state.util.SaveUtil;
 import core.state.impex.models.ExpPackageTemplateWrapper;
 import core.state.impex.models.ExportBundle;
 import core.state.models.StateModel;
@@ -10,7 +10,7 @@ import global.Const;
 import global.models.PackageTemplate;
 import global.utils.FileWriter;
 import global.utils.GsonFactory;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 
 import java.util.ArrayList;
 

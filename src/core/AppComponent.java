@@ -1,13 +1,11 @@
 package core;
 
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.components.ApplicationComponent;
 import core.actions.generated.RunTemplateAction;
-import core.state.SaveUtil;
+import core.state.util.SaveUtil;
 import global.Const;
 import global.models.PackageTemplate;
-import global.utils.StringTools;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

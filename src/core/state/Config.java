@@ -4,6 +4,8 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import core.state.models.StateWrapper;
+import org.jdom.Element;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by CeH9 on 03.07.2016.

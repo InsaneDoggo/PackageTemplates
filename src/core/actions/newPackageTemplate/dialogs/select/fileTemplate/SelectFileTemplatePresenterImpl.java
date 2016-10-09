@@ -4,7 +4,7 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.util.ArrayUtil;
 import global.models.TemplateForSearch;
-import global.utils.Localizer;
+import global.utils.i18n.Localizer;
 
 import java.util.ArrayList;
 
