@@ -63,9 +63,8 @@ public class NewPackageTemplateAction extends AnAction {
     }
 
     public static void executeTemplateSilently(PackageTemplate pt, Project project, VirtualFile virtualFile) {
-        PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.USAGE);
-
         ProgressHelper.runProcessWithProgress(project, () -> {
+            PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.USAGE);
             ptWrapper.prepareGlobals();
             ptWrapper.addGlobalVariablesToFileTemplates();
             ptWrapper.replaceNameVariable();
