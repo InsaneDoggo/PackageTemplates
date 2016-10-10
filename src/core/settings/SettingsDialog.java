@@ -12,6 +12,7 @@ import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBComboBoxLabel;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.PlatformIcons;
+import core.state.models.UserSettings;
 import core.state.util.SaveUtil;
 import global.utils.i18n.Language;
 import global.utils.i18n.Localizer;
@@ -42,35 +43,31 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
         presenter = new SettingsPresenterImpl(this);
     }
 
-
     @Override
     public void preShow() {
         presenter.onPreShow();
     }
 
     @Override
-    public void buildView() {
+    public void buildView(UserSettings userSettings) {
         panel.setLayout(new MigLayout());
 
         // Language
         JLabel jlLanguage = new JLabel(Localizer.get("settings.Language"));
-//
-//        ArrayList<String> languages = new ArrayList<>();
-//        for(Language lang: Language.values()){
-//            languages.add(lang.toString());
-//        }
+
         JComboBox<Language> comboLanguages = new ComboBox<>(new EnumComboBoxModel<>(Language.class));
-        Language userLang = SaveUtil.getInstance().getStateModel().getUserSettings().getLanguage();
-        if (userLang != null) {
-            comboLanguages.setSelectedItem(userLang);
+        if (userSettings.getLanguage() != null) {
+            comboLanguages.setSelectedItem(userSettings.getLanguage());
         }
 
         comboLanguages.addItemListener(e -> {
             Language selectedLang = (Language) comboLanguages.getSelectedItem();
-            SaveUtil.getInstance().editor()
-                    .setLanguage(selectedLang)
-                    .save();
+            presenter.onLanguageSelected(selectedLang);
         });
+        // No RU support yet
+        //todo enable lang selection
+        jlLanguage.setEnabled(false);
+        comboLanguages.setEnabled(false);
 
         panel.add(jlLanguage, new CC());
         panel.add(comboLanguages, new CC().wrap());

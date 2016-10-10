@@ -46,8 +46,7 @@
                 icon="PluginIcons.PACKAGE_TEMPLATES"
                 text="Package Template">
             <add-to-group group-id="NewGroup"
-                          relative-to-action="NewFile"
-                          anchor="before"/>
+                          anchor="last"/>
         </action>
     </actions>
 

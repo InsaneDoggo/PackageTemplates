@@ -17,7 +17,9 @@ import java.awt.*;
 public abstract class ImplementDialog extends BaseDialog implements ImplementView {
 
     public abstract void onSuccess(PackageTemplateWrapper ptWrapper);
-    public abstract void onCancel();
+
+    public void onCancel() {
+    }
 
     private ImplementPresenter presenter;
 

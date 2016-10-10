@@ -1,6 +1,10 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
@@ -106,6 +110,12 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                         presenter.onExportAction();
                     }
                 })
+//                .addExtraAction(new AnActionButton("Test", PlatformIcons.CHECK_ICON) {
+//                    @Override
+//                    public void actionPerformed(AnActionEvent e) {
+//                      //test
+//                    }
+//                });
                 .addExtraAction(new AnActionButton("Setting", PlatformIcons.SHOW_SETTINGS_ICON) {
                     @Override
                     public void actionPerformed(AnActionEvent e) {

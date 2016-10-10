@@ -1,5 +1,7 @@
 package core.settings;
 
+import core.state.util.SaveUtil;
+import global.utils.i18n.Language;
 import global.utils.i18n.Localizer;
 
 /**
@@ -16,7 +18,13 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     @Override
     public void onPreShow() {
         view.setTitle(Localizer.get("title.Settings"));
-        view.buildView();
+        view.buildView(SaveUtil.getInstance().getStateModel().getUserSettings());
     }
 
+    @Override
+    public void onLanguageSelected(Language lang) {
+        SaveUtil.getInstance().editor()
+                .setLanguage(lang)
+                .save();
+    }
 }

@@ -5,6 +5,7 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -281,7 +282,13 @@ public class PackageTemplateWrapper {
     }
 
     public void writeTemplate(Project project, VirtualFile virtualFile) {
-        PsiDirectory currentDir = FileWriter.findCurrentDirectory(project, virtualFile);
+        PsiDirectory currentDir = ApplicationManager.getApplication().runReadAction(new Computable<PsiDirectory>() {
+            @Override
+            public PsiDirectory compute() {
+                return FileWriter.findCurrentDirectory(project, virtualFile);
+            }
+        });
+
         if (currentDir != null) {
             failedElements = new ArrayList<>();
             writtenElements = new ArrayList<>();
@@ -289,6 +296,10 @@ public class PackageTemplateWrapper {
             rootElement.accept(new WriteElementVisitor(currentDir, project));
         }
 
+        ApplicationManager.getApplication().invokeLater(() -> checkWrittenElements(project));
+    }
+
+    public void checkWrittenElements(final Project project) {
         if (!failedElements.isEmpty()) {
             //show dialog
             new FailedFilesDialog(project, Localizer.get("ErrorDialog"), this) {

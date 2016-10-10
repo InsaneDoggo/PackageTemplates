@@ -8,6 +8,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
@@ -21,13 +22,16 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.RunnableFuture;
 
 /**
  * Created by CeH9 on 19.06.2016.
  */
 public class FileWriter {
 
-    public static PsiDirectory findCurrentDirectory(Project project,VirtualFile file) {
+    public static PsiDirectory findCurrentDirectory(Project project, VirtualFile file) {
         if (file != null && project != null) {
             if (file.isDirectory()) {
                 return PsiManager.getInstance(project).findDirectory(file);
@@ -45,19 +49,42 @@ public class FileWriter {
             return null;
         }
 
-        final PsiDirectory[] directory = new PsiDirectory[1];
 
-        CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> {
-            try {
-                directory[0] = dir.createSubdirectory(dirWrapper.getDirectory().getName());
-            } catch (Exception ex) {
-                Logger.log(ex.getMessage());
-                dirWrapper.setWriteException(ex);
-                dirWrapper.getPackageTemplateWrapper().getFailedElements().add(dirWrapper);
-            }
-        }), null, null);
+        //        ApplicationManager.getApplication().invokeLater(
+//                () -> CommandProcessor.getInstance().executeCommand(project,
+//                        () -> ApplicationManager.getApplication().runWriteAction(() -> {
+//                            try {
+//                                directory[0] = dir.createSubdirectory(dirWrapper.getDirectory().getName());
+//                            } catch (Exception ex) {
+//                                Logger.log(ex.getMessage());
+//                                dirWrapper.setWriteException(ex);
+//                                dirWrapper.getPackageTemplateWrapper().getFailedElements().add(dirWrapper);
+//                            }
+//                        }), null, null));
 
-        return directory[0];
+        RunnableFuture<PsiDirectory> runnableFuture = new FutureTask<>(() ->
+                ApplicationManager.getApplication().runWriteAction(new Computable<PsiDirectory>() {
+                    @Override
+                    public PsiDirectory compute() {
+                        try {
+                            return dir.createSubdirectory(dirWrapper.getDirectory().getName());
+                        } catch (Exception ex) {
+                            Logger.log(ex.getMessage());
+                            dirWrapper.setWriteException(ex);
+                            dirWrapper.getPackageTemplateWrapper().getFailedElements().add(dirWrapper);
+                            return null;
+                        }
+                    }
+                }));
+
+        ApplicationManager.getApplication().invokeLater(runnableFuture);
+        try {
+            return runnableFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("runnableFuture  " + e.getMessage());
+        }
+
+        return null;
     }
 
     public static PsiElement writeFile(PsiDirectory dir, FileWrapper fileWrapper) {
@@ -72,14 +99,24 @@ public class FileWriter {
         properties.putAll(fileWrapper.getPackageTemplateWrapper().getDefaultProperties());
         properties.putAll(fileWrapper.getFile().getMapProperties());
 
-        PsiElement element;
+        PsiElement element = null;
+        RunnableFuture<PsiElement> runnableFuture = new FutureTask<>(() ->
+                ApplicationManager.getApplication().runWriteAction((Computable<PsiElement>) () -> {
+                    try {
+                        return FileTemplateUtil.createFromTemplate(template, fileWrapper.getFile().getName(), properties, dir);
+                    } catch (Exception e) {
+                        Logger.log(e.getMessage());
+                        fileWrapper.setWriteException(e);
+                        fileWrapper.getPackageTemplateWrapper().getFailedElements().add(fileWrapper);
+                        return null;
+                    }
+                }));
+
+        ApplicationManager.getApplication().invokeLater(runnableFuture);
         try {
-            element = FileTemplateUtil.createFromTemplate(template, fileWrapper.getFile().getName(), properties, dir);
-        } catch (Exception e) {
-            Logger.log(e.getMessage());
-            fileWrapper.setWriteException(e);
-            fileWrapper.getPackageTemplateWrapper().getFailedElements().add(fileWrapper);
-            return null;
+            element = runnableFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("runnableFuture  " + e.getMessage());
         }
 
         fileWrapper.getPackageTemplateWrapper().getWrittenElements().add(element);
@@ -103,7 +140,7 @@ public class FileWriter {
     private static File createFile(String path, String fileName) {
         File file = new File(path + "/" + fileName);
 
-        while (file.exists() && !file.isDirectory()){
+        while (file.exists() && !file.isDirectory()) {
             System.out.println("Exist");
             //todo overwrite or change name dialog
             break;
@@ -112,9 +149,9 @@ public class FileWriter {
         return file;
     }
 
-    public static FileTemplate createFileTemplate(ExpFileTemplate expTemplate){
+    public static FileTemplate createFileTemplate(ExpFileTemplate expTemplate) {
         FileTemplateManager ftm = FileTemplateManager.getDefaultInstance();
-        if(isFileTemplateExist(expTemplate.getName())){
+        if (isFileTemplateExist(expTemplate.getName())) {
             //todo overwrite dialog
             System.out.println("file template already exist");
         }
