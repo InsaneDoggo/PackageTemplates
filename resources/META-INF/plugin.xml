@@ -1,20 +1,17 @@
-<idea-plugin version="10">
+<idea-plugin url="http://ceh9.github.io/PackageTemplates/" version="1">
     <id>dev.senya.packagetemplates</id>
-    <version>1.0</version>
-    <name>PackageTemplate</name>
+    <version>0.1.0-beta</version>
+    <name>Package Templates</name>
     <vendor email="senya.dev@gmail.com" url="http://ceh9.github.io/PackageTemplates/">CeH9</vendor>
 
     <description><![CDATA[
-      Tool for create "package templates".<br>
-      <em>Plugin in Development</em>
+      Flexible tool for creating multiple File Templates.<br> Visit GitHub page for details.<br>
     ]]></description>
 
     <change-notes><![CDATA[
-      No changes.<br>
+    Initial beta version.
     ]]>
     </change-notes>
-
-    <resource-bundle>localization.MyResources</resource-bundle>
 
     <idea-version since-build="141.0"/>
 

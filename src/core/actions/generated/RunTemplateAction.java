@@ -8,6 +8,7 @@ import core.actions.newPackageTemplate.NewPackageTemplateAction;
 import core.state.util.SaveUtil;
 import global.models.PackageTemplate;
 import global.utils.GsonFactory;
+import global.utils.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class RunTemplateAction extends BaseAction {
         PackageTemplate pt = getPackageTemplateByName(packageTemplate.getName());
         if(pt == null){
             // TODO: 29.09.2016 template not found msg
-            System.out.println("action: pt == null");
+            Logger.log("action: pt == null");
             return;
         }
         packageTemplate = GsonFactory.cloneObject(pt, PackageTemplate.class);

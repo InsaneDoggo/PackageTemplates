@@ -49,19 +49,6 @@ public class FileWriter {
             return null;
         }
 
-
-        //        ApplicationManager.getApplication().invokeLater(
-//                () -> CommandProcessor.getInstance().executeCommand(project,
-//                        () -> ApplicationManager.getApplication().runWriteAction(() -> {
-//                            try {
-//                                directory[0] = dir.createSubdirectory(dirWrapper.getDirectory().getName());
-//                            } catch (Exception ex) {
-//                                Logger.log(ex.getMessage());
-//                                dirWrapper.setWriteException(ex);
-//                                dirWrapper.getPackageTemplateWrapper().getFailedElements().add(dirWrapper);
-//                            }
-//                        }), null, null));
-
         RunnableFuture<PsiDirectory> runnableFuture = new FutureTask<>(() ->
                 ApplicationManager.getApplication().runWriteAction(new Computable<PsiDirectory>() {
                     @Override
@@ -81,7 +68,7 @@ public class FileWriter {
         try {
             return runnableFuture.get();
         } catch (InterruptedException | ExecutionException e) {
-            System.out.println("runnableFuture  " + e.getMessage());
+            Logger.log("runnableFuture  " + e.getMessage());
         }
 
         return null;
@@ -116,7 +103,7 @@ public class FileWriter {
         try {
             element = runnableFuture.get();
         } catch (InterruptedException | ExecutionException e) {
-            System.out.println("runnableFuture  " + e.getMessage());
+            Logger.log("runnableFuture  " + e.getMessage());
         }
 
         fileWrapper.getPackageTemplateWrapper().getWrittenElements().add(element);
@@ -130,7 +117,7 @@ public class FileWriter {
             FileUtil.writeToFile(file, content);
         } catch (IOException e) {
             //todo print error
-            System.out.println(e.getMessage());
+            Logger.log(e.getMessage());
             return false;
         }
         return true;
@@ -141,7 +128,7 @@ public class FileWriter {
         File file = new File(path + "/" + fileName);
 
         while (file.exists() && !file.isDirectory()) {
-            System.out.println("Exist");
+            Logger.log("Exist");
             //todo overwrite or change name dialog
             break;
         }
@@ -153,7 +140,7 @@ public class FileWriter {
         FileTemplateManager ftm = FileTemplateManager.getDefaultInstance();
         if (isFileTemplateExist(expTemplate.getName())) {
             //todo overwrite dialog
-            System.out.println("file template already exist");
+            Logger.log("file template already exist");
         }
 
         FileTemplate fileTemplate = ftm.addTemplate(expTemplate.getName(), expTemplate.getExtension());

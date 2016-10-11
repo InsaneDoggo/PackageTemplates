@@ -51,12 +51,12 @@ public class NewPackageTemplateAction extends AnAction {
 //        ImpexDialog dialog = new ImpexDialog(event.getProject(), "Export Templates") {
 //            @Override
 //            public void onSuccess() {
-//                System.out.println("onSuccess");
+//                Logger.log("onSuccess");
 //            }
 //
 //            @Override
 //            public void onCancel() {
-//                System.out.println("onCancel");
+//                Logger.log("onCancel");
 //            }
 //        };
 //        dialog.show();

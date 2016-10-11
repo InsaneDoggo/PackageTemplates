@@ -104,12 +104,12 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                 .setAddAction(action -> presenter.onAddAction(action, selectedNode))
                 .setRemoveAction(anActionButton -> presenter.onDeleteAction(selectedNode))
                 .setEditAction(anActionButton -> presenter.onEditAction(selectedTemplate, selectedNode))
-                .addExtraAction(new AnActionButton("Export", PlatformIcons.EXPORT_ICON) {
-                    @Override
-                    public void actionPerformed(AnActionEvent e) {
-                        presenter.onExportAction();
-                    }
-                })
+//                .addExtraAction(new AnActionButton("Export", PlatformIcons.EXPORT_ICON) {
+//                    @Override
+//                    public void actionPerformed(AnActionEvent e) {
+//                        presenter.onExportAction();
+//                    }
+//                })
 //                .addExtraAction(new AnActionButton("Test", PlatformIcons.CHECK_ICON) {
 //                    @Override
 //                    public void actionPerformed(AnActionEvent e) {

@@ -142,20 +142,8 @@ public class GlobalVariableWrapper extends BaseWrapper {
         JMenuItem itemAddVariable = new JBMenuItem(Localizer.get("AddVariable"), AllIcons.Nodes.Variable);
         JMenuItem itemDelete = new JBMenuItem(Localizer.get("Delete"), AllIcons.Actions.Delete);
 
-        itemAddVariable.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addVariable(ptWrapper);
-                System.out.println(Localizer.get("AddVariable"));
-            }
-        });
-        itemDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteVariable(ptWrapper);
-                System.out.println(Localizer.get("Delete"));
-            }
-        });
+        itemAddVariable.addActionListener(e -> addVariable(ptWrapper));
+        itemDelete.addActionListener(e -> deleteVariable(ptWrapper));
 
         popupMenu.add(itemAddVariable);
         addGroovyMenuItems(popupMenu, ptWrapper.getProject());
@@ -168,43 +156,30 @@ public class GlobalVariableWrapper extends BaseWrapper {
     private void addGroovyMenuItems(JPopupMenu popupMenu, Project project) {
         if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
             JMenuItem itemEditGroovy = new JBMenuItem(Localizer.get("EditGroovyScript"), JetgroovyIcons.Groovy.Groovy_16x16);
-            itemEditGroovy.addActionListener(new ActionListener() {
+            itemEditGroovy.addActionListener(e -> new GroovyDialog(project, globalVariable.getGroovyCode()) {
                 @Override
-                public void actionPerformed(ActionEvent e) {
-                    new GroovyDialog(project, globalVariable.getGroovyCode()) {
-                        @Override
-                        public void onSuccess(String code) {
-                            globalVariable.setGroovyCode(code);
-                            updateComponentsState();
-                        }
-                    }.show();
+                public void onSuccess(String code) {
+                    globalVariable.setGroovyCode(code);
+                    updateComponentsState();
                 }
-            });
+            }.show());
             popupMenu.add(itemEditGroovy);
 
             JMenuItem itemDeleteGroovy = new JBMenuItem(Localizer.get("DeleteGroovyScript"), AllIcons.Actions.Delete);
-            itemDeleteGroovy.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    globalVariable.setGroovyCode("");
-                    updateComponentsState();
-                }
+            itemDeleteGroovy.addActionListener(e -> {
+                globalVariable.setGroovyCode("");
+                updateComponentsState();
             });
             popupMenu.add(itemDeleteGroovy);
         } else {
             JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddGroovyScript"), JetgroovyIcons.Groovy.Groovy_16x16);
-            itemAddGroovy.addActionListener(new ActionListener() {
+            itemAddGroovy.addActionListener(e -> new GroovyDialog(project) {
                 @Override
-                public void actionPerformed(ActionEvent e) {
-                    new GroovyDialog(project) {
-                        @Override
-                        public void onSuccess(String code) {
-                            globalVariable.setGroovyCode(code);
-                            updateComponentsState();
-                        }
-                    }.show();
+                public void onSuccess(String code) {
+                    globalVariable.setGroovyCode(code);
+                    updateComponentsState();
                 }
-            });
+            }.show());
             popupMenu.add(itemAddGroovy);
         }
     }

@@ -69,11 +69,11 @@ public class ExpPackageTemplateWrapper {
         for (String name : names) {
             FileTemplate fileTemplate = AttributesHelper.getTemplate(name);
             if (fileTemplate == null) {
-                //System.out.println("Skip null :" + name);
+                //Logger.log("Skip null :" + name);
                 continue;
             }
             if (fileTemplate.isDefault()) {
-                //System.out.println("Skip Default :" + name);
+                //Logger.log("Skip Default :" + name);
                 continue;
             }
             result.add(new ExpFileTemplate(

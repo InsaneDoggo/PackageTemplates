@@ -21,7 +21,7 @@ public class FileReaderUtil {
             }
             return sb.toString();
         } catch (Exception e){
-            System.out.println("Error read file " + e.getMessage());
+            Logger.log("Error read file " + e.getMessage());
             return null;
         }
     }

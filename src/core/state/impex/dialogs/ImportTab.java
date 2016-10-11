@@ -64,7 +64,7 @@ public class ImportTab {
                         MigrationHelper.upgrade(bundle);
                         showTemplates();
                     }
-                    System.out.println("LMB");
+                    Logger.log("LMB");
                 }
             }
         });
