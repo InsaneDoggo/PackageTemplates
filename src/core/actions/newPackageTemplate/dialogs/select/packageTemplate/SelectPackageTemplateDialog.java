@@ -195,6 +195,11 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
     @Override
     public void selectNode(DefaultMutableTreeNode node) {
+        if(node == null){
+            selectedNode = null;
+            selectedTemplate = null;
+            return;
+        }
         tree.setSelectionPath(new TreePath(((DefaultTreeModel) tree.getModel()).getPathToRoot(node)));
     }
 

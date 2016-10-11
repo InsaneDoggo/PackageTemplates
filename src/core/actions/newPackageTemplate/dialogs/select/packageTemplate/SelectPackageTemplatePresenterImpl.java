@@ -12,6 +12,7 @@ import core.state.impex.dialogs.ImpexDialog;
 import core.state.models.StateModel;
 import core.state.util.StateEditor;
 import global.models.PackageTemplate;
+import global.utils.Logger;
 import global.utils.i18n.Localizer;
 import icons.PluginIcons;
 import org.jetbrains.annotations.Nullable;
@@ -82,6 +83,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
                         .removePackageTemplate((PackageTemplate) userObject)
                         .save();
                 removeNode(selectedNode);
+                view.selectNode(null);
             }
             return;
         }
