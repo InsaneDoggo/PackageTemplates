@@ -23,8 +23,10 @@ order: 5
 Тогда **Example<font class="variable">${VARIABLE_NAME}</font>File** преобразуется в **ExampleFooBarFile**
 
 #### Особенности
-В любом PackageTemplate шаблоне есть стандартная переменная **BASE_NAME**, которая может использоваться в пользовательских глобальных переменных.<br>
+- В любом PackageTemplate шаблоне есть стандартная переменная **BASE_NAME**, которая может использоваться в пользовательских глобальных переменных.<br>
 Например, переменная **VARIABLE_NAME** со значением **Foo<font class="variable">${BASE_NAME}</font>Bar**
+
+<!-- - **File** Templates поддерживают вариант без скобок: **<font class="variable">$VARIABLE_NAME</font>**, однако в **Package**Templates скобки нужно указывать **всегда**. Это касается только диалога редактирования **Package Template**. В тексте **File Templates** по прежнему валидны оба варианта.  -->
 
 [1]: {{ site.data.links.file_template_variables }}
 [2]: {{ site.data.links.file_templates }}
