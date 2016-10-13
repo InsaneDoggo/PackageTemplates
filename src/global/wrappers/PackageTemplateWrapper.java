@@ -309,7 +309,7 @@ public class PackageTemplateWrapper {
 
                 @Override
                 public void onCancel() {
-                    CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(() -> {
+                    ApplicationManager.getApplication().runWriteAction(() -> {
                         try {
                             for (PsiElement item : Lists.reverse(writtenElements)) {
                                 item.delete();
@@ -317,7 +317,7 @@ public class PackageTemplateWrapper {
                         } catch (Exception ex) {
                             Logger.log(ex.getMessage());
                         }
-                    }), null, null);
+                    });
 
                 }
             }.show();

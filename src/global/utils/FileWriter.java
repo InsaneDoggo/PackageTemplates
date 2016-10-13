@@ -18,10 +18,12 @@ import core.state.impex.models.ExpFileTemplate;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.FileWrapper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -53,18 +55,12 @@ public class FileWriter {
                 ApplicationManager.getApplication().runWriteAction(new Computable<PsiDirectory>() {
                     @Override
                     public PsiDirectory compute() {
-                        try {
-                            return dir.createSubdirectory(dirWrapper.getDirectory().getName());
-                        } catch (Exception ex) {
-                            Logger.log(ex.getMessage());
-                            dirWrapper.setWriteException(ex);
-                            dirWrapper.getPackageTemplateWrapper().getFailedElements().add(dirWrapper);
-                            return null;
-                        }
+                        return writeDirectoryAction(dir, dirWrapper, project);
                     }
                 }));
 
         ApplicationManager.getApplication().invokeLater(runnableFuture);
+
         try {
             return runnableFuture.get();
         } catch (InterruptedException | ExecutionException e) {
@@ -72,6 +68,23 @@ public class FileWriter {
         }
 
         return null;
+    }
+
+    @Nullable
+    private static PsiDirectory writeDirectoryAction(PsiDirectory dir, DirectoryWrapper dirWrapper, Project project) {
+        FutureTask<PsiDirectory> psiDirectoryFutureTask = new FutureTask<>(() -> {
+            return dir.createSubdirectory(dirWrapper.getDirectory().getName());
+        });
+        CommandProcessor.getInstance().executeCommand(project, psiDirectoryFutureTask, "Create '" + dirWrapper.getElement().getName() + "' Directory", null);
+
+        try {
+            return psiDirectoryFutureTask.get();
+        } catch (Exception ex) {
+            Logger.log(ex.getMessage());
+            dirWrapper.setWriteException(ex);
+            dirWrapper.getPackageTemplateWrapper().getFailedElements().add(dirWrapper);
+            return null;
+        }
     }
 
     public static PsiElement writeFile(PsiDirectory dir, FileWrapper fileWrapper) {
