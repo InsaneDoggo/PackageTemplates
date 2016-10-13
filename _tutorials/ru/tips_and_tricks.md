@@ -1,7 +1,7 @@
 ---
 title: Советы и Хитрости
 lang: ru
-order: 7
+order: 9
 ---
 
 ### Уникальные имена для File Template
