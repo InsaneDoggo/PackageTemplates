@@ -14,4 +14,6 @@ public interface Const {
     String ACTION_PREFIX = "PT_Action_";
 
     String NODE_GROUP_DEFAULT = "default";
+
+    int MESSAGE_MAX_LENGTH = 50;
 }

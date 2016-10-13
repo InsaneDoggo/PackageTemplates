@@ -42,13 +42,6 @@ public class GridBagFactory {
                 .setDefaultWeightX(1);
     }
 
-    public static GridBag getBagForFailedFilesDialog() {
-        return new GridBag()
-                .setDefaultFill(GridBagConstraints.HORIZONTAL)
-                .setDefaultInsets(defaultInsets)
-                .setDefaultWeightX(1);
-    }
-
     public static GridBag getBagForGroovyDialog() {
         return new GridBag()
                 .setDefaultFill(GridBagConstraints.HORIZONTAL)
