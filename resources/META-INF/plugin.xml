@@ -2,7 +2,7 @@
     <id>dev.senya.packagetemplates</id>
     <version>0.1.0-beta</version>
     <name>Package Templates</name>
-    <vendor email="senya.dev@gmail.com" url="http://ceh9.github.io/PackageTemplates/">CeH9</vendor>
+    <vendor email="senya.dev@gmail.com">CeH9</vendor>
 
     <description><![CDATA[
       Flexible tool for creating multiple File Templates.<br> Visit GitHub page for details.<br>
@@ -16,23 +16,14 @@
     <idea-version since-build="141.0"/>
 
     <depends>com.intellij.modules.lang</depends>
-    <!--<depends>com.intellij.modules.java</depends>-->
     <depends>org.intellij.groovy</depends>
-    <!--<depends>com.intellij.modules.platform</depends>-->
-    <!--<depends>com.intellij.modules.vcs</depends>-->
-    <!--<depends>com.intellij.modules.xml</depends>-->
-    <!--<depends>com.intellij.modules.xdebugger</depends>-->
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService
-                serviceInterface="core.state.Config"
-                serviceImplementation="core.state.Config"/>
+        <applicationService serviceInterface="core.state.Config" serviceImplementation="core.state.Config"/>
     </extensions>
 
     <application-components>
-        <component>
-            <implementation-class>core.AppComponent</implementation-class>
-        </component>
+        <component><implementation-class>core.AppComponent</implementation-class></component>
     </application-components>
 
     <actions>
@@ -42,8 +33,7 @@
                 description="Package Templates management"
                 icon="PluginIcons.PACKAGE_TEMPLATES"
                 text="Package Template">
-            <add-to-group group-id="NewGroup"
-                          anchor="last"/>
+            <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
     </actions>
 
