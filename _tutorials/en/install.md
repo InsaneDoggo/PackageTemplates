@@ -1,5 +1,5 @@
 ---
-title: Installation
+title: Install
 lang: en
 order: 1
 ---
