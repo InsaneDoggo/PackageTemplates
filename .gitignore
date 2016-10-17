@@ -1,11 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/workspace.xml
-<<<<<<< HEAD
-out/
-=======
-.idea/tasks.xml
-
 out/
 /.idea/dictionaries/
 PackageTemplates.zip
->>>>>>> development
+/.idea/misc.xml
