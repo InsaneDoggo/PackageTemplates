@@ -1,38 +1,41 @@
-<idea-plugin version="2">
-  <id>com.your.company.supaplugin</id>
-  <name>Megaplugin</name>
-  <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+<idea-plugin url="http://ceh9.github.io/PackageTemplates/" version="1">
+    <id>dev.senya.packagetemplates</id>
+    <version>0.1.0-beta</version>
+    <name>Package Templates</name>
+    <vendor email="senya.dev@gmail.com">CeH9</vendor>
 
-  <description><![CDATA[
-      Enter short description for your plugin here.<br>
-      <em>most HTML tags may be used</em>
+    <description><![CDATA[
+      Flexible tool for creating multiple File Templates.<br> Visit GitHub page for details.<br>
     ]]></description>
 
-  <change-notes><![CDATA[
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+    <change-notes><![CDATA[
+    Initial beta version.
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="141.0"/>
+    <idea-version since-build="141.0"/>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products
-  <depends>com.intellij.modules.lang</depends>
-  -->
+    <depends>com.intellij.modules.lang</depends>
+    <depends>org.intellij.groovy</depends>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceInterface="core.state.Config" serviceImplementation="core.state.Config"/>
+    </extensions>
 
-  <actions>
-    <!-- Add your actions here -->
-    <action id="SampleAct" class="SampleAction" text="SampleActName">
-      <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
-    </action>
-  </actions>
+    <application-components>
+        <component><implementation-class>core.AppComponent</implementation-class></component>
+    </application-components>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="PackageTemplate"
+                class="core.actions.newPackageTemplate.NewPackageTemplateAction"
+                description="Package Templates management"
+                icon="PluginIcons.PACKAGE_TEMPLATES"
+                text="Package Template">
+            <add-to-group group-id="NewGroup" anchor="last"/>
+        </action>
+    </actions>
+
 
 </idea-plugin>
