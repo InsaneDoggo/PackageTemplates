@@ -11,6 +11,14 @@ lang: en
 ### About
 Package Templates make Multiple [File Templates][1] possible. Plugin let you create **directories** and **File Templates** in one action.
 
+### Supported IDE
+Plugin must work with all **IntelliJ IDEA-based IDEs**, but tested with listed below only:
+
+* Intellij Idea Community Edition.
+* Android Studio.
+
+Also **PackageTemplates plugin** requires a **groovy plugin**, which is standard and comes bundled with the IDE.
+
 ### Tutorials:
 {% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" | sort: 'order' %}
 {% for tutorial in listTutorials %}

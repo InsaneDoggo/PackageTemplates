@@ -12,7 +12,7 @@ jetbrains: https://www.jetbrains.com/
 plugin_from_disk: https://www.jetbrains.com/help/idea/2016.2/installing-plugin-from-disk.html
 plugin_from_repository: https://www.jetbrains.com/help/idea/2016.2/installing-updating-and-uninstalling-repository-plugins.html
 
-forum_plugin: https://intellij-support.jetbrains.com/hc/en-us/community/topics/200366979-IntelliJ-IDEA-Open-API-and-Plugin-Development
+forum_plugin: https://intellij-support.jetbrains.com/hc/en-us/community/posts/203420544-PackageTemplates-Plugin-Discussion
 
 # GitHub
 github_releases: https://github.com/CeH9/PackageTemplates/releases

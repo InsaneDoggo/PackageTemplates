@@ -7,6 +7,14 @@ lang: ru
 ### Описание
 Package Templates это плагин реализующий Multiple [File Templates][1]. Он позволяет создавать шаблоны, состоящие из директорий и File Tamplates.
 
+### Поддерживаемые IDE
+Плагин должен работать на всех **IntelliJ IDEA-based IDEs**, но тестировался только на следующих:
+
+* Intellij Idea Community Edition.
+* Android Studio.
+
+Так же плагин требует наличие groovy plugin, который являяется стандартным и поставляется в комплекте с IDE.
+
 ### Подробнее:
 {% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" | sort: 'order' %}
 {% for tutorial in listTutorials %}
