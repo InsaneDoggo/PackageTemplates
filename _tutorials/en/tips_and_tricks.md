@@ -1,37 +1,39 @@
 ---
-title: Советы и Хитрости
+title: Tips and Tricks
 lang: en
 order: 9
 ---
 
 # todo translate to eng ^_^
 
-### Уникальные имена для File Template
-На момент написания этого пункта, импорт File Templates в IDE реализован **жесткой заменой**. Это означает, что при импорте настроек **File -> Import Setting..** шаблоны с одинаковыми именами будут заменены без каких-либо уведомлений. То есть вы потеряете старый шаблон и, скорее всего, даже не узнаете об этом. Следовательно чем уникальнее будет имя, тем лучше.
+### Unique names for File Templates
+At this moment import **File Templates** in the IDEA-based IDE implemented with **silent replace**. When you import settings with ** File -> Import Setting .. ** **File Templates** with same name will be replaced without any notification. we recommend you to use unique names to avoid replacement.
 
-Можно добавлять префиксы:
+You can use prefixes like:
 
-- MVC_Model (форматирование каждый выбирает сам, например: **mvc**Model или **Mvc**Model )
+- MVC_Model (ofc you can use other style: **mvc**Model or **Mvc**Model)
 - MVP_Model
 
-### Порядок выполнения
-Для ясности нужно понимать какие операции и в каком порядке выполняются:
+### Execution Order
+To clarify how plugin works you must be familiar with operations that executes when you use **Package Template**:
 
-1. Выполнение [Groovy скрипта][2] у глобальной переменной BASE_NAME.
-2. Вставка <font class="variable">${BASE_NAME}</font> в остальные [глобальные переменные][3].
-3. Выполнение **Groovy скриптов** у остальных **глобальных переменных**.
-4. Вставка **глобальных переменных** в имена **директорий** и **файлов**.
-5. Выполнение Groovy скриптов у **директорий** и **файлов**.
-6. Добавление **глобальных переменных** к уже имеющимся [переменным в File Template][1]. 
-7. Создание директорий и файлов.
+1. Execute [Groovy script][2] of BASE_NAME global variable.
+2. Replace <font class="variable">${BASE_NAME}</font> value in other [global variables][3].
+3. Execute **Groovy scripts** of other **global variables**.
+4. Replace **global variables** in **directory** and **file** names.
+5. Execute Groovy scripts of **directories** and **files**.
+6. Add **global variables** to array of [variables in File Template][1]. 
+7. Create directoies and files.
 
-### Обратная совместимость
-После выхода релизной версии(1.0.0+) гарантируется обратная совместимость сохраненных шаблонов. Пока этого не произошло, не создавайте много шаблонов. Есть вероятность, что в очередной бета версии я поменяю что-нибудь важное, и все шаблоны придется выкинуть  ^_^ (создать заново).
+### Backward Compatibility
+Backward compatibility guaranteed after release 1.0.0+ version. Don't make a lot of templates until plugin release. Any update under 1.0.0 can broke all your **Package Templates**.
 
-**Примечание:** это не касается [File Templates][4], они не зависят от этого плагина и поддерживаются создателями IDE т.е. [JetBrains][5]. Их можете создавать сколько угодно.
+**Note:** Feel free to make a lot of [File Templates][4], it supported by IDE ([JetBrains][5]).
 
-### Отмена действия
-**Отмена действия** Ctrl + Z (для *mac* Command ⌘ + Z) срабатывает не для всего шаблона, а для его элементов(файлы и директории). Например, если в шаблоне 1 директория и 2 папки, то для полной отмены нужно воспользоваться **отменой действия** 3 раза ^_^.
+### Undo
+**Undo** Ctrl + Z (Command ⌘ + Z for *mac*) doesn't work for whole template, it work for each element(files and directories). E.g. if you want to undo **Template** that consist of 1 directory and 2 files then you need to use **undo** 3 times ^_^.
+
+**Note:** In most cases better way for undo is **select** created root directory and press **delete**.
 
 
 [1]: {{ site.data.links.file_template_variables }}

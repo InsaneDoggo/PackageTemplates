@@ -4,6 +4,10 @@ title: Package Templates
 lang: en
 ---
 
+**Note:** This version is translated from original ([Russian][6]). If you find some **errors** or **wrong language constructs** please contact with devs (You can find contact info below).
+
+<hr>
+
 ### About
 Package Templates make Multiple [File Templates][1] possible. Plugin let you create **directories** and **File Templates** in one action.
 
@@ -16,7 +20,7 @@ Package Templates make Multiple [File Templates][1] possible. Plugin let you cre
 [List][5] of features on *github*.<br>
 Send us your ideas (see **Suggestions and comments**). Best ideas will be implemented in new version of the plugin.
 
-### Suggestions and comments
+### Contacts
 
 1. [Post][4] on forum. (Available soon)
 2. [Email][2] for question about plugin. Set **"Package Templates"** as subject.
@@ -30,3 +34,4 @@ Do you like this plugin and think it's useful? Then you could <a class="github-b
 [3]: {{ site.data.links.mailto_developer }}
 [4]: {{ site.data.links.forum_plugin }}
 [5]: {{ site.data.links.github_todo_project }}
+[6]: {{site.baseurl}}/ru
