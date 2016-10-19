@@ -39,4 +39,6 @@ public interface SelectPackageTemplatePresenter {
     void setTreeRootNode(DefaultMutableTreeNode rootNode);
 
     void setGroups(HashMap<String, DefaultMutableTreeNode> groups);
+
+    void onCopyAction(DefaultMutableTreeNode selectedNode);
 }

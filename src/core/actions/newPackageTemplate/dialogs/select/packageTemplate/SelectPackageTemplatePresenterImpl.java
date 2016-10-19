@@ -12,7 +12,9 @@ import core.state.impex.dialogs.ImpexDialog;
 import core.state.models.StateModel;
 import core.state.util.StateEditor;
 import global.models.PackageTemplate;
+import global.utils.GsonFactory;
 import global.utils.Logger;
+import global.utils.TemplateValidator;
 import global.utils.i18n.Localizer;
 import icons.PluginIcons;
 import org.jetbrains.annotations.Nullable;
@@ -71,10 +73,9 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 
     @Override
     public void onDeleteAction(DefaultMutableTreeNode selectedNode) {
+        if (selectedNode == null) return;
         Object userObject = selectedNode.getUserObject();
-        if (userObject == null) {
-            return;
-        }
+        if (userObject == null) return;
 
         if (userObject instanceof PackageTemplate) {
             int confirmDialog = JOptionPane.showConfirmDialog(((SelectPackageTemplateDialog) view).getRootPane(), Localizer.get("DeleteTemplate"));
@@ -118,6 +119,35 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
                         .removePackageTemplate((PackageTemplate) userObject);
             }
         }
+    }
+
+    @Override
+    public void onCopyAction(DefaultMutableTreeNode selectedNode) {
+        if (selectedNode == null) return;
+        Object userObject = selectedNode.getUserObject();
+        if (userObject == null) return;
+
+        if (userObject instanceof PackageTemplate) {
+            PackageTemplate ptCopy = GsonFactory.cloneObject((PackageTemplate) userObject, PackageTemplate.class);
+
+            String name = Messages.showInputDialog(project, Localizer.get("message.EnterName"),
+                    Localizer.get("title.CopyOf" )+ " " + ptCopy.getName(), Messages.getQuestionIcon(), "", new InputValidator() {
+                        @Override
+                        public boolean checkInput(String inputString) {
+                            return !inputString.isEmpty() && TemplateValidator.isPackageTemplateNameUnique(inputString);
+                        }
+
+                        @Override
+                        public boolean canClose(String inputString) {
+                            return checkInput(inputString);
+                        }
+                    });
+            if (name != null && !name.isEmpty()) {
+                ptCopy.setName(name);
+                addPackageTemplate(ptCopy, (DefaultMutableTreeNode) selectedNode.getParent());
+            }
+        }
+
     }
 
     @Override
@@ -182,14 +212,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
                     groupNode = (DefaultMutableTreeNode) selectedNode.getParent();
                 }
 
-                packageTemplate.setGroupName(groupNode.getUserObject().toString());
-                SaveUtil.getInstance().editor()
-                        .addPackageTemplate(packageTemplate)
-                        .save();
-                DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(packageTemplate);
-                groupNode.add(newChild);
-                view.nodesWereInserted(groupNode, new int[]{groupNode.getIndex(newChild)});
-                view.selectNode(newChild);
+                addPackageTemplate(packageTemplate, groupNode);
             }
 
             @Override
@@ -197,6 +220,17 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             }
         };
         dialog.show();
+    }
+
+    private void addPackageTemplate(PackageTemplate packageTemplate, DefaultMutableTreeNode groupNode) {
+        packageTemplate.setGroupName(groupNode.getUserObject().toString());
+        SaveUtil.getInstance().editor()
+                .addPackageTemplate(packageTemplate)
+                .save();
+        DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(packageTemplate);
+        groupNode.add(newChild);
+        view.nodesWereInserted(groupNode, new int[]{groupNode.getIndex(newChild)});
+        view.selectNode(newChild);
     }
 
     @Override

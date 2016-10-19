@@ -1,10 +1,6 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
@@ -104,6 +100,12 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                 .setAddAction(action -> presenter.onAddAction(action, selectedNode))
                 .setRemoveAction(anActionButton -> presenter.onDeleteAction(selectedNode))
                 .setEditAction(anActionButton -> presenter.onEditAction(selectedTemplate, selectedNode))
+                .addExtraAction(new AnActionButton("Copy", PlatformIcons.COPY_ICON) {
+                    @Override
+                    public void actionPerformed(AnActionEvent e) {
+                        presenter.onCopyAction(selectedNode);
+                    }
+                })
 //                .addExtraAction(new AnActionButton("Export", PlatformIcons.EXPORT_ICON) {
 //                    @Override
 //                    public void actionPerformed(AnActionEvent e) {
@@ -122,6 +124,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                         presenter.onSettingsAction();
                     }
                 });
+
 
         panel = tbDecorator.createPanel();
         panel.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
