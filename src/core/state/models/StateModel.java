@@ -13,7 +13,7 @@ public class StateModel {
 
     @Expose @SerializedName("modelVersion") private long modelVersion;
     @Expose @SerializedName("userSettings") private UserSettings userSettings;
-    @Expose @SerializedName("listPackageTemplate") private ArrayList<PackageTemplate> listPackageTemplate;
+//    @Expose @SerializedName("listPackageTemplate") private ArrayList<PackageTemplate> listPackageTemplate;
 
     public long getModelVersion() {
         return modelVersion;
@@ -23,13 +23,13 @@ public class StateModel {
         this.modelVersion = modelVersion;
     }
 
-    public ArrayList<PackageTemplate> getListPackageTemplate() {
-        return listPackageTemplate;
-    }
-
-    public void setListPackageTemplate(ArrayList<PackageTemplate> listPackageTemplate) {
-        this.listPackageTemplate = listPackageTemplate;
-    }
+//    public ArrayList<PackageTemplate> getListPackageTemplate() {
+//        return listPackageTemplate;
+//    }
+//
+//    public void setListPackageTemplate(ArrayList<PackageTemplate> listPackageTemplate) {
+//        this.listPackageTemplate = listPackageTemplate;
+//    }
 
     public UserSettings getUserSettings() {
         return userSettings;

@@ -2,6 +2,7 @@ package core.state.util;
 
 import core.state.models.StateModel;
 import global.models.PackageTemplate;
+import global.utils.PackageTemplateHelper;
 import global.utils.i18n.Language;
 
 /**
@@ -25,12 +26,12 @@ public class StateEditor {
     }
 
     public StateEditor removePackageTemplate(PackageTemplate pt) {
-        model().getListPackageTemplate().remove(pt);
+        PackageTemplateHelper.getListPackageTemplate().remove(pt);
         return this;
     }
 
     public StateEditor addPackageTemplate(PackageTemplate pt) {
-        model().getListPackageTemplate().add(pt);
+        PackageTemplateHelper.getListPackageTemplate().add(pt);
         return this;
     }
 

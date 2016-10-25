@@ -126,7 +126,7 @@ public class TemplateValidator {
     }
 
     public static boolean isPackageTemplateNameUnique(String text) {
-        ArrayList<PackageTemplate> listPackageTemplate = SaveUtil.getInstance().getStateModel().getListPackageTemplate();
+        ArrayList<PackageTemplate> listPackageTemplate = PackageTemplateHelper.getListPackageTemplate();
         if(listPackageTemplate == null || listPackageTemplate.isEmpty()){
             return true;
         }

@@ -14,6 +14,7 @@ import core.state.util.StateEditor;
 import global.models.PackageTemplate;
 import global.utils.GsonFactory;
 import global.utils.Logger;
+import global.utils.PackageTemplateHelper;
 import global.utils.TemplateValidator;
 import global.utils.i18n.Localizer;
 import icons.PluginIcons;
@@ -68,7 +69,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 
     @Override
     public void loadTemplates() {
-        view.setTemplatesList(SaveUtil.getInstance().getStateModel().getListPackageTemplate());
+        view.setTemplatesList(PackageTemplateHelper.getListPackageTemplate());
     }
 
     @Override
@@ -239,7 +240,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     }
 
     @Override
-    public void onEditAction(PackageTemplate packageTemplate, DefaultMutableTreeNode selectedNode) {
+    public void onEditAction(PackageTemplate packageTemplate) {
         if (packageTemplate == null) {
             return;
         }
@@ -248,7 +249,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
                 SaveUtil.getInstance().save();
-                view.nodeChanged(selectedNode);
+//                view.nodeChanged(selectedNode);
             }
 
             @Override

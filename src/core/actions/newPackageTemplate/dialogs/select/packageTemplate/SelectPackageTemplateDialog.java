@@ -1,19 +1,32 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.impl.ActionButton;
+import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.openapi.ui.popup.IconButton;
 import com.intellij.ui.AnActionButton;
+import com.intellij.ui.CommonActionsPanel;
+import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.tabs.impl.ActionPanel;
 import com.intellij.ui.treeStructure.Tree;
+import com.intellij.util.IconUtil;
 import com.intellij.util.PlatformIcons;
 import com.intellij.util.containers.HashMap;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.tree.PackageTemplateCellRender;
 import core.state.util.SaveUtil;
 import global.Const;
+import global.listeners.ClickListener;
 import global.models.PackageTemplate;
+import global.utils.FileReaderUtil;
+import global.utils.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
+import net.miginfocom.layout.CC;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +35,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.HashSet;
 import java.util.List;
 
@@ -42,6 +56,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     private Project project;
     private PackageTemplate selectedTemplate;
     private SelectPackageTemplatePresenter presenter;
+    private TextFieldWithBrowseButton btnPath;
 
     protected SelectPackageTemplateDialog(@Nullable Project project) {
         super(project);
@@ -94,42 +109,68 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
     @Override
     protected JComponent createCenterPanel() {
-        createTree();
-        ToolbarDecorator tbDecorator = ToolbarDecorator
-                .createDecorator(tree)
-                .setAddAction(action -> presenter.onAddAction(action, selectedNode))
-                .setRemoveAction(anActionButton -> presenter.onDeleteAction(selectedNode))
-                .setEditAction(anActionButton -> presenter.onEditAction(selectedTemplate, selectedNode))
-                .addExtraAction(new AnActionButton("Copy", PlatformIcons.COPY_ICON) {
-                    @Override
-                    public void actionPerformed(AnActionEvent e) {
-                        presenter.onCopyAction(selectedNode);
-                    }
-                })
-//                .addExtraAction(new AnActionButton("Export", PlatformIcons.EXPORT_ICON) {
+        panel = new JPanel(new MigLayout());
+        makeToolBar();
+        panel.add(new SeparatorComponent(), new CC().growX().spanX().wrap());
+
+
+//        createTree();
+//        ToolbarDecorator tbDecorator = ToolbarDecorator
+//                .createDecorator(tree)
+//                .setAddAction(action -> presenter.onAddAction(action, selectedNode))
+//                .setRemoveAction(anActionButton -> presenter.onDeleteAction(selectedNode))
+//                .setEditAction(anActionButton -> presenter.onEditAction(selectedTemplate, selectedNode))
+//                .addExtraAction(new AnActionButton("Copy", PlatformIcons.COPY_ICON) {
 //                    @Override
 //                    public void actionPerformed(AnActionEvent e) {
-//                        presenter.onExportAction();
+//                        presenter.onCopyAction(selectedNode);
 //                    }
 //                })
-//                .addExtraAction(new AnActionButton("Test", PlatformIcons.CHECK_ICON) {
+////                .addExtraAction(new AnActionButton("Export", PlatformIcons.EXPORT_ICON) {
+////                    @Override
+////                    public void actionPerformed(AnActionEvent e) {
+////                        presenter.onExportAction();
+////                    }
+////                })
+////                .addExtraAction(new AnActionButton("Test", PlatformIcons.CHECK_ICON) {
+////                    @Override
+////                    public void actionPerformed(AnActionEvent e) {
+////                      //test
+////                    }
+////                });
+//                .addExtraAction(new AnActionButton("Setting", PlatformIcons.SHOW_SETTINGS_ICON) {
 //                    @Override
 //                    public void actionPerformed(AnActionEvent e) {
-//                      //test
+//                        presenter.onSettingsAction();
 //                    }
 //                });
-                .addExtraAction(new AnActionButton("Setting", PlatformIcons.SHOW_SETTINGS_ICON) {
-                    @Override
-                    public void actionPerformed(AnActionEvent e) {
-                        presenter.onSettingsAction();
-                    }
-                });
 
 
-        panel = tbDecorator.createPanel();
-        panel.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
+//        panel = tbDecorator.createPanel();
+        panel.setMinimumSize(new Dimension(MIN_WIDTH, panel.getMinimumSize().height));
+
+        btnPath = new TextFieldWithBrowseButton();
+        btnPath.setText(PackageTemplateHelper.getRootDirPath());
+        btnPath.addBrowseFolderListener(Localizer.get("SelectPackageTemplate"), "", project, FileReaderUtil.getPackageTemplatesDescriptor());
+        panel.add(btnPath, new CC().pushX().growX());
 
         return panel;
+    }
+
+    private void makeToolBar() {
+        JButton jbEdit = new JButton(IconUtil.getEditIcon());
+        jbEdit.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String text = btnPath.getText();
+                if(text != null && !text.isEmpty()){
+                    presenter.onEditAction(PackageTemplateHelper.getPackageTemplate(btnPath.getText()));
+                } else {
+                    //todo show error selection
+                }
+            }
+        });
+        panel.add(jbEdit,new CC().wrap());
     }
 
     private DefaultMutableTreeNode rootNode;
@@ -163,7 +204,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         groups.clear();
         addGroupToTree(Const.NODE_GROUP_DEFAULT);
         HashSet<String> groupNames = SaveUtil.getInstance().getStateModel().getUserSettings().getGroupNames();
-        for (String name : groupNames){
+        for (String name : groupNames) {
             addGroupToTree(name);
         }
 
@@ -198,7 +239,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
     @Override
     public void selectNode(DefaultMutableTreeNode node) {
-        if(node == null){
+        if (node == null) {
             selectedNode = null;
             selectedTemplate = null;
             return;

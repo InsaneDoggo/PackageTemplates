@@ -6,6 +6,7 @@ import core.actions.generated.RunTemplateAction;
 import core.state.util.SaveUtil;
 import global.Const;
 import global.models.PackageTemplate;
+import global.utils.PackageTemplateHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -18,8 +19,7 @@ public class AppComponent implements ApplicationComponent {
     @Override
     public void initComponent() {
         ActionManager am = ActionManager.getInstance();
-//        DefaultActionGroup group = (DefaultActionGroup) am.getAction("WindowMenu");
-        ArrayList<PackageTemplate> listPackageTemplate = SaveUtil.getInstance().getStateModel().getListPackageTemplate();
+        ArrayList<PackageTemplate> listPackageTemplate = PackageTemplateHelper.getListPackageTemplate();
 
         for(PackageTemplate pt : listPackageTemplate){
             if(!pt.isShouldRegisterAction()){
@@ -27,8 +27,6 @@ public class AppComponent implements ApplicationComponent {
             }
             RunTemplateAction action = new RunTemplateAction(pt.getName(), pt);
             am.registerAction(action.getName() + Const.ACTION_PREFIX, action);
-//            group.addSeparator();
-//            group.add(action);
         }
     }
 

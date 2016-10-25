@@ -14,6 +14,7 @@ public class PackageTemplate {
     @Expose @SerializedName("name") private String name;
     @Expose @SerializedName("description") private String description;
     @Expose @SerializedName("directory") private Directory directory;
+    @Expose @SerializedName("relativePath") private String relativePath;
     @Expose @SerializedName("groupName") private String groupName;
     @Expose @SerializedName("mapGlobalVars") private HashMap<String, String> mapGlobalVars;
     @Expose @SerializedName("listGlobalVariable") private ArrayList<GlobalVariable> listGlobalVariable;
@@ -100,5 +101,13 @@ public class PackageTemplate {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public String getRelativePath() {
+        return relativePath;
+    }
+
+    public void setRelativePath(String relativePath) {
+        this.relativePath = relativePath;
     }
 }

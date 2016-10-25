@@ -28,6 +28,15 @@ public class NewPackageTemplateAction extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent event) {
+//        if(true){
+//            try {
+//                Tester.doTest(event);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return;
+//        }
+
         virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         project = event.getProject();
 

@@ -26,7 +26,7 @@ public interface SelectPackageTemplatePresenter {
 
     void onAddAction(AnActionButton anActionButton, DefaultMutableTreeNode selectedNode);
 
-    void onEditAction(PackageTemplate packageTemplate, DefaultMutableTreeNode selectedNode);
+    void onEditAction(PackageTemplate packageTemplate);
 
     void onExportAction();
 

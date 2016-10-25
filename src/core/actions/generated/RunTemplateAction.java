@@ -9,6 +9,7 @@ import core.state.util.SaveUtil;
 import global.models.PackageTemplate;
 import global.utils.GsonFactory;
 import global.utils.Logger;
+import global.utils.PackageTemplateHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -49,7 +50,8 @@ public class RunTemplateAction extends BaseAction {
 
     @Nullable
     private PackageTemplate getPackageTemplateByName(String name) {
-        ArrayList<PackageTemplate> list = SaveUtil.getInstance().getStateModel().getListPackageTemplate();
+        ArrayList<PackageTemplate> list = PackageTemplateHelper.getListPackageTemplate();
+
         for(PackageTemplate pt : list){
             if(pt.getName().equals(name)){
                 return pt;

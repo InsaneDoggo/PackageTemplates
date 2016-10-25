@@ -21,6 +21,9 @@ public class SaveUtil {
 
     private static SaveUtil instance;
     private static StateEditor editor;
+    private StateModel stateModel;
+    private Gson gson;
+    private Config cfg;
 
     public static SaveUtil getInstance() {
         if (instance == null) {
@@ -31,10 +34,6 @@ public class SaveUtil {
 
         return instance;
     }
-
-    private StateModel stateModel;
-    private Gson gson;
-    private Config cfg;
 
     public SaveUtil() {
         gson = GsonFactory.getInstance();
@@ -89,7 +88,7 @@ public class SaveUtil {
     }
 
     private void preventNPE() {
-        if (stateModel.getListPackageTemplate() == null) stateModel.setListPackageTemplate(new ArrayList<>());
+//        if (stateModel.getListPackageTemplate() == null) stateModel.setListPackageTemplate(new ArrayList<>());
         if (stateModel.getUserSettings() == null) stateModel.setUserSettings(new UserSettings());
 
         // User Settings

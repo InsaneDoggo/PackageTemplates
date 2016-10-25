@@ -10,6 +10,7 @@ import global.Const;
 import global.models.PackageTemplate;
 import global.utils.FileWriter;
 import global.utils.GsonFactory;
+import global.utils.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class ImpexPresenter {
 
     public void onCreateCenterPanel() {
         listExpPackageTemplateWrapper = new ArrayList<>();
-        for (PackageTemplate pt : stateModel.getListPackageTemplate()) {
+        for (PackageTemplate pt : PackageTemplateHelper.getListPackageTemplate()) {
             listExpPackageTemplateWrapper.add(new ExpPackageTemplateWrapper(true, pt));
         }
 
