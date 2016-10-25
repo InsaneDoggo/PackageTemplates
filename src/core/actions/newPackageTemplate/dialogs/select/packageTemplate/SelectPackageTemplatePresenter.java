@@ -24,7 +24,7 @@ public interface SelectPackageTemplatePresenter {
 
     void onDeleteAction(DefaultMutableTreeNode selectedNode);
 
-    void onAddAction(AnActionButton anActionButton, DefaultMutableTreeNode selectedNode);
+    void onAddAction(String path);
 
     void onEditAction(PackageTemplate packageTemplate);
 
@@ -33,8 +33,6 @@ public interface SelectPackageTemplatePresenter {
     void onSettingsAction();
 
     void newGroup();
-
-    void newTemplate(DefaultMutableTreeNode selectedNode);
 
     void setTreeRootNode(DefaultMutableTreeNode rootNode);
 

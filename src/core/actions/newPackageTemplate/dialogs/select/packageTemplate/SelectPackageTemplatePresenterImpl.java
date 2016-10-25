@@ -152,19 +152,18 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     }
 
     @Override
-    public void onAddAction(AnActionButton anActionButton, DefaultMutableTreeNode selectedNode) {
-        JPopupMenu popupMenu = new JBPopupMenu();
+    public void onAddAction(String path) {
+        ConfigureDialog dialog = new ConfigureDialog(project) {
+            @Override
+            public void onSuccess(PackageTemplate packageTemplate) {
+                //todo write file
+            }
 
-        JMenuItem itemNewTemplate = new JBMenuItem(Localizer.get("popup.item.NewPackageTemplate"), PluginIcons.PACKAGE_TEMPLATES);
-        JMenuItem itemNewGroup = new JBMenuItem(Localizer.get("popup.item.NewGroup"), AllIcons.Nodes.Package);
-
-        itemNewTemplate.addActionListener(e -> newTemplate(selectedNode));
-        itemNewGroup.addActionListener(e -> newGroup());
-
-        popupMenu.add(itemNewTemplate);
-        popupMenu.add(itemNewGroup);
-
-        popupMenu.show(anActionButton.getContextComponent(), 0, 0);
+            @Override
+            public void onFail() {
+            }
+        };
+        dialog.show();
     }
 
     @Override
@@ -199,28 +198,6 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     @Override
     public void setGroups(HashMap<String, DefaultMutableTreeNode> groups) {
         this.groups = groups;
-    }
-
-    @Override
-    public void newTemplate(DefaultMutableTreeNode selectedNode) {
-        ConfigureDialog dialog = new ConfigureDialog(project) {
-            @Override
-            public void onSuccess(PackageTemplate packageTemplate) {
-                DefaultMutableTreeNode groupNode;
-                if (selectedNode.getUserObject() instanceof String) {
-                    groupNode = selectedNode;
-                } else {
-                    groupNode = (DefaultMutableTreeNode) selectedNode.getParent();
-                }
-
-                addPackageTemplate(packageTemplate, groupNode);
-            }
-
-            @Override
-            public void onFail() {
-            }
-        };
-        dialog.show();
     }
 
     private void addPackageTemplate(PackageTemplate packageTemplate, DefaultMutableTreeNode groupNode) {

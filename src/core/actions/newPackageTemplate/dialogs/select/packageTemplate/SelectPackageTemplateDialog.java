@@ -118,8 +118,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 //        ToolbarDecorator tbDecorator = ToolbarDecorator
 //                .createDecorator(tree)
 //                .setAddAction(action -> presenter.onAddAction(action, selectedNode))
-//                .setRemoveAction(anActionButton -> presenter.onDeleteAction(selectedNode))
-//                .setEditAction(anActionButton -> presenter.onEditAction(selectedTemplate, selectedNode))
 //                .addExtraAction(new AnActionButton("Copy", PlatformIcons.COPY_ICON) {
 //                    @Override
 //                    public void actionPerformed(AnActionEvent e) {
@@ -158,7 +156,20 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     }
 
     private void makeToolBar() {
+        JButton jbAdd = new JButton(IconUtil.getAddIcon());
         JButton jbEdit = new JButton(IconUtil.getEditIcon());
+
+        jbEdit.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String text = btnPath.getText();
+                if(text != null && !text.isEmpty()){
+                    presenter.onAddAction(btnPath.getText());
+                } else {
+                    //todo show error selection
+                }
+            }
+        });
         jbEdit.addMouseListener(new ClickListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -170,6 +181,8 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                 }
             }
         });
+
+        panel.add(jbAdd,new CC().wrap());
         panel.add(jbEdit,new CC().wrap());
     }
 
