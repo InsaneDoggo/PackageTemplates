@@ -17,11 +17,11 @@ import com.intellij.psi.PsiManager;
 import core.state.impex.models.ExpFileTemplate;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.FileWrapper;
+import groovy.json.internal.Charsets;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -165,6 +165,23 @@ public class FileWriter {
 
     private static boolean isFileTemplateExist(String name) {
         return AttributesHelper.getTemplate(name) == null;
+    }
+
+    public static void writeStringToFile(String text, String path) {
+        writeStringToFile(text, new File(path));
+    }
+
+    public static void writeStringToFile(String text, File file) {
+        try {
+            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8));
+
+            out.write(text);
+
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            Logger.log(e.getMessage());
+        }
     }
 
 }
