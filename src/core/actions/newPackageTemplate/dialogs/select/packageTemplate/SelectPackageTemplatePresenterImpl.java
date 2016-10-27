@@ -1,32 +1,24 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.*;
+import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.AnActionButton;
-import com.intellij.util.containers.HashMap;
 import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
 import core.settings.SettingsDialog;
-import core.state.util.SaveUtil;
 import core.state.impex.dialogs.ImpexDialog;
-import core.state.models.StateModel;
-import core.state.util.StateEditor;
+import core.state.util.SaveUtil;
 import global.Const;
 import global.models.PackageTemplate;
-import global.utils.*;
+import global.utils.FileReaderUtil;
+import global.utils.Logger;
+import global.utils.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
-import icons.PluginIcons;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Map;
 
 /**
  * Created by Arsen on 17.09.2016.
@@ -35,8 +27,6 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 
     private SelectPackageTemplateView view;
     private Project project;
-    private DefaultMutableTreeNode rootNode;
-    private HashMap<String, DefaultMutableTreeNode> groups;
 
     public SelectPackageTemplatePresenterImpl(SelectPackageTemplateView view, Project project) {
         this.view = view;
@@ -46,14 +36,21 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 
 
     @Override
-    public ValidationInfo doValidate(PackageTemplate packageTemplate, @Nullable JComponent component) {
+    public ValidationInfo doValidate(String path, @Nullable JComponent component) {
 //        ValidationInfo validationInfo = TemplateValidator.isTemplateValid((PackageTemplate) jbList.getSelectedValue());
 //        if (validationInfo != null) {
 //            return new ValidationInfo(validationInfo.message, jbList);
 //        }
 
-        if (packageTemplate == null) {
-            return new ValidationInfo(Localizer.get("warning.SelectTemplate"), component);
+        File file = new File(path);
+        if(file.isDirectory()){
+            return new ValidationInfo(Localizer.get("warning.select.packageTemplate"), component);
+        }
+
+        PackageTemplate pt = PackageTemplateHelper.getPackageTemplate(file.getPath());
+
+        if (pt == null) {
+            return new ValidationInfo(Localizer.get("warning.select.packageTemplate"), component);
         }
 
         return null;
@@ -67,90 +64,6 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     @Override
     public void onCancel() {
         view.onCancel();
-    }
-
-    @Override
-    public void loadTemplates() {
-        view.setTemplatesList(PackageTemplateHelper.getListPackageTemplate());
-    }
-
-    @Override
-    public void onDeleteAction(DefaultMutableTreeNode selectedNode) {
-        if (selectedNode == null) return;
-        Object userObject = selectedNode.getUserObject();
-        if (userObject == null) return;
-
-        if (userObject instanceof PackageTemplate) {
-            int confirmDialog = JOptionPane.showConfirmDialog(((SelectPackageTemplateDialog) view).getRootPane(), Localizer.get("DeleteTemplate"));
-            if (confirmDialog == JOptionPane.OK_OPTION) {
-                SaveUtil.getInstance().editor()
-                        .removePackageTemplate((PackageTemplate) userObject)
-                        .save();
-                removeNode(selectedNode);
-                view.selectNode(null);
-            }
-            return;
-        }
-        if (userObject instanceof String) {
-            int confirmDialog = JOptionPane.showConfirmDialog(((SelectPackageTemplateDialog) view).getRootPane(), Localizer.get("DeleteGroup"));
-            if (confirmDialog == JOptionPane.OK_OPTION) {
-                deleteGroupChildren(selectedNode);
-                SaveUtil.getInstance().editor()
-                        .removeGroupName(selectedNode.getUserObject().toString())
-                        .save();
-                groups.remove(selectedNode.getUserObject().toString());
-                removeNode(selectedNode);
-            }
-            return;
-        }
-    }
-
-    private void removeNode(DefaultMutableTreeNode selectedNode) {
-        DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedNode.getParent();
-        int index = parent.getIndex(selectedNode);
-        selectedNode.removeFromParent();
-        view.nodesWereRemoved(parent, new int[]{index}, new DefaultMutableTreeNode[]{selectedNode});
-    }
-
-    private void deleteGroupChildren(DefaultMutableTreeNode groupNode) {
-        Enumeration children = groupNode.children();
-        while (children.hasMoreElements()) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) children.nextElement();
-            Object userObject = node.getUserObject();
-            if (userObject instanceof PackageTemplate) {
-                SaveUtil.getInstance().editor()
-                        .removePackageTemplate((PackageTemplate) userObject);
-            }
-        }
-    }
-
-    @Override
-    public void onCopyAction(DefaultMutableTreeNode selectedNode) {
-        if (selectedNode == null) return;
-        Object userObject = selectedNode.getUserObject();
-        if (userObject == null) return;
-
-        if (userObject instanceof PackageTemplate) {
-            PackageTemplate ptCopy = GsonFactory.cloneObject((PackageTemplate) userObject, PackageTemplate.class);
-
-            String name = Messages.showInputDialog(project, Localizer.get("message.EnterName"),
-                    Localizer.get("title.CopyOf") + " " + ptCopy.getName(), Messages.getQuestionIcon(), "", new InputValidator() {
-                        @Override
-                        public boolean checkInput(String inputString) {
-                            return !inputString.isEmpty() && TemplateValidator.isPackageTemplateNameUnique(inputString);
-                        }
-
-                        @Override
-                        public boolean canClose(String inputString) {
-                            return checkInput(inputString);
-                        }
-                    });
-            if (name != null && !name.isEmpty()) {
-                ptCopy.setName(name);
-                addPackageTemplate(ptCopy, (DefaultMutableTreeNode) selectedNode.getParent());
-            }
-        }
-
     }
 
     @Override
@@ -171,56 +84,6 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             }
         };
         dialog.show();
-    }
-
-    @Override
-    public void newGroup() {
-        String name = Messages.showInputDialog(project, Localizer.get("message.EnterName"),
-                Localizer.get("title.NewGroup"), Messages.getQuestionIcon(), "", new InputValidator() {
-                    @Override
-                    public boolean checkInput(String inputString) {
-                        return !inputString.isEmpty() && isGroupUnique(inputString);
-                    }
-
-                    @Override
-                    public boolean canClose(String inputString) {
-                        return checkInput(inputString);
-                    }
-                });
-        if (name != null && !name.isEmpty()) {
-            DefaultMutableTreeNode groupNode = view.addGroupToTree(name);
-            view.nodesWereInserted(rootNode, new int[]{rootNode.getIndex(groupNode)});
-            view.selectNode(groupNode);
-        }
-    }
-
-    private boolean isGroupUnique(String name) {
-        for (Map.Entry<String, DefaultMutableTreeNode> entry : groups.entrySet())
-            if (entry.getKey().equals(name)) {
-                return false;
-            }
-        return true;
-    }
-
-    @Override
-    public void setGroups(HashMap<String, DefaultMutableTreeNode> groups) {
-        this.groups = groups;
-    }
-
-    private void addPackageTemplate(PackageTemplate packageTemplate, DefaultMutableTreeNode groupNode) {
-        packageTemplate.setGroupName(groupNode.getUserObject().toString());
-        SaveUtil.getInstance().editor()
-                .addPackageTemplate(packageTemplate)
-                .save();
-        DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(packageTemplate);
-        groupNode.add(newChild);
-        view.nodesWereInserted(groupNode, new int[]{groupNode.getIndex(newChild)});
-        view.selectNode(newChild);
-    }
-
-    @Override
-    public void setTreeRootNode(DefaultMutableTreeNode rootNode) {
-        this.rootNode = rootNode;
     }
 
     @Override
