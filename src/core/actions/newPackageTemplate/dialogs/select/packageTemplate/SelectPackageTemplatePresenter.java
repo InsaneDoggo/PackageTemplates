@@ -24,7 +24,7 @@ public interface SelectPackageTemplatePresenter {
 
     void onDeleteAction(DefaultMutableTreeNode selectedNode);
 
-    void onAddAction(String path);
+    void onAddAction();
 
     void onEditAction(PackageTemplate packageTemplate);
 

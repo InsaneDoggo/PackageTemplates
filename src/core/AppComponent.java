@@ -21,12 +21,12 @@ public class AppComponent implements ApplicationComponent {
         ActionManager am = ActionManager.getInstance();
         ArrayList<PackageTemplate> listPackageTemplate = PackageTemplateHelper.getListPackageTemplate();
 
-        for(PackageTemplate pt : listPackageTemplate){
-            if(!pt.isShouldRegisterAction()){
+        for (PackageTemplate pt : listPackageTemplate) {
+            if (!pt.isShouldRegisterAction()) {
                 continue;
             }
             RunTemplateAction action = new RunTemplateAction(pt.getName(), pt);
-            am.registerAction(action.getName() + Const.ACTION_PREFIX, action);
+            am.registerAction(Const.ACTION_PREFIX + action.getName(), action);
         }
     }
 

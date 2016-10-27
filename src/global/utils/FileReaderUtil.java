@@ -44,4 +44,9 @@ public class FileReaderUtil {
         return descriptor;
     }
 
+    public static FileChooserDescriptor getDirectoryDescriptor() {
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false);
+        return descriptor;
+    }
+
 }

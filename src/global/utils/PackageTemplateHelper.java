@@ -46,4 +46,7 @@ public class PackageTemplateHelper {
 //        this.listPackageTemplate = listPackageTemplate;
     }
 
+    public static void savePackageTemplate(PackageTemplate packageTemplate, String path) {
+        FileWriter.writeStringToFile(GsonFactory.getInstance().toJson(packageTemplate, PackageTemplate.class), path);
+    }
 }

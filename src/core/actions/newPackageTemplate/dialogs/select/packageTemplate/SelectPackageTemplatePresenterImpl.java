@@ -1,8 +1,11 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.*;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AnActionButton;
 import com.intellij.util.containers.HashMap;
 import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
@@ -11,17 +14,16 @@ import core.state.util.SaveUtil;
 import core.state.impex.dialogs.ImpexDialog;
 import core.state.models.StateModel;
 import core.state.util.StateEditor;
+import global.Const;
 import global.models.PackageTemplate;
-import global.utils.GsonFactory;
-import global.utils.Logger;
-import global.utils.PackageTemplateHelper;
-import global.utils.TemplateValidator;
+import global.utils.*;
 import global.utils.i18n.Localizer;
 import icons.PluginIcons;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Map;
@@ -132,7 +134,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             PackageTemplate ptCopy = GsonFactory.cloneObject((PackageTemplate) userObject, PackageTemplate.class);
 
             String name = Messages.showInputDialog(project, Localizer.get("message.EnterName"),
-                    Localizer.get("title.CopyOf" )+ " " + ptCopy.getName(), Messages.getQuestionIcon(), "", new InputValidator() {
+                    Localizer.get("title.CopyOf") + " " + ptCopy.getName(), Messages.getQuestionIcon(), "", new InputValidator() {
                         @Override
                         public boolean checkInput(String inputString) {
                             return !inputString.isEmpty() && TemplateValidator.isPackageTemplateNameUnique(inputString);
@@ -152,11 +154,16 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     }
 
     @Override
-    public void onAddAction(String path) {
+    public void onAddAction() {
         ConfigureDialog dialog = new ConfigureDialog(project) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
-                //todo write file
+                VirtualFile[] files = FileChooser.chooseFiles(FileReaderUtil.getDirectoryDescriptor(), project,
+                        LocalFileSystem.getInstance().findFileByIoFile(new File(PackageTemplateHelper.getRootDirPath())));
+                if (files.length > 0) {
+                    PackageTemplateHelper.savePackageTemplate(packageTemplate,
+                            String.format("%s/%s.%s", files[0].getPath(), packageTemplate.getName(), Const.PACKAGE_TEMPLATES_EXTENSION));
+                }
             }
 
             @Override

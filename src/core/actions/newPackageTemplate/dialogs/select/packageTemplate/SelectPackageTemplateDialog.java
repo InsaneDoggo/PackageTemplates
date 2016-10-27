@@ -1,10 +1,11 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.ui.popup.IconButton;
@@ -31,11 +32,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 
@@ -150,40 +153,37 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         btnPath = new TextFieldWithBrowseButton();
         btnPath.setText(PackageTemplateHelper.getRootDirPath());
         btnPath.addBrowseFolderListener(Localizer.get("SelectPackageTemplate"), "", project, FileReaderUtil.getPackageTemplatesDescriptor());
-        panel.add(btnPath, new CC().pushX().growX());
+        panel.add(btnPath, new CC().pushX().growX().spanX());
 
         return panel;
     }
 
     private void makeToolBar() {
-        JButton jbAdd = new JButton(IconUtil.getAddIcon());
-        JButton jbEdit = new JButton(IconUtil.getEditIcon());
-
-        jbEdit.addMouseListener(new ClickListener() {
+        DefaultActionGroup actions = new DefaultActionGroup();
+        AnAction actionAdd = new AnAction(IconUtil.getAddIcon()) {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                String text = btnPath.getText();
-                if(text != null && !text.isEmpty()){
-                    presenter.onAddAction(btnPath.getText());
-                } else {
-                    //todo show error selection
-                }
+            public void actionPerformed(AnActionEvent e) {
+                presenter.onAddAction();
             }
-        });
-        jbEdit.addMouseListener(new ClickListener() {
+        };
+        AnAction actionEdit = new AnAction(IconUtil.getEditIcon()) {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                String text = btnPath.getText();
-                if(text != null && !text.isEmpty()){
+            public void actionPerformed(AnActionEvent e) {
+                String path = btnPath.getText();
+                if (path != null && !path.isEmpty() && !(new File(path).isDirectory())) {
                     presenter.onEditAction(PackageTemplateHelper.getPackageTemplate(btnPath.getText()));
                 } else {
-                    //todo show error selection
+                    Messages.showErrorDialog(project, Localizer.get("error.select.packageTemplate"), Localizer.get("ErrorDialog"));
                 }
             }
-        });
+        };
 
-        panel.add(jbAdd,new CC().wrap());
-        panel.add(jbEdit,new CC().wrap());
+        actions.add(actionAdd);
+        actions.add(actionEdit);
+
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, actions, true);
+
+        panel.add(toolbar.getComponent(), new CC().spanX().wrap());
     }
 
     private DefaultMutableTreeNode rootNode;
