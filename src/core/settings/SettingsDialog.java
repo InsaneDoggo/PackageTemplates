@@ -49,15 +49,15 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
     }
 
     @Override
-    public void buildView(UserSettings userSettings) {
+    public void buildView() {
         panel.setLayout(new MigLayout());
 
         // Language
         JLabel jlLanguage = new JLabel(Localizer.get("settings.Language"));
 
         JComboBox<Language> comboLanguages = new ComboBox<>(new EnumComboBoxModel<>(Language.class));
-        if (userSettings.getLanguage() != null) {
-            comboLanguages.setSelectedItem(userSettings.getLanguage());
+        if (SaveUtil.reader().getLanguage() != null) {
+            comboLanguages.setSelectedItem(SaveUtil.reader().getLanguage());
         }
 
         comboLanguages.addItemListener(e -> {

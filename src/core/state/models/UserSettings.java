@@ -13,7 +13,6 @@ import java.util.HashSet;
 public class UserSettings {
 
     @Expose @SerializedName("language") private Language language;
-    @Expose @SerializedName("groupNames") private HashSet<String> groupNames;
 
     public Language getLanguage() {
         return language;
@@ -23,11 +22,4 @@ public class UserSettings {
         this.language = language;
     }
 
-    public HashSet<String> getGroupNames() {
-        return groupNames;
-    }
-
-    public void setGroupNames(HashSet<String> groupNames) {
-        this.groupNames = groupNames;
-    }
 }

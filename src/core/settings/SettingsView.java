@@ -8,6 +8,6 @@ import core.state.models.UserSettings;
 public interface SettingsView {
 
     void setTitle(String title);
-    void buildView(UserSettings userSettings);
+    void buildView();
 
 }

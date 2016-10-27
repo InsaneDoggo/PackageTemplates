@@ -1,9 +1,7 @@
 package core.state.util;
 
-import core.state.impex.models.ExpPackageTemplate;
 import core.state.impex.models.ExportBundle;
 import core.state.models.StateModel;
-import global.models.PackageTemplate;
 
 /**
  * Created by CeH9 on 06.08.2016.

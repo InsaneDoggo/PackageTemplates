@@ -95,7 +95,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
         ConfigureDialog dialog = new ConfigureDialog(project, packageTemplate) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
-                SaveUtil.getInstance().save();
+                SaveUtil.editor().save();
 //                view.nodeChanged(selectedNode);
             }
 

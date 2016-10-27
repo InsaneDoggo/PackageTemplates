@@ -40,7 +40,6 @@ public class NewPackageTemplateAction extends AnAction {
         virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         project = event.getProject();
 
-        SaveUtil.getInstance().load();
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
             public void onSuccess(PackageTemplate pt) {
@@ -56,19 +55,6 @@ public class NewPackageTemplateAction extends AnAction {
             }
         };
         dialog.show();
-
-//        ImpexDialog dialog = new ImpexDialog(event.getProject(), "Export Templates") {
-//            @Override
-//            public void onSuccess() {
-//                Logger.log("onSuccess");
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                Logger.log("onCancel");
-//            }
-//        };
-//        dialog.show();
     }
 
     public static void executeTemplateSilently(PackageTemplate pt, Project project, VirtualFile virtualFile) {

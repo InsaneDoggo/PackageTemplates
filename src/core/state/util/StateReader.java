@@ -6,31 +6,25 @@ import global.utils.i18n.Language;
 
 /**
  * Хелпер для взаимодествия с конфигом
- * Created by Arsen on 09.10.2016.
+ * Created by Arsen on 28.10.2016.
  */
-public class StateEditor {
+public class StateReader {
 
     private SaveUtil saveUtil;
     private StateModel model;
 
-    public StateEditor(SaveUtil saveUtil, StateModel model) {
+    public StateReader(SaveUtil saveUtil, StateModel model) {
         this.saveUtil = saveUtil;
         this.model = model;
     }
 
-    private UserSettings userSettings(){
+    private UserSettings userSettings() {
         return model.getUserSettings();
     }
 
-    public StateEditor save(){
-        saveUtil.save();
-        return this;
-    }
 
-
-    public StateEditor setLanguage(Language lang) {
-        userSettings().setLanguage(lang);
-        return this;
+    public Language getLanguage() {
+        return userSettings().getLanguage();
     }
 
 }

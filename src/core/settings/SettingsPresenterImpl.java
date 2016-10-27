@@ -18,12 +18,12 @@ public class SettingsPresenterImpl implements SettingsPresenter {
     @Override
     public void onPreShow() {
         view.setTitle(Localizer.get("title.Settings"));
-        view.buildView(SaveUtil.getInstance().getStateModel().getUserSettings());
+        view.buildView();
     }
 
     @Override
     public void onLanguageSelected(Language lang) {
-        SaveUtil.getInstance().editor()
+        SaveUtil.editor()
                 .setLanguage(lang)
                 .save();
     }

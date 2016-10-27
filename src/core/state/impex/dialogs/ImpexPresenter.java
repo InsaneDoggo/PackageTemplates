@@ -22,11 +22,9 @@ import java.util.ArrayList;
 public class ImpexPresenter {
 
     private ImpexView view;
-    private StateModel stateModel;
 
     public ImpexPresenter(ImpexView view) {
         this.view = view;
-        stateModel = SaveUtil.getInstance().getStateModel();
     }
 
     public ValidationInfo doValidate(String savePath) {

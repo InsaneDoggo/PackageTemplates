@@ -18,7 +18,7 @@ public class Localizer {
 
     private static Language getCurrentLang() {
         if (currentLang == null) {
-            currentLang = SaveUtil.getInstance().getStateModel().getUserSettings().getLanguage();
+            currentLang = SaveUtil.reader().getLanguage();
         }
         return currentLang;
     }

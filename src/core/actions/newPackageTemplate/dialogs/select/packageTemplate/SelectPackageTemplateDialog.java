@@ -13,6 +13,7 @@ import com.intellij.ui.AnActionButton;
 import com.intellij.ui.CommonActionsPanel;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.tabs.impl.ActionPanel;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.IconUtil;
@@ -114,15 +115,26 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         panel.setMinimumSize(new Dimension(MIN_WIDTH, panel.getMinimumSize().height));
 
         makeToolBar();
+        makePathButton();
+        makeFavourites();
 
+        return panel;
+    }
+
+    private void makeFavourites() {
+        JBLabel jlFavourites = new JBLabel(Localizer.get("label.Favourites"));
+
+        panel.add(new SeparatorComponent(), new CC().growX().spanX().wrap());
+//        panel.add()
+    }
+
+    private void makePathButton() {
         btnPath = new TextFieldWithBrowseButton();
         btnPath.setText(PackageTemplateHelper.getRootDirPath());
         btnPath.addBrowseFolderListener(Localizer.get("SelectPackageTemplate"), "", project, FileReaderUtil.getPackageTemplatesDescriptor());
 
         panel.add(new SeparatorComponent(), new CC().growX().spanX().wrap());
         panel.add(btnPath, new CC().pushX().growX().spanX());
-
-        return panel;
     }
 
     private void makeToolBar() {
