@@ -2,6 +2,7 @@ package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -10,10 +11,9 @@ import core.settings.SettingsDialog;
 import core.state.impex.dialogs.ImpexDialog;
 import core.state.util.SaveUtil;
 import global.Const;
+import global.models.Favourite;
 import global.models.PackageTemplate;
-import global.utils.FileReaderUtil;
-import global.utils.Logger;
-import global.utils.PackageTemplateHelper;
+import global.utils.*;
 import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,11 +43,11 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 //        }
 
         File file = new File(path);
-        if(file.isDirectory()){
+        if (file.isDirectory()) {
             return new ValidationInfo(Localizer.get("warning.select.packageTemplate"), component);
         }
 
-        PackageTemplate pt = PackageTemplateHelper.getPackageTemplate(file.getPath());
+        PackageTemplate pt = PackageTemplateHelper.getPackageTemplate(file);
 
         if (pt == null) {
             return new ValidationInfo(Localizer.get("warning.select.packageTemplate"), component);
@@ -104,6 +104,27 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             }
         };
         dialog.show();
+    }
+
+    @Override
+    public void onAddToFavourites(String path) {
+        if (!FileValidator.isUnderConfigDir(path)) {
+            Messages.showErrorDialog(project, String.format(Localizer.get("warning.select.fromConfigDir"), PackageTemplateHelper.getRootDirPath()), Localizer.get("title.SystemMessage"));
+            return;
+        }
+
+        Favourite storedFavourite = CollectionHelper.getFavouriteByPath(SaveUtil.reader().getListFavourite(), path);
+
+        if (storedFavourite != null) {
+            SaveUtil.editor()
+                    .removeFavourite(storedFavourite)
+                    .reorderFavourites()
+                    .save();
+        } else {
+            SaveUtil.editor()
+                    .addFavourite(new Favourite(path, SaveUtil.reader().getListFavourite().size()))
+                    .save();
+        }
     }
 
     @Override

@@ -2,7 +2,10 @@ package core.state.util;
 
 import core.state.models.StateModel;
 import core.state.models.UserSettings;
+import global.models.Favourite;
 import global.utils.i18n.Language;
+
+import java.util.ArrayList;
 
 /**
  * Хелпер для взаимодествия с конфигом
@@ -25,6 +28,10 @@ public class StateReader {
 
     public Language getLanguage() {
         return userSettings().getLanguage();
+    }
+
+    public ArrayList<Favourite> getListFavourite() {
+        return model.getListFavourite();
     }
 
 }

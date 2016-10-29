@@ -25,4 +25,5 @@ public interface SelectPackageTemplatePresenter {
 
     void onSettingsAction();
 
+    void onAddToFavourites(String path);
 }

@@ -2,7 +2,11 @@ package core.state.util;
 
 import core.state.models.StateModel;
 import core.state.models.UserSettings;
+import global.models.Favourite;
 import global.utils.i18n.Language;
+import org.jetbrains.jps.classFilesIndex.indexer.api.IndexState;
+
+import java.util.ArrayList;
 
 /**
  * Хелпер для взаимодествия с конфигом
@@ -18,11 +22,11 @@ public class StateEditor {
         this.model = model;
     }
 
-    private UserSettings userSettings(){
+    private UserSettings userSettings() {
         return model.getUserSettings();
     }
 
-    public StateEditor save(){
+    public StateEditor save() {
         saveUtil.save();
         return this;
     }
@@ -30,6 +34,36 @@ public class StateEditor {
 
     public StateEditor setLanguage(Language lang) {
         userSettings().setLanguage(lang);
+        return this;
+    }
+
+    public StateEditor addFavourite(Favourite favourite) {
+        model.getListFavourite().add(favourite);
+        return this;
+    }
+
+    public StateEditor addFavourite(ArrayList<Favourite> list) {
+        model.getListFavourite().addAll(list);
+        return this;
+    }
+
+    public StateEditor removeFavourite(Favourite favourite) {
+        model.getListFavourite().remove(favourite);
+        return this;
+    }
+
+    public StateEditor clearListFavourite() {
+        model.getListFavourite().clear();
+        return this;
+    }
+
+    public StateEditor reorderFavourites() {
+        ArrayList<Favourite> listFavourite = model.getListFavourite();
+        listFavourite.sort((o1, o2) -> o1.getOrder() - o2.getOrder());
+
+        for (int i = 0; i < listFavourite.size(); i++) {
+            listFavourite.get(i).setOrder(i);
+        }
         return this;
     }
 

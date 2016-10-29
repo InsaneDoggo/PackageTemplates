@@ -14,7 +14,6 @@ public class PackageTemplate {
     @Expose @SerializedName("name") private String name;
     @Expose @SerializedName("description") private String description;
     @Expose @SerializedName("directory") private Directory directory;
-    @Expose @SerializedName("relativePath") private String relativePath;
     @Expose @SerializedName("mapGlobalVars") private HashMap<String, String> mapGlobalVars;
     @Expose @SerializedName("listGlobalVariable") private ArrayList<GlobalVariable> listGlobalVariable;
     @Expose @SerializedName("postGeneratedResults") private PostGeneratedResults postGeneratedResults;
@@ -94,11 +93,4 @@ public class PackageTemplate {
         this.postGeneratedResults = postGeneratedResults;
     }
 
-    public String getRelativePath() {
-        return relativePath;
-    }
-
-    public void setRelativePath(String relativePath) {
-        this.relativePath = relativePath;
-    }
 }

@@ -11,6 +11,16 @@ public class Favourite {
     @Expose @SerializedName("path") private String path;
     @Expose @SerializedName("order") private int order;
 
+    public Favourite(String path, int order) {
+        this.path = path;
+        this.order = order;
+    }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        return getPath().equals(((Favourite) obj).getPath());
+//    }
+
     public String getPath() {
         return path;
     }

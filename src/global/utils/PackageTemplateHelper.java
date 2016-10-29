@@ -5,9 +5,13 @@ import global.Const;
 import global.models.PackageTemplate;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Arsen on 25.10.2016.
@@ -16,7 +20,7 @@ public class PackageTemplateHelper {
 
     @NotNull
     public static String getRootDirPath() {
-        return PathManager.getConfigPath() + "/" + Const.PACKAGE_TEMPLATES_DIR_NAME + "/";
+        return Paths.get(PathManager.getConfigPath()).toString() + File.separator + Const.PACKAGE_TEMPLATES_DIR_NAME + File.separator;
     }
 
     private static File rootDir() {
@@ -35,18 +39,36 @@ public class PackageTemplateHelper {
     }
 
     public static PackageTemplate getPackageTemplate(String path) {
-        String json = FileReaderUtil.readFile(path);
+        return getPackageTemplate(new File(path));
+    }
+
+    public static PackageTemplate getPackageTemplate(File file) {
+        String json = FileReaderUtil.readFile(file);
         if (json != null && !json.isEmpty()) {
-            return GsonFactory.getInstance().fromJson(json, PackageTemplate.class);
+            try {
+            PackageTemplate pt = GsonFactory.getInstance().fromJson(json, PackageTemplate.class);
+            pt.setName(file.getName());
+            return pt;
+            } catch (Exception e){
+                Logger.log(e.getMessage());
+                return null;
+            }
         }
         return null;
     }
 
-    public static void setListPackageTemplate(ArrayList<PackageTemplate> listPackageTemplate) {
-//        this.listPackageTemplate = listPackageTemplate;
+    private static String getRelativePath(File file) {
+        String path =  Paths.get(file.getPath()).toString();
+        return path.replace(PackageTemplateHelper.getRootDirPath(), "");
     }
 
     public static void savePackageTemplate(PackageTemplate packageTemplate, String path) {
         FileWriter.writeStringToFile(GsonFactory.getInstance().toJson(packageTemplate, PackageTemplate.class), path);
+    }
+
+    public static String createNameFromPath(File file) {
+        String path = getRelativePath(file);
+        path = path.replaceAll(Pattern.quote(File.separator), Matcher.quoteReplacement("."));
+        return path.replaceAll(Pattern.quote("-"), Matcher.quoteReplacement("_"));
     }
 }

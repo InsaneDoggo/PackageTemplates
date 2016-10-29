@@ -15,8 +15,12 @@ import java.nio.file.Paths;
 public class FileReaderUtil {
 
     public static String readFile(String path) {
+        return readFile(new File(path));
+    }
+
+    public static String readFile(File file) {
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), Charsets.UTF_8));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 

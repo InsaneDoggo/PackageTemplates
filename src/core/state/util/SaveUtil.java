@@ -22,12 +22,16 @@ public class SaveUtil {
     private static SaveUtil getInstance() {
         if (instance == null) {
             instance = new SaveUtil();
+            instance.init();
         }
         return instance;
     }
 
     public SaveUtil() {
         cfg = ServiceManager.getService(Config.class);
+    }
+
+    private void init() {
         instance.load();
         editor = new StateEditor(this, stateModel);
         reader = new StateReader(this, stateModel);
@@ -44,13 +48,13 @@ public class SaveUtil {
     private void load() {
         StateWrapper stateWrapper = cfg.getState();
         if (stateWrapper == null) {
-            StateFactory.createStateModel();
+            stateModel = StateFactory.createStateModel();
             return;
         }
 
         stateModel = GsonFactory.getInstance().fromJson(stateWrapper.value, StateModel.class);
         if (stateModel == null) {
-            StateFactory.createStateModel(stateWrapper);
+            stateModel = StateFactory.createStateModel();
             return;
         }
 
