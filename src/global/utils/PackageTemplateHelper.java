@@ -1,8 +1,11 @@
 package global.utils;
 
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.project.Project;
 import global.Const;
 import global.models.PackageTemplate;
+import global.visitors.CollectFileTemplatesVisitor;
+import global.wrappers.PackageTemplateWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -46,10 +49,10 @@ public class PackageTemplateHelper {
         String json = FileReaderUtil.readFile(file);
         if (json != null && !json.isEmpty()) {
             try {
-            PackageTemplate pt = GsonFactory.getInstance().fromJson(json, PackageTemplate.class);
-            pt.setName(file.getName());
-            return pt;
-            } catch (Exception e){
+                PackageTemplate pt = GsonFactory.getInstance().fromJson(json, PackageTemplate.class);
+                pt.setName(file.getName().replace("." + Const.PACKAGE_TEMPLATES_EXTENSION, ""));
+                return pt;
+            } catch (Exception e) {
                 Logger.log(e.getMessage());
                 return null;
             }
@@ -58,7 +61,7 @@ public class PackageTemplateHelper {
     }
 
     private static String getRelativePath(File file) {
-        String path =  Paths.get(file.getPath()).toString();
+        String path = Paths.get(file.getPath()).toString();
         return path.replace(PackageTemplateHelper.getRootDirPath(), "");
     }
 
@@ -71,4 +74,14 @@ public class PackageTemplateHelper {
         path = path.replaceAll(Pattern.quote(File.separator), Matcher.quoteReplacement("."));
         return path.replaceAll(Pattern.quote("-"), Matcher.quoteReplacement("_"));
     }
+
+    public static void exportPackageTemplate(Project project, PackageTemplate pt, String pathDir) {
+        CollectFileTemplatesVisitor visitor = new CollectFileTemplatesVisitor();
+        PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.EDIT);
+        visitor.visit(ptWrapper.getRootElement());
+
+
+        System.out.println("jhj");
+    }
+
 }

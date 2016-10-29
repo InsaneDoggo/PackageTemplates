@@ -19,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Created by Arsen on 17.09.2016.
@@ -87,7 +89,9 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     }
 
     @Override
-    public void onEditAction(PackageTemplate packageTemplate) {
+    public void onEditAction(String path) {
+        PackageTemplate packageTemplate = PackageTemplateHelper.getPackageTemplate(path);
+
         if (packageTemplate == null) {
             return;
         }
@@ -95,7 +99,9 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
         ConfigureDialog dialog = new ConfigureDialog(project, packageTemplate) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
-                SaveUtil.editor().save();
+                // Replace Name
+                String newPath = path.replace(new File(path).getName(), packageTemplate.getName() + "."+Const.PACKAGE_TEMPLATES_EXTENSION);
+                PackageTemplateHelper.savePackageTemplate(packageTemplate, newPath);
 //                view.nodeChanged(selectedNode);
             }
 
@@ -128,19 +134,13 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     }
 
     @Override
-    public void onExportAction() {
-        ImpexDialog dialog = new ImpexDialog(project, "Export Templates") {
-            @Override
-            public void onSuccess() {
-                Logger.log("onSuccess");
-            }
+    public void onExportAction(String path) {
+        VirtualFile[] files = FileChooser.chooseFiles(FileReaderUtil.getDirectoryDescriptor(), project, null);
 
-            @Override
-            public void onCancel() {
-                Logger.log("onCancel");
-            }
-        };
-        dialog.show();
+        if (files.length > 0) {
+            PackageTemplate pt = PackageTemplateHelper.getPackageTemplate(path);
+            PackageTemplateHelper.exportPackageTemplate(project, pt, files[0].getPath());
+        }
     }
 
     @Override

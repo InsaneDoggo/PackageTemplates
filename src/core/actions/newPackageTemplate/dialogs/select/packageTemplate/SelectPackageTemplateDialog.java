@@ -10,6 +10,7 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.IconUtil;
 import com.intellij.util.PlatformIcons;
 import core.state.util.SaveUtil;
@@ -37,7 +38,6 @@ import java.util.ArrayList;
 public abstract class SelectPackageTemplateDialog extends DialogWrapper implements SelectPackageTemplateView {
 
     private static final int MIN_WIDTH = 600;
-    private static final int MIN_HEIGHT = 520;
 
     public abstract void onSuccess(PackageTemplate packageTemplate);
 
@@ -108,21 +108,11 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     @Override
     protected JComponent createCenterPanel() {
         panel = new JPanel(new MigLayout());
+        JBScrollPane scrollPane = new JBScrollPane(panel);
         panel.setMinimumSize(new Dimension(MIN_WIDTH, panel.getMinimumSize().height));
 
         makeToolBar();
         makePathButton();
-
-        rbFromPath = new JBRadioButton(Localizer.get("label.FromPath"));
-        rbFromPath.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                actionAdd.getTemplatePresentation().setEnabled(true);
-                actionAddToFavourites.getTemplatePresentation().setEnabled(true);
-                selectedPath = null;
-                componentForValidation = btnPath;
-                refreshToolbar();
-            }
-        });
         makeFavourites();
 
         return panel;
@@ -158,7 +148,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
             @Override
             public void actionPerformed(AnActionEvent e) {
                 if (FileValidator.isValidTemplatePath(getSelectedPath())) {
-                    presenter.onEditAction(PackageTemplateHelper.getPackageTemplate(getSelectedPath()));
+                    presenter.onEditAction(getSelectedPath());
                 } else {
                     Messages.showErrorDialog(project, Localizer.get("warning.select.packageTemplate"), Localizer.get("title.SystemMessage"));
                 }
@@ -173,7 +163,11 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         actionExport = new AnAction(PlatformIcons.EXPORT_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
-                presenter.onExportAction();
+                if (FileValidator.isValidTemplatePath(getSelectedPath())) {
+                    presenter.onExportAction(getSelectedPath());
+                } else {
+                    Messages.showErrorDialog(project, Localizer.get("warning.select.packageTemplate"), Localizer.get("title.SystemMessage"));
+                }
             }
         };
         actionAddToFavourites = new AnAction(AllIcons.Toolwindows.ToolWindowFavorites) {
@@ -192,9 +186,9 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
         actionGroup.add(actionAdd);
         actionGroup.add(actionEdit);
-        actionGroup.add(actionSettings);
         actionGroup.add(actionAddToFavourites);
-//        actionGroup.add(actionExport);
+        actionGroup.add(actionSettings);
+        actionGroup.add(actionExport);
 
         jpToolbar = new JPanel(new MigLayout());
         panel.add(jpToolbar, new CC().spanX().wrap());
@@ -220,6 +214,17 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     private void makeFavourites() {
         buttonGroup = new ButtonGroup();
         buttonGroup.add(rbFromPath);
+
+        rbFromPath = new JBRadioButton(Localizer.get("label.FromPath"));
+        rbFromPath.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                actionAdd.getTemplatePresentation().setEnabled(true);
+                actionAddToFavourites.getTemplatePresentation().setEnabled(true);
+                selectedPath = null;
+                componentForValidation = btnPath;
+                refreshToolbar();
+            }
+        });
         panel.add(rbFromPath, new CC().growX().spanX().wrap());
 
         ArrayList<Favourite> listFavourite = SaveUtil.reader().getListFavourite();

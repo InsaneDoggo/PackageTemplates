@@ -19,9 +19,9 @@ public interface SelectPackageTemplatePresenter {
 
     void onAddAction();
 
-    void onEditAction(PackageTemplate packageTemplate);
+    void onEditAction(String packageTemplate);
 
-    void onExportAction();
+    void onExportAction(String selectedPath);
 
     void onSettingsAction();
 
