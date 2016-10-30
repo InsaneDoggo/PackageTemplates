@@ -30,12 +30,6 @@ public class GridBagFactory {
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
-    public static GridBag getBagForSelectDialog() {
-        return new GridBag()
-                .setDefaultInsets(new JBInsets(4, 6, 4, 6))
-                .setDefaultFill(GridBagConstraints.HORIZONTAL);
-    }
-
     public static GridBag getBagForConfigureDialog() {
         return new GridBag()
                 .setDefaultFill(GridBagConstraints.HORIZONTAL)
@@ -47,14 +41,6 @@ public class GridBagFactory {
                 .setDefaultFill(GridBagConstraints.HORIZONTAL)
                 .setDefaultInsets(new JBInsets(4, 4, 4, 4))
                 .setDefaultWeightX(1);
-    }
-
-    @NotNull
-    public static GridBag getGridBagForImpexDialog() {
-        return new GridBag()
-                .setDefaultWeightX(1, 1)
-                .setDefaultInsets(defaultInsets)
-                .setDefaultFill(GridBagConstraints.HORIZONTAL);
     }
 
     public static GridBag getOptionsPanelGridBag() {

@@ -8,19 +8,19 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
 import core.settings.SettingsDialog;
-import core.state.impex.dialogs.ImpexDialog;
 import core.state.util.SaveUtil;
 import global.Const;
 import global.models.Favourite;
 import global.models.PackageTemplate;
-import global.utils.*;
+import global.utils.CollectionHelper;
+import global.utils.FileReaderUtil;
+import global.utils.FileValidator;
+import global.utils.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * Created by Arsen on 17.09.2016.

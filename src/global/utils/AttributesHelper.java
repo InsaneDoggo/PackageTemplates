@@ -46,9 +46,16 @@ public class AttributesHelper {
     public static FileTemplate getTemplate(String name) {
         FileTemplateManager ftm = FileTemplateManager.getDefaultInstance();
 
+        // Custom
         FileTemplate result = ftm.getTemplate(name);
-        if( result == null ) result = ftm.getInternalTemplate(name);
-        if( result == null ) result = ftm.getJ2eeTemplate(name);
+        // Internal
+        if (result == null) {
+            result = ftm.getInternalTemplate(name);
+        }
+        // J2EE
+        if (result == null) {
+            result = ftm.getJ2eeTemplate(name);
+        }
 
         return result;
     }
@@ -57,7 +64,7 @@ public class AttributesHelper {
         List<String> listUnset = new ArrayList<>(Arrays.asList(unsetAttributes));
         List<String> listGlobals = new ArrayList<>();
 
-        for (GlobalVariable variable : listGlobalVariable){
+        for (GlobalVariable variable : listGlobalVariable) {
             listGlobals.add(variable.getName());
         }
 

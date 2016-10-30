@@ -1,6 +1,5 @@
 package core.state.util;
 
-import core.state.impex.models.ExportBundle;
 import core.state.models.StateModel;
 
 /**
@@ -23,14 +22,4 @@ public class MigrationHelper {
 //        SaveUtil.getInstance().save();
     }
 
-    public static void upgrade(ExportBundle bundle) {
-        if (bundle.getModelVersion() == CURRENT_MODEL_VERSION) {
-            return;
-        }
-//        if(stateModel.getModelVersion() == 1){
-//            //todo migrate from 1 to 2.
-//            bundle.setModelVersion(2);
-//        }
-
-    }
 }

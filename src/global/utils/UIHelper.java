@@ -1,9 +1,7 @@
 package global.utils;
 
-import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
 import global.utils.highligt.HighlightHelper;
 

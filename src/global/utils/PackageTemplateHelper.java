@@ -2,6 +2,7 @@ package global.utils;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
+import core.export.ExportHelper;
 import global.Const;
 import global.models.PackageTemplate;
 import global.visitors.CollectFileTemplatesVisitor;
@@ -80,8 +81,7 @@ public class PackageTemplateHelper {
         PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.EDIT);
         visitor.visit(ptWrapper.getRootElement());
 
-
-        System.out.println("jhj");
+        ExportHelper.exportPackageTemplate(pt, pathDir);
     }
 
 }

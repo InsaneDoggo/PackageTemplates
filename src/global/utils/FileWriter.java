@@ -1,10 +1,7 @@
 package global.utils;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
@@ -14,7 +11,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import core.state.impex.models.ExpFileTemplate;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.FileWrapper;
 import groovy.json.internal.Charsets;
@@ -23,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.Properties;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -123,19 +118,6 @@ public class FileWriter {
         return element;
     }
 
-    public static boolean exportFile(String path, String fileName, String content) {
-        try {
-            File file = createFile(path, fileName);
-
-            FileUtil.writeToFile(file, content);
-        } catch (IOException e) {
-            //todo print error
-            Logger.log(e.getMessage());
-            return false;
-        }
-        return true;
-    }
-
     @NotNull
     private static File createFile(String path, String fileName) {
         File file = new File(path + "/" + fileName);
@@ -147,24 +129,6 @@ public class FileWriter {
         }
 
         return file;
-    }
-
-    public static FileTemplate createFileTemplate(ExpFileTemplate expTemplate) {
-        FileTemplateManager ftm = FileTemplateManager.getDefaultInstance();
-        if (isFileTemplateExist(expTemplate.getName())) {
-            //todo overwrite dialog
-            Logger.log("file template already exist");
-        }
-
-        FileTemplate fileTemplate = ftm.addTemplate(expTemplate.getName(), expTemplate.getExtension());
-        fileTemplate.setText(expTemplate.getText());
-
-        //todo description
-        return fileTemplate;
-    }
-
-    private static boolean isFileTemplateExist(String name) {
-        return AttributesHelper.getTemplate(name) == null;
     }
 
     public static void writeStringToFile(String text, String path) {
