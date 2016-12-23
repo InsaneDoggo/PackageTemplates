@@ -24,7 +24,7 @@ public class ExportHelper {
     }
 
     @Nullable
-    public static void exportPackageTemplate(PackageTemplateWrapper ptWrapper) {
+    public static void exportPackageTemplate(PackageTemplateWrapper ptWrapper, String pathDir) {
 
     }
 
@@ -42,10 +42,13 @@ public class ExportHelper {
             result = ftm.getJ2eeTemplate(fileTemplateName);
         }
 
+        //todo impl
+        return null;
     }
 
     private static String getRelativePath(String templateType) {
-
+        //todo impl
+        return null;
     }
 
 }

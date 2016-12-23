@@ -282,12 +282,8 @@ public class PackageTemplateWrapper {
     }
 
     public void writeTemplate(Project project, VirtualFile virtualFile) {
-        PsiDirectory currentDir = ApplicationManager.getApplication().runReadAction(new Computable<PsiDirectory>() {
-            @Override
-            public PsiDirectory compute() {
-                return FileWriter.findCurrentDirectory(project, virtualFile);
-            }
-        });
+        PsiDirectory currentDir = ApplicationManager.getApplication().runReadAction((Computable<PsiDirectory>)
+                () -> FileWriter.findCurrentDirectory(project, virtualFile));
 
         if (currentDir != null) {
             failedElements = new ArrayList<>();
@@ -299,7 +295,7 @@ public class PackageTemplateWrapper {
         ApplicationManager.getApplication().invokeLater(() -> checkWrittenElements(project));
     }
 
-    public void checkWrittenElements(final Project project) {
+    private void checkWrittenElements(final Project project) {
         if (!failedElements.isEmpty()) {
             //show dialog
             new FailedFilesDialog(project, Localizer.get("ErrorDialog"), this) {

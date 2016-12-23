@@ -81,7 +81,7 @@ public class PackageTemplateHelper {
         PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.EDIT);
         visitor.visit(ptWrapper.getRootElement());
 
-        ExportHelper.exportPackageTemplate(pt, pathDir);
+        ExportHelper.exportPackageTemplate(ptWrapper, pathDir);
     }
 
 }

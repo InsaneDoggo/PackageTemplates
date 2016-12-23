@@ -4,9 +4,9 @@ import core.state.models.StateModel;
 import core.state.models.UserSettings;
 import global.models.Favourite;
 import global.utils.i18n.Language;
-import org.jetbrains.jps.classFilesIndex.indexer.api.IndexState;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Хелпер для взаимодествия с конфигом
@@ -59,7 +59,7 @@ public class StateEditor {
 
     public StateEditor reorderFavourites() {
         ArrayList<Favourite> listFavourite = model.getListFavourite();
-        listFavourite.sort((o1, o2) -> o1.getOrder() - o2.getOrder());
+        listFavourite.sort(Comparator.comparingInt(Favourite::getOrder));
 
         for (int i = 0; i < listFavourite.size(); i++) {
             listFavourite.get(i).setOrder(i);

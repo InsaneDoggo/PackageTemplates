@@ -14,8 +14,8 @@ import java.awt.*;
  */
 public abstract class BaseDialog extends DialogWrapper {
 
-    public Project project;
-    public JPanel panel;
+    protected Project project;
+    protected JPanel panel;
 
     private static final int PADDING = 10;
     private static final int MIN_WIDTH = 600;
