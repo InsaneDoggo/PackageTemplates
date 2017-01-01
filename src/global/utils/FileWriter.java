@@ -68,10 +68,15 @@ public class FileWriter {
     @Nullable
     private static PsiDirectory writeDirectoryAction(PsiDirectory dir, DirectoryWrapper dirWrapper, Project project) {
         FutureTask<PsiDirectory> psiDirectoryFutureTask = new FutureTask<>(() -> {
-            Logger.log("executeCommand id: " + CommandProcessor.getInstance().getCurrentCommandGroupId());
+
+//            Properties properties = new Properties();
+//            properties.putAll(dirWrapper.getPackageTemplateWrapper().getDefaultProperties());
+//            FileTemplate fileTemplate = AttributesHelper.getTemplate("Test");
+//            FileTemplateUtil.createFromTemplate(fileTemplate, "TestFile", properties, dir);
+
             return dir.createSubdirectory(dirWrapper.getDirectory().getName());
         });
-        CommandProcessor.getInstance().executeCommand(project, psiDirectoryFutureTask, "Create '" + dirWrapper.getElement().getName() + "' Directory",  "testGroupId");
+        CommandProcessor.getInstance().executeCommand(project, psiDirectoryFutureTask, "Create '" + dirWrapper.getDirectory().getName() + "' Directory",  "testGroupId");
 
         try {
             return psiDirectoryFutureTask.get();

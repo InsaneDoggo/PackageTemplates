@@ -1,18 +1,24 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
+import com.intellij.history.LocalHistory;
+import com.intellij.history.LocalHistoryAction;
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.IdeBundle;
+import com.intellij.ide.util.DeleteHandler;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.psi.PsiElement;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.IconUtil;
 import com.intellij.util.PlatformIcons;
+import core.actions.newPackageTemplate.Tester;
 import core.state.util.SaveUtil;
 import global.models.Favourite;
 import global.models.PackageTemplate;
@@ -62,7 +68,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
     @Override
     protected ValidationInfo doValidate() {
-        if( selectedPath == null) {
+        if (selectedPath == null) {
             return presenter.doValidate(getSelectedPath(), btnPath);
         }
 
@@ -127,8 +133,8 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     private AnAction actionExport;
     private AnAction actionAddToFavourites;
 
-    private String getSelectedPath(){
-        if(selectedPath==null){
+    private String getSelectedPath() {
+        if (selectedPath == null) {
             return btnPath.getText();
         }
 
@@ -157,7 +163,8 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         actionSettings = new AnAction(PlatformIcons.SHOW_SETTINGS_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
-                presenter.onSettingsAction();
+                new Tester().runMockAction(project);
+                //presenter.onSettingsAction();
             }
         };
         actionExport = new AnAction(PlatformIcons.EXPORT_ICON) {
