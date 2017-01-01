@@ -12,6 +12,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * Created by Arsen on 07.10.2016.
  */
 public class PackageTemplateCellRender extends ColoredTreeCellRenderer {
+
+    //todo delete?
+
     @Override
     public void customizeCellRenderer(@NotNull JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
@@ -25,4 +28,5 @@ public class PackageTemplateCellRender extends ColoredTreeCellRenderer {
             append(userObject.toString());
         }
     }
+
 }

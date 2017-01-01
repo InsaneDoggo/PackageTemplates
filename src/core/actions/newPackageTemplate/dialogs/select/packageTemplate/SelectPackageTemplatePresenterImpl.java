@@ -36,7 +36,6 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
         view.setTitle(Localizer.get("SelectPackageTemplate"));
     }
 
-
     @Override
     public ValidationInfo doValidate(String path, @Nullable JComponent component) {
 //        ValidationInfo validationInfo = TemplateValidator.isTemplateValid((PackageTemplate) jbList.getSelectedValue());
@@ -68,6 +67,10 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
         view.onCancel();
     }
 
+
+    //=================================================================
+    //  Toolbar actions
+    //=================================================================
     @Override
     public void onAddAction() {
         ConfigureDialog dialog = new ConfigureDialog(project) {
@@ -148,4 +151,5 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
         SettingsDialog dialog = new SettingsDialog(project);
         dialog.show();
     }
+
 }
