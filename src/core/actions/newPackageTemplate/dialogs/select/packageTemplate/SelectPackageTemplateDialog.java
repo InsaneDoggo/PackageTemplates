@@ -6,11 +6,15 @@ import com.intellij.icons.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.command.impl.UndoManagerImpl;
+import com.intellij.openapi.keymap.Keymap;
+import com.intellij.openapi.keymap.KeymapManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.openapi.ui.playback.commands.KeyStrokeMap;
 import com.intellij.psi.PsiElement;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBLabel;
@@ -34,6 +38,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -52,10 +58,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     private JPanel panel;
     private Project project;
     private SelectPackageTemplatePresenter presenter;
-    private TextFieldWithBrowseButton btnPath;
-    private ButtonGroup buttonGroup;
-    private JBRadioButton rbFromPath;
-    private String selectedPath;
     private JComponent componentForValidation;
 
     protected SelectPackageTemplateDialog(@Nullable Project project) {
@@ -114,14 +116,48 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     @Override
     protected JComponent createCenterPanel() {
         panel = new JPanel(new MigLayout());
-        JBScrollPane scrollPane = new JBScrollPane(panel);
+        new JBScrollPane(panel);
         panel.setMinimumSize(new Dimension(MIN_WIDTH, panel.getMinimumSize().height));
+
+        initShortcuts();
 
         makeToolBar();
         makePathButton();
         makeFavourites();
 
         return panel;
+    }
+
+//    @Override
+//    public void update(AnActionEvent e) {
+//        super.update(e);
+//        e.getPresentation().setEnabled(canUndo());
+//    }
+
+    private void initShortcuts() {
+        // Test
+        Keymap activeKeymap = KeymapManager.getInstance().getActiveKeymap();
+        Shortcut[] undoShortcuts = activeKeymap.getShortcuts(IdeActions.ACTION_UNDO);
+
+        AnAction undoAction = new AnAction() {
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                undo();
+            }
+        };
+
+        undoAction.registerCustomShortcutSet(new CustomShortcutSet(undoShortcuts), getRootPane());
+    }
+
+    private void undo() {
+        System.out.println("undo ");
+//        if (myUndoManager.canUndo()) {
+//            myUndoManager.undo();
+//        }
+    }
+    private boolean canUndo() {
+        System.out.println("canUndo ");
+        return true;
     }
 
     private JPanel jpToolbar;
@@ -209,6 +245,14 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         jpToolbar.add(toolbar.getComponent(), new CC().spanX().wrap());
     }
 
+
+    //=================================================================
+    //  From path
+    //=================================================================
+    private TextFieldWithBrowseButton btnPath;
+    private JBRadioButton rbFromPath;
+    private String selectedPath;
+
     private void makePathButton() {
         btnPath = new TextFieldWithBrowseButton();
         btnPath.setText(PackageTemplateHelper.getRootDirPath());
@@ -216,11 +260,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
         panel.add(new SeparatorComponent(), new CC().growX().spanX().wrap());
         panel.add(btnPath, new CC().pushX().growX().spanX());
-    }
-
-    private void makeFavourites() {
-        buttonGroup = new ButtonGroup();
-        buttonGroup.add(rbFromPath);
 
         rbFromPath = new JBRadioButton(Localizer.get("label.FromPath"));
         rbFromPath.addItemListener(e -> {
@@ -230,13 +269,26 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                 selectedPath = null;
                 componentForValidation = btnPath;
                 refreshToolbar();
+
             }
         });
         panel.add(rbFromPath, new CC().growX().spanX().wrap());
+    }
+
+
+    //=================================================================
+    //  Favourites
+    //=================================================================
+    private ButtonGroup buttonGroup;
+    private ArrayList<JBRadioButton> listButtons;
+
+    private void makeFavourites() {
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(rbFromPath);
 
         ArrayList<Favourite> listFavourite = SaveUtil.reader().getListFavourite();
         listFavourite.sort((o1, o2) -> o1.getOrder() - o2.getOrder());
-        ArrayList<JBRadioButton> listButtons = new ArrayList<>();
+        listButtons = new ArrayList<>();
 
         for (Favourite favourite : listFavourite) {
             File file = new File(favourite.getPath());
@@ -252,7 +304,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
             JBRadioButton radioButton = new JBRadioButton(PackageTemplateHelper.createNameFromPath(file), PluginIcons.PACKAGE_TEMPLATES);
             radioButton.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    actionAdd.getTemplatePresentation().setEnabled(false);
+//                    actionAdd.getTemplatePresentation().setEnabled(false);
                     actionAddToFavourites.getTemplatePresentation().setEnabled(false);
                     selectedPath = favourite.getPath();
                     componentForValidation = radioButton;
@@ -274,7 +326,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         } else {
             rbFromPath.doClick();
         }
-
     }
 
 }
