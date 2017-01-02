@@ -1,8 +1,9 @@
-package global.utils;
+package global.utils.file;
 
 import com.google.common.base.Charsets;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import global.Const;
+import global.utils.Logger;
 
 import java.io.*;
 import java.nio.charset.Charset;

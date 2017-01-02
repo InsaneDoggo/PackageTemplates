@@ -1,8 +1,7 @@
-package global.utils;
+package global.utils.file;
 
-import com.intellij.openapi.ui.Messages;
 import global.Const;
-import global.utils.i18n.Localizer;
+import global.utils.templates.PackageTemplateHelper;
 
 import java.io.File;
 

@@ -5,11 +5,10 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.newPackageTemplate.NewPackageTemplateAction;
-import core.state.util.SaveUtil;
 import global.models.PackageTemplate;
-import global.utils.GsonFactory;
+import global.utils.factories.GsonFactory;
 import global.utils.Logger;
-import global.utils.PackageTemplateHelper;
+import global.utils.templates.PackageTemplateHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

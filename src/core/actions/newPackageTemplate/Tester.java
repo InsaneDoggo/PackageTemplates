@@ -1,6 +1,5 @@
 package core.actions.newPackageTemplate;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.undo.*;
 import com.intellij.openapi.project.Project;
@@ -54,26 +53,5 @@ public class Tester {
         }, "Custom Undoable Action", null);
 
     }
-
-//    FooBar fooBar; // My custom data to change
-//
-//    void blabla() {
-//        String oldProperty = fooBar.someProperty;
-//        fooBar.someProperty = "new value 123"; // action, which must support Undo
-//
-//        // Create UndoAction (revert changes above)
-//        UndoableAction action = new BasicUndoableAction() {
-//            @Override
-//            public void undo() throws UnexpectedUndoException {
-//                fooBar.someProperty = oldProperty;
-//            }
-//
-//            @Override public void redo() throws UnexpectedUndoException {}
-//        };
-//
-//        CommandProcessor.getInstance().executeCommand(project, () -> {
-//            UndoManager.getInstance(project).undoableActionPerformed(action);
-//        }, "Custom Undoable Action", null);
-//    }
 
 }

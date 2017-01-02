@@ -9,7 +9,11 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import global.models.BaseElement;
 import global.models.File;
+import global.utils.factories.GridBagFactory;
 import global.utils.i18n.Localizer;
+import global.utils.templates.FileTemplateHelper;
+import global.utils.validation.FieldType;
+import global.utils.validation.TemplateValidator;
 import icons.PluginIcons;
 import base.ElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -27,20 +31,11 @@ import java.util.List;
 public class FileWrapper extends ElementWrapper {
 
     private File file;
+
+    //=================================================================
+    //  UI
+    //=================================================================
     public CreateFromTemplatePanel panelVariables;
-
-    @Override
-    public void accept(ElementVisitor visitor) {
-        visitor.visit(this);
-    }
-
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
-    }
 
     @Override
     public void buildView(Project project, JPanel container, GridBag bag) {
@@ -57,21 +52,33 @@ public class FileWrapper extends ElementWrapper {
 
         addMouseListener();
 
-        if (getPackageTemplateWrapper().getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
-            FileTemplate fileTemplate = AttributesHelper.getTemplate(getFile().getTemplateName());
-            if (fileTemplate != null) {
-                String[] unsetAttributes = AttributesHelper.getUnsetAttrs(fileTemplate, getPackageTemplateWrapper().getProject());
-                if (unsetAttributes != null && unsetAttributes.length > 0) {
-                    panelVariables = new CreateFromTemplatePanel(AttributesHelper.getNonGlobalAttributes(
-                            unsetAttributes, getPackageTemplateWrapper().getPackageTemplate().getListGlobalVariable())
-                            , false, null);
+        createUssageUI(container, bag);
+    }
 
-                    JComponent component = panelVariables.getComponent();
-                    UIHelper.setLeftPadding(component, UIHelper.PADDING);
-                    container.add(component, bag.nextLine().next().coverLine());
-                }
-            }
+    private void createUssageUI(JPanel container, GridBag bag) {
+        if (getPackageTemplateWrapper().getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
+            return;
         }
+        FileTemplate fileTemplate = FileTemplateHelper.getTemplate(getFile().getTemplateName());
+        if (fileTemplate == null) {
+            return;
+        }
+
+        String[] unsetAttributes = AttributesHelper.getUnsetAttrs(fileTemplate, getPackageTemplateWrapper().getProject());
+        if (unsetAttributes == null || unsetAttributes.length <= 0) {
+            return;
+        }
+
+        panelVariables = new CreateFromTemplatePanel(AttributesHelper.getNonGlobalAttributes(
+                unsetAttributes,
+                getPackageTemplateWrapper().getPackageTemplate().getListGlobalVariable()),
+                false,
+                null
+        );
+
+        JComponent component = panelVariables.getComponent();
+        UIHelper.setLeftPadding(component, UIHelper.PADDING);
+        container.add(component, bag.nextLine().next().coverLine());
     }
 
     @NotNull
@@ -81,11 +88,7 @@ public class FileWrapper extends ElementWrapper {
 
         cbEnabled = new JBCheckBox();
         cbEnabled.setSelected(file.isEnabled());
-        cbEnabled.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                setEnabled(cbEnabled.isSelected());
-            }
-        });
+        cbEnabled.addItemListener(e -> setEnabled(cbEnabled.isSelected()));
 
         jlGroovy = new JBLabel();
         if (file.getGroovyCode() != null && !file.getGroovyCode().isEmpty()) {
@@ -102,19 +105,18 @@ public class FileWrapper extends ElementWrapper {
         return optionsPanel;
     }
 
+
+    //=================================================================
+    //  Utils
+    //=================================================================
+    @Override
+    public void accept(ElementVisitor visitor) {
+        visitor.visit(this);
+    }
+
     @Override
     public void addElement(ElementWrapper element) {
         getParent().addElement(element);
-    }
-
-    @Override
-    public BaseElement getElement() {
-        return file;
-    }
-
-    @Override
-    public boolean isDirectory() {
-        return false;
     }
 
     @Override
@@ -127,7 +129,7 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public ValidationInfo validateFields() {
-        return TemplateValidator.validateText(etfName, etfName.getText(), TemplateValidator.FieldType.CLASS_NAME);
+        return TemplateValidator.validateText(etfName, etfName.getText(), FieldType.CLASS_NAME);
     }
 
     @Override
@@ -151,6 +153,28 @@ public class FileWrapper extends ElementWrapper {
         }
         jlName.setEnabled(file.isEnabled());
         etfName.setEnabled(file.isEnabled());
+    }
+
+
+    //=================================================================
+    //  Getter | setter
+    //=================================================================
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    @Override
+    public BaseElement getElement() {
+        return file;
+    }
+
+    @Override
+    public boolean isDirectory() {
+        return false;
     }
 
 }

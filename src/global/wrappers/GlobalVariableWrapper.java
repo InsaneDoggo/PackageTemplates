@@ -18,7 +18,7 @@ import icons.PluginIcons;
 import icons.JetgroovyIcons;
 import org.jetbrains.annotations.NotNull;
 import global.models.GlobalVariable;
-import global.utils.GridBagFactory;
+import global.utils.factories.GridBagFactory;
 import global.utils.i18n.Localizer;
 import global.utils.UIHelper;
 
@@ -36,37 +36,13 @@ import static global.wrappers.PackageTemplateWrapper.PATTERN_BASE_NAME;
 public class GlobalVariableWrapper extends BaseWrapper {
 
     private GlobalVariable globalVariable;
+
+    //=================================================================
+    //  UI
+    //=================================================================
     private EditorTextField tfKey;
     private EditorTextField tfValue;
-    JLabel jlVariable;
-
-    public GlobalVariableWrapper(GlobalVariable globalVariable) {
-        this.globalVariable = globalVariable;
-    }
-
-    public GlobalVariable getGlobalVariable() {
-        return globalVariable;
-    }
-
-    public void setGlobalVariable(GlobalVariable globalVariable) {
-        this.globalVariable = globalVariable;
-    }
-
-    public EditorTextField getTfKey() {
-        return tfKey;
-    }
-
-    public void setTfKey(EditorTextField tfKey) {
-        this.tfKey = tfKey;
-    }
-
-    public EditorTextField getTfValue() {
-        return tfValue;
-    }
-
-    public void setTfValue(EditorTextField tfValue) {
-        this.tfValue = tfValue;
-    }
+    private JLabel jlVariable;
 
     public void buildView(PackageTemplateWrapper ptWrapper, JPanel container, GridBag bag) {
         jlVariable = new JLabel(AllIcons.Nodes.Variable, JLabel.LEFT);
@@ -184,6 +160,10 @@ public class GlobalVariableWrapper extends BaseWrapper {
         }
     }
 
+
+    //=================================================================
+    //  Utils
+    //=================================================================
     private void deleteVariable(PackageTemplateWrapper ptWrapper) {
         ptWrapper.removeGlobalVariable(this);
 
@@ -227,4 +207,29 @@ public class GlobalVariableWrapper extends BaseWrapper {
     public void replaceBaseName(String baseName) {
         globalVariable.setValue(globalVariable.getValue().replace(PATTERN_BASE_NAME, baseName));
     }
+
+
+    //=================================================================
+    //  Getter | Setter
+    //=================================================================
+    public GlobalVariableWrapper(GlobalVariable globalVariable) {
+        this.globalVariable = globalVariable;
+    }
+
+    public GlobalVariable getGlobalVariable() {
+        return globalVariable;
+    }
+
+    public void setGlobalVariable(GlobalVariable globalVariable) {
+        this.globalVariable = globalVariable;
+    }
+
+    public EditorTextField getTfKey() {
+        return tfKey;
+    }
+
+    public EditorTextField getTfValue() {
+        return tfValue;
+    }
+
 }

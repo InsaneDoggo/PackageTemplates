@@ -20,6 +20,8 @@ import javax.swing.*;
 public class SettingsDialog extends BaseDialog implements SettingsView {
 
     private SettingsPresenter presenter;
+    private JLabel jlLanguage;
+    private JComboBox<Language> comboLanguages;
 
     public SettingsDialog(Project project) {
         super(project);
@@ -27,26 +29,11 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
     }
 
     @Override
-    public void preShow() {
-        presenter.onPreShow();
-    }
-
-    @Override
     public void buildView() {
         panel.setLayout(new MigLayout());
 
-        // Language
-        JLabel jlLanguage = new JLabel(Localizer.get("settings.Language"));
+        createLanguageViews();
 
-        JComboBox<Language> comboLanguages = new ComboBox(new EnumComboBoxModel<>(Language.class));
-        if (SaveUtil.reader().getLanguage() != null) {
-            comboLanguages.setSelectedItem(SaveUtil.reader().getLanguage());
-        }
-
-        comboLanguages.addItemListener(e -> {
-            Language selectedLang = (Language) comboLanguages.getSelectedItem();
-            presenter.onLanguageSelected(selectedLang);
-        });
         // No RU support yet
         //todo enable lang selection
         jlLanguage.setEnabled(false);
@@ -56,6 +43,28 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
         panel.add(comboLanguages, new CC().wrap());
     }
 
+    private void createLanguageViews() {
+        jlLanguage = new JLabel(Localizer.get("settings.Language"));
+
+        comboLanguages = new ComboBox(new EnumComboBoxModel<>(Language.class));
+        if (SaveUtil.reader().getLanguage() != null) {
+            comboLanguages.setSelectedItem(SaveUtil.reader().getLanguage());
+        }
+
+        comboLanguages.addItemListener(e -> {
+            Language selectedLang = (Language) comboLanguages.getSelectedItem();
+            presenter.onLanguageSelected(selectedLang);
+        });
+    }
+
+    //=================================================================
+    //  Dialog specific stuff
+    //=================================================================
+    @Override
+    public void preShow() {
+        presenter.onPreShow();
+    }
+
     @NotNull
     @Override
     protected Action[] createActions() {
@@ -63,4 +72,5 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
         cancelAction.putValue(Action.NAME, Localizer.get("action.Done"));
         return new Action[]{cancelAction};
     }
+
 }

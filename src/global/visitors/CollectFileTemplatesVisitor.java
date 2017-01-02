@@ -1,11 +1,9 @@
 package global.visitors;
 
 import base.ElementVisitor;
-import global.utils.WrappersFactory;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
-import global.wrappers.PackageTemplateWrapper;
 
 import java.util.HashSet;
 

@@ -1,4 +1,4 @@
-package global.utils;
+package global.utils.file;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
@@ -6,11 +6,13 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import global.utils.AttributesHelper;
+import global.utils.Logger;
+import global.utils.templates.FileTemplateHelper;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.FileWrapper;
 import groovy.json.internal.Charsets;
@@ -29,15 +31,15 @@ import java.util.concurrent.RunnableFuture;
 public class FileWriter {
 
     public static PsiDirectory findCurrentDirectory(Project project, VirtualFile file) {
-        if (file != null && project != null) {
-            if (file.isDirectory()) {
-                return PsiManager.getInstance(project).findDirectory(file);
-            } else {
-                return PsiManager.getInstance(project).findDirectory(file.getParent());
-            }
+        if (file == null || project == null) {
+            return null;
         }
 
-        return null;
+        if (file.isDirectory()) {
+            return PsiManager.getInstance(project).findDirectory(file);
+        } else {
+            return PsiManager.getInstance(project).findDirectory(file.getParent());
+        }
     }
 
     public static PsiDirectory writeDirectory(PsiDirectory dir, DirectoryWrapper dirWrapper, Project project) {
@@ -76,7 +78,8 @@ public class FileWriter {
 
             return dir.createSubdirectory(dirWrapper.getDirectory().getName());
         });
-        CommandProcessor.getInstance().executeCommand(project, psiDirectoryFutureTask, "Create '" + dirWrapper.getDirectory().getName() + "' Directory",  "testGroupId");
+        CommandProcessor.getInstance().executeCommand(project, psiDirectoryFutureTask,
+                "Create '" + dirWrapper.getDirectory().getName() + "' Directory", "testGroupId");
 
         try {
             return psiDirectoryFutureTask.get();
@@ -89,7 +92,7 @@ public class FileWriter {
     }
 
     public static PsiElement writeFile(PsiDirectory dir, FileWrapper fileWrapper) {
-        FileTemplate template = AttributesHelper.getTemplate(fileWrapper.getFile().getTemplateName());
+        FileTemplate template = FileTemplateHelper.getTemplate(fileWrapper.getFile().getTemplateName());
 
         if (dir == null || template == null) {
             //todo print error
@@ -137,6 +140,10 @@ public class FileWriter {
         return file;
     }
 
+
+    //=================================================================
+    //  Low Level I/O
+    //=================================================================
     public static void writeStringToFile(String text, String path) {
         writeStringToFile(text, new File(path));
     }

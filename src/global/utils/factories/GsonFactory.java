@@ -1,4 +1,4 @@
-package global.utils;
+package global.utils.factories;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

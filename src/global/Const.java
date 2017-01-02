@@ -10,8 +10,10 @@ public interface Const {
     boolean IS_DEBUG = true;
 
     String EXPORT_FILE_NAME = "Templates.json";
-    String MODELS_PACKAGE_PATH = File.class.getCanonicalName().substring(0, File.class.getCanonicalName().length() - File.class.getSimpleName().length());
     String ACTION_PREFIX = "pt.action.";
+
+    String MODELS_PACKAGE_PATH = File.class.getCanonicalName().substring(
+            0, File.class.getCanonicalName().length() - File.class.getSimpleName().length());
 
     String NODE_GROUP_DEFAULT = "default";
 

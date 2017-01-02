@@ -28,13 +28,18 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper implements 
     private ComboBox comboBox;
     private SelectFileTemplatePresenter presenter;
 
-    public abstract void onSuccess(FileTemplate fileTemplate);
-    public abstract void onCancel();
-
     public SelectFileTemplateDialog(Project project) {
         super(project);
         init();
     }
+
+
+    //=================================================================
+    //  Dialog specific stuff
+    //=================================================================
+    public abstract void onSuccess(FileTemplate fileTemplate);
+
+    public abstract void onCancel();
 
     @Override
     public void show() {
@@ -50,9 +55,6 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper implements 
         }
     }
 
-    private JBCheckBox cbAddInternal;
-    private JBCheckBox cbAddJ2EE;
-
     @Override
     protected JComponent createCenterPanel() {
         presenter = new SelectFileTemplatePresenterImpl(this);
@@ -61,29 +63,7 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper implements 
         root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
         root.setAlignmentY(Component.TOP_ALIGNMENT);
 
-        JPanel options = new JPanel(new GridBagLayout());
-        GridBag bag = new GridBag()
-                .setDefaultInsets(new JBInsets(0, 4, 0, 4))
-                .setDefaultFill(GridBagConstraints.HORIZONTAL);
-
-        cbAddInternal = new JBCheckBox("Internal");
-        cbAddJ2EE = new JBCheckBox("J2EE");
-
-        ItemListener itemListener = new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                root.remove(comboBox);
-                comboBox = getSelector();
-                root.add(comboBox);
-                root.revalidate();
-            }
-        };
-
-        cbAddInternal.addItemListener(itemListener);
-        cbAddJ2EE.addItemListener(itemListener);
-
-        options.add(cbAddInternal, bag.nextLine().next());
-        options.add(cbAddJ2EE, bag.next());
+        JPanel options = getOptionsPanel(root);
 
         comboBox = getSelector();
 
@@ -96,6 +76,41 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper implements 
     }
 
 
+    //=================================================================
+    //  Options / Filter
+    //=================================================================
+    private JBCheckBox cbAddInternal;
+    private JBCheckBox cbAddJ2EE;
+
+    @NotNull
+    private JPanel getOptionsPanel(final JPanel root) {
+        JPanel options = new JPanel(new GridBagLayout());
+        GridBag bag = new GridBag()
+                .setDefaultInsets(new JBInsets(0, 4, 0, 4))
+                .setDefaultFill(GridBagConstraints.HORIZONTAL);
+
+        cbAddInternal = new JBCheckBox("Internal");
+        cbAddJ2EE = new JBCheckBox("J2EE");
+
+        ItemListener itemListener = e -> {
+            root.remove(comboBox);
+            comboBox = getSelector();
+            root.add(comboBox);
+            root.revalidate();
+        };
+
+        cbAddInternal.addItemListener(itemListener);
+        cbAddJ2EE.addItemListener(itemListener);
+
+        options.add(cbAddInternal, bag.nextLine().next());
+        options.add(cbAddJ2EE, bag.next());
+        return options;
+    }
+
+
+    //=================================================================
+    //  Other
+    //=================================================================
     @NotNull
     private ComboBox getSelector() {
         ArrayList<TemplateForSearch> listTemplateForSearch = presenter.getListTemplateForSearch(cbAddInternal.isSelected(), cbAddJ2EE.isSelected());

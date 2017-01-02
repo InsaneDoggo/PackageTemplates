@@ -1,4 +1,4 @@
-package global.utils;
+package global.utils.factories;
 
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBInsets;

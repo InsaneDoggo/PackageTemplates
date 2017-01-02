@@ -3,7 +3,8 @@ package core.groovy;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
 import global.utils.i18n.Localizer;
-import global.utils.TemplateValidator;
+import global.utils.validation.FieldType;
+import global.utils.validation.TemplateValidator;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 
@@ -37,7 +38,7 @@ public class GroovyExecutor {
             return TemplateValidator.validateText(
                     etfCode,
                     (String) getShell().evaluate(String.format(GROOVY_CODE_PATTERN, etfCode.getText(), variable)),
-                    TemplateValidator.FieldType.GROOVY_SCRIPT
+                    FieldType.GROOVY_SCRIPT
             );
         } catch (Exception e) {
             return new ValidationInfo(e.getMessage());

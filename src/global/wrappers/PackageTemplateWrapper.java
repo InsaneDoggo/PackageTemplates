@@ -3,7 +3,6 @@ package global.wrappers;
 import com.google.common.collect.Lists;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -16,6 +15,8 @@ import com.intellij.util.ui.GridBag;
 import global.dialogs.FailedFilesDialog;
 import global.models.*;
 import global.utils.*;
+import global.utils.factories.GridBagFactory;
+import global.utils.file.FileWriter;
 import global.utils.i18n.Localizer;
 import global.visitors.*;
 import net.miginfocom.layout.CC;
@@ -34,29 +35,10 @@ public class PackageTemplateWrapper {
 
     public static final String ATTRIBUTE_BASE_NAME = "BASE_NAME";
     public static final String PATTERN_BASE_NAME = "${" + ATTRIBUTE_BASE_NAME + "}";
-
-    private Properties defaultProperties;
-
-    public void initDefaultProperties() {
-        defaultProperties = FileTemplateManager.getInstance(getProject()).getDefaultProperties();
-    }
-
-    public Properties getDefaultProperties() {
-        return defaultProperties;
-    }
-
     public enum ViewMode {EDIT, CREATE, USAGE}
 
     private Project project;
-
-    private JPanel panel;
-    public EditorTextField etfName;
-    public EditorTextField etfDescription;
-    public JCheckBox cbShouldRegisterAction;
-    public JCheckBox cbSkipDefiningNames;
-    public JCheckBox cbSkipRootDirectory;
-    private GridBag gridBag;
-
+    private Properties defaultProperties;
     private PackageTemplate packageTemplate;
     private DirectoryWrapper rootElement;
     private ArrayList<GlobalVariableWrapper> listGlobalVariableWrapper;
@@ -68,61 +50,17 @@ public class PackageTemplateWrapper {
         this.project = project;
     }
 
-    public Project getProject() {
-        return project;
-    }
 
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    public ArrayList<PsiElement> getWrittenElements() {
-        return writtenElements;
-    }
-
-    public void setWrittenElements(ArrayList<PsiElement> writtenElements) {
-        this.writtenElements = writtenElements;
-    }
-
-    public ArrayList<ElementWrapper> getFailedElements() {
-        return failedElements;
-    }
-
-    public void setFailedElements(ArrayList<ElementWrapper> failedElements) {
-        this.failedElements = failedElements;
-    }
-
-    public PackageTemplate getPackageTemplate() {
-        return packageTemplate;
-    }
-
-    public void setPackageTemplate(PackageTemplate packageTemplate) {
-        this.packageTemplate = packageTemplate;
-    }
-
-    public DirectoryWrapper getRootElement() {
-        return rootElement;
-    }
-
-    public void setRootElement(DirectoryWrapper rootElement) {
-        this.rootElement = rootElement;
-    }
-
-    public ArrayList<GlobalVariableWrapper> getListGlobalVariableWrapper() {
-        return listGlobalVariableWrapper;
-    }
-
-    public void setListGlobalVariableWrapper(ArrayList<GlobalVariableWrapper> listGlobalVariableWrapper) {
-        this.listGlobalVariableWrapper = listGlobalVariableWrapper;
-    }
-
-    public ViewMode getMode() {
-        return mode;
-    }
-
-    public void setMode(ViewMode mode) {
-        this.mode = mode;
-    }
+    //=================================================================
+    //  UI
+    //=================================================================
+    private JPanel panel;
+    public EditorTextField etfName;
+    public EditorTextField etfDescription;
+    public JCheckBox cbShouldRegisterAction;
+    public JCheckBox cbSkipDefiningNames;
+    public JCheckBox cbSkipRootDirectory;
+    private GridBag gridBag;
 
     public JPanel buildView() {
         if (panel == null) {
@@ -198,6 +136,10 @@ public class PackageTemplateWrapper {
         buildView();
     }
 
+
+    //=================================================================
+    //  Utils
+    //=================================================================
     public void replaceNameVariable() {
         rootElement.accept(new ReplaceNameVariableVisitor(packageTemplate.getMapGlobalVars()));
     }
@@ -318,6 +260,74 @@ public class PackageTemplateWrapper {
                 }
             }.show();
         }
+    }
+
+    public void initDefaultProperties() {
+        defaultProperties = FileTemplateManager.getInstance(getProject()).getDefaultProperties();
+    }
+
+
+    //=================================================================
+    //  Getter | Setter
+    //=================================================================
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public ArrayList<PsiElement> getWrittenElements() {
+        return writtenElements;
+    }
+
+    public void setWrittenElements(ArrayList<PsiElement> writtenElements) {
+        this.writtenElements = writtenElements;
+    }
+
+    public ArrayList<ElementWrapper> getFailedElements() {
+        return failedElements;
+    }
+
+    public void setFailedElements(ArrayList<ElementWrapper> failedElements) {
+        this.failedElements = failedElements;
+    }
+
+    public PackageTemplate getPackageTemplate() {
+        return packageTemplate;
+    }
+
+    public void setPackageTemplate(PackageTemplate packageTemplate) {
+        this.packageTemplate = packageTemplate;
+    }
+
+    public DirectoryWrapper getRootElement() {
+        return rootElement;
+    }
+
+    public void setRootElement(DirectoryWrapper rootElement) {
+        this.rootElement = rootElement;
+    }
+
+    public ArrayList<GlobalVariableWrapper> getListGlobalVariableWrapper() {
+        return listGlobalVariableWrapper;
+    }
+
+    public void setListGlobalVariableWrapper(ArrayList<GlobalVariableWrapper> listGlobalVariableWrapper) {
+        this.listGlobalVariableWrapper = listGlobalVariableWrapper;
+    }
+
+    public ViewMode getMode() {
+        return mode;
+    }
+
+    public void setMode(ViewMode mode) {
+        this.mode = mode;
+    }
+
+    public Properties getDefaultProperties() {
+        return defaultProperties;
     }
 
 }

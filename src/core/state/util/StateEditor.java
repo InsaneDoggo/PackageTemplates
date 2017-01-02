@@ -22,21 +22,28 @@ public class StateEditor {
         this.model = model;
     }
 
-    private UserSettings userSettings() {
-        return model.getUserSettings();
-    }
-
     public StateEditor save() {
         saveUtil.save();
         return this;
     }
 
 
+    //=================================================================
+    //  User Settings
+    //=================================================================
+    private UserSettings userSettings() {
+        return model.getUserSettings();
+    }
+
     public StateEditor setLanguage(Language lang) {
         userSettings().setLanguage(lang);
         return this;
     }
 
+
+    //=================================================================
+    //  Favourite
+    //=================================================================
     public StateEditor addFavourite(Favourite favourite) {
         model.getListFavourite().add(favourite);
         return this;

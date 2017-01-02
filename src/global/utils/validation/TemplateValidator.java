@@ -1,4 +1,4 @@
-package global.utils;
+package global.utils.validation;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
@@ -6,8 +6,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import core.state.util.SaveUtil;
 import global.models.PackageTemplate;
+import global.utils.file.FileWriter;
+import global.utils.templates.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
 import global.wrappers.ElementWrapper;
 import global.wrappers.GlobalVariableWrapper;
@@ -50,6 +51,18 @@ public class TemplateValidator {
         return null;
     }
 
+
+    //=================================================================
+    //  Text
+    //=================================================================
+    private static final String PATTERN_CLASS_NAME_VALIDATION = ".*[^0-9a-zA-Z_].*";
+    private static final String PATTERN_PLAIN_TEXT_VALIDATION = ".*[^0-9a-zA-Z_=\\-+.)(].*";
+    private static final String PATTERN_GLOBAL_VARIABLE_VALIDATION = ".*[^0-9a-zA-Z_}{\\$].*";
+
+    private static final String ILLEGAL_SYMBOLS = Localizer.get("warning.FieldContainsIllegalSymbols");
+    private static final String STARTS_WITH_DIGIT = Localizer.get("warning.NameCantStartsWithDigit");
+    private static final String EMPTY_FIELDS = Localizer.get("warning.FillEmptyFields");
+
     //    \d    A digit: [0-9]
     //    \D    A non-digit: [^0-9]
     //    \h    A horizontal whitespace character: [ \t\xA0\u1680\u180e\u2000-\u200a\u202f\u205f\u3000]
@@ -60,23 +73,6 @@ public class TemplateValidator {
     //    \V    A non-vertical whitespace character: [^\v]
     //    \w    A word character: [a-zA-Z_0-9]
     //    \W    A non-word character: [^\w]
-
-    private static final String PATTERN_CLASS_NAME_VALIDATION = ".*[^0-9a-zA-Z_].*";
-    private static final String PATTERN_PLAIN_TEXT_VALIDATION = ".*[^0-9a-zA-Z_=\\-+.)(].*";
-    private static final String PATTERN_GLOBAL_VARIABLE_VALIDATION = ".*[^0-9a-zA-Z_}{\\$].*";
-
-    private static final String ILLEGAL_SYMBOLS = Localizer.get("warning.FieldContainsIllegalSymbols");
-    private static final String STARTS_WITH_DIGIT = Localizer.get("warning.NameCantStartsWithDigit");
-    private static final String EMPTY_FIELDS = Localizer.get("warning.FillEmptyFields");
-
-    public enum FieldType {
-        GLOBAL_VARIABLE,
-        CLASS_NAME,
-        DIRECTORY_NAME,
-        PACKAGE_TEMPLATE_NAME,
-        GROOVY_SCRIPT,
-        PLAIN_TEXT
-    }
 
     @Nullable
     public static ValidationInfo validateText(JComponent jComponent, String text, FieldType fieldType) {
@@ -125,6 +121,22 @@ public class TemplateValidator {
         return null;
     }
 
+    private static boolean isValidByPattern(String text, String pattern) {
+        return !text.matches(pattern);
+    }
+
+    private static boolean startsWithDigit(String text) {
+        return text.substring(0, 1).matches("\\d");
+    }
+
+    public static boolean isValidClassName(String name) {
+        return isValidByPattern(name, PATTERN_CLASS_NAME_VALIDATION) && !TemplateValidator.startsWithDigit(name);
+    }
+
+
+    //=================================================================
+    //  PackageTemplate
+    //=================================================================
     public static boolean isPackageTemplateNameUnique(String text) {
         ArrayList<PackageTemplate> listPackageTemplate = PackageTemplateHelper.getListPackageTemplate();
         if(listPackageTemplate == null || listPackageTemplate.isEmpty()){
@@ -138,25 +150,13 @@ public class TemplateValidator {
         return true;
     }
 
-    private static boolean isValidByPattern(String text, String pattern) {
-        return !text.matches(pattern);
-    }
-
-    private static boolean startsWithDigit(String text) {
-        return text.substring(0, 1).matches("\\d");
-    }
-
-    public static boolean isValidClassName(String name) {
-        return isValidByPattern(name, PATTERN_CLASS_NAME_VALIDATION) && !TemplateValidator.startsWithDigit(name);
-    }
-
     @Nullable
     public static ValidationInfo validateProperties(PackageTemplateWrapper ptWrapper) {
         ValidationInfo result;
         if (ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
-            result = TemplateValidator.validateText(ptWrapper.etfName, ptWrapper.etfName.getText(), TemplateValidator.FieldType.PACKAGE_TEMPLATE_NAME);
+            result = TemplateValidator.validateText(ptWrapper.etfName, ptWrapper.etfName.getText(), FieldType.PACKAGE_TEMPLATE_NAME);
             if (result != null) return result;
-            result = TemplateValidator.validateText(ptWrapper.etfDescription, ptWrapper.etfDescription.getText(), TemplateValidator.FieldType.PLAIN_TEXT);
+            result = TemplateValidator.validateText(ptWrapper.etfDescription, ptWrapper.etfDescription.getText(), FieldType.PLAIN_TEXT);
             if (result != null) return result;
         }
         return null;
@@ -166,7 +166,7 @@ public class TemplateValidator {
     public static ValidationInfo validateGlobalVariables(PackageTemplateWrapper ptWrapper) {
         ValidationInfo result;
         for (GlobalVariableWrapper gvWrapper : ptWrapper.getListGlobalVariableWrapper()) {
-            result = TemplateValidator.validateText(gvWrapper.getTfValue(), gvWrapper.getTfValue().getText(), TemplateValidator.FieldType.GLOBAL_VARIABLE);
+            result = TemplateValidator.validateText(gvWrapper.getTfValue(), gvWrapper.getTfValue().getText(), FieldType.GLOBAL_VARIABLE);
             if (result != null) return result;
         }
         return null;

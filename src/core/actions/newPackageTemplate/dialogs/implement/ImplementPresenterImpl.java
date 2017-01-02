@@ -4,8 +4,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import global.models.PackageTemplate;
-import global.utils.TemplateValidator;
-import global.utils.WrappersFactory;
+import global.utils.validation.TemplateValidator;
+import global.utils.factories.WrappersFactory;
 import global.wrappers.PackageTemplateWrapper;
 
 /**

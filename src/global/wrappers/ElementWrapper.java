@@ -1,5 +1,6 @@
 package global.wrappers;
 
+import base.ElementVisitor;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.openapi.project.Project;
@@ -9,17 +10,14 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.ui.GridBag;
 import core.actions.newPackageTemplate.dialogs.select.fileTemplate.SelectFileTemplateDialog;
-import global.listeners.ClickListener;
 import core.groovy.GroovyDialog;
-import base.ElementVisitor;
+import global.listeners.ClickListener;
 import global.models.BaseElement;
+import global.utils.factories.WrappersFactory;
 import global.utils.i18n.Localizer;
-import global.utils.WrappersFactory;
 import icons.JetgroovyIcons;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -28,13 +26,14 @@ import java.util.List;
  */
 public abstract class ElementWrapper extends BaseWrapper {
 
-    public JLabel jlName;
-    public EditorTextField etfName;
     private DirectoryWrapper parent;
     private Exception writeException;
-
     private PackageTemplateWrapper packageTemplateWrapper;
 
+
+    //=================================================================
+    //  Abstraction
+    //=================================================================
     public abstract void accept(ElementVisitor visitor);
     public abstract void buildView(Project project, JPanel container, GridBag bag);
     public abstract void removeMyself();
@@ -45,43 +44,12 @@ public abstract class ElementWrapper extends BaseWrapper {
     public abstract ValidationInfo validateFields();
     public abstract void setEnabled(boolean isEnabled);
 
-    public DirectoryWrapper getParent() {
-        return parent;
-    }
 
-    public void setParent(DirectoryWrapper parent) {
-        this.parent = parent;
-    }
-
-    public PackageTemplateWrapper getPackageTemplateWrapper() {
-        return packageTemplateWrapper;
-    }
-
-    public void setPackageTemplateWrapper(PackageTemplateWrapper packageTemplateWrapper) {
-        this.packageTemplateWrapper = packageTemplateWrapper;
-    }
-
-    public void reBuild() {
-        packageTemplateWrapper.reBuildView();
-    }
-
-    public void addMouseListener() {
-        jlName.addMouseListener(new ClickListener() {
-            @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                if (SwingUtilities.isRightMouseButton(mouseEvent)) {
-                    switch (getPackageTemplateWrapper().getMode()) {
-                        case EDIT:
-                        case CREATE:
-                            createPopupForEditMode(mouseEvent);
-                            break;
-                        case USAGE:
-                            break;
-                    }
-                }
-            }
-        });
-    }
+    //=================================================================
+    //  UI
+    //=================================================================
+    public JLabel jlName;
+    public EditorTextField etfName;
 
     private void createPopupForEditMode(MouseEvent mouseEvent) {
         JPopupMenu popupMenu = new JBPopupMenu();
@@ -107,48 +75,68 @@ public abstract class ElementWrapper extends BaseWrapper {
         popupMenu.show(jlName, mouseEvent.getX(), mouseEvent.getY());
     }
 
+    public void reBuild() {
+        packageTemplateWrapper.reBuildView();
+    }
+
     private void addGroovyMenuItems(JPopupMenu popupMenu) {
+        // With Groovy script
         if (getElement().getGroovyCode() != null && !getElement().getGroovyCode().isEmpty()) {
             JMenuItem itemEditGroovy = new JBMenuItem(Localizer.get("EditGroovyScript"), JetgroovyIcons.Groovy.Groovy_16x16);
-            itemEditGroovy.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    new GroovyDialog(getPackageTemplateWrapper().getProject(), getElement().getGroovyCode()) {
-                        @Override
-                        public void onSuccess(String code) {
-                            getElement().setGroovyCode(code);
-                            updateComponentsState();
-                        }
-                    }.show();
-                }
-            });
-            popupMenu.add(itemEditGroovy);
-
             JMenuItem itemDeleteGroovy = new JBMenuItem(Localizer.get("DeleteGroovyScript"), AllIcons.Actions.Delete);
-            itemDeleteGroovy.addActionListener(new ActionListener() {
+
+            itemEditGroovy.addActionListener(e -> new GroovyDialog(
+                    getPackageTemplateWrapper().getProject(), getElement().getGroovyCode()) {
                 @Override
-                public void actionPerformed(ActionEvent e) {
-                    getElement().setGroovyCode("");
+                public void onSuccess(String code) {
+                    getElement().setGroovyCode(code);
                     updateComponentsState();
                 }
+            }.show());
+
+            itemDeleteGroovy.addActionListener(e -> {
+                getElement().setGroovyCode("");
+                updateComponentsState();
             });
+
+            popupMenu.add(itemEditGroovy);
             popupMenu.add(itemDeleteGroovy);
         } else {
+            // Without Groovy script
             JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddGroovyScript"), JetgroovyIcons.Groovy.Groovy_16x16);
-            itemAddGroovy.addActionListener(new ActionListener() {
+
+            itemAddGroovy.addActionListener(e -> new GroovyDialog(getPackageTemplateWrapper().getProject()) {
                 @Override
-                public void actionPerformed(ActionEvent e) {
-                    new GroovyDialog(getPackageTemplateWrapper().getProject()) {
-                        @Override
-                        public void onSuccess(String code) {
-                            getElement().setGroovyCode(code);
-                            updateComponentsState();
-                        }
-                    }.show();
+                public void onSuccess(String code) {
+                    getElement().setGroovyCode(code);
+                    updateComponentsState();
                 }
-            });
+            }.show());
+
             popupMenu.add(itemAddGroovy);
         }
+    }
+
+
+    //=================================================================
+    //  Utils
+    //=================================================================
+    public void addMouseListener() {
+        jlName.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                if (SwingUtilities.isRightMouseButton(mouseEvent)) {
+                    switch (getPackageTemplateWrapper().getMode()) {
+                        case EDIT:
+                        case CREATE:
+                            createPopupForEditMode(mouseEvent);
+                            break;
+                        case USAGE:
+                            break;
+                    }
+                }
+            }
+        });
     }
 
     public void addDirectory() {
@@ -195,6 +183,26 @@ public abstract class ElementWrapper extends BaseWrapper {
         dialog.show();
     }
 
+
+    //=================================================================
+    //  Getters | Setters
+    //=================================================================
+    public DirectoryWrapper getParent() {
+        return parent;
+    }
+
+    public void setParent(DirectoryWrapper parent) {
+        this.parent = parent;
+    }
+
+    public PackageTemplateWrapper getPackageTemplateWrapper() {
+        return packageTemplateWrapper;
+    }
+
+    public void setPackageTemplateWrapper(PackageTemplateWrapper packageTemplateWrapper) {
+        this.packageTemplateWrapper = packageTemplateWrapper;
+    }
+
     public Exception getWriteException() {
         return writeException;
     }
@@ -202,4 +210,5 @@ public abstract class ElementWrapper extends BaseWrapper {
     public void setWriteException(Exception writeException) {
         this.writeException = writeException;
     }
+
 }

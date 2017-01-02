@@ -3,9 +3,8 @@ package global.visitors;
 import base.ElementVisitor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
-import global.models.Directory;
 import global.models.File;
-import global.utils.FileWriter;
+import global.utils.file.FileWriter;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
@@ -17,12 +16,21 @@ import java.util.ArrayList;
  */
 public class WriteElementVisitor implements ElementVisitor {
 
-    private ArrayList<PsiDirectory> stackDirs;
     private Project project;
 
     public WriteElementVisitor(PsiDirectory currentDir, Project project) {
-        stackDirs = new ArrayList<>();
         this.project = project;
+        initStack(currentDir);
+    }
+
+
+    //=================================================================
+    //  Stack
+    //=================================================================
+    private ArrayList<PsiDirectory> stackDirs;
+
+    private void initStack(PsiDirectory currentDir) {
+        stackDirs = new ArrayList<>();
         pushDir(currentDir);
     }
 

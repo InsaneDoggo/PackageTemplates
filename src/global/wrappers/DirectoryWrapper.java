@@ -1,5 +1,6 @@
 package global.wrappers;
 
+import base.ElementVisitor;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
@@ -8,16 +9,16 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import global.models.BaseElement;
 import global.models.Directory;
+import global.utils.UIHelper;
+import global.utils.factories.GridBagFactory;
 import global.utils.i18n.Localizer;
+import global.utils.validation.FieldType;
+import global.utils.validation.TemplateValidator;
 import icons.PluginIcons;
-import base.ElementVisitor;
 import org.jetbrains.annotations.NotNull;
-import global.utils.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.font.TextAttribute;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,40 +30,14 @@ import java.util.Map;
 public class DirectoryWrapper extends ElementWrapper {
 
     private Directory directory;
-    private JPanel panel;
-    private GridBag gridBag;
-
     private ArrayList<ElementWrapper> listElementWrapper;
 
+    //=================================================================
+    //  Utils
+    //=================================================================
     @Override
     public void accept(ElementVisitor visitor) {
         visitor.visit(this);
-    }
-
-    public Directory getDirectory() {
-        return directory;
-    }
-
-    public void setDirectory(Directory directory) {
-        this.directory = directory;
-    }
-
-    public ArrayList<ElementWrapper> getListElementWrapper() {
-        return listElementWrapper;
-    }
-
-    public void setListElementWrapper(ArrayList<ElementWrapper> listElementWrapper) {
-        this.listElementWrapper = listElementWrapper;
-    }
-
-    @Override
-    public BaseElement getElement() {
-        return directory;
-    }
-
-    @Override
-    public boolean isDirectory() {
-        return true;
     }
 
     @Override
@@ -78,7 +53,7 @@ public class DirectoryWrapper extends ElementWrapper {
 
     @Override
     public ValidationInfo validateFields() {
-        ValidationInfo result = TemplateValidator.validateText(etfName, etfName.getText(), TemplateValidator.FieldType.CLASS_NAME);
+        ValidationInfo result = TemplateValidator.validateText(etfName, etfName.getText(), FieldType.CLASS_NAME);
         if (result != null) {
             return result;
         }
@@ -112,6 +87,22 @@ public class DirectoryWrapper extends ElementWrapper {
     }
 
     @Override
+    public void setEnabled(boolean isEnabled) {
+        directory.setEnabled(isEnabled);
+        updateComponentsState();
+
+        for (ElementWrapper elementWrapper : listElementWrapper) {
+            elementWrapper.cbEnabled.setSelected(isEnabled);
+        }
+    }
+
+
+    //=================================================================
+    //  UI
+    //=================================================================
+    private JPanel panel;
+
+    @Override
     public void buildView(Project project, JPanel container, GridBag bag) {
         if (panel == null) {
             panel = new JPanel(new GridBagLayout());
@@ -122,7 +113,7 @@ public class DirectoryWrapper extends ElementWrapper {
         createPackageView(project, container, bag);
         updateComponentsState();
 
-        gridBag = GridBagFactory.getBagForDirectory();
+        GridBag gridBag = GridBagFactory.getBagForDirectory();
 
         for (ElementWrapper elementWrapper : getListElementWrapper()) {
             elementWrapper.buildView(project, panel, gridBag);
@@ -150,11 +141,7 @@ public class DirectoryWrapper extends ElementWrapper {
     private JPanel createOptionsBlock() {
         cbEnabled = new JBCheckBox();
         cbEnabled.setSelected(directory.isEnabled());
-        cbEnabled.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                setEnabled(cbEnabled.isSelected());
-            }
-        });
+        cbEnabled.addItemListener(e -> setEnabled(cbEnabled.isSelected()));
 
         jlGroovy = new JBLabel();
         if (directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty()) {
@@ -165,22 +152,12 @@ public class DirectoryWrapper extends ElementWrapper {
         jlGroovy.setToolTipText(Localizer.get("ColoredWhenItemHasGroovyScript"));
         cbEnabled.setToolTipText(Localizer.get("IfCheckedElementWillBeCreated"));
 
-        JPanel optionsPanel = new JPanel(new GridBagLayout());
         GridBag optionsBag = GridBagFactory.getOptionsPanelGridBag();
+        JPanel optionsPanel = new JPanel(new GridBagLayout());
         optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
         optionsPanel.add(jlGroovy, optionsBag.next().insets(0, 0, 0, 12));
         optionsPanel.add(jlName, optionsBag.next());
         return optionsPanel;
-    }
-
-    @Override
-    public void setEnabled(boolean isEnabled) {
-        directory.setEnabled(isEnabled);
-        updateComponentsState();
-
-        for (ElementWrapper elementWrapper : listElementWrapper) {
-            elementWrapper.cbEnabled.setSelected(isEnabled);
-        }
     }
 
     @Override
@@ -200,6 +177,36 @@ public class DirectoryWrapper extends ElementWrapper {
         }
         jlName.setEnabled(directory.isEnabled());
         etfName.setEnabled(directory.isEnabled());
+    }
+
+
+    //=================================================================
+    //  Getters | Setters
+    //=================================================================
+    public Directory getDirectory() {
+        return directory;
+    }
+
+    public void setDirectory(Directory directory) {
+        this.directory = directory;
+    }
+
+    public ArrayList<ElementWrapper> getListElementWrapper() {
+        return listElementWrapper;
+    }
+
+    public void setListElementWrapper(ArrayList<ElementWrapper> listElementWrapper) {
+        this.listElementWrapper = listElementWrapper;
+    }
+
+    @Override
+    public BaseElement getElement() {
+        return directory;
+    }
+
+    @Override
+    public boolean isDirectory() {
+        return true;
     }
 
 }

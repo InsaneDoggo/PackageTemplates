@@ -1,12 +1,10 @@
 package global.utils;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
 import global.models.GlobalVariable;
-import org.apache.velocity.runtime.parser.ParseException;
-import org.jetbrains.annotations.Nullable;
 import global.wrappers.PackageTemplateWrapper;
+import org.apache.velocity.runtime.parser.ParseException;
 
 import java.util.*;
 
@@ -33,31 +31,10 @@ public class AttributesHelper {
     private static String[] getWithoutDefaultAttributes(String[] unsetAttributes) {
         ArrayList<String> list = new ArrayList<>();
         list.addAll(Arrays.asList(unsetAttributes));
-        Iterator<String> iterator = list.iterator();
-        while (iterator.hasNext()) {
-            if (listAttributesToRemove.contains(iterator.next())) {
-                iterator.remove();
-            }
-        }
+
+        list.removeIf(listAttributesToRemove::contains);
+
         return list.toArray(new String[list.size()]);
-    }
-
-    @Nullable
-    public static FileTemplate getTemplate(String name) {
-        FileTemplateManager ftm = FileTemplateManager.getDefaultInstance();
-
-        // Custom
-        FileTemplate result = ftm.getTemplate(name);
-        // Internal
-        if (result == null) {
-            result = ftm.getInternalTemplate(name);
-        }
-        // J2EE
-        if (result == null) {
-            result = ftm.getJ2eeTemplate(name);
-        }
-
-        return result;
     }
 
     public static String[] getNonGlobalAttributes(String[] unsetAttributes, ArrayList<GlobalVariable> listGlobalVariable) {

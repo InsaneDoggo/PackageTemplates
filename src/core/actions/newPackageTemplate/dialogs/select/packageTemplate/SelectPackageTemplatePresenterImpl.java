@@ -13,9 +13,9 @@ import global.Const;
 import global.models.Favourite;
 import global.models.PackageTemplate;
 import global.utils.CollectionHelper;
-import global.utils.FileReaderUtil;
-import global.utils.FileValidator;
-import global.utils.PackageTemplateHelper;
+import global.utils.file.FileReaderUtil;
+import global.utils.file.FileValidator;
+import global.utils.templates.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 

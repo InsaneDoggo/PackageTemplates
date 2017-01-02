@@ -6,7 +6,7 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.GridBag;
 import global.models.PackageTemplate;
-import global.utils.*;
+import global.utils.factories.GridBagFactory;
 import global.wrappers.PackageTemplateWrapper;
 
 import java.awt.*;
@@ -15,11 +15,6 @@ import java.awt.*;
  * Created by CeH9 on 14.06.2016.
  */
 public abstract class ImplementDialog extends BaseDialog implements ImplementView {
-
-    public abstract void onSuccess(PackageTemplateWrapper ptWrapper);
-
-    public void onCancel() {
-    }
 
     private ImplementPresenter presenter;
 
@@ -31,6 +26,20 @@ public abstract class ImplementDialog extends BaseDialog implements ImplementVie
     }
 
     @Override
+    public void buildView(PackageTemplateWrapper ptWrapper) {
+        GridBag gridBag = GridBagFactory.getBagForConfigureDialog();
+        panel.add(ptWrapper.buildView(), gridBag.nextLine().next());
+    }
+
+
+    //=================================================================
+    //  Dialog specific stuff
+    //=================================================================
+    public abstract void onSuccess(PackageTemplateWrapper ptWrapper);
+
+    public void onCancel() {}
+
+    @Override
     protected ValidationInfo doValidate() {
         return presenter.doValidate();
     }
@@ -39,12 +48,6 @@ public abstract class ImplementDialog extends BaseDialog implements ImplementVie
     public void preShow() {
         panel.setLayout(new GridBagLayout());
         presenter.onPreShow();
-    }
-
-    @Override
-    public void buildView(PackageTemplateWrapper ptWrapper) {
-        GridBag gridBag = GridBagFactory.getBagForConfigureDialog();
-        panel.add(ptWrapper.buildView(), gridBag.nextLine().next());
     }
 
     @Override

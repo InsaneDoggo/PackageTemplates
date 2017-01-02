@@ -1,4 +1,4 @@
-package global.utils;
+package global.utils.factories;
 
 import com.intellij.openapi.project.Project;
 import global.models.*;

@@ -5,7 +5,7 @@ import core.state.Config;
 import core.state.StateFactory;
 import core.state.models.StateModel;
 import core.state.models.StateWrapper;
-import global.utils.GsonFactory;
+import global.utils.factories.GsonFactory;
 
 /**
  * Created by CeH9 on 26.06.2016.
@@ -13,9 +13,6 @@ import global.utils.GsonFactory;
 public class SaveUtil {
 
     private static SaveUtil instance;
-    private StateEditor editor;
-    private StateReader reader;
-
     private StateModel stateModel;
     private Config cfg;
 
@@ -27,22 +24,14 @@ public class SaveUtil {
         return instance;
     }
 
-    public SaveUtil() {
-        cfg = ServiceManager.getService(Config.class);
-    }
-
     private void init() {
         instance.load();
-        editor = new StateEditor(this, stateModel);
-        reader = new StateReader(this, stateModel);
+        initEditor();
+        initReader();
     }
 
-    public static StateReader reader() {
-        return getInstance().reader;
-    }
-
-    public static StateEditor editor() {
-        return getInstance().editor;
+    public SaveUtil() {
+        cfg = ServiceManager.getService(Config.class);
     }
 
     private void load() {
@@ -69,6 +58,34 @@ public class SaveUtil {
         if (state != null) {
             state.value = GsonFactory.getInstance().toJson(stateModel, StateModel.class);
         }
+    }
+
+
+    //=================================================================
+    //  Editor
+    //=================================================================
+    private StateEditor editor;
+
+    private void initEditor() {
+        editor = new StateEditor(this, stateModel);
+    }
+
+    public static StateEditor editor() {
+        return getInstance().editor;
+    }
+
+
+    //=================================================================
+    //  Reader
+    //=================================================================
+    private StateReader reader;
+
+    private void initReader() {
+        reader = new StateReader(this, stateModel);
+    }
+
+    public static StateReader reader() {
+        return getInstance().reader;
     }
 
 }

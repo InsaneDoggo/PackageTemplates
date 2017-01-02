@@ -4,8 +4,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import global.models.PackageTemplate;
 import global.utils.i18n.Localizer;
-import global.utils.TemplateValidator;
-import global.utils.WrappersFactory;
+import global.utils.validation.TemplateValidator;
+import global.utils.factories.WrappersFactory;
 import global.wrappers.PackageTemplateWrapper;
 
 /**
@@ -16,7 +16,6 @@ public class ConfigurePresenterImpl implements ConfigurePresenter {
     private PackageTemplateWrapper ptWrapper;
     private ConfigureView view;
 
-
     public ConfigurePresenterImpl(Project project, ConfigureView view) {
         this.ptWrapper = WrappersFactory.createAndWrapPackageTemplate(project, PackageTemplateWrapper.ViewMode.CREATE);
         this.view = view;
@@ -25,6 +24,23 @@ public class ConfigurePresenterImpl implements ConfigurePresenter {
     public ConfigurePresenterImpl(Project project, PackageTemplate packageTemplate, ConfigureView view) {
         this.view = view;
         this.ptWrapper = WrappersFactory.wrapPackageTemplate(project, packageTemplate, PackageTemplateWrapper.ViewMode.EDIT);
+    }
+
+    @Override
+    public ValidationInfo doValidate() {
+        ValidationInfo result;
+        result = TemplateValidator.validateProperties(ptWrapper);
+        if (result != null) return result;
+
+        if (ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.EDIT || !ptWrapper.getPackageTemplate().getName().equals(ptWrapper.etfName.getText())) {
+            if (!TemplateValidator.isPackageTemplateNameUnique(ptWrapper.etfName.getText())) {
+                return new ValidationInfo(Localizer.get("warning.TemplateWithSpecifiedNameAlreadyExists"), ptWrapper.etfName);
+            }
+            result = TemplateValidator.validateProperties(ptWrapper);
+            if (result != null) return result;
+        }
+
+        return null;
     }
 
     @Override
@@ -52,21 +68,5 @@ public class ConfigurePresenterImpl implements ConfigurePresenter {
         view.onFail();
     }
 
-    @Override
-    public ValidationInfo doValidate() {
-        ValidationInfo result;
-        result = TemplateValidator.validateProperties(ptWrapper);
-        if (result != null) return result;
-
-        if (ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.EDIT || !ptWrapper.getPackageTemplate().getName().equals(ptWrapper.etfName.getText())) {
-            if (!TemplateValidator.isPackageTemplateNameUnique(ptWrapper.etfName.getText())) {
-                return new ValidationInfo(Localizer.get("warning.TemplateWithSpecifiedNameAlreadyExists"), ptWrapper.etfName);
-            }
-            result = TemplateValidator.validateProperties(ptWrapper);
-            if (result != null) return result;
-        }
-
-        return null;
-    }
 
 }

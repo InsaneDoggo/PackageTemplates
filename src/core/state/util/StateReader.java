@@ -25,7 +25,6 @@ public class StateReader {
         return model.getUserSettings();
     }
 
-
     public Language getLanguage() {
         return userSettings().getLanguage();
     }

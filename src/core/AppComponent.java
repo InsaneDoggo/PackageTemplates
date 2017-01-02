@@ -3,10 +3,9 @@ package core;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import core.actions.generated.RunTemplateAction;
-import core.state.util.SaveUtil;
 import global.Const;
 import global.models.PackageTemplate;
-import global.utils.PackageTemplateHelper;
+import global.utils.templates.PackageTemplateHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

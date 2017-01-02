@@ -15,7 +15,7 @@ import org.jetbrains.plugins.groovy.GroovyFileType;
 import org.jetbrains.plugins.groovy.GroovyLanguage;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
-import global.utils.GridBagFactory;
+import global.utils.factories.GridBagFactory;
 import global.utils.i18n.Localizer;
 
 import javax.swing.*;
@@ -27,13 +27,8 @@ import java.awt.event.MouseEvent;
  */
 public abstract class GroovyDialog extends BaseDialog {
 
-    public abstract void onSuccess(String code);
-
-    public void onCancel(){
-
-    }
-
-    private String code = "\nstatic String getModifiedName(String name) {\n" +
+    private String code =
+            "\nstatic String getModifiedName(String name) {\n" +
             "   //A small Example:\n" +
             "   return name.toLowerCase();\n" +
             "}\n";
@@ -51,7 +46,8 @@ public abstract class GroovyDialog extends BaseDialog {
 
     private EditorTextField etfCode;
     private EditorTextField etfName;
-
+    private JButton btnTry;
+    private JBLabel jlResult;
 
     @Override
     public void preShow() {
@@ -59,10 +55,26 @@ public abstract class GroovyDialog extends BaseDialog {
         GridBag gridBag = GridBagFactory.getBagForGroovyDialog();
 
         createEditorField();
+        createViews();
 
+        panel.add(etfCode, gridBag.nextLine().next().weighty(1).fillCell());
+        panel.add(etfName, gridBag.nextLine().next());
+        panel.add(btnTry, gridBag.nextLine().next().insets(4, 0, 4, 0));
+        panel.add(jlResult, gridBag.nextLine().next());
+    }
+
+    private void createEditorField() {
+        PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("GroovyCode", GroovyLanguage.INSTANCE, code);
+        GroovyFile groovyFile = GroovyPsiElementFactory.getInstance(project).createGroovyFile(code, true, psiFile);
+
+        etfCode = new EditorTextField(PsiDocumentManager.getInstance(project).getDocument(groovyFile), project, GroovyFileType.GROOVY_FILE_TYPE);
+        etfCode.setOneLineMode(false);
+    }
+
+    private void createViews() {
         etfName = new EditorTextField(Localizer.get("ExampleName"));
-        JButton btnTry = new JButton(Localizer.get("TryIt"));
-        JBLabel jlResult = new JBLabel(Localizer.get("ResultWillBeHere"));
+        btnTry = new JButton(Localizer.get("TryIt"));
+        jlResult = new JBLabel(Localizer.get("ResultWillBeHere"));
 
         etfName.setAlignmentX(Component.CENTER_ALIGNMENT);
         etfName.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -77,21 +89,13 @@ public abstract class GroovyDialog extends BaseDialog {
                 jlResult.setText(GroovyExecutor.runGroovy(etfCode.getText(), etfName.getText()));
             }
         });
-
-        panel.add(etfCode, gridBag.nextLine().next().weighty(1).fillCell());
-        panel.add(etfName, gridBag.nextLine().next());
-        panel.add(btnTry, gridBag.nextLine().next().insets(4, 0, 4, 0));
-        panel.add(jlResult, gridBag.nextLine().next());
     }
 
 
-    private void createEditorField() {
-        PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("GroovyCode", GroovyLanguage.INSTANCE, code);
-        GroovyFile groovyFile = GroovyPsiElementFactory.getInstance(project).createGroovyFile(code, true, psiFile);
-
-        etfCode = new EditorTextField(PsiDocumentManager.getInstance(project).getDocument(groovyFile), project, GroovyFileType.GROOVY_FILE_TYPE);
-        etfCode.setOneLineMode(false);
-    }
+    //=================================================================
+    //  Dialog specific stuff
+    //=================================================================
+    public abstract void onSuccess(String code);
 
     @Override
     public void onOKAction() {
@@ -99,12 +103,11 @@ public abstract class GroovyDialog extends BaseDialog {
     }
 
     @Override
-    public void onCancelAction() {
-        onCancel();
-    }
+    public void onCancelAction() {}
 
     @Override
     protected ValidationInfo doValidate() {
         return GroovyExecutor.ValidateGroovyCode(etfCode, etfName.getText());
     }
+
 }

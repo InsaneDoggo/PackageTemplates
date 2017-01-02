@@ -19,9 +19,10 @@ import core.actions.newPackageTemplate.Tester;
 import core.state.util.SaveUtil;
 import global.models.Favourite;
 import global.models.PackageTemplate;
-import global.utils.FileReaderUtil;
-import global.utils.FileValidator;
-import global.utils.PackageTemplateHelper;
+import global.utils.Logger;
+import global.utils.file.FileReaderUtil;
+import global.utils.file.FileValidator;
+import global.utils.templates.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
 import icons.PluginIcons;
 import net.miginfocom.layout.CC;
@@ -142,14 +143,14 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     }
 
     private void undo() {
-        System.out.println("undo ");
+        Logger.log("undo ");
 //        if (myUndoManager.canUndo()) {
 //            myUndoManager.undo();
 //        }
     }
 
     private boolean canUndo() {
-        System.out.println("canUndo ");
+        Logger.log("canUndo ");
         return true;
     }
 
