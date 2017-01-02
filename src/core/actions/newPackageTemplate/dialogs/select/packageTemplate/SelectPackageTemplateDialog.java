@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -93,15 +94,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         }
     }
 
-    @Override
-    protected ValidationInfo doValidate() {
-        if (selectedPath == null) {
-            return presenter.doValidate(getSelectedPath(), btnPath);
-        }
-
-        return presenter.doValidate(getSelectedPath(), componentForValidation);
-    }
-
     @NotNull
     @Override
     protected Action getOKAction() {
@@ -118,6 +110,51 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         return action;
     }
 
+
+    //=================================================================
+    //  Validation
+    //=================================================================
+    private boolean skipValidation = false;
+    protected final int VALIDATION_DELAY = 300;
+    protected final int VALIDATION_HUGE_DELAY = 20 * 60 * 1000;  // 20 min
+
+    protected void resetValidation() {
+        skipValidation = true;
+        initValidation();
+    }
+
+    @Override
+    protected ValidationInfo doValidate() {
+        if (skipValidation) {
+            Logger.log("doValidate  SKIP");
+            setValidationDelay(VALIDATION_HUGE_DELAY);
+            skipValidation = false;
+            return null;
+        }
+
+        Logger.log("doValidate ");
+        if (selectedPath == null) {
+            return presenter.doValidate(getSelectedPath(), btnPath);
+        }
+
+        return presenter.doValidate(getSelectedPath(), componentForValidation);
+    }
+
+    @Override
+    protected void createDefaultActions() {
+        super.createDefaultActions();
+        myOKAction = new MyOkAction();
+    }
+
+    protected class MyOkAction extends OkAction {
+        @Override
+        protected void doAction(ActionEvent e) {
+            Logger.log("set validation delay 300");
+            setValidationDelay(VALIDATION_DELAY);
+            initValidation();
+            super.doAction(e);
+        }
+    }
 
     //=================================================================
     //  Shortcuts
@@ -210,7 +247,8 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
             @Override
             public void actionPerformed(AnActionEvent e) {
                 // todo remove
-                new Tester().runMockAction(project);
+                resetValidation();
+//                new Tester().runMockAction(project);
                 //presenter.onSettingsAction();
             }
         };
