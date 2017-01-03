@@ -103,7 +103,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
                 // Replace Name
-                String newPath = path.replace(new File(path).getName(), packageTemplate.getName() + "."+Const.PACKAGE_TEMPLATES_EXTENSION);
+                String newPath = path.replace(new File(path).getName(), packageTemplate.getName() + "." + Const.PACKAGE_TEMPLATES_EXTENSION);
                 PackageTemplateHelper.savePackageTemplate(packageTemplate, newPath);
 //                view.nodeChanged(selectedNode);
             }
@@ -138,12 +138,19 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 
     @Override
     public void onExportAction(String path) {
-        VirtualFile[] files = FileChooser.chooseFiles(FileReaderUtil.getDirectoryDescriptor(), project, null);
+//        VirtualFile[] files = FileChooser.chooseFiles(FileReaderUtil.getDirectoryDescriptor(), project, null);
+        //todo remove
+        VirtualFile[] files = FileChooser.chooseFiles(FileReaderUtil.getDirectoryDescriptor(), project,
+                LocalFileSystem.getInstance().findFileByIoFile(new File("E:" + File.separator + "Downloads")));
 
-        if (files.length > 0) {
-            PackageTemplate pt = PackageTemplateHelper.getPackageTemplate(path);
-            PackageTemplateHelper.exportPackageTemplate(project, pt, files[0].getPath());
+        if (files.length <= 0) {
+            return;
         }
+
+        PackageTemplate pt = PackageTemplateHelper.getPackageTemplate(path);
+        VirtualFile directoryToExport = files[0];
+
+        PackageTemplateHelper.exportPackageTemplate(project, pt, directoryToExport.getPath());
     }
 
     @Override

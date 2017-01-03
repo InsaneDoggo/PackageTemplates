@@ -18,6 +18,9 @@ public class CollectFileTemplatesVisitor implements ElementVisitor {
         hsFileTemplateNames = new HashSet<>();
     }
 
+    public HashSet<String> getHsFileTemplateNames() {
+        return hsFileTemplateNames;
+    }
 
     @Override
     public void visit(DirectoryWrapper wrapper) {

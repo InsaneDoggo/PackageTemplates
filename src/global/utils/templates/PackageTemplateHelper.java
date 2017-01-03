@@ -1,7 +1,11 @@
 package global.utils.templates;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
+import com.intellij.psi.PsiDirectory;
 import core.export.ExportHelper;
 import global.Const;
 import global.models.PackageTemplate;
@@ -17,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +39,24 @@ public class PackageTemplateHelper {
         PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.EDIT);
         visitor.visit(ptWrapper.getRootElement());
 
-        ExportHelper.exportPackageTemplate(ptWrapper, pathDir);
+        //todo check existing dir
+
+        FutureTask<Void> futureTask = new FutureTask<>(() ->
+                ApplicationManager.getApplication().runWriteAction((Computable<Void>) () -> {
+                    ExportHelper.exportPackageTemplate(project, pathDir, ptWrapper, visitor.getHsFileTemplateNames());
+                    return null;
+                })
+        );
+        CommandProcessor.getInstance().executeCommand(project, futureTask,
+                "Export '" + pt.getName() + "' PackageTemplate", null);
+        try {
+            futureTask.get();
+        } catch (Exception ex) {
+            Logger.log(ex.getMessage());
+//            dirWrapper.setWriteException(ex);
+//            dirWrapper.getPackageTemplateWrapper().getFailedElements().add(dirWrapper);
+        }
+
     }
 
 

@@ -52,7 +52,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         presenter = new SelectPackageTemplatePresenterImpl(this, project);
         this.project = project;
         init();
-        setValidationDelay(1000);
     }
 
     @Override
@@ -69,6 +68,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
         return panel;
     }
+
 
     //=================================================================
     //  Dialog specific stuff
@@ -115,7 +115,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     //  Validation
     //=================================================================
     private boolean skipValidation = false;
-    protected final int VALIDATION_DELAY = 300;
+    protected final int VALIDATION_DELAY = 400;
     protected final int VALIDATION_HUGE_DELAY = 20 * 60 * 1000;  // 20 min
 
     protected void resetValidation() {
@@ -216,7 +216,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         actionGroup.add(actionExport);
 
         jpToolbar = new JPanel(new MigLayout());
-        panel.add(jpToolbar, new CC().spanX().wrap());
+        panel.add(jpToolbar, new CC().spanX());
 
         refreshToolbar();
     }
@@ -285,8 +285,9 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     private void refreshToolbar() {
         jpToolbar.removeAll();
         ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
-        jpToolbar.add(toolbar.getComponent(), new CC().spanX().wrap());
+        jpToolbar.add(toolbar.getComponent(), new CC().spanX());
     }
+
 
 
     //=================================================================
@@ -301,7 +302,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         btnPath.setText(PackageTemplateHelper.getRootDirPath());
         btnPath.addBrowseFolderListener(Localizer.get("SelectPackageTemplate"), "", project, FileReaderUtil.getPackageTemplatesDescriptor());
 
-        panel.add(new SeparatorComponent(), new CC().growX().spanX().wrap());
+//        panel.add(new SeparatorComponent(), new CC().growX().spanX().wrap());
         panel.add(btnPath, new CC().pushX().growX().spanX());
 
         rbFromPath = new JBRadioButton(Localizer.get("label.FromPath"));
@@ -312,7 +313,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                 selectedPath = null;
                 componentForValidation = btnPath;
                 refreshToolbar();
-
             }
         });
         panel.add(rbFromPath, new CC().growX().spanX().wrap());

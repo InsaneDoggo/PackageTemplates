@@ -3,6 +3,7 @@ package global.utils.file;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
@@ -20,6 +21,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -127,28 +132,15 @@ public class FileWriter {
         return element;
     }
 
-    @NotNull
-    private static File createFile(String path, String fileName) {
-        File file = new File(path + "/" + fileName);
-
-        while (file.exists() && !file.isDirectory()) {
-            Logger.log("Exist");
-            //todo overwrite or change name dialog
-            break;
-        }
-
-        return file;
-    }
-
 
     //=================================================================
     //  Low Level I/O
     //=================================================================
-    public static void writeStringToFile(String text, String path) {
-        writeStringToFile(text, new File(path));
+    public static boolean writeStringToFile(String text, String path) {
+        return writeStringToFile(text, new File(path));
     }
 
-    public static void writeStringToFile(String text, File file) {
+    public static boolean writeStringToFile(String text, File file) {
         try {
             Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8));
 
@@ -156,9 +148,42 @@ public class FileWriter {
 
             out.flush();
             out.close();
+            return true;
         } catch (Exception e) {
             Logger.log(e.getMessage());
+            return false;
         }
     }
 
+    public static File makeDirectory(String path) {
+        return makeDirectory(new File(path));
+    }
+
+    public static File makeDirectory(File directory) {
+        if (directory.exists()) {
+            //todo dir already exists
+            return null;
+        }
+
+        try {
+            if (directory.mkdirs()) {
+                return directory;
+            }
+        } catch (SecurityException se) {
+            Logger.log("makeDirectory ex: " + se.getMessage());
+            return null;
+        }
+
+        return null;
+    }
+
+    public static boolean copyFile(Path from, Path to) {
+        try {
+            Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+            return true;
+        } catch (IOException e) {
+            Logger.log("copyFile " + e.getMessage());
+            return false;
+        }
+    }
 }

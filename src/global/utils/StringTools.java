@@ -44,4 +44,8 @@ public class StringTools {
         return ".*" +  text + ".*";
     }
 
+    public static String getNameWithoutExtension(String name) {
+        return name.replaceFirst("[.][^.]+$", "");
+    }
+
 }
