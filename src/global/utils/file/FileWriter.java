@@ -142,6 +142,8 @@ public class FileWriter {
 
     public static boolean writeStringToFile(String text, File file) {
         try {
+            file.getParentFile().mkdirs();
+            file.createNewFile();
             Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8));
 
             out.write(text);
@@ -156,29 +158,23 @@ public class FileWriter {
     }
 
     public static File makeDirectory(String path) {
-        return makeDirectory(new File(path));
-    }
-
-    public static File makeDirectory(File directory) {
-        if (directory.exists()) {
-            //todo dir already exists
-            return null;
-        }
+//        if (directory.exists()) {
+//            //todo dir already exists
+//            return null;
+//        }
 
         try {
-            if (directory.mkdirs()) {
-                return directory;
-            }
-        } catch (SecurityException se) {
+            Path p = Paths.get(path);
+            return Files.createDirectories(p).toFile();
+        } catch (IOException se) {
             Logger.log("makeDirectory ex: " + se.getMessage());
             return null;
         }
-
-        return null;
     }
 
     public static boolean copyFile(Path from, Path to) {
         try {
+            to.toFile().getParentFile().mkdirs();
             Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
             return true;
         } catch (IOException e) {

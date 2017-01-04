@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.rmi.server.ExportException;
 import java.util.ArrayList;
@@ -66,21 +67,21 @@ public class ExportHelper {
         Logger.log("exportPackageTemplate ");
 
         // Make Container Dir
-        File fileTemplatesRootDir = FileWriter.makeDirectory(pathDir
-                + File.separator + ptWrapper.getPackageTemplate().getName()
-                + File.separator + FileTemplatesScheme.TEMPLATES_DIR
-                + File.separator);
-        if (fileTemplatesRootDir == null) {
-            //todo Writing fileTemplatesRootDir failed, revert changes?
-            throw new RuntimeException("Writing fileTemplatesRootDir failed");
-        }
-        File rootDir = fileTemplatesRootDir.getParentFile();
+//        File fileTemplatesRootDir = FileWriter.makeDirectory(pathDir
+        String rootDirPath = pathDir + File.separator + ptWrapper.getPackageTemplate().getName();
+//                + File.separator + FileTemplatesScheme.TEMPLATES_DIR
+//                + File.separator);
+//        if (fileTemplatesRootDir == null) {
+//            //todo Writing fileTemplatesRootDir failed, revert changes?
+//            throw new RuntimeException("Writing fileTemplatesRootDir failed");
+//        }
+//        File rootDir = fileTemplatesRootDir.getParentFile();
 
         // Write PackageTemplate
         String ptJson = GsonFactory.getInstance().toJson(ptWrapper.getPackageTemplate(), PackageTemplate.class);
         boolean isWritePtSuccess = FileWriter.writeStringToFile(ptJson,
                 String.format("%s%s%s.%s",
-                        rootDir,
+                        rootDirPath,
                         File.separator,
                         ptWrapper.getPackageTemplate().getName(),
                         Const.PACKAGE_TEMPLATES_EXTENSION
@@ -108,7 +109,9 @@ public class ExportHelper {
         }
 
         for (File file : filesToCopy) {
-            boolean isSuccess = FileWriter.copyFile(file.toPath(), fileTemplatesRootDir.toPath());
+            boolean isSuccess = FileWriter.copyFile(file.toPath(), Paths.get(rootDirPath
+                    + File.separator + FileTemplatesScheme.TEMPLATES_DIR
+                    + File.separator + file.getName()));
             if (!isSuccess) {
                 //todo FileTemplate not written
                 Logger.log("FileTemplate not written");
