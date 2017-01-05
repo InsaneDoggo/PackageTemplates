@@ -10,5 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.google.code.gson:gson:2.7" level="application" />
+    <orderEntry type="library" name="com.miglayout:miglayout-swing:5.0" level="project" />
   </component>
 </module>

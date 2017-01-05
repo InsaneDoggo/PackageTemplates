@@ -1,9 +1,15 @@
 package core.export;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.DialogWrapperDialog;
+import com.intellij.openapi.vcs.VcsShowConfirmationOption;
+import com.intellij.util.ui.ConfirmationDialog;
+import com.sun.jna.platform.FileUtils;
 import core.state.models.StateModel;
 import global.Const;
 import global.models.PackageTemplate;
@@ -11,16 +17,15 @@ import global.utils.Logger;
 import global.utils.StringTools;
 import global.utils.factories.GsonFactory;
 import global.utils.file.FileWriter;
+import global.utils.i18n.Localizer;
 import global.wrappers.PackageTemplateWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -67,21 +72,31 @@ public class ExportHelper {
         Logger.log("exportPackageTemplate ");
 
         // Make Container Dir
-//        File fileTemplatesRootDir = FileWriter.makeDirectory(pathDir
-        String rootDirPath = pathDir + File.separator + ptWrapper.getPackageTemplate().getName();
-//                + File.separator + FileTemplatesScheme.TEMPLATES_DIR
-//                + File.separator);
-//        if (fileTemplatesRootDir == null) {
-//            //todo Writing fileTemplatesRootDir failed, revert changes?
-//            throw new RuntimeException("Writing fileTemplatesRootDir failed");
-//        }
-//        File rootDir = fileTemplatesRootDir.getParentFile();
+        File rootDir = new File(pathDir + File.separator + ptWrapper.getPackageTemplate().getName());
+        if (rootDir.exists()) {
+            boolean doOverwrite = new ConfirmationDialog(project,
+                    Localizer.get("question.Overwrite"),
+                    Localizer.get("warning.PackageTemplateAlreadyExist"),
+                    AllIcons.General.QuestionDialog,
+                    VcsShowConfirmationOption.STATIC_SHOW_CONFIRMATION,
+                    Localizer.get("action.Overwrite"),
+                    Localizer.get("action.Cancel")
+            ).showAndGet();
+
+            if (!doOverwrite) {
+                return;
+            }
+
+            Logger.log("Removing Directory!");
+            FileWriter.removeDirectoryExceptRoot(rootDir);
+        }
+
 
         // Write PackageTemplate
         String ptJson = GsonFactory.getInstance().toJson(ptWrapper.getPackageTemplate(), PackageTemplate.class);
         boolean isWritePtSuccess = FileWriter.writeStringToFile(ptJson,
                 String.format("%s%s%s.%s",
-                        rootDirPath,
+                        rootDir.getPath(),
                         File.separator,
                         ptWrapper.getPackageTemplate().getName(),
                         Const.PACKAGE_TEMPLATES_EXTENSION
@@ -109,7 +124,7 @@ public class ExportHelper {
         }
 
         for (File file : filesToCopy) {
-            boolean isSuccess = FileWriter.copyFile(file.toPath(), Paths.get(rootDirPath
+            boolean isSuccess = FileWriter.copyFile(file.toPath(), Paths.get(rootDir.getPath()
                     + File.separator + FileTemplatesScheme.TEMPLATES_DIR
                     + File.separator + file.getName()));
             if (!isSuccess) {

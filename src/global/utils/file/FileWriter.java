@@ -21,10 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -157,29 +155,61 @@ public class FileWriter {
         }
     }
 
-    public static File makeDirectory(String path) {
-//        if (directory.exists()) {
-//            //todo dir already exists
-//            return null;
-//        }
-
-        try {
-            Path p = Paths.get(path);
-            return Files.createDirectories(p).toFile();
-        } catch (IOException se) {
-            Logger.log("makeDirectory ex: " + se.getMessage());
-            return null;
-        }
-    }
-
     public static boolean copyFile(Path from, Path to) {
         try {
             to.toFile().getParentFile().mkdirs();
             Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
             return true;
         } catch (IOException e) {
-            Logger.log("copyFile " + e.getMessage());
+            Logger.log("copyFile ex: " + e.getMessage());
             return false;
         }
     }
+
+
+    //=================================================================
+    //  Delete
+    //=================================================================
+    public static boolean removeDirectoryExceptRoot(File dir) {
+        String path = dir.getPath();
+        boolean result = removeDirectory(dir);
+        if (!result) return false;
+
+        new File(path).mkdirs();
+        return true;
+    }
+
+    public static boolean removeDirectory(File dir) {
+        try {
+            Files.walkFileTree(dir.toPath(), new FileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.deleteIfExists(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.deleteIfExists(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+            return true;
+        } catch (IOException e) {
+            Logger.log("removeDirectory ex: " + e.getMessage());
+            return false;
+        }
+    }
+
+
 }

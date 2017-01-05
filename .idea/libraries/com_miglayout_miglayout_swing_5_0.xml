@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="com.miglayout:miglayout-swing:5.0" type="repository">
+    <properties maven-id="com.miglayout:miglayout-swing:5.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/miglayout/miglayout-swing/5.0/miglayout-swing-5.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/miglayout/miglayout-core/5.0/miglayout-core-5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/miglayout/miglayout-swing/5.0/miglayout-swing-5.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/miglayout/miglayout-swing/5.0/miglayout-swing-5.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
