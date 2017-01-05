@@ -22,4 +22,8 @@ public interface Const {
 
     int MESSAGE_MAX_LENGTH = 50;
 
+    String DIR_USER = "";
+    String DIR_INTERNAL = "internal";
+    String DIR_J2EE = "j2ee";
+
 }

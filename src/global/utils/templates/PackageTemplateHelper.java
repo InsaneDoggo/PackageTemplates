@@ -5,8 +5,10 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import core.export.ExportHelper;
+import core.importTemplates.ImportHelper;
 import global.Const;
 import global.models.PackageTemplate;
 import global.utils.Logger;
@@ -21,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,8 +42,6 @@ public class PackageTemplateHelper {
         PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.EDIT);
         visitor.visit(ptWrapper.getRootElement());
 
-        //todo check existing dir
-
         FutureTask<Void> futureTask = new FutureTask<>(() ->
                 ApplicationManager.getApplication().runWriteAction((Computable<Void>) () -> {
                     ExportHelper.exportPackageTemplate(project, pathDir, ptWrapper, visitor.getHsFileTemplateNames());
@@ -53,12 +54,23 @@ public class PackageTemplateHelper {
             futureTask.get();
         } catch (Exception ex) {
             Logger.log(ex.getMessage());
-//            dirWrapper.setWriteException(ex);
-//            dirWrapper.getPackageTemplateWrapper().getFailedElements().add(dirWrapper);
         }
-
     }
 
+    public static void importPackageTemplate(Project project, ArrayList<PackageTemplateWrapper> ptWrappers, HashSet<String> hsFileTemplateNames, ArrayList<File> selectedFiles) {
+        FutureTask<Void> futureTask = new FutureTask<>(() ->
+                ApplicationManager.getApplication().runWriteAction((Computable<Void>) () -> {
+                    ImportHelper.importPackageTemplate(project, ptWrappers, hsFileTemplateNames, selectedFiles);
+                    return null;
+                })
+        );
+        CommandProcessor.getInstance().executeCommand(project, futureTask,"Import  PackageTemplates", null);
+        try {
+            futureTask.get();
+        } catch (Exception ex) {
+            Logger.log(ex.getMessage());
+        }
+    }
 
     //=================================================================
     //  Getters

@@ -23,6 +23,8 @@ public interface SelectPackageTemplatePresenter {
 
     void onExportAction(String selectedPath);
 
+    void onImportAction();
+
     void onSettingsAction();
 
     void onAddToFavourites(String path);

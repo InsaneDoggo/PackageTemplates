@@ -1,4 +1,4 @@
-package global.dialogs;
+package global.views;
 
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;

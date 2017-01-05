@@ -1,17 +1,9 @@
 package core.export;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.DialogWrapperDialog;
-import com.intellij.openapi.vcs.VcsShowConfirmationOption;
-import com.intellij.util.ui.ConfirmationDialog;
-import com.sun.jna.platform.FileUtils;
-import core.state.models.StateModel;
 import global.Const;
+import global.dialogs.SimpleConfirmationDialog;
 import global.models.PackageTemplate;
 import global.utils.Logger;
 import global.utils.StringTools;
@@ -23,10 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.rmi.server.ExportException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -35,36 +24,9 @@ import java.util.HashSet;
  */
 public class ExportHelper {
 
-    private static final String DIR_USER = "";
-    private static final String DIR_INTERNAL = "internal";
-    private static final String DIR_J2EE = "j2ee";
-
     @NotNull
     public static String getFileTemplatesDirPath() {
         return FileTemplatesScheme.DEFAULT.getTemplatesDir() + File.separator;
-    }
-
-    public static File getTemplate(String fileTemplateName) {
-        FileTemplateManager ftm = FileTemplateManager.getDefaultInstance();
-
-        // Custom
-        FileTemplate result = ftm.getTemplate(fileTemplateName);
-        // Internal
-        if (result == null) {
-            result = ftm.getInternalTemplate(fileTemplateName);
-        }
-        // J2EE
-        if (result == null) {
-            result = ftm.getJ2eeTemplate(fileTemplateName);
-        }
-
-        //todo impl
-        return null;
-    }
-
-    private static String getRelativePath(String templateType) {
-        //todo impl
-        return null;
     }
 
     @Nullable
@@ -74,24 +36,24 @@ public class ExportHelper {
         // Make Container Dir
         File rootDir = new File(pathDir + File.separator + ptWrapper.getPackageTemplate().getName());
         if (rootDir.exists()) {
-            boolean doOverwrite = new ConfirmationDialog(project,
-                    Localizer.get("question.Overwrite"),
-                    Localizer.get("warning.PackageTemplateAlreadyExist"),
-                    AllIcons.General.QuestionDialog,
-                    VcsShowConfirmationOption.STATIC_SHOW_CONFIRMATION,
-                    Localizer.get("action.Overwrite"),
-                    Localizer.get("action.Cancel")
-            ).showAndGet();
-
-            if (!doOverwrite) {
-                return;
-            }
-
-            Logger.log("Removing Directory!");
-            FileWriter.removeDirectoryExceptRoot(rootDir);
+            askUserToOverwriteTemplate(project, ptWrapper, hsFileTemplateNames, rootDir);
+        } else {
+            onExportConfirmed(ptWrapper, hsFileTemplateNames, rootDir);
         }
+    }
 
+    private static void askUserToOverwriteTemplate(final Project project, final PackageTemplateWrapper ptWrapper, final HashSet<String> hsFileTemplateNames, final File rootDir) {
+        new SimpleConfirmationDialog(project, Localizer.get("question.Overwrite"), Localizer.get("warning.PackageTemplateAlreadyExist"),
+                Localizer.get("action.Overwrite"), Localizer.get("action.Cancel")) {
+            @Override
+            public void onOk() {
+                FileWriter.removeDirectoryExceptRoot(rootDir);
+                onExportConfirmed(ptWrapper, hsFileTemplateNames, rootDir);
+            }
+        };
+    }
 
+    private static void onExportConfirmed(PackageTemplateWrapper ptWrapper, HashSet<String> hsFileTemplateNames, File rootDir) {
         // Write PackageTemplate
         String ptJson = GsonFactory.getInstance().toJson(ptWrapper.getPackageTemplate(), PackageTemplate.class);
         boolean isWritePtSuccess = FileWriter.writeStringToFile(ptJson,
@@ -102,18 +64,23 @@ public class ExportHelper {
                         Const.PACKAGE_TEMPLATES_EXTENSION
                 )
         );
-        if (!isWritePtSuccess) {
+        if (!isWritePtSuccess)
+
+        {
             //todo Writing ptJson failed, revert changes?
             throw new RuntimeException("Writing ptJson failed");
         }
 
         // Write FileTemplates
-        File[] userFiles = new File(getFileTemplatesDirPath() + DIR_USER).listFiles();
-        File[] internalFiles = new File(getFileTemplatesDirPath() + DIR_INTERNAL).listFiles();
-        File[] j2eeFiles = new File(getFileTemplatesDirPath() + DIR_J2EE).listFiles();
+        File[] userFiles = new File(getFileTemplatesDirPath() + Const.DIR_USER).listFiles();
+        File[] internalFiles = new File(getFileTemplatesDirPath() + Const.DIR_INTERNAL).listFiles();
+        File[] j2eeFiles = new File(getFileTemplatesDirPath() + Const.DIR_J2EE).listFiles();
 
         ArrayList<File> filesToCopy = new ArrayList<>();
-        for (String name : hsFileTemplateNames) {
+        for (
+                String name : hsFileTemplateNames)
+
+        {
             File file = findInArray(name, userFiles, internalFiles, j2eeFiles);
             if (file != null) {
                 filesToCopy.add(file);
@@ -123,7 +90,10 @@ public class ExportHelper {
             }
         }
 
-        for (File file : filesToCopy) {
+        for (
+                File file : filesToCopy)
+
+        {
             boolean isSuccess = FileWriter.copyFile(file.toPath(), Paths.get(rootDir.getPath()
                     + File.separator + FileTemplatesScheme.TEMPLATES_DIR
                     + File.separator + file.getName()));
@@ -132,7 +102,6 @@ public class ExportHelper {
                 Logger.log("FileTemplate not written");
             }
         }
-
     }
 
     private static File findInArray(String name, File[]... arrays) {

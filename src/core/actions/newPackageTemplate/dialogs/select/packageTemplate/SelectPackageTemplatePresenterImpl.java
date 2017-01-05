@@ -13,14 +13,19 @@ import global.Const;
 import global.models.Favourite;
 import global.models.PackageTemplate;
 import global.utils.CollectionHelper;
+import global.utils.Logger;
+import global.utils.factories.WrappersFactory;
 import global.utils.file.FileReaderUtil;
 import global.utils.file.FileValidator;
 import global.utils.templates.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
+import global.visitors.CollectFileTemplatesVisitor;
+import global.wrappers.PackageTemplateWrapper;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Arsen on 17.09.2016.
@@ -151,6 +156,37 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
         VirtualFile directoryToExport = files[0];
 
         PackageTemplateHelper.exportPackageTemplate(project, pt, directoryToExport.getPath());
+    }
+
+    @Override
+    public void onImportAction() {
+//        VirtualFile[] files = FileChooser.chooseFiles(FileReaderUtil.getDirectoryDescriptor(), project, null);
+        //todo remove
+        VirtualFile[] files = FileChooser.chooseFiles(FileReaderUtil.getPackageTemplatesDescriptor(), project,
+                LocalFileSystem.getInstance().findFileByIoFile(new File("E:" + File.separator + "Downloads")));
+
+        if (files.length <= 0) {
+            return;
+        }
+
+        CollectFileTemplatesVisitor visitor = new CollectFileTemplatesVisitor();
+        ArrayList<PackageTemplateWrapper> ptWrappers = new ArrayList<>();
+        ArrayList<File> selectedFiles = new ArrayList<>();
+
+        for (VirtualFile item : files) {
+            File file = new File(item.getPath());
+            selectedFiles.add(file);
+
+            PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project,
+                    PackageTemplateHelper.getPackageTemplate(file),
+                    PackageTemplateWrapper.ViewMode.EDIT
+            );
+            visitor.visit(ptWrapper.getRootElement());
+            ptWrappers.add(ptWrapper);
+        }
+
+
+        PackageTemplateHelper.importPackageTemplate(project, ptWrappers, visitor.getHsFileTemplateNames(), selectedFiles);
     }
 
     @Override

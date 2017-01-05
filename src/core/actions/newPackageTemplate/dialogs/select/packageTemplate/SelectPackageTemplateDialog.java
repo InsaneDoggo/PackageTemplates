@@ -202,6 +202,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     private AnAction actionEdit;
     private AnAction actionSettings;
     private AnAction actionExport;
+    private AnAction actionImport;
     private AnAction actionAddToFavourites;
 
     private void makeToolBar() {
@@ -262,6 +263,14 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                 } else {
                     Messages.showErrorDialog(project, Localizer.get("warning.select.packageTemplate"), Localizer.get("title.SystemMessage"));
                 }
+            }
+        };
+
+        // Import
+        actionImport = new AnAction(PlatformIcons.IMPORT_ICON) {
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                presenter.onImportAction();
             }
         };
 
