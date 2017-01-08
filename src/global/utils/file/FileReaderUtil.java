@@ -49,6 +49,18 @@ public class FileReaderUtil {
         return descriptor;
     }
 
+    public static FileChooserDescriptor getPackageTemplatesDescriptorForImport() {
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, false, false, false, true);
+        descriptor.withFileFilter(file -> {
+            if (file.getExtension() == null) {
+                return false;
+            }
+
+            return file.getExtension().toLowerCase().equals(Const.PACKAGE_TEMPLATES_EXTENSION);
+        });
+        return descriptor;
+    }
+
     public static FileChooserDescriptor getDirectoryDescriptor() {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(false, true, false, false, false, false);
         return descriptor;

@@ -19,13 +19,13 @@ import java.util.HashSet;
 public class ImportHelper {
 
     public static void importPackageTemplate(Project project, ArrayList<PackageTemplateWrapper> ptWrappers, HashSet<String> hsFileTemplateNames, ArrayList<File> selectedFiles) {
-        //todo import
-
-        //check all src
-//        if (!isResourcesAvailable(pt, file)) {
+//        check all src
+//        if (!isResourcesAvailable()) {
 //            //todo show err msg
 //            return;
 //        }
+
+
     }
 
     private static boolean isResourcesAvailable(PackageTemplate pt, File file) {

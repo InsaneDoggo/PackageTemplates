@@ -215,6 +215,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         actionGroup.add(actionAddToFavourites);
         actionGroup.add(actionSettings);
         actionGroup.add(actionExport);
+        actionGroup.add(actionImport);
 
         jpToolbar = new JPanel(new MigLayout());
         panel.add(jpToolbar, new CC().spanX());
