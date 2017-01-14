@@ -2,16 +2,14 @@ package core.importTemplates;
 
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import core.actions.executor.AccessPrivileges;
+import core.actions.executor.ActionExecutor;
 import core.actions.custom.SimpleAction;
 import core.export.ExportHelper;
 import core.importTemplates.models.CopyFileAction;
-import global.models.PackageTemplate;
 import global.utils.Logger;
 import global.utils.StringTools;
-import global.utils.factories.WrappersFactory;
 import global.utils.templates.PackageTemplateHelper;
-import global.visitors.CollectFileTemplatesVisitor;
 import global.wrappers.PackageTemplateWrapper;
 
 import java.io.File;
@@ -38,7 +36,7 @@ public class ImportHelper {
         File templatesDir = new File(ExportHelper.getFileTemplatesDirPath());
 
         //PackageTemplate Actions
-        for(File file :  selectedFiles){
+        for (File file : selectedFiles) {
             listSimpleAction.add(new CopyFileAction(
                     file,
                     new File(PackageTemplateHelper.getRootDirPath() + file.getName())
@@ -58,8 +56,12 @@ public class ImportHelper {
             }
         }
 
-        //todo run actions
-        Logger.log("importPackageTemplate  Done!");
+        if (ActionExecutor.runAsTransaction(project, listSimpleAction, "Import PackageTemplates", AccessPrivileges.WRITE)) {
+            Logger.log("importPackageTemplate  Done!");
+        } else {
+            //todo revert?
+            Logger.log("importPackageTemplate  Fail!");
+        }
     }
 
     /**
@@ -69,7 +71,7 @@ public class ImportHelper {
      */
     private static boolean isResourcesAvailable(HashSet<String> requiredTemplateNames, ArrayList<File> selectedFiles, ArrayList<File> availableFileTemplates) {
         for (File file : selectedFiles) {
-            // Check FileTemp Dir
+            // Verify FileTemp Dir
             if (!containsDirectoryByName(file, FileTemplatesScheme.TEMPLATES_DIR)) {
                 Logger.log("no FileTemplates dir for " + file.getName());
                 return false;
@@ -97,6 +99,20 @@ public class ImportHelper {
                 return false;
             }
         }
+
+        //Verify existence of PackageTemplate in IDE
+//        File ptDir = PackageTemplateHelper.getRootDir();
+//        for (File file : selectedFiles) {
+//            File templateFile = new File(ptDir.getPath() + File.separator + file.getName());
+//            if (templateFile.exists() && !templateFile.isDirectory()) {
+//                //todo dlg ask to replace | remove | cancel
+//                Logger.log("isResourcesAvailable PackageTemplate Already exists in IDE!");
+//                if(!templateFile.delete()){
+//                    Logger.log("can't delete " + templateFile.getName());
+//                    return false;
+//                }
+//            }
+//        }
 
         return true;
     }

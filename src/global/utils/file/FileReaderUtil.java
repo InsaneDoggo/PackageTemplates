@@ -30,6 +30,8 @@ public class FileReaderUtil {
                 sb.append("\n");
                 line = br.readLine();
             }
+
+            br.close();
             return sb.toString();
         } catch (Exception e) {
             Logger.log("Error read file " + e.getMessage());

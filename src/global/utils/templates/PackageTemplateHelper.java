@@ -5,8 +5,6 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
 import core.export.ExportHelper;
 import core.importTemplates.ImportHelper;
 import global.Const;
@@ -77,7 +75,7 @@ public class PackageTemplateHelper {
     //=================================================================
     public static ArrayList<PackageTemplate> getListPackageTemplate() {
         //todo getListPackageTemplate
-        File root = rootDir();
+        File root = getRootDir();
         return new ArrayList<>();
     }
 
@@ -115,7 +113,7 @@ public class PackageTemplateHelper {
         return Paths.get(PathManager.getConfigPath()).toString() + File.separator + Const.PACKAGE_TEMPLATES_DIR_NAME + File.separator;
     }
 
-    private static File rootDir() {
+    public static File getRootDir() {
         File file = new File(getRootDirPath());
         file.mkdirs();
         return file;
