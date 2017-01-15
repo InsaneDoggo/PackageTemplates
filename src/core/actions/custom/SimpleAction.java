@@ -6,6 +6,9 @@ package core.actions.custom;
 public abstract class SimpleAction {
 
     protected boolean isEnabled = true;
+    /**
+     * true когда {@link #run()} успешно выполнен, false когда неудачно, либо когда был выполнен {@link #undo()}
+     */
     protected boolean isDone = false;
 
     /**

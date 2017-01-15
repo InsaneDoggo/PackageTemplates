@@ -160,9 +160,9 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 
     @Override
     public void onImportAction() {
-//        VirtualFile[] files = FileChooser.chooseFiles(FileReaderUtil.getDirectoryDescriptor(), project, null);
-        //todo remove
         VirtualFile[] files = FileChooser.chooseFiles(FileReaderUtil.getPackageTemplatesDescriptorForImport(), project,
+//                null);
+                //todo remove
                 LocalFileSystem.getInstance().findFileByIoFile(new File("E:" + File.separator + "Downloads")));
 
         if (files.length <= 0) {

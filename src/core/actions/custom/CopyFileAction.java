@@ -1,6 +1,5 @@
-package core.importTemplates.models;
+package core.actions.custom;
 
-import core.actions.custom.SimpleAction;
 import global.utils.file.FileWriter;
 
 import java.io.File;

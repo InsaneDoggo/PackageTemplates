@@ -43,8 +43,12 @@ public class ExportHelper {
     }
 
     private static void askUserToOverwriteTemplate(final Project project, final PackageTemplateWrapper ptWrapper, final HashSet<String> hsFileTemplateNames, final File rootDir) {
-        new SimpleConfirmationDialog(project, Localizer.get("question.Overwrite"), Localizer.get("warning.PackageTemplateAlreadyExist"),
-                Localizer.get("action.Overwrite"), Localizer.get("action.Cancel")) {
+        new SimpleConfirmationDialog(project,
+                Localizer.get("question.Overwrite"),
+                Localizer.get("warning.PackageTemplateAlreadyExist"),
+                Localizer.get("action.Overwrite"),
+                Localizer.get("action.Cancel")
+        ) {
             @Override
             public void onOk() {
                 FileWriter.removeDirectoryExceptRoot(rootDir);
@@ -77,11 +81,8 @@ public class ExportHelper {
         File[] j2eeFiles = new File(getFileTemplatesDirPath() + Const.DIR_J2EE).listFiles();
 
         ArrayList<File> filesToCopy = new ArrayList<>();
-        for (
-                String name : hsFileTemplateNames)
-
-        {
-            File file = findInArray(name, userFiles, internalFiles, j2eeFiles);
+        for (String name : hsFileTemplateNames) {
+            File file = findInArrays(name, userFiles, internalFiles, j2eeFiles);
             if (file != null) {
                 filesToCopy.add(file);
             } else {
@@ -90,10 +91,7 @@ public class ExportHelper {
             }
         }
 
-        for (
-                File file : filesToCopy)
-
-        {
+        for (File file : filesToCopy) {
             boolean isSuccess = FileWriter.copyFile(file.toPath(), Paths.get(rootDir.getPath()
                     + File.separator + FileTemplatesScheme.TEMPLATES_DIR
                     + File.separator + file.getName()));
@@ -104,7 +102,7 @@ public class ExportHelper {
         }
     }
 
-    private static File findInArray(String name, File[]... arrays) {
+    public static File findInArrays(String name, File[]... arrays) {
         for (int arrayPos = 0; arrayPos < arrays.length; arrayPos++) {
             File[] files = arrays[arrayPos];
 
