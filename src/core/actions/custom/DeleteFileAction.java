@@ -1,12 +1,9 @@
 package core.actions.custom;
 
-import global.utils.Logger;
 import global.utils.file.FileReaderUtil;
 import global.utils.file.FileWriter;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 /**
  * Created by Arsen on 09.01.2017.
@@ -24,29 +21,39 @@ public class DeleteFileAction extends SimpleAction {
 
     @Override
     public boolean run() {
-        try {
-            // save temp data
-            pathToRestore = fileToDelete.getPath();
-            contentToRestore = FileReaderUtil.readFile(fileToDelete);
-            if(contentToRestore == null){
-                throw new RuntimeException("Saving contentToRestore Failed");
-            }
+        // save temp data
+        pathToRestore = fileToDelete.getPath();
 
-            //delete
-            Files.delete(fileToDelete.toPath());
-            isDone = true;
-        } catch (IOException e) {
-            Logger.log("DeleteFileAction run ex: " + e.getMessage());
-            isDone = false;
+        if (fileToDelete.isDirectory()) {
+            removeDir();
+        } else {
+            removeFile();
         }
         return isDone;
     }
 
+    private void removeDir() {
+        //todo save temp dir include files/subdirs
+        isDone = FileWriter.removeDirectory(fileToDelete);
+    }
+
+    private void removeFile() {
+        contentToRestore = FileReaderUtil.readFile(fileToDelete);
+        if (contentToRestore == null) {
+            throw new RuntimeException("Saving contentToRestore Failed");
+        }
+        isDone = FileWriter.removeFile(fileToDelete);
+    }
+
     @Override
     public boolean undo() {
-        boolean isRestored = FileWriter.writeStringToFile(contentToRestore, pathToRestore);
-        isDone = !isRestored;
-        return isRestored;
+        if (fileToDelete.isDirectory()) {
+            //todo restore temp dir include files/subdirs
+            isDone = !FileWriter.createDirectory(fileToDelete);
+        } else {
+            isDone = !FileWriter.writeStringToFile(contentToRestore, pathToRestore);
+        }
+        return !isDone;
     }
 
 

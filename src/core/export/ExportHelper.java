@@ -2,6 +2,12 @@ package core.export;
 
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.project.Project;
+import core.actions.custom.CopyFileAction;
+import core.actions.custom.CreateFileAction;
+import core.actions.custom.DeleteFileAction;
+import core.actions.custom.SimpleAction;
+import core.actions.executor.AccessPrivileges;
+import core.actions.executor.ActionExecutor;
 import global.Const;
 import global.dialogs.SimpleConfirmationDialog;
 import global.models.PackageTemplate;
@@ -24,26 +30,37 @@ import java.util.HashSet;
  */
 public class ExportHelper {
 
-    @NotNull
-    public static String getFileTemplatesDirPath() {
-        return FileTemplatesScheme.DEFAULT.getTemplatesDir() + File.separator;
+    private static class Context {
+        Project project;
+        String pathDir;
+        PackageTemplateWrapper ptWrapper;
+        HashSet<String> hsFileTemplateNames;
+        ArrayList<SimpleAction> listSimpleAction;
+
+        public Context(Project project, String pathDir, PackageTemplateWrapper ptWrapper, HashSet<String> hsFileTemplateNames) {
+            this.project = project;
+            this.pathDir = pathDir;
+            this.ptWrapper = ptWrapper;
+            this.hsFileTemplateNames = hsFileTemplateNames;
+
+            listSimpleAction = new ArrayList<>();
+        }
     }
 
     @Nullable
     public static void exportPackageTemplate(Project project, String pathDir, PackageTemplateWrapper ptWrapper, HashSet<String> hsFileTemplateNames) {
-        Logger.log("exportPackageTemplate ");
+        Context ctx = new Context(project, pathDir, ptWrapper, hsFileTemplateNames);
 
-        // Make Container Dir
         File rootDir = new File(pathDir + File.separator + ptWrapper.getPackageTemplate().getName());
         if (rootDir.exists()) {
-            askUserToOverwriteTemplate(project, ptWrapper, hsFileTemplateNames, rootDir);
+            askAboutFileConflict(ctx, rootDir);
         } else {
-            onExportConfirmed(ptWrapper, hsFileTemplateNames, rootDir);
+            onExportConfirmed(ctx, rootDir);
         }
     }
 
-    private static void askUserToOverwriteTemplate(final Project project, final PackageTemplateWrapper ptWrapper, final HashSet<String> hsFileTemplateNames, final File rootDir) {
-        new SimpleConfirmationDialog(project,
+    private static void askAboutFileConflict(Context ctx, File rootDir) {
+        new SimpleConfirmationDialog(ctx.project,
                 Localizer.get("question.Overwrite"),
                 Localizer.get("warning.PackageTemplateAlreadyExist"),
                 Localizer.get("action.Overwrite"),
@@ -51,55 +68,61 @@ public class ExportHelper {
         ) {
             @Override
             public void onOk() {
-                FileWriter.removeDirectoryExceptRoot(rootDir);
-                onExportConfirmed(ptWrapper, hsFileTemplateNames, rootDir);
+                ctx.listSimpleAction.add(new DeleteFileAction(rootDir));
+                onExportConfirmed(ctx, rootDir);
             }
         };
     }
 
-    private static void onExportConfirmed(PackageTemplateWrapper ptWrapper, HashSet<String> hsFileTemplateNames, File rootDir) {
+    private static void onExportConfirmed(Context ctx, File rootDir) {
         // Write PackageTemplate
-        String ptJson = GsonFactory.getInstance().toJson(ptWrapper.getPackageTemplate(), PackageTemplate.class);
-        boolean isWritePtSuccess = FileWriter.writeStringToFile(ptJson,
-                String.format("%s%s%s.%s",
-                        rootDir.getPath(),
-                        File.separator,
-                        ptWrapper.getPackageTemplate().getName(),
-                        Const.PACKAGE_TEMPLATES_EXTENSION
-                )
-        );
-        if (!isWritePtSuccess)
+        String ptJson = GsonFactory.getInstance().toJson(ctx.ptWrapper.getPackageTemplate(), PackageTemplate.class);
+        File ptFile = new File(String.format("%s%s%s.%s",
+                rootDir.getPath(),
+                File.separator,
+                ctx.ptWrapper.getPackageTemplate().getName(),
+                Const.PACKAGE_TEMPLATES_EXTENSION
+        ));
 
-        {
-            //todo Writing ptJson failed, revert changes?
-            throw new RuntimeException("Writing ptJson failed");
-        }
+        ctx.listSimpleAction.add(new CreateFileAction(ptFile, ptJson));
 
         // Write FileTemplates
         File[] userFiles = new File(getFileTemplatesDirPath() + Const.DIR_USER).listFiles();
         File[] internalFiles = new File(getFileTemplatesDirPath() + Const.DIR_INTERNAL).listFiles();
         File[] j2eeFiles = new File(getFileTemplatesDirPath() + Const.DIR_J2EE).listFiles();
 
-        ArrayList<File> filesToCopy = new ArrayList<>();
-        for (String name : hsFileTemplateNames) {
+        for (String name : ctx.hsFileTemplateNames) {
             File file = findInArrays(name, userFiles, internalFiles, j2eeFiles);
             if (file != null) {
-                filesToCopy.add(file);
+                ctx.listSimpleAction.add(new CopyFileAction(
+                        file,
+                        Paths.get(rootDir.getPath()
+                                + File.separator
+                                + FileTemplatesScheme.TEMPLATES_DIR
+                                + File.separator
+                                + file.getName()).toFile()
+                ));
             } else {
                 //todo FileTemplate not found
                 Logger.log("FileTemplate not found: " + name);
             }
         }
 
-        for (File file : filesToCopy) {
-            boolean isSuccess = FileWriter.copyFile(file.toPath(), Paths.get(rootDir.getPath()
-                    + File.separator + FileTemplatesScheme.TEMPLATES_DIR
-                    + File.separator + file.getName()));
-            if (!isSuccess) {
-                //todo FileTemplate not written
-                Logger.log("FileTemplate not written");
-            }
+        if (ActionExecutor.runAsTransaction(ctx.project, ctx.listSimpleAction, "Import PackageTemplates", AccessPrivileges.WRITE)) {
+            Logger.log("ExportPackageTemplate  Done!");
+        } else {
+            //todo revert?
+            Logger.log("ExportPackageTemplate  Fail!");
         }
+    }
+
+
+    //=================================================================
+    //  Utils
+    //=================================================================
+    @NotNull
+    public static String getFileTemplatesDirPath() {
+        return FileTemplatesScheme.DEFAULT.getTemplatesDir() + File.separator;
     }
 
     public static File findInArrays(String name, File[]... arrays) {

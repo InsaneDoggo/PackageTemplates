@@ -7,6 +7,7 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.io.FileAttributes;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileAttribute;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -166,19 +168,20 @@ public class FileWriter {
         }
     }
 
+    public static boolean createDirectory(File dir) {
+        try {
+            Files.createDirectories(dir.toPath());
+            return true;
+        } catch (IOException e) {
+            Logger.log("createDirectory ex: " + e.getMessage());
+            return false;
+        }
+    }
+
 
     //=================================================================
     //  Delete
     //=================================================================
-    public static boolean removeDirectoryExceptRoot(File dir) {
-        String path = dir.getPath();
-        boolean result = removeDirectory(dir);
-        if (!result) return false;
-
-        new File(path).mkdirs();
-        return true;
-    }
-
     public static boolean removeDirectory(File dir) {
         try {
             Files.walkFileTree(dir.toPath(), new FileVisitor<Path>() {
@@ -211,5 +214,14 @@ public class FileWriter {
         }
     }
 
+    public static boolean removeFile(File file) {
+        try {
+            Files.delete(file.toPath());
+            return true;
+        } catch (IOException e) {
+            Logger.log("removeFile ex: " + e.getMessage());
+            return false;
+        }
+    }
 
 }
