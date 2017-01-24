@@ -285,17 +285,22 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         actionAddToFavourites = new BaseAction(AllIcons.Toolwindows.ToolWindowFavorites) {
             @Override
             public void actionPerformed(AnActionEvent e) {
-                String path = btnPath.getText();
-                if (!FileValidator.isValidTemplatePath(path)) {
-                    Messages.showErrorDialog(project, Localizer.get("warning.select.packageTemplate"), Localizer.get("title.SystemMessage"));
-                    return;
-                }
+                String path = getSelectedPath();
+                switch (templateSourceType) {
+                    case FAVOURITE:
+                        presenter.removeFavourite(path);
+                        break;
+                    case PATH:
+                        if (!FileValidator.isValidTemplatePath(path)) {
+                            Messages.showErrorDialog(project, Localizer.get("warning.select.packageTemplate"), Localizer.get("title.SystemMessage"));
+                            return;
+                        }
 
-                presenter.onAddToFavourites(path);
+                        presenter.addFavourite(path);
+                        break;
+                }
             }
         };
-
-        //todo add favourite
     }
 
 
@@ -317,10 +322,11 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         rbFromPath = new JBRadioButton(Localizer.get("label.FromPath"));
         rbFromPath.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                actionAdd.setEnabled(true);
-                actionAddToFavourites.setEnabled(true);
-                selectedPath = null;
-                componentForValidation = btnPath;
+                toggleSourcePath(
+                        TemplateSourceType.PATH,
+                        null,
+                        btnPath
+                );
             }
         });
         panel.add(rbFromPath, new CC().growX().spanX().wrap());
@@ -345,7 +351,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     }
 
     private void buildFavouritesUI() {
-        Logger.log("buildFavouritesUI ");
         resetFavourites();
         createFavouriteRadioButtons();
 
@@ -371,12 +376,12 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
     @Override
     public void selectFavourite(Favourite selected) {
-        if(listButtons == null && selected == null){
+        if (listButtons == null && selected == null) {
             return;
         }
 
-        for(FavouriteRadioButton item : listButtons){
-            if(item.getFavouritePath().equals(selected.getPath())){
+        for (FavouriteRadioButton item : listButtons) {
+            if (item.getFavouritePath().equals(selected.getPath())) {
                 item.doClick();
             }
         }
@@ -408,10 +413,11 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
             FavouriteRadioButton radioButton = new FavouriteRadioButton(PackageTemplateHelper.createNameFromPath(file), PluginIcons.PACKAGE_TEMPLATES);
             radioButton.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    actionAdd.setEnabled(false);
-                    actionAddToFavourites.setEnabled(false);
-                    selectedPath = favourite.getPath();
-                    componentForValidation = radioButton;
+                    toggleSourcePath(
+                            TemplateSourceType.FAVOURITE,
+                            favourite.getPath(),
+                            radioButton
+                    );
                 }
             });
             radioButton.setFavouritePath(favourite.getPath());
@@ -422,11 +428,36 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
 
     //=================================================================
+    //  SourcePath
+    //=================================================================
+    private TemplateSourceType templateSourceType;
+
+    private void toggleSourcePath(TemplateSourceType sourceType, String path, JComponent component) {
+        templateSourceType = sourceType;
+        selectedPath = path;
+        componentForValidation = component;
+
+        switch (sourceType) {
+            case FAVOURITE:
+                actionAdd.setEnabled(false);
+                break;
+            case PATH:
+                actionAdd.setEnabled(true);
+//                actionAddToFavourites.setEnabled(true);
+                break;
+        }
+    }
+
+
+    //=================================================================
     //  Other
     //=================================================================
     private String getSelectedPath() {
-        if (selectedPath == null) {
-            return btnPath.getText();
+        switch (templateSourceType) {
+            case FAVOURITE:
+                return selectedPath;
+            case PATH:
+                return btnPath.getText();
         }
 
         return selectedPath;

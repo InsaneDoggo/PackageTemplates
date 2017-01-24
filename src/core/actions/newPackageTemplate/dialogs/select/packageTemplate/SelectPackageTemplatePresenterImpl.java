@@ -12,8 +12,6 @@ import core.state.util.SaveUtil;
 import global.Const;
 import global.models.Favourite;
 import global.models.PackageTemplate;
-import global.utils.CollectionHelper;
-import global.utils.Logger;
 import global.utils.factories.WrappersFactory;
 import global.utils.file.FileReaderUtil;
 import global.utils.file.FileValidator;
@@ -108,12 +106,12 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
                 // Replace Name
-                Favourite favourite = getFavourite(path);
+                Favourite favourite = getFavouriteByPath(path);
 
                 String newPath = path.replace(new File(path).getName(), packageTemplate.getName() + "." + Const.PACKAGE_TEMPLATES_EXTENSION);
                 PackageTemplateHelper.savePackageTemplate(packageTemplate, newPath);
 
-                if(favourite!=null){
+                if (favourite != null) {
                     favourite.setPath(newPath);
                     SaveUtil.editor().save();
                 }
@@ -129,36 +127,18 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
         dialog.show();
     }
 
-    private Favourite getFavourite(String path) {
-        ArrayList<Favourite> listFavourite = SaveUtil.reader().getListFavourite();
-        for(Favourite item : listFavourite){
-            if(item.getPath().equals(path)){
-                return item;
-            }
-        }
-
-        return null;
-    }
-
     @Override
-    public void onAddToFavourites(String path) {
+    public void addFavourite(String path) {
         if (!FileValidator.isUnderConfigDir(path)) {
             Messages.showErrorDialog(project, String.format(Localizer.get("warning.select.fromConfigDir"), PackageTemplateHelper.getRootDirPath()), Localizer.get("title.SystemMessage"));
             return;
         }
 
-        Favourite storedFavourite = CollectionHelper.getFavouriteByPath(SaveUtil.reader().getListFavourite(), path);
+        SaveUtil.editor()
+                .addFavourite(new Favourite(path, SaveUtil.reader().getListFavourite().size()))
+                .save();
 
-        if (storedFavourite != null) {
-            SaveUtil.editor()
-                    .removeFavourite(storedFavourite)
-                    .reorderFavourites()
-                    .save();
-        } else {
-            SaveUtil.editor()
-                    .addFavourite(new Favourite(path, SaveUtil.reader().getListFavourite().size()))
-                    .save();
-        }
+        view.updateFavouritesUI();
     }
 
     @Override
@@ -213,6 +193,29 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
     public void onSettingsAction() {
         SettingsDialog dialog = new SettingsDialog(project);
         dialog.show();
+    }
+
+    @Override
+    public void removeFavourite(String path) {
+        Favourite favourite = getFavouriteByPath(path);
+
+        SaveUtil.editor().removeFavourite(favourite).save();
+        view.updateFavouritesUI();
+    }
+
+
+    //=================================================================
+    //  Utils
+    //=================================================================
+    private Favourite getFavouriteByPath(String path) {
+        ArrayList<Favourite> listFavourite = SaveUtil.reader().getListFavourite();
+        for (Favourite item : listFavourite) {
+            if (item.getPath().equals(path)) {
+                return item;
+            }
+        }
+
+        return null;
     }
 
 }

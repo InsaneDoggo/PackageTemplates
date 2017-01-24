@@ -27,5 +27,7 @@ public interface SelectPackageTemplatePresenter {
 
     void onSettingsAction();
 
-    void onAddToFavourites(String path);
+    void addFavourite(String path);
+
+    void removeFavourite(String path);
 }
