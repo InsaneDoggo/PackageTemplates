@@ -108,9 +108,18 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
                 // Replace Name
+                Favourite favourite = getFavourite(path);
+
                 String newPath = path.replace(new File(path).getName(), packageTemplate.getName() + "." + Const.PACKAGE_TEMPLATES_EXTENSION);
                 PackageTemplateHelper.savePackageTemplate(packageTemplate, newPath);
-//                view.nodeChanged(selectedNode);
+
+                if(favourite!=null){
+                    favourite.setPath(newPath);
+                    SaveUtil.editor().save();
+                }
+
+                view.updateFavouritesUI();
+                view.selectFavourite(favourite);
             }
 
             @Override
@@ -118,6 +127,17 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             }
         };
         dialog.show();
+    }
+
+    private Favourite getFavourite(String path) {
+        ArrayList<Favourite> listFavourite = SaveUtil.reader().getListFavourite();
+        for(Favourite item : listFavourite){
+            if(item.getPath().equals(path)){
+                return item;
+            }
+        }
+
+        return null;
     }
 
     @Override

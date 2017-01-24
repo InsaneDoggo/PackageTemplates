@@ -1,5 +1,6 @@
 package global;
 
+import com.intellij.ide.fileTemplates.FileTemplateManager;
 import global.models.File;
 
 /**
@@ -24,6 +25,6 @@ public interface Const {
 
     String DIR_USER = "";
     String DIR_INTERNAL = "internal";
-    String DIR_J2EE = "j2ee";
+    String DIR_J2EE = FileTemplateManager.J2EE_TEMPLATES_CATEGORY.toLowerCase();
 
 }

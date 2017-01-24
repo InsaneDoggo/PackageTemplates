@@ -15,7 +15,7 @@ import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.IconUtil;
 import com.intellij.util.PlatformIcons;
-import core.actions.newPackageTemplate.Tester;
+import core.actions.generated.BaseAction;
 import core.state.util.SaveUtil;
 import global.models.Favourite;
 import global.models.PackageTemplate;
@@ -24,6 +24,7 @@ import global.utils.file.FileReaderUtil;
 import global.utils.file.FileValidator;
 import global.utils.templates.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
+import global.views.FavouriteRadioButton;
 import icons.PluginIcons;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
@@ -198,12 +199,12 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     private JPanel jpToolbar;
     private DefaultActionGroup actionGroup;
 
-    private AnAction actionAdd;
-    private AnAction actionEdit;
-    private AnAction actionSettings;
-    private AnAction actionExport;
-    private AnAction actionImport;
-    private AnAction actionAddToFavourites;
+    private BaseAction actionAdd;
+    private BaseAction actionEdit;
+    private BaseAction actionSettings;
+    private BaseAction actionExport;
+    private BaseAction actionImport;
+    private BaseAction actionAddToFavourites;
 
     private void makeToolBar() {
         actionGroup = new DefaultActionGroup();
@@ -220,12 +221,13 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         jpToolbar = new JPanel(new MigLayout());
         panel.add(jpToolbar, new CC().spanX());
 
-        refreshToolbar();
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
+        jpToolbar.add(toolbar.getComponent(), new CC().spanX());
     }
 
     private void initToolbarActions() {
         //Add
-        actionAdd = new AnAction(IconUtil.getAddIcon()) {
+        actionAdd = new BaseAction(IconUtil.getAddIcon()) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 presenter.onAddAction();
@@ -233,7 +235,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         //Edit
-        actionEdit = new AnAction(IconUtil.getEditIcon()) {
+        actionEdit = new BaseAction(IconUtil.getEditIcon()) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 if (FileValidator.isValidTemplatePath(getSelectedPath())) {
@@ -245,7 +247,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Settings
-        actionSettings = new AnAction(PlatformIcons.SHOW_SETTINGS_ICON) {
+        actionSettings = new BaseAction(PlatformIcons.SHOW_SETTINGS_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 // todo remove
@@ -256,7 +258,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Export
-        actionExport = new AnAction(PlatformIcons.EXPORT_ICON) {
+        actionExport = new BaseAction(PlatformIcons.EXPORT_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 if (FileValidator.isValidTemplatePath(getSelectedPath())) {
@@ -268,7 +270,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Import
-        actionImport = new AnAction(PlatformIcons.IMPORT_ICON) {
+        actionImport = new BaseAction(PlatformIcons.IMPORT_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 //todo delete
@@ -280,7 +282,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Add to Favourite
-        actionAddToFavourites = new AnAction(AllIcons.Toolwindows.ToolWindowFavorites) {
+        actionAddToFavourites = new BaseAction(AllIcons.Toolwindows.ToolWindowFavorites) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 String path = btnPath.getText();
@@ -295,13 +297,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
         //todo add favourite
     }
-
-    private void refreshToolbar() {
-        jpToolbar.removeAll();
-        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, actionGroup, true);
-        jpToolbar.add(toolbar.getComponent(), new CC().spanX());
-    }
-
 
 
     //=================================================================
@@ -322,11 +317,10 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         rbFromPath = new JBRadioButton(Localizer.get("label.FromPath"));
         rbFromPath.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
-                actionAdd.getTemplatePresentation().setEnabled(true);
-                actionAddToFavourites.getTemplatePresentation().setEnabled(true);
+                actionAdd.setEnabled(true);
+                actionAddToFavourites.setEnabled(true);
                 selectedPath = null;
                 componentForValidation = btnPath;
-                refreshToolbar();
             }
         });
         panel.add(rbFromPath, new CC().growX().spanX().wrap());
@@ -337,27 +331,63 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     //  Favourites
     //=================================================================
     private ButtonGroup buttonGroup;
-    private ArrayList<JBRadioButton> listButtons;
+    private ArrayList<FavouriteRadioButton> listButtons;
+    private JPanel favouritesPanel;
 
     private void makeFavourites() {
+        favouritesPanel = new JPanel(new MigLayout());
         buttonGroup = new ButtonGroup();
-        buttonGroup.add(rbFromPath);
-
         listButtons = new ArrayList<>();
+        buttonGroup.add(rbFromPath);
+        panel.add(favouritesPanel, new CC().growX().spanX().wrap());
+
+        buildFavouritesUI();
+    }
+
+    private void buildFavouritesUI() {
+        Logger.log("buildFavouritesUI ");
+        resetFavourites();
         createFavouriteRadioButtons();
 
         if (!listButtons.isEmpty()) {
-            panel.add(new SeparatorComponent(), new CC().growX().spanX().wrap());
-            panel.add(new JBLabel(Localizer.get("label.Favourites")), new CC().growX().spanX().pushX().wrap().alignX("center"));
+            favouritesPanel.add(new SeparatorComponent(), new CC().growX().spanX().wrap());
+            favouritesPanel.add(new JBLabel(Localizer.get("label.Favourites")), new CC().growX().spanX().pushX().wrap().alignX("center"));
 
             for (JBRadioButton radioButton : listButtons) {
-                panel.add(radioButton, new CC().growX().spanX().wrap());
+                favouritesPanel.add(radioButton, new CC().growX().spanX().wrap());
             }
 
             listButtons.get(0).doClick();
         } else {
             rbFromPath.doClick();
         }
+    }
+
+    @Override
+    public void updateFavouritesUI() {
+        buildFavouritesUI();
+        favouritesPanel.revalidate();
+    }
+
+    @Override
+    public void selectFavourite(Favourite selected) {
+        if(listButtons == null && selected == null){
+            return;
+        }
+
+        for(FavouriteRadioButton item : listButtons){
+            if(item.getFavouritePath().equals(selected.getPath())){
+                item.doClick();
+            }
+        }
+    }
+
+    private void resetFavourites() {
+        for (JBRadioButton btn : listButtons) {
+            buttonGroup.remove(btn);
+        }
+        listButtons.clear();
+        favouritesPanel.removeAll();
     }
 
     private void createFavouriteRadioButtons() {
@@ -375,16 +405,16 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                 continue;
             }
 
-            JBRadioButton radioButton = new JBRadioButton(PackageTemplateHelper.createNameFromPath(file), PluginIcons.PACKAGE_TEMPLATES);
+            FavouriteRadioButton radioButton = new FavouriteRadioButton(PackageTemplateHelper.createNameFromPath(file), PluginIcons.PACKAGE_TEMPLATES);
             radioButton.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-//                    actionAdd.getTemplatePresentation().setEnabled(false);
-                    actionAddToFavourites.getTemplatePresentation().setEnabled(false);
+                    actionAdd.setEnabled(false);
+                    actionAddToFavourites.setEnabled(false);
                     selectedPath = favourite.getPath();
                     componentForValidation = radioButton;
-                    refreshToolbar();
                 }
             });
+            radioButton.setFavouritePath(favourite.getPath());
             buttonGroup.add(radioButton);
             listButtons.add(radioButton);
         }

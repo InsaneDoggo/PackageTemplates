@@ -1,9 +1,7 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
+import global.models.Favourite;
 import global.models.PackageTemplate;
-
-import javax.swing.tree.DefaultMutableTreeNode;
-import java.util.List;
 
 /**
  * Created by Arsen on 17.09.2016.
@@ -15,5 +13,9 @@ public interface SelectPackageTemplateView {
     void onSuccess(PackageTemplate packageTemplate);
 
     void onCancel();
+
+    void updateFavouritesUI();
+
+    void selectFavourite(Favourite selected);
 
 }
