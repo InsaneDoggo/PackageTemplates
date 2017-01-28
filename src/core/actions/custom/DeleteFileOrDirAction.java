@@ -8,14 +8,14 @@ import java.io.File;
 /**
  * Created by Arsen on 09.01.2017.
  */
-public class DeleteFileAction extends SimpleAction {
+public class DeleteFileOrDirAction extends SimpleAction {
 
     private File fileToDelete;
 
     private String pathToRestore;
     private String contentToRestore;
 
-    public DeleteFileAction(File fileToDelete) {
+    public DeleteFileOrDirAction(File fileToDelete) {
         this.fileToDelete = fileToDelete;
     }
 

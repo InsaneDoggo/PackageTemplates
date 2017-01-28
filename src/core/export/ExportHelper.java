@@ -3,8 +3,8 @@ package core.export;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.project.Project;
 import core.actions.custom.CopyFileAction;
-import core.actions.custom.CreateFileAction;
-import core.actions.custom.DeleteFileAction;
+import core.actions.custom.CreateFileOrDirAction;
+import core.actions.custom.DeleteFileOrDirAction;
 import core.actions.custom.SimpleAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
@@ -14,7 +14,6 @@ import global.models.PackageTemplate;
 import global.utils.Logger;
 import global.utils.StringTools;
 import global.utils.factories.GsonFactory;
-import global.utils.file.FileWriter;
 import global.utils.i18n.Localizer;
 import global.wrappers.PackageTemplateWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +67,7 @@ public class ExportHelper {
         ) {
             @Override
             public void onOk() {
-                ctx.listSimpleAction.add(new DeleteFileAction(rootDir));
+                ctx.listSimpleAction.add(new DeleteFileOrDirAction(rootDir));
                 onExportConfirmed(ctx, rootDir);
             }
         };
@@ -84,7 +83,7 @@ public class ExportHelper {
                 Const.PACKAGE_TEMPLATES_EXTENSION
         ));
 
-        ctx.listSimpleAction.add(new CreateFileAction(ptFile, ptJson));
+        ctx.listSimpleAction.add(new CreateFileOrDirAction(ptFile, ptJson));
 
         // Write FileTemplates
         File[] userFiles = new File(getFileTemplatesDirPath() + Const.DIR_USER).listFiles();

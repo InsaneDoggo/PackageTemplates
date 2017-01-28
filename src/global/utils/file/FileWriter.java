@@ -12,6 +12,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.intellij.util.IncorrectOperationException;
 import global.utils.AttributesHelper;
 import global.utils.Logger;
 import global.utils.templates.FileTemplateHelper;
@@ -224,4 +225,13 @@ public class FileWriter {
         }
     }
 
+    public static boolean removeFile(PsiElement psiFile) {
+        try {
+            psiFile.delete();
+            return true;
+        } catch (IncorrectOperationException e){
+            Logger.log("removeFile ex: " + e.getMessage());
+            return false;
+        }
+    }
 }

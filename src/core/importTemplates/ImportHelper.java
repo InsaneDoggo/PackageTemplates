@@ -3,7 +3,7 @@ package core.importTemplates;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.project.Project;
 import core.actions.custom.CopyFileAction;
-import core.actions.custom.DeleteFileAction;
+import core.actions.custom.DeleteFileOrDirAction;
 import core.actions.custom.SimpleAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
@@ -104,8 +104,8 @@ public class ImportHelper {
 
     private static boolean inOrderToDelete(Context ctx, File fileTo) {
         for (SimpleAction action : ctx.listSimpleAction){
-            if(action instanceof DeleteFileAction){
-                File fileToDelete = ((DeleteFileAction) action).getFileToDelete();
+            if(action instanceof DeleteFileOrDirAction){
+                File fileToDelete = ((DeleteFileOrDirAction) action).getFileToDelete();
                 if(fileToDelete.getPath().equals(fileTo.getPath())){
                     return true;
                 }
@@ -190,7 +190,7 @@ public class ImportHelper {
         ) {
             @Override
             public void onOk() {
-                ctx.listSimpleAction.add(new DeleteFileAction(templateFile));
+                ctx.listSimpleAction.add(new DeleteFileOrDirAction(templateFile));
             }
 
             @Override

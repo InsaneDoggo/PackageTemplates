@@ -3,18 +3,16 @@ package core.actions.custom;
 import global.utils.file.FileWriter;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 /**
  * Created by Arsen on 09.01.2017.
  */
-public class CreateFileAction extends SimpleAction {
+public class CreateFileOrDirAction extends SimpleAction {
 
     private File file;
     private String content;
 
-    public CreateFileAction(File file, String content) {
+    public CreateFileOrDirAction(File file, String content) {
         this.file = file;
         this.content = content;
     }

@@ -1,7 +1,5 @@
 package core.actions.newPackageTemplate;
 
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -23,14 +21,10 @@ public class NewPackageTemplateAction extends AnAction {
     private VirtualFile virtualFile;
     private Project project;
 
-    LocalHistoryAction localHistoryAction;
-
     @Override
     public void actionPerformed(AnActionEvent event) {
         virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         project = event.getProject();
-
-        localHistoryAction = LocalHistory.getInstance().startAction("custom action local history");
 
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
@@ -40,12 +34,6 @@ public class NewPackageTemplateAction extends AnAction {
                 } else {
                     showDialog(pt, project, virtualFile);
                 }
-                localHistoryAction.finish();
-            }
-
-            @Override
-            public void onCancel() {
-                localHistoryAction.finish();
             }
         };
         dialog.show();

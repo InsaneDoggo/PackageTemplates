@@ -79,7 +79,8 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
     public abstract void onSuccess(PackageTemplate packageTemplate);
 
-    public abstract void onCancel();
+    public void onCancel() {
+    }
 
     @Override
     public void show() {
