@@ -5,13 +5,20 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import core.actions.custom.SimpleAction;
+import core.actions.executor.AccessPrivileges;
+import core.actions.executor.ActionExecutor;
 import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
 import global.models.PackageTemplate;
+import global.utils.Logger;
 import global.utils.ProgressHelper;
 import global.utils.i18n.Localizer;
 import global.utils.factories.WrappersFactory;
 import global.wrappers.PackageTemplateWrapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Arsen on 13.06.2016.
@@ -40,14 +47,15 @@ public class NewPackageTemplateAction extends AnAction {
     }
 
     public static void executeTemplateSilently(PackageTemplate pt, Project project, VirtualFile virtualFile) {
-        ProgressHelper.runProcessWithProgress(project, () -> {
+//        ProgressHelper.runProcessWithProgress(project, () -> {
             PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.USAGE);
             ptWrapper.prepareGlobals();
             ptWrapper.addGlobalVariablesToFileTemplates();
             ptWrapper.replaceNameVariable();
             ptWrapper.runElementsGroovyScript();
-            ptWrapper.writeTemplate(project, virtualFile);
-        });
+
+            collectAndExecuteActions(project, virtualFile, ptWrapper);
+//        });
     }
 
     public static void showDialog(PackageTemplate packageTemplate, Project project, VirtualFile virtualFile) {
@@ -55,9 +63,23 @@ public class NewPackageTemplateAction extends AnAction {
                 packageTemplate.getName()), packageTemplate, virtualFile) {
             @Override
             public void onSuccess(PackageTemplateWrapper ptWrapper) {
-                ProgressHelper.runProcessWithProgress(project, () -> ptWrapper.writeTemplate(project, virtualFile));
+//                ProgressHelper.runProcessWithProgress(project, () -> {
+                    collectAndExecuteActions(project, virtualFile, ptWrapper);
+//                });
             }
         }.show();
+    }
+
+    private static void collectAndExecuteActions(Project project, VirtualFile virtualFile, PackageTemplateWrapper ptWrapper) {
+        List<SimpleAction> listSimpleAction = new ArrayList<>();
+        ptWrapper.collectSimpleActions(project, virtualFile, listSimpleAction);
+
+        if (ActionExecutor.runAsTransaction(project, listSimpleAction, "ExecutePackageTemplate", AccessPrivileges.WRITE)) {
+            Logger.log("ExecutePackageTemplate  Done!");
+        } else {
+            //todo revert?
+            Logger.log("ExecutePackageTemplate  Fail!");
+        }
     }
 
 }

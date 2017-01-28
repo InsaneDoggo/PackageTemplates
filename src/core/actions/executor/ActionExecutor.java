@@ -8,6 +8,7 @@ import core.actions.custom.SimpleAction;
 import global.utils.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.FutureTask;
 
 /**
@@ -15,7 +16,7 @@ import java.util.concurrent.FutureTask;
  */
 public class ActionExecutor {
 
-    public static boolean runAsTransaction(Project project, ArrayList<SimpleAction> actions, String actionLabel, AccessPrivileges accessPrivileges) {
+    public static boolean runAsTransaction(Project project, List<SimpleAction> actions, String actionLabel, AccessPrivileges accessPrivileges) {
         // Action
         Computable<Boolean> computable = () -> {
             for (SimpleAction action : actions) {

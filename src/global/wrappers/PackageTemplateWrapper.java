@@ -12,6 +12,7 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GridBag;
+import core.actions.custom.SimpleAction;
 import global.dialogs.FailedFilesDialog;
 import global.models.*;
 import global.utils.*;
@@ -24,9 +25,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by Arsen on 07.07.2016.
@@ -223,18 +223,17 @@ public class PackageTemplateWrapper {
         rootElement.accept(new RunGroovyScriptVisitor());
     }
 
-    public void writeTemplate(Project project, VirtualFile virtualFile) {
-        PsiDirectory currentDir = ApplicationManager.getApplication().runReadAction((Computable<PsiDirectory>)
-                () -> FileWriter.findCurrentDirectory(project, virtualFile));
-
-        if (currentDir != null) {
-            failedElements = new ArrayList<>();
-            writtenElements = new ArrayList<>();
-            initDefaultProperties();
-            rootElement.accept(new WriteElementVisitor(currentDir, project));
-        }
-
-        ApplicationManager.getApplication().invokeLater(() -> checkWrittenElements(project));
+    public void collectSimpleActions(Project project, VirtualFile virtualFile, List<SimpleAction> listSimpleAction) {
+        ApplicationManager.getApplication().runReadAction(() -> {
+            PsiDirectory currentDir = FileWriter.findCurrentDirectory(project, virtualFile);
+            if (currentDir != null) {
+                failedElements = new ArrayList<>();
+                writtenElements = new ArrayList<>();
+                initDefaultProperties();
+                rootElement.accept(new CollectSimpleActionVisitor(currentDir, project, listSimpleAction));
+            }
+        });
+        //ApplicationManager.getApplication().invokeLater(() -> checkWrittenElements(project));
     }
 
     private void checkWrittenElements(final Project project) {

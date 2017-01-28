@@ -3,29 +3,26 @@ package global.utils.file;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.io.FileAttributes;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.IncorrectOperationException;
-import global.utils.AttributesHelper;
 import global.utils.Logger;
 import global.utils.templates.FileTemplateHelper;
 import global.wrappers.DirectoryWrapper;
+import global.wrappers.DirectoryWrapper;
 import global.wrappers.FileWrapper;
 import groovy.json.internal.Charsets;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileAttribute;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -133,6 +130,27 @@ public class FileWriter {
         return element;
     }
 
+    public static PsiElement createFileFromTemplate(Project project, FileTemplate template, String fileName, Properties properties, String parentPath) {
+        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(parentPath);
+        if (virtualFile == null) {
+            Logger.log("createFileFromTemplate virtualFile is NULL");
+            return null;
+        }
+
+        PsiDirectory psiParentDir = PsiManager.getInstance(project).findDirectory(virtualFile);
+        if (psiParentDir == null) {
+            Logger.log("createFileFromTemplate psiDirectory is NULL");
+            return null;
+        }
+
+        try {
+            return FileTemplateUtil.createFromTemplate(template, fileName, properties, psiParentDir);
+        } catch (Exception e) {
+            Logger.log("createFileFromTemplate ex: " + e.getMessage());
+            return null;
+        }
+    }
+
 
     //=================================================================
     //  Low Level I/O
@@ -229,9 +247,10 @@ public class FileWriter {
         try {
             psiFile.delete();
             return true;
-        } catch (IncorrectOperationException e){
+        } catch (IncorrectOperationException e) {
             Logger.log("removeFile ex: " + e.getMessage());
             return false;
         }
     }
+
 }

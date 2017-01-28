@@ -8,14 +8,14 @@ import java.io.File;
 /**
  * Created by Arsen on 09.01.2017.
  */
-public class DeleteFileOrDirAction extends SimpleAction {
+public class DeleteFileAction extends SimpleAction {
 
     private File fileToDelete;
 
     private String pathToRestore;
     private String contentToRestore;
 
-    public DeleteFileOrDirAction(File fileToDelete) {
+    public DeleteFileAction(File fileToDelete) {
         this.fileToDelete = fileToDelete;
     }
 
@@ -24,35 +24,18 @@ public class DeleteFileOrDirAction extends SimpleAction {
         // save temp data
         pathToRestore = fileToDelete.getPath();
 
-        if (fileToDelete.isDirectory()) {
-            removeDir();
-        } else {
-            removeFile();
-        }
-        return isDone;
-    }
-
-    private void removeDir() {
-        //todo save temp dir include files/subdirs
-        isDone = FileWriter.removeDirectory(fileToDelete);
-    }
-
-    private void removeFile() {
         contentToRestore = FileReaderUtil.readFile(fileToDelete);
         if (contentToRestore == null) {
             throw new RuntimeException("Saving contentToRestore Failed");
         }
         isDone = FileWriter.removeFile(fileToDelete);
+
+        return isDone;
     }
 
     @Override
     public boolean undo() {
-        if (fileToDelete.isDirectory()) {
-            //todo restore temp dir include files/subdirs
-            isDone = !FileWriter.createDirectory(fileToDelete);
-        } else {
-            isDone = !FileWriter.writeStringToFile(contentToRestore, pathToRestore);
-        }
+        isDone = !FileWriter.writeStringToFile(contentToRestore, pathToRestore);
         return !isDone;
     }
 
