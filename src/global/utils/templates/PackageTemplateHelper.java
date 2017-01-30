@@ -4,7 +4,11 @@ import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
 import core.export.ExportHelper;
 import core.importTemplates.ImportHelper;
+import core.state.Config;
+import core.state.util.SaveUtil;
+import core.state.util.StateReader;
 import global.Const;
+import global.models.Favourite;
 import global.models.PackageTemplate;
 import global.utils.Logger;
 import global.utils.factories.GsonFactory;
@@ -49,8 +53,17 @@ public class PackageTemplateHelper {
     //=================================================================
     public static ArrayList<PackageTemplate> getListPackageTemplate() {
         //todo getListPackageTemplate
-        File root = getRootDir();
-        return new ArrayList<>();
+        ArrayList<Favourite> favourites = SaveUtil.reader().getListFavourite();
+        ArrayList<PackageTemplate> templates = new ArrayList<>();
+
+        for (Favourite item : favourites) {
+            PackageTemplate pt = PackageTemplateHelper.getPackageTemplate(item.getPath());
+            if (pt != null) {
+                templates.add(pt);
+            }
+        }
+
+        return templates;
     }
 
     public static PackageTemplate getPackageTemplateByRelativePath(String relativePath) {

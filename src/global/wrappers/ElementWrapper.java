@@ -15,7 +15,7 @@ import global.listeners.ClickListener;
 import global.models.BaseElement;
 import global.utils.factories.WrappersFactory;
 import global.utils.i18n.Localizer;
-import icons.JetgroovyIcons;
+import icons.PluginIcons;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -82,7 +82,7 @@ public abstract class ElementWrapper extends BaseWrapper {
     private void addGroovyMenuItems(JPopupMenu popupMenu) {
         // With Groovy script
         if (getElement().getGroovyCode() != null && !getElement().getGroovyCode().isEmpty()) {
-            JMenuItem itemEditGroovy = new JBMenuItem(Localizer.get("EditGroovyScript"), JetgroovyIcons.Groovy.Groovy_16x16);
+            JMenuItem itemEditGroovy = new JBMenuItem(Localizer.get("EditGroovyScript"), PluginIcons.GROOVY);
             JMenuItem itemDeleteGroovy = new JBMenuItem(Localizer.get("DeleteGroovyScript"), AllIcons.Actions.Delete);
 
             itemEditGroovy.addActionListener(e -> new GroovyDialog(
@@ -103,7 +103,7 @@ public abstract class ElementWrapper extends BaseWrapper {
             popupMenu.add(itemDeleteGroovy);
         } else {
             // Without Groovy script
-            JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddGroovyScript"), JetgroovyIcons.Groovy.Groovy_16x16);
+            JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddGroovyScript"), PluginIcons.GROOVY);
 
             itemAddGroovy.addActionListener(e -> new GroovyDialog(getPackageTemplateWrapper().getProject()) {
                 @Override

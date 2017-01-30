@@ -1,5 +1,8 @@
 package core.groovy;
 
+import base.BaseDialog;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDocumentManager;
@@ -8,15 +11,10 @@ import com.intellij.psi.PsiFileFactory;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
-import base.BaseDialog;
 import global.listeners.ClickListener;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.plugins.groovy.GroovyFileType;
-import org.jetbrains.plugins.groovy.GroovyLanguage;
-import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
-import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
 import global.utils.factories.GridBagFactory;
 import global.utils.i18n.Localizer;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,11 +25,7 @@ import java.awt.event.MouseEvent;
  */
 public abstract class GroovyDialog extends BaseDialog {
 
-    private String code =
-            "\nstatic String getModifiedName(String name) {\n" +
-            "   //A small Example:\n" +
-            "   return name.toLowerCase();\n" +
-            "}\n";
+    private String code = ScriptExecutor.defaultCode;
 
     public GroovyDialog(@Nullable Project project, String code) {
         super(project);
@@ -64,10 +58,9 @@ public abstract class GroovyDialog extends BaseDialog {
     }
 
     private void createEditorField() {
-        PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("GroovyCode", GroovyLanguage.INSTANCE, code);
-        GroovyFile groovyFile = GroovyPsiElementFactory.getInstance(project).createGroovyFile(code, true, psiFile);
+        PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("Script", PlainTextLanguage.INSTANCE, code);
 
-        etfCode = new EditorTextField(PsiDocumentManager.getInstance(project).getDocument(groovyFile), project, GroovyFileType.GROOVY_FILE_TYPE);
+        etfCode = new EditorTextField(PsiDocumentManager.getInstance(project).getDocument(psiFile), project, PlainTextFileType.INSTANCE);
         etfCode.setOneLineMode(false);
     }
 
@@ -86,7 +79,7 @@ public abstract class GroovyDialog extends BaseDialog {
         btnTry.addMouseListener(new ClickListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                jlResult.setText(GroovyExecutor.runGroovy(etfCode.getText(), etfName.getText()));
+                jlResult.setText(ScriptExecutor.runScript(etfCode.getText(), etfName.getText()));
             }
         });
     }
@@ -107,7 +100,7 @@ public abstract class GroovyDialog extends BaseDialog {
 
     @Override
     protected ValidationInfo doValidate() {
-        return GroovyExecutor.ValidateGroovyCode(etfCode, etfName.getText());
+        return ScriptExecutor.ValidateGroovyCode(etfCode, etfName.getText());
     }
 
 }

@@ -1,10 +1,8 @@
 package global.wrappers;
 
-import com.google.common.collect.Lists;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -15,7 +13,8 @@ import com.intellij.util.ui.GridBag;
 import core.actions.custom.SimpleAction;
 import global.dialogs.FailedFilesDialog;
 import global.models.*;
-import global.utils.*;
+import global.utils.Logger;
+import global.utils.UIHelper;
 import global.utils.factories.GridBagFactory;
 import global.utils.file.FileWriter;
 import global.utils.i18n.Localizer;
@@ -25,8 +24,10 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by Arsen on 07.07.2016.
@@ -248,7 +249,8 @@ public class PackageTemplateWrapper {
                 public void onCancel() {
                     ApplicationManager.getApplication().runWriteAction(() -> {
                         try {
-                            for (PsiElement item : Lists.reverse(writtenElements)) {
+                            for (int pos = writtenElements.size()-1; pos >= 0; pos--) {
+                                PsiElement item = writtenElements.get(pos);
                                 item.delete();
                             }
                         } catch (Exception ex) {

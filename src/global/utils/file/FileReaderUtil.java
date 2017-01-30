@@ -1,14 +1,10 @@
 package global.utils.file;
 
-import com.google.common.base.Charsets;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import global.Const;
 import global.utils.Logger;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * Created by Arsen on 04.09.2016.
@@ -21,7 +17,7 @@ public class FileReaderUtil {
 
     public static String readFile(File file) {
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), Charsets.UTF_8));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), Const.charsets.UTF_8));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 

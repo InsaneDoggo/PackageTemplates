@@ -12,11 +12,11 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.IncorrectOperationException;
+import global.Const;
 import global.utils.Logger;
 import global.utils.templates.FileTemplateHelper;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.FileWrapper;
-import groovy.json.internal.Charsets;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -162,7 +162,7 @@ public class FileWriter {
         try {
             file.getParentFile().mkdirs();
             file.createNewFile();
-            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8));
+            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Const.charsets.UTF_8));
 
             out.write(text);
 

@@ -3,6 +3,8 @@ package global;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import global.models.File;
 
+import java.nio.charset.Charset;
+
 /**
  * Created by Arsen on 04.09.2016.
  */
@@ -26,5 +28,10 @@ public interface Const {
     String DIR_USER = "";
     String DIR_INTERNAL = "internal";
     String DIR_J2EE = FileTemplateManager.J2EE_TEMPLATES_CATEGORY.toLowerCase();
+
+    interface charsets {
+        Charset UTF_8 = Charset.forName("UTF-8");
+        Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
+    }
 
 }

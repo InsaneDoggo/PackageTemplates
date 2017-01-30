@@ -2,7 +2,7 @@ package global.utils.i18n;
 
 
 import core.state.util.SaveUtil;
-import org.apache.commons.codec.Charsets;
+import global.Const;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -47,7 +47,7 @@ public class Localizer {
 
     public static String get(String key, Language lang) {
         if (lang == Language.RU) {
-            return new String(getBundle(Language.RU).getString(key).getBytes(Charsets.ISO_8859_1), Charsets.UTF_8);
+            return new String(getBundle(Language.RU).getString(key).getBytes(Const.charsets.ISO_8859_1), Const.charsets.UTF_8);
         } else {
             return getBundle(lang).getString(key);
         }

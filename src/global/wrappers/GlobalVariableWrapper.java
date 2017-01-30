@@ -11,11 +11,10 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.GridBag;
 import global.listeners.ClickListener;
 import core.groovy.GroovyDialog;
-import core.groovy.GroovyExecutor;
+import core.groovy.ScriptExecutor;
 import global.utils.StringTools;
 import global.utils.highligt.HighlightHelper;
 import icons.PluginIcons;
-import icons.JetgroovyIcons;
 import org.jetbrains.annotations.NotNull;
 import global.models.GlobalVariable;
 import global.utils.factories.GridBagFactory;
@@ -131,7 +130,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
 
     private void addGroovyMenuItems(JPopupMenu popupMenu, Project project) {
         if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
-            JMenuItem itemEditGroovy = new JBMenuItem(Localizer.get("EditGroovyScript"), JetgroovyIcons.Groovy.Groovy_16x16);
+            JMenuItem itemEditGroovy = new JBMenuItem(Localizer.get("EditGroovyScript"), PluginIcons.GROOVY);
             itemEditGroovy.addActionListener(e -> new GroovyDialog(project, globalVariable.getGroovyCode()) {
                 @Override
                 public void onSuccess(String code) {
@@ -148,7 +147,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
             });
             popupMenu.add(itemDeleteGroovy);
         } else {
-            JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddGroovyScript"), JetgroovyIcons.Groovy.Groovy_16x16);
+            JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddGroovyScript"), PluginIcons.GROOVY);
             itemAddGroovy.addActionListener(e -> new GroovyDialog(project) {
                 @Override
                 public void onSuccess(String code) {
@@ -191,7 +190,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
 
     public void runGroovyScript() {
         if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
-            globalVariable.setValue(GroovyExecutor.runGroovy(globalVariable.getGroovyCode(), globalVariable.getValue()));
+            globalVariable.setValue(ScriptExecutor.runScript(globalVariable.getGroovyCode(), globalVariable.getValue()));
         }
     }
 

@@ -16,7 +16,6 @@
     <idea-version since-build="141.0"/>
 
     <depends>com.intellij.modules.lang</depends>
-    <depends>org.intellij.groovy</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceInterface="core.state.Config" serviceImplementation="core.state.Config"/>
