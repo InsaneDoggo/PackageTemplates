@@ -15,7 +15,6 @@ import com.intellij.util.IncorrectOperationException;
 import global.utils.Logger;
 import global.utils.templates.FileTemplateHelper;
 import global.wrappers.DirectoryWrapper;
-import global.wrappers.DirectoryWrapper;
 import global.wrappers.FileWrapper;
 import groovy.json.internal.Charsets;
 import org.jetbrains.annotations.Nullable;
@@ -187,14 +186,27 @@ public class FileWriter {
         }
     }
 
-    public static boolean createDirectory(File dir) {
-        try {
-            Files.createDirectories(dir.toPath());
-            return true;
-        } catch (IOException e) {
-            Logger.log("createDirectory ex: " + e.getMessage());
-            return false;
+    public static PsiDirectory createDirectory(Project project, File dir) {
+        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(dir.getParentFile().getPath());
+        if (virtualFile == null) {
+            Logger.log("createFileFromTemplate virtualFile is NULL");
+            return null;
         }
+
+        PsiDirectory psiParentDir = PsiManager.getInstance(project).findDirectory(virtualFile);
+        if (psiParentDir == null) {
+            Logger.log("createFileFromTemplate psiDirectory is NULL");
+            return null;
+        }
+
+        return psiParentDir.createSubdirectory(dir.getName());
+//        try {
+//            Files.createDirectories(dir.toPath());
+//            return true;
+//        } catch (IOException e) {
+//            Logger.log("createDirectory ex: " + e.getMessage());
+//            return false;
+//        }
     }
 
 

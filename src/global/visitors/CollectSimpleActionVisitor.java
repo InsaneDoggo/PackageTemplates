@@ -76,7 +76,7 @@ public class CollectSimpleActionVisitor implements ElementVisitor {
             java.io.File subDirectory = new java.io.File(subDir);
             if(!subDirectory.exists()){
                 // Create if not exist
-                listActions.add(new CreateDirectoryAction(subDirectory));
+                listActions.add(new CreateDirectoryAction(subDirectory, project));
             }
 
             pushPath(subDir);

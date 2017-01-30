@@ -7,7 +7,6 @@ import com.intellij.openapi.util.Computable;
 import core.actions.custom.SimpleAction;
 import global.utils.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.FutureTask;
 

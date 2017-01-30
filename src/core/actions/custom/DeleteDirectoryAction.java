@@ -1,5 +1,7 @@
 package core.actions.custom;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiDirectory;
 import global.utils.file.FileWriter;
 
 import java.io.File;
@@ -13,9 +15,11 @@ public class DeleteDirectoryAction extends SimpleAction {
 
     private String pathToRestore;
     private String contentToRestore;
+    private Project project;
 
-    public DeleteDirectoryAction(File fileDirToDelete) {
+    public DeleteDirectoryAction(File fileDirToDelete, Project project) {
         this.fileDirToDelete = fileDirToDelete;
+        this.project = project;
     }
 
     @Override
@@ -32,7 +36,8 @@ public class DeleteDirectoryAction extends SimpleAction {
     @Override
     public boolean undo() {
             //todo restore temp dir include files/subdirs
-            isDone = !FileWriter.createDirectory(fileDirToDelete);
+        PsiDirectory psiResultDirectory = FileWriter.createDirectory(project, fileDirToDelete);
+        isDone = psiResultDirectory == null;
         return !isDone;
     }
 
