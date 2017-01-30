@@ -128,13 +128,11 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     @Override
     protected ValidationInfo doValidate() {
         if (skipValidation) {
-            Logger.log("doValidate  SKIP");
             setValidationDelay(VALIDATION_HUGE_DELAY);
             skipValidation = false;
             return null;
         }
 
-        Logger.log("doValidate ");
         if (selectedPath == null) {
             return presenter.doValidate(getSelectedPath(), btnPath);
         }
@@ -151,7 +149,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     protected class MyOkAction extends OkAction {
         @Override
         protected void doAction(ActionEvent e) {
-            Logger.log("set validation delay 300");
             setValidationDelay(VALIDATION_DELAY);
             initValidation();
             super.doAction(e);
@@ -333,6 +330,10 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         panel.add(rbFromPath, new CC().growX().spanX().wrap());
     }
 
+    @Override
+    public void setPathBtnText(String path) {
+        btnPath.setText(path);
+    }
 
     //=================================================================
     //  Favourites
@@ -400,9 +401,12 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         ArrayList<Favourite> listFavourite = SaveUtil.reader().getListFavourite();
         listFavourite.sort(Comparator.comparingInt(Favourite::getOrder));
 
+        ArrayList<Favourite> favouritesToDelete = new ArrayList<>();
+
         for (Favourite favourite : listFavourite) {
             File file = new File(favourite.getPath());
             if (!FileValidator.isTemplateFileValid(file)) {
+                favouritesToDelete.add(favourite);
                 continue;
             }
 
@@ -425,6 +429,12 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
             buttonGroup.add(radioButton);
             listButtons.add(radioButton);
         }
+
+        // Delete Invalid templates
+        for (Favourite favourite : favouritesToDelete) {
+            SaveUtil.editor().removeFavourite(favourite);
+        }
+        SaveUtil.editor().save();
     }
 
 

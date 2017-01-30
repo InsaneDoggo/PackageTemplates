@@ -82,8 +82,10 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
                 VirtualFile[] files = FileChooser.chooseFiles(FileReaderUtil.getDirectoryDescriptor(), project,
                         LocalFileSystem.getInstance().findFileByIoFile(new File(PackageTemplateHelper.getRootDirPath())));
                 if (files.length > 0) {
-                    PackageTemplateHelper.savePackageTemplate(packageTemplate,
-                            String.format("%s/%s.%s", files[0].getPath(), packageTemplate.getName(), Const.PACKAGE_TEMPLATES_EXTENSION));
+                    String path = String.format("%s/%s.%s", files[0].getPath(), packageTemplate.getName(), Const.PACKAGE_TEMPLATES_EXTENSION);
+                    PackageTemplateHelper.savePackageTemplate(packageTemplate, path);
+
+                    view.setPathBtnText(path);
                 }
             }
 
