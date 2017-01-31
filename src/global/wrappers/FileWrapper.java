@@ -64,14 +64,8 @@ public class FileWrapper extends ElementWrapper {
             return;
         }
 
-        String[] unsetAttributes = AttributesHelper.getUnsetAttrs(fileTemplate, getPackageTemplateWrapper().getProject());
-        if (unsetAttributes == null || unsetAttributes.length <= 0) {
-            return;
-        }
-
-        panelVariables = new CreateFromTemplatePanel(AttributesHelper.getNonGlobalAttributes(
-                unsetAttributes,
-                getPackageTemplateWrapper().getPackageTemplate().getListGlobalVariable()),
+        panelVariables = new CreateFromTemplatePanel(
+                AttributesHelper.getUnsetAttributes(fileTemplate, getPackageTemplateWrapper()),
                 false,
                 null
         );

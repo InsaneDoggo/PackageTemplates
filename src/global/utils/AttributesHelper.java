@@ -1,6 +1,7 @@
 package global.utils;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
+import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
 import global.models.GlobalVariable;
 import global.wrappers.PackageTemplateWrapper;
@@ -13,47 +14,44 @@ import java.util.*;
  */
 public class AttributesHelper {
 
-    private static final ArrayList<String> listAttributesToRemove = new ArrayList<String>() {{
-        add(FileTemplate.ATTRIBUTE_NAME);
-        add(FileTemplate.ATTRIBUTE_PACKAGE_NAME);
-        add(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME);
-    }};
+    private static HashSet<String> listDefaultAttributeNames;
 
-    public static String[] getUnsetAttrs(FileTemplate fileTemplate, Project project) {
-        try {
-            return getWithoutDefaultAttributes(fileTemplate.getUnsetAttributes(new Properties(), project));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+    public static HashSet<String> getDefaultAttributeNames(Project project) {
+        if (listDefaultAttributeNames == null) {
+            listDefaultAttributeNames = new HashSet<>();
 
-    private static String[] getWithoutDefaultAttributes(String[] unsetAttributes) {
-        ArrayList<String> list = new ArrayList<>();
-        list.addAll(Arrays.asList(unsetAttributes));
+            listDefaultAttributeNames.add(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME);
+            listDefaultAttributeNames.add(FileTemplate.ATTRIBUTE_NAME);
+            listDefaultAttributeNames.add(FileTemplate.ATTRIBUTE_PACKAGE_NAME);
 
-        list.removeIf(listAttributesToRemove::contains);
-
-        return list.toArray(new String[list.size()]);
-    }
-
-    public static String[] getNonGlobalAttributes(String[] unsetAttributes, ArrayList<GlobalVariable> listGlobalVariable) {
-        List<String> listUnset = new ArrayList<>(Arrays.asList(unsetAttributes));
-        List<String> listGlobals = new ArrayList<>();
-
-        for (GlobalVariable variable : listGlobalVariable) {
-            listGlobals.add(variable.getName());
-        }
-
-        Iterator<String> iterator = listUnset.iterator();
-
-        while (iterator.hasNext()) {
-            String next = iterator.next();
-            if (listGlobals.contains(next)) {
-                iterator.remove();
+            Properties defaultProperties = FileTemplateManager.getInstance(project).getDefaultProperties();
+            for (Object Property : defaultProperties.keySet()) {
+                listDefaultAttributeNames.add((String) Property);
             }
         }
 
-        return listUnset.toArray(new String[listUnset.size()]);
+        return listDefaultAttributeNames;
+    }
+
+    public static String[] getUnsetAttributes(FileTemplate fileTemplate, PackageTemplateWrapper ptWrapper) {
+        HashSet<String> defaultAttributeNames = getDefaultAttributeNames(ptWrapper.getProject());
+
+        // Add globals vars
+        for (GlobalVariable variable : ptWrapper.getPackageTemplate().getListGlobalVariable()) {
+            defaultAttributeNames.add(variable.getName());
+        }
+
+        Properties properties = new Properties();
+        for (String item : defaultAttributeNames) {
+            properties.put(item, "fakeValue");
+        }
+
+        //parse
+        try {
+            return fileTemplate.getUnsetAttributes(properties, ptWrapper.getProject());
+        } catch (ParseException e) {
+            Logger.log("getUnsetAttributes ex: " + e.getMessage());
+            return new String[0];
+        }
     }
 }

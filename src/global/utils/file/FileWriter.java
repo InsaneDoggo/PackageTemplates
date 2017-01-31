@@ -200,13 +200,16 @@ public class FileWriter {
         }
 
         return psiParentDir.createSubdirectory(dir.getName());
-//        try {
-//            Files.createDirectories(dir.toPath());
-//            return true;
-//        } catch (IOException e) {
-//            Logger.log("createDirectory ex: " + e.getMessage());
-//            return false;
-//        }
+    }
+
+    public static boolean createDirectories(Path path) {
+        try {
+            Files.createDirectories(path);
+            return true;
+        } catch (IOException e) {
+            Logger.log("createDirectory ex: " + e.getMessage());
+            return false;
+        }
     }
 
 
