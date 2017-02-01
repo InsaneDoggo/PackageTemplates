@@ -16,6 +16,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.IconUtil;
 import com.intellij.util.PlatformIcons;
 import core.actions.generated.BaseAction;
+import core.actions.newPackageTemplate.Tester;
 import core.state.util.SaveUtil;
 import global.models.Favourite;
 import global.models.PackageTemplate;
@@ -248,10 +249,8 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         actionSettings = new BaseAction(PlatformIcons.SHOW_SETTINGS_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
-                // todo remove
-                resetValidation();
 //                new Tester().runMockAction(project);
-                //presenter.onSettingsAction();
+                presenter.onSettingsAction();
             }
         };
 
