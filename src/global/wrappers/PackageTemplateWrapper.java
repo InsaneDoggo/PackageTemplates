@@ -10,7 +10,9 @@ import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GridBag;
-import core.actions.custom.SimpleAction;
+import core.actions.custom.CreateDirectoryAction;
+import core.actions.custom.DummyDirectoryAction;
+import core.actions.custom.base.SimpleAction;
 import global.dialogs.FailedFilesDialog;
 import global.models.*;
 import global.utils.Logger;
@@ -36,6 +38,7 @@ public class PackageTemplateWrapper {
 
     public static final String ATTRIBUTE_BASE_NAME = "BASE_NAME";
     public static final String PATTERN_BASE_NAME = "${" + ATTRIBUTE_BASE_NAME + "}";
+
     public enum ViewMode {EDIT, CREATE, USAGE}
 
     private Project project;
@@ -231,10 +234,32 @@ public class PackageTemplateWrapper {
                 failedElements = new ArrayList<>();
                 writtenElements = new ArrayList<>();
                 initDefaultProperties();
-                rootElement.accept(new CollectSimpleActionVisitor(currentDir, project, listSimpleAction));
+
+                SimpleAction rootAction;
+                if (packageTemplate.isSkipRootDirectory()) {
+                    // Without root
+                    rootAction = new DummyDirectoryAction(project, currentDir);
+                    listSimpleAction.add(rootAction);
+                } else {
+                    // With root
+                    rootAction = new CreateDirectoryAction(packageTemplate.getDirectory(), project);
+                    listSimpleAction.add(wrapInDummyDirAction(rootAction, currentDir));
+                }
+
+                CollectSimpleActionVisitor visitor = new CollectSimpleActionVisitor(rootAction, project);
+
+                for (ElementWrapper elementWrapper : rootElement.getListElementWrapper()) {
+                    elementWrapper.accept(visitor);
+                }
             }
         });
         //ApplicationManager.getApplication().invokeLater(() -> checkWrittenElements(project));
+    }
+
+    private SimpleAction wrapInDummyDirAction(SimpleAction simpleAction, PsiDirectory currentDir) {
+        DummyDirectoryAction dummyAction = new DummyDirectoryAction(project, currentDir);
+        dummyAction.addAction(simpleAction);
+        return  dummyAction;
     }
 
     private void checkWrittenElements(final Project project) {
@@ -249,7 +274,7 @@ public class PackageTemplateWrapper {
                 public void onCancel() {
                     ApplicationManager.getApplication().runWriteAction(() -> {
                         try {
-                            for (int pos = writtenElements.size()-1; pos >= 0; pos--) {
+                            for (int pos = writtenElements.size() - 1; pos >= 0; pos--) {
                                 PsiElement item = writtenElements.get(pos);
                                 item.delete();
                             }

@@ -2,6 +2,7 @@ package core.actions.custom;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
+import core.actions.custom.base.SimpleAction;
 import global.utils.file.FileWriter;
 
 import java.io.File;
@@ -23,19 +24,24 @@ public class DeleteDirectoryAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
+    public boolean run(SimpleAction parentAction) {
         // save temp data
         pathToRestore = fileDirToDelete.getPath();
 
         //todo save temp dir include files/subdirs
-        isDone = FileWriter.removeDirectory(fileDirToDelete);
+        if(!FileWriter.removeDirectory(fileDirToDelete)){
+            isDone = false;
+            return false;
+        }
 
-        return isDone;
+        return super.run(this);
     }
 
     @Override
-    public boolean undo() {
-            //todo restore temp dir include files/subdirs
+    public boolean undo(SimpleAction parentAction) {
+        if(!super.undo(this)){ return false; }
+
+        //todo restore temp dir include files/subdirs
         PsiDirectory psiResultDirectory = FileWriter.createDirectory(project, fileDirToDelete);
         isDone = psiResultDirectory == null;
         return !isDone;

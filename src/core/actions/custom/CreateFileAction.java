@@ -1,5 +1,6 @@
 package core.actions.custom;
 
+import core.actions.custom.base.SimpleAction;
 import global.utils.file.FileWriter;
 
 import java.io.File;
@@ -18,13 +19,19 @@ public class CreateFileAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
-        isDone = FileWriter.writeStringToFile(content, file);
-        return isDone;
+    public boolean run(SimpleAction parentAction) {
+       if(!FileWriter.writeStringToFile(content, file)){
+           isDone = false;
+           return false;
+       }
+
+        return super.run(this);
     }
 
     @Override
-    public boolean undo() {
+    public boolean undo(SimpleAction parentAction) {
+        if(!super.undo(this)){ return false; }
+
         isDone = FileWriter.removeFile(file);
         return !isDone;
     }

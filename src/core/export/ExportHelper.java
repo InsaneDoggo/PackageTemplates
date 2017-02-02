@@ -5,7 +5,7 @@ import com.intellij.openapi.project.Project;
 import core.actions.custom.CopyFileAction;
 import core.actions.custom.CreateFileAction;
 import core.actions.custom.DeleteFileAction;
-import core.actions.custom.SimpleAction;
+import core.actions.custom.base.SimpleAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
 import global.Const;

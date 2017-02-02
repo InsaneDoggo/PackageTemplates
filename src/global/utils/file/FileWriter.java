@@ -216,6 +216,16 @@ public class FileWriter {
     //=================================================================
     //  Delete
     //=================================================================
+    public static boolean removeDirectory(PsiDirectory psiDirectory) {
+        try {
+            psiDirectory.delete();
+            return true;
+        } catch (Exception e) {
+            Logger.log("removeDirectory ex: " + e.getMessage());
+            return false;
+        }
+    }
+
     public static boolean removeDirectory(File dir) {
         try {
             Files.walkFileTree(dir.toPath(), new FileVisitor<Path>() {

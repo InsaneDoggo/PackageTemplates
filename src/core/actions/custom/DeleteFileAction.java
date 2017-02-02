@@ -1,5 +1,6 @@
 package core.actions.custom;
 
+import core.actions.custom.base.SimpleAction;
 import global.utils.file.FileReaderUtil;
 import global.utils.file.FileWriter;
 
@@ -20,7 +21,7 @@ public class DeleteFileAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
+    public boolean run(SimpleAction parentAction) {
         // save temp data
         pathToRestore = fileToDelete.getPath();
 
@@ -28,13 +29,18 @@ public class DeleteFileAction extends SimpleAction {
         if (contentToRestore == null) {
             throw new RuntimeException("Saving contentToRestore Failed");
         }
-        isDone = FileWriter.removeFile(fileToDelete);
+        if(!FileWriter.removeFile(fileToDelete)){
+            isDone = false;
+            return false;
+        }
 
-        return isDone;
+        return super.run(this);
     }
 
     @Override
-    public boolean undo() {
+    public boolean undo(SimpleAction parentAction) {
+        if(!super.undo(this)){ return false; }
+
         isDone = !FileWriter.writeStringToFile(contentToRestore, pathToRestore);
         return !isDone;
     }

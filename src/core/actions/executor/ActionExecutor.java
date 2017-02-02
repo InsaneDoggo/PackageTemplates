@@ -4,7 +4,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import core.actions.custom.SimpleAction;
+import core.actions.custom.base.SimpleAction;
 import global.utils.Logger;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class ActionExecutor {
         // Action
         Computable<Boolean> computable = () -> {
             for (SimpleAction action : actions) {
-                if (!action.run()) {
+                if (!action.run(null)) {
                     return false;
                 }
             }

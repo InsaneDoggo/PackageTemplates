@@ -1,5 +1,6 @@
 package core.actions.custom;
 
+import core.actions.custom.base.SimpleAction;
 import global.utils.file.FileWriter;
 
 import java.io.File;
@@ -20,13 +21,20 @@ public class CopyFileAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
-        isDone = FileWriter.copyFile(fileFrom.toPath(), fileTo.toPath());
-        return isDone;
+    public boolean run(SimpleAction parentAction) {
+        // Action
+        if(!FileWriter.copyFile(fileFrom.toPath(), fileTo.toPath())){
+            isDone = false;
+            return false;
+        }
+
+        return super.run(this);
     }
 
     @Override
-    public boolean undo() {
+    public boolean undo(SimpleAction parentAction) {
+        if(!super.undo(this)){ return false; }
+
         try {
             Files.delete(fileTo.toPath());
             isDone = false;

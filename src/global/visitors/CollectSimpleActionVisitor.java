@@ -2,11 +2,9 @@ package global.visitors;
 
 import base.ElementVisitor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDirectory;
 import core.actions.custom.CreateDirectoryAction;
 import core.actions.custom.CreateFileFromTemplateAction;
-import core.actions.custom.CreateFileAction;
-import core.actions.custom.SimpleAction;
+import core.actions.custom.base.SimpleAction;
 import global.models.File;
 import global.utils.templates.FileTemplateHelper;
 import global.wrappers.DirectoryWrapper;
@@ -14,7 +12,6 @@ import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -23,35 +20,33 @@ import java.util.Properties;
 public class CollectSimpleActionVisitor implements ElementVisitor {
 
     private Project project;
-    private List<SimpleAction> listActions;
 
-    public CollectSimpleActionVisitor(PsiDirectory currentDir, Project project, List<SimpleAction> listActions) {
+    public CollectSimpleActionVisitor(SimpleAction rootAction, Project project) {
         this.project = project;
-        this.listActions = listActions;
-        initStack(currentDir.getVirtualFile().getPath() + java.io.File.separator);
+        initStack(rootAction);
     }
 
 
     //=================================================================
     //  Stack
     //=================================================================
-    private ArrayList<String> stackPath;
+    private ArrayList<SimpleAction> stack;
 
-    private void initStack(String currentDir) {
-        stackPath = new ArrayList<>();
-        pushPath(currentDir);
+    private void initStack(SimpleAction rootAction) {
+        stack = new ArrayList<>();
+        pushAction(rootAction);
     }
 
-    private String getLastPath() {
-        return stackPath.get(stackPath.size() - 1);
+    private SimpleAction getLastAction() {
+        return stack.get(stack.size() - 1);
     }
 
-    private void popPath() {
-        stackPath.remove(stackPath.size() - 1);
+    private void popAction() {
+        stack.remove(stack.size() - 1);
     }
 
-    private void pushPath(String directory) {
-        stackPath.add(directory);
+    private void pushAction(SimpleAction simpleAction) {
+        stack.add(simpleAction);
     }
 
 
@@ -64,28 +59,15 @@ public class CollectSimpleActionVisitor implements ElementVisitor {
             return;
         }
 
-        if (wrapper.getParent() == null && wrapper.getPackageTemplateWrapper().getPackageTemplate().isSkipRootDirectory()) {
-            // Only files without Directory
-            for (ElementWrapper element : wrapper.getListElementWrapper()) {
-                element.accept(this);
-            }
-        } else {
-//            PsiDirectory subDirectory = FileWriter.writeDirectory(getLastPath(), wrapper, project);
-            String subDir = getLastPath() + wrapper.getElement().getName() + java.io.File.separator;
+        CreateDirectoryAction directoryAction = new CreateDirectoryAction(wrapper.getDirectory(), project);
+        getLastAction().addAction(directoryAction);
+        pushAction(directoryAction);
 
-            java.io.File subDirectory = new java.io.File(subDir);
-            if(!subDirectory.exists()){
-                // Create if not exist
-                listActions.add(new CreateDirectoryAction(subDirectory, project));
-            }
-
-            pushPath(subDir);
-            for (ElementWrapper element : wrapper.getListElementWrapper()) {
-                element.accept(this);
-            }
+        for (ElementWrapper element : wrapper.getListElementWrapper()) {
+            element.accept(this);
         }
 
-        popPath();
+        popAction();
     }
 
     @Override
@@ -100,14 +82,13 @@ public class CollectSimpleActionVisitor implements ElementVisitor {
         properties.putAll(wrapper.getPackageTemplateWrapper().getDefaultProperties());
         properties.putAll(wrapper.getFile().getMapProperties());
 
-        listActions.add(new CreateFileFromTemplateAction(
+        getLastAction().addAction(new CreateFileFromTemplateAction(
                 properties,
                 FileTemplateHelper.getTemplate(wrapper.getFile().getTemplateName()),
                 file.getName(),
-                getLastPath(),
                 project
         ));
-        //        FileWriter.writeFile(getLastPath(), wrapper);
+        //        FileWriter.writeFile(getLastAction(), wrapper);
     }
 
 }
