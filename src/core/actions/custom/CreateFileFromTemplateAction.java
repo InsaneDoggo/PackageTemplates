@@ -11,6 +11,7 @@ import core.actions.custom.base.SimpleAction;
 import core.actions.custom.interfaces.IHasPsiDirectory;
 import core.search.SearchAction;
 import core.search.SearchEngine;
+import global.models.BaseElement;
 import global.models.File;
 import global.utils.Logger;
 import global.utils.file.FileWriter;
@@ -83,8 +84,8 @@ public class CreateFileFromTemplateAction extends SimpleAction {
     //  Utils
     //=================================================================
     @Nullable
-    private String getCustomPath(File file, String pathFrom) {
-        ArrayList<SearchAction> actions = file.getCustomPath().getListSearchAction();
+    private String getCustomPath(BaseElement element, String pathFrom) {
+        ArrayList<SearchAction> actions = element.getCustomPath().getListSearchAction();
 
         java.io.File searchResultFile = SearchEngine.find(new java.io.File(pathFrom), actions);
 
