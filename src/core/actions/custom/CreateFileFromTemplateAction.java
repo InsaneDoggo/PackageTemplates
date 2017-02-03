@@ -2,12 +2,21 @@ package core.actions.custom;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiManager;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.interfaces.IHasPsiDirectory;
+import core.search.SearchAction;
+import core.search.SearchEngine;
+import global.models.File;
+import global.utils.Logger;
 import global.utils.file.FileWriter;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Properties;
 
 /**
@@ -17,16 +26,16 @@ public class CreateFileFromTemplateAction extends SimpleAction {
 
     private Properties properties;
     private FileTemplate template;
-    private String fileName;
+    private File file;
     private Project project;
 
     //result
     private PsiElement psiElementCreated;
 
-    public CreateFileFromTemplateAction(Properties properties, FileTemplate template, String fileName, Project project) {
+    public CreateFileFromTemplateAction(Properties properties, FileTemplate template, File file, Project project) {
         this.properties = properties;
         this.template = template;
-        this.fileName = fileName;
+        this.file = file;
         this.project = project;
     }
 
@@ -34,14 +43,24 @@ public class CreateFileFromTemplateAction extends SimpleAction {
     public boolean run(SimpleAction parentAction) {
         psiElementCreated = null;
 
-        if(parentAction instanceof IHasPsiDirectory){
+        if (parentAction instanceof IHasPsiDirectory) {
             PsiDirectory psiParent = ((IHasPsiDirectory) parentAction).getPsiDirectory();
+            String path = psiParent.getVirtualFile().getPath();
 
-            //todo check custom path
-            psiElementCreated = FileWriter.createFileFromTemplate(project, template, fileName, properties, psiParent.getVirtualFile().getPath());
+            // Custom Path
+            if (file.getCustomPath() != null) {
+                path = getCustomPath(file, path);
+
+                if (path == null) {
+                    isDone = false;
+                    return false;
+                }
+            }
+
+            psiElementCreated = FileWriter.createFileFromTemplate(project, template, file.getName(), properties, path);
         }
 
-        if(psiElementCreated == null){
+        if (psiElementCreated == null) {
             isDone = false;
             return false;
         }
@@ -51,10 +70,31 @@ public class CreateFileFromTemplateAction extends SimpleAction {
 
     @Override
     public boolean undo(SimpleAction parentAction) {
-        if(!super.undo(this)){ return false; }
+        if (!super.undo(this)) {
+            return false;
+        }
 
         isDone = !FileWriter.removeFile(psiElementCreated);
         return !isDone;
+    }
+
+
+    //=================================================================
+    //  Utils
+    //=================================================================
+    @Nullable
+    private String getCustomPath(File file, String pathFrom) {
+        ArrayList<SearchAction> actions = file.getCustomPath().getListSearchAction();
+
+        java.io.File searchResultFile = SearchEngine.find(new java.io.File(pathFrom), actions);
+
+        if (searchResultFile == null) {
+            //print name of last action
+            Logger.log("getCustomPath File Not Found: " + (actions.isEmpty() ? "" : actions.get(actions.size() - 1).getName()));
+            return null;
+        }
+
+        return searchResultFile.getPath();
     }
 
 }

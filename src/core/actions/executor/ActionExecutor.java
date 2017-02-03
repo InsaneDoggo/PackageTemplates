@@ -50,9 +50,32 @@ public class ActionExecutor {
         }
     }
 
-    public static boolean runAction(Project project, SimpleAction action, AccessPrivileges accessPrivileges) {
-        //todo runAction
-        return true;
+    public static boolean runAction(Project project, SimpleAction action, String actionLabel, AccessPrivileges accessPrivileges) {
+        // Action
+        Computable<Boolean> computable = () -> action.run(null);
+
+        // Execution
+        FutureTask<Boolean> futureTask = new FutureTask<>(() -> {
+            switch (accessPrivileges) {
+                case NONE:
+                    return computable.compute();
+                case READ:
+                    return ApplicationManager.getApplication().runReadAction(computable);
+                case WRITE:
+                    return ApplicationManager.getApplication().runWriteAction(computable);
+                default:
+                    throw new RuntimeException("Unknown AccessPrivileges " + accessPrivileges.name());
+            }
+        });
+
+        // Handle result
+        CommandProcessor.getInstance().executeCommand(project, futureTask, actionLabel, null);
+        try {
+            return futureTask.get();
+        } catch (Exception ex) {
+            Logger.log("runAsTransaction: " + ex.getMessage());
+            return false;
+        }
     }
 
 

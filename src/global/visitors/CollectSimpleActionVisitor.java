@@ -85,7 +85,7 @@ public class CollectSimpleActionVisitor implements ElementVisitor {
         getLastAction().addAction(new CreateFileFromTemplateAction(
                 properties,
                 FileTemplateHelper.getTemplate(wrapper.getFile().getTemplateName()),
-                file.getName(),
+                file,
                 project
         ));
         //        FileWriter.writeFile(getLastAction(), wrapper);

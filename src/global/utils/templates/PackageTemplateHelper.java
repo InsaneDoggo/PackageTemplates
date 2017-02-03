@@ -83,6 +83,7 @@ public class PackageTemplateHelper {
         try {
             PackageTemplate pt = GsonFactory.getInstance().fromJson(json, PackageTemplate.class);
             pt.setName(file.getName().replace("." + Const.PACKAGE_TEMPLATES_EXTENSION, ""));
+            //todo prevent NPE
             return pt;
         } catch (Exception e) {
             Logger.log(e.getMessage());
