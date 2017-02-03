@@ -73,7 +73,7 @@ public class ActionExecutor {
         try {
             return futureTask.get();
         } catch (Exception ex) {
-            Logger.log("runAsTransaction: " + ex.getMessage());
+            Logger.log("run Action: " + ex.getMessage());
             return false;
         }
     }
