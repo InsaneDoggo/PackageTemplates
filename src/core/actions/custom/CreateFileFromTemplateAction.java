@@ -2,11 +2,8 @@ package core.actions.custom;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.interfaces.IHasPsiDirectory;
 import core.search.SearchAction;
@@ -67,16 +64,6 @@ public class CreateFileFromTemplateAction extends SimpleAction {
         }
 
         return super.run(this);
-    }
-
-    @Override
-    public boolean undo(SimpleAction parentAction) {
-        if (!super.undo(this)) {
-            return false;
-        }
-
-        isDone = !FileWriter.removeFile(psiElementCreated);
-        return !isDone;
     }
 
 

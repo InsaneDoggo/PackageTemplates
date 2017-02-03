@@ -11,9 +11,7 @@ import core.search.SearchAction;
 import core.search.SearchEngine;
 import global.models.BaseElement;
 import global.models.Directory;
-import global.models.File;
 import global.utils.Logger;
-import global.utils.file.FileWriter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -28,9 +26,6 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
 
     //result
     private PsiDirectory psiDirectoryCreated;
-
-    //other
-    private boolean shouldSkipUndo = false;
 
     public CreateDirectoryAction(Directory directory, Project project) {
         this.directory = directory;
@@ -59,8 +54,6 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
             if(psiDirectoryCreated == null){
                 // create new one
                 psiDirectoryCreated = psiParent.createSubdirectory(directory.getName());
-            } else {
-                shouldSkipUndo = true;
             }
         }
 
@@ -70,19 +63,6 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
         }
 
         return super.run(this);
-    }
-
-    @Override
-    public boolean undo(SimpleAction parentAction) {
-        if(!super.undo(this)){ return false; }
-
-        if(shouldSkipUndo){
-            isDone = false;
-            return true;
-        }
-
-        isDone = !FileWriter.removeDirectory(psiDirectoryCreated);
-        return !isDone;
     }
 
     @Override

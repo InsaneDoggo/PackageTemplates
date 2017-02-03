@@ -31,17 +31,4 @@ public class CopyFileAction extends SimpleAction {
         return super.run(this);
     }
 
-    @Override
-    public boolean undo(SimpleAction parentAction) {
-        if(!super.undo(this)){ return false; }
-
-        try {
-            Files.delete(fileTo.toPath());
-            isDone = false;
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }

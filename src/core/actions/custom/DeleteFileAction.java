@@ -37,14 +37,6 @@ public class DeleteFileAction extends SimpleAction {
         return super.run(this);
     }
 
-    @Override
-    public boolean undo(SimpleAction parentAction) {
-        if(!super.undo(this)){ return false; }
-
-        isDone = !FileWriter.writeStringToFile(contentToRestore, pathToRestore);
-        return !isDone;
-    }
-
 
     //=================================================================
     //  Getter | Setter

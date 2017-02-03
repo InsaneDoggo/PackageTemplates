@@ -16,7 +16,7 @@ public abstract class SimpleAction {
     }
 
     /**
-     * true когда {@link #run(SimpleAction)} успешно выполнен, false когда неудачно, либо когда был выполнен {@link #undo(SimpleAction)}
+     * true когда {@link #run(SimpleAction)} успешно выполнен, false когда неудачно
      */
     protected boolean isDone = false;
     protected boolean isChildrenDone = false;
@@ -41,32 +41,6 @@ public abstract class SimpleAction {
         }
 
         isChildrenDone = true;
-        return true;
-    }
-
-    /**
-     * Contract:
-     * 1) set isDone to true if success;
-     * 2) Call super in the start;
-     */
-    public boolean undo(SimpleAction parentAction) {
-        return undoChildren();
-    }
-
-    public boolean undoChildren() {
-        //todo don't interrupt(always return true) undo?
-
-        if (actions != null && !actions.isEmpty()) {
-            for (int pos = actions.size() - 1; pos >= 0; pos--) {
-                SimpleAction action = actions.get(pos);
-                if (!action.undo(this)) {
-                    isChildrenDone = true;
-                    return false;
-                }
-            }
-        }
-
-        isChildrenDone = false;
         return true;
     }
 
