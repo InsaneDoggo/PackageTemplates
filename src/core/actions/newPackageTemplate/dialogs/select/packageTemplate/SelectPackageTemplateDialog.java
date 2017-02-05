@@ -61,8 +61,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         new JBScrollPane(panel);
         panel.setMinimumSize(new Dimension(MIN_WIDTH, panel.getMinimumSize().height));
 
-        initShortcuts();
-
         makeToolBar();
         makePathButton();
         makeFavourites();
@@ -153,41 +151,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
             initValidation();
             super.doAction(e);
         }
-    }
-
-    //=================================================================
-    //  Shortcuts
-    //=================================================================
-    private void initShortcuts() {
-        // Test
-        Keymap activeKeymap = KeymapManager.getInstance().getActiveKeymap();
-        Shortcut[] undoShortcuts = activeKeymap.getShortcuts(IdeActions.ACTION_UNDO);
-
-        AnAction undoAction = new AnAction() {
-            //    @Override
-            //    public void update(AnActionEvent e) {
-            //        super.update(e);
-            //        e.getPresentation().setEnabled(canUndo());
-            //    }
-            @Override
-            public void actionPerformed(AnActionEvent e) {
-                undo();
-            }
-        };
-
-        undoAction.registerCustomShortcutSet(new CustomShortcutSet(undoShortcuts), getRootPane());
-    }
-
-    private void undo() {
-        Logger.log("undo ");
-//        if (myUndoManager.canUndo()) {
-//            myUndoManager.undo();
-//        }
-    }
-
-    private boolean canUndo() {
-        Logger.log("canUndo ");
-        return true;
     }
 
 

@@ -150,7 +150,7 @@ public abstract class ElementWrapper extends BaseWrapper {
             popupMenu.add(itemEdit);
             popupMenu.add(itemDelete);
         } else {
-            JMenuItem itemAdd = new JBMenuItem(Localizer.get("AddCustomPath"), PluginIcons.SCRIPT);
+            JMenuItem itemAdd = new JBMenuItem(Localizer.get("AddCustomPath"), PluginIcons.CUSTOM_PATH);
 
             itemAdd.addActionListener(e -> new CustomPathDialog(getPackageTemplateWrapper().getProject(),null) {
                 @Override
