@@ -1,8 +1,11 @@
 package core.actions.custom;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiDirectory;
+import com.intellij.util.IncorrectOperationException;
 import core.actions.custom.base.SimpleAction;
-import global.utils.file.FileWriter;
+import global.utils.Logger;
+import global.utils.file.PsiHelper;
 
 import java.io.File;
 
@@ -12,23 +15,26 @@ import java.io.File;
 public class DeleteDirectoryAction extends SimpleAction {
 
     private File fileDirToDelete;
-
-    private String pathToRestore;
-    private String contentToRestore;
     private Project project;
 
-    public DeleteDirectoryAction(File fileDirToDelete, Project project) {
+    public
+    DeleteDirectoryAction(File fileDirToDelete, Project project) {
         this.fileDirToDelete = fileDirToDelete;
         this.project = project;
     }
 
     @Override
     public boolean run(SimpleAction parentAction) {
-        // save temp data
-        pathToRestore = fileDirToDelete.getPath();
+        PsiDirectory psiDirectory = PsiHelper.getPsiDirByPath(project, fileDirToDelete.getPath());
+        if(psiDirectory==null){
+            isDone = false;
+            return false;
+        }
 
-        //todo save temp dir include files/subdirs
-        if(!FileWriter.removeDirectory(fileDirToDelete)){
+        try {
+            psiDirectory.delete();
+        } catch (IncorrectOperationException ex){
+            Logger.log("DeleteDirectoryAction " + ex.getMessage());
             isDone = false;
             return false;
         }
@@ -36,19 +42,4 @@ public class DeleteDirectoryAction extends SimpleAction {
         return super.run(this);
     }
 
-
-    //=================================================================
-    //  Getter | Setter
-    //=================================================================
-    public File getFileDirToDelete() {
-        return fileDirToDelete;
-    }
-
-    public String getPathToRestore() {
-        return pathToRestore;
-    }
-
-    public String getContentToRestore() {
-        return contentToRestore;
-    }
 }

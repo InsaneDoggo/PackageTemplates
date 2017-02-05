@@ -130,15 +130,8 @@ public class FileWriter {
     }
 
     public static PsiElement createFileFromTemplate(Project project, FileTemplate template, String fileName, Properties properties, String parentPath) {
-        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(parentPath);
-        if (virtualFile == null) {
-            Logger.log("createFileFromTemplate virtualFile is NULL");
-            return null;
-        }
-
-        PsiDirectory psiParentDir = PsiManager.getInstance(project).findDirectory(virtualFile);
-        if (psiParentDir == null) {
-            Logger.log("createFileFromTemplate psiDirectory is NULL");
+        PsiDirectory psiParentDir = PsiHelper.getPsiDirByPath(project, parentPath);
+        if(psiParentDir==null){
             return null;
         }
 
@@ -187,15 +180,8 @@ public class FileWriter {
     }
 
     public static PsiDirectory createDirectory(Project project, File dir) {
-        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(dir.getParentFile().getPath());
-        if (virtualFile == null) {
-            Logger.log("createFileFromTemplate virtualFile is NULL");
-            return null;
-        }
-
-        PsiDirectory psiParentDir = PsiManager.getInstance(project).findDirectory(virtualFile);
-        if (psiParentDir == null) {
-            Logger.log("createFileFromTemplate psiDirectory is NULL");
+        PsiDirectory psiParentDir = PsiHelper.getPsiDirByPath(project, dir.getParentFile().getPath());
+        if(psiParentDir==null){
             return null;
         }
 

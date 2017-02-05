@@ -1,10 +1,7 @@
 package core.actions.custom;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiManager;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.interfaces.IHasPsiDirectory;
 import core.search.SearchAction;
@@ -12,6 +9,7 @@ import core.search.SearchEngine;
 import global.models.BaseElement;
 import global.models.Directory;
 import global.utils.Logger;
+import global.utils.file.PsiHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -86,19 +84,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
             return null;
         }
 
-        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(searchResultFile.getPath());
-        if (virtualFile == null) {
-            Logger.log("getCustomPath virtualFile is NULL");
-            return null;
-        }
-
-        PsiDirectory psiParentDir = PsiManager.getInstance(project).findDirectory(virtualFile);
-        if (psiParentDir == null) {
-            Logger.log("getCustomPath psiDirectory is NULL");
-            return null;
-        }
-
-        return psiParentDir;
+        return PsiHelper.getPsiDirByPath(project, searchResultFile.getPath());
     }
 
 }

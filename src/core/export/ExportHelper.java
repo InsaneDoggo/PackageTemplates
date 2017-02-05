@@ -2,9 +2,7 @@ package core.export;
 
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.project.Project;
-import core.actions.custom.CopyFileAction;
-import core.actions.custom.CreateFileAction;
-import core.actions.custom.DeleteFileAction;
+import core.actions.custom.*;
 import core.actions.custom.base.SimpleAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
@@ -67,7 +65,7 @@ public class ExportHelper {
         ) {
             @Override
             public void onOk() {
-                ctx.listSimpleAction.add(new DeleteFileAction(rootDir));
+                ctx.listSimpleAction.add(new DeleteDirectoryAction(rootDir, ctx.project));
                 onExportConfirmed(ctx, rootDir);
             }
         };
@@ -76,6 +74,9 @@ public class ExportHelper {
     private static void onExportConfirmed(Context ctx, File rootDir) {
         // Write PackageTemplate
         String ptJson = GsonFactory.getInstance().toJson(ctx.ptWrapper.getPackageTemplate(), PackageTemplate.class);
+
+        ctx.listSimpleAction.add(new CreateSimpleDirectoryAction(ctx.project, rootDir));
+
         File ptFile = new File(String.format("%s%s%s.%s",
                 rootDir.getPath(),
                 File.separator,
@@ -83,7 +84,11 @@ public class ExportHelper {
                 Const.PACKAGE_TEMPLATES_EXTENSION
         ));
 
-        ctx.listSimpleAction.add(new CreateFileAction(ptFile, ptJson));
+        ctx.listSimpleAction.add(new CreateFileAction(ctx.project, ptFile, ptJson));
+
+        //Create Dir for FileTemplates
+        File fileTemplateParentDir = new File(rootDir.getPath() + File.separator + FileTemplatesScheme.TEMPLATES_DIR);
+        ctx.listSimpleAction.add(new CreateSimpleDirectoryAction(ctx.project, fileTemplateParentDir));
 
         // Write FileTemplates
         File[] userFiles = new File(getFileTemplatesDirPath() + Const.DIR_USER).listFiles();
@@ -93,8 +98,7 @@ public class ExportHelper {
         for (String name : ctx.hsFileTemplateNames) {
             File file = findInArrays(name, userFiles, internalFiles, j2eeFiles);
             if (file != null) {
-                ctx.listSimpleAction.add(new CopyFileAction(
-                        file,
+                ctx.listSimpleAction.add(new CopyFileAction(ctx.project, file,
                         Paths.get(rootDir.getPath()
                                 + File.separator
                                 + FileTemplatesScheme.TEMPLATES_DIR
@@ -107,7 +111,7 @@ public class ExportHelper {
             }
         }
 
-        if (ActionExecutor.runAsTransaction(ctx.project, ctx.listSimpleAction, "Import PackageTemplates", AccessPrivileges.WRITE)) {
+        if (ActionExecutor.runAsTransaction(ctx.project, ctx.listSimpleAction, "Export PackageTemplates", AccessPrivileges.WRITE)) {
             Logger.log("ExportPackageTemplate  Done!");
         } else {
             //todo revert?

@@ -68,10 +68,7 @@ public class ImportHelper {
                 break;
             }
 
-            ctx.listSimpleAction.add(new CopyFileAction(
-                    file,
-                    fileTo
-            ));
+            ctx.listSimpleAction.add(new CopyFileAction(project, file, fileTo));
         }
 
         // FileTemplate Actions
@@ -85,10 +82,7 @@ public class ImportHelper {
                         break;
                     }
 
-                    ctx.listSimpleAction.add(new CopyFileAction(
-                            template,
-                            fileTo
-                    ));
+                    ctx.listSimpleAction.add(new CopyFileAction(project, template, fileTo));
                     break;
                 }
             }
@@ -103,10 +97,10 @@ public class ImportHelper {
     }
 
     private static boolean inOrderToDelete(Context ctx, File fileTo) {
-        for (SimpleAction action : ctx.listSimpleAction){
-            if(action instanceof DeleteFileAction){
+        for (SimpleAction action : ctx.listSimpleAction) {
+            if (action instanceof DeleteFileAction) {
                 File fileToDelete = ((DeleteFileAction) action).getFileToDelete();
-                if(fileToDelete.getPath().equals(fileTo.getPath())){
+                if (fileToDelete.getPath().equals(fileTo.getPath())) {
                     return true;
                 }
             }
