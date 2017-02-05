@@ -1,7 +1,8 @@
-package core.search;
+package core.search.customPath;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import core.search.SearchAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

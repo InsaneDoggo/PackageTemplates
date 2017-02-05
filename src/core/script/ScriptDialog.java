@@ -1,4 +1,4 @@
-package core.groovy;
+package core.script;
 
 import base.BaseDialog;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
@@ -23,18 +23,18 @@ import java.awt.event.MouseEvent;
 /**
  * Created by Arsen on 19.07.2016.
  */
-public abstract class GroovyDialog extends BaseDialog {
+public abstract class ScriptDialog extends BaseDialog {
 
     private String code = ScriptExecutor.defaultCode;
 
-    public GroovyDialog(@Nullable Project project, String code) {
+    public ScriptDialog(@Nullable Project project, String code) {
         super(project);
         if (code != null) {
             this.code = code;
         }
     }
 
-    public GroovyDialog(@Nullable Project project) {
+    public ScriptDialog(@Nullable Project project) {
         super(project);
     }
 

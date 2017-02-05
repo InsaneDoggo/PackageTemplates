@@ -46,6 +46,7 @@ public class ActionExecutor {
             return futureTask.get();
         } catch (Exception ex) {
             Logger.log("runAsTransaction: " + ex.getMessage());
+            ex.printStackTrace();
             return false;
         }
     }

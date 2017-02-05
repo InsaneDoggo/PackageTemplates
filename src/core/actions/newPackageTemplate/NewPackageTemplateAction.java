@@ -11,6 +11,8 @@ import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
 import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
+import core.search.customPath.CustomPath;
+import core.search.customPath.dialog.CustomPathDialog;
 import global.models.PackageTemplate;
 import global.utils.Logger;
 import global.utils.factories.WrappersFactory;

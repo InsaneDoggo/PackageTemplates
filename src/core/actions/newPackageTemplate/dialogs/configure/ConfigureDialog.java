@@ -7,6 +7,9 @@ import com.intellij.util.ui.GridBag;
 import global.models.PackageTemplate;
 import global.utils.factories.GridBagFactory;
 import global.wrappers.PackageTemplateWrapper;
+import net.miginfocom.layout.CC;
+import net.miginfocom.layout.LC;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
@@ -31,9 +34,8 @@ public abstract class ConfigureDialog extends BaseDialog implements ConfigureVie
 
     @Override
     public void buildView(PackageTemplateWrapper ptWrapper) {
-        panel.setLayout(new GridBagLayout());
-        GridBag gridBag = GridBagFactory.getBagForConfigureDialog();
-        panel.add(ptWrapper.buildView(), gridBag.nextLine().next());
+        panel.setLayout(new MigLayout(new LC().fillX()));
+        panel.add(ptWrapper.buildView(), new CC().pushX().growX().wrap());
     }
 
 

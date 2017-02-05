@@ -9,8 +9,12 @@ import javax.swing.*;
  */
 public interface PluginIcons {
 
-    Icon GROOVY = IconLoader.getIcon("/icons/groovy_16x16.png");
-    Icon GROOVY_DISABLED = IconLoader.getIcon("/icons/groovy_disabled_16x16.png");
+    Icon CUSTOM_PATH = IconLoader.getIcon("/icons/custom_path.png");
+    Icon CUSTOM_PATH_DISABLED = IconLoader.getIcon("/icons/custom_path_disabled.png");
+
+    Icon SCRIPT = IconLoader.getIcon("/icons/script.png");
+    Icon SCRIPT_DISABLED = IconLoader.getIcon("/icons/script_disabled.png");
+
     Icon PACKAGE_TEMPLATES = IconLoader.getIcon("/icons/package_templates.png");
 
 }

@@ -2,7 +2,7 @@ package global.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import core.search.CustomPath;
+import core.search.customPath.CustomPath;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -11,7 +11,7 @@ public abstract class BaseElement {
 
     @Expose @SerializedName("name") private String name;
     @Expose @SerializedName("isEnabled") private boolean isEnabled;
-    @Expose @SerializedName("groovyCode") private String groovyCode;
+    @Expose @SerializedName("script") private String script;
     @Expose @SerializedName("customPath") private CustomPath customPath;
     @Expose @SerializedName("writeBehavior") private WriteBehavior writeBehavior;
 
@@ -33,12 +33,12 @@ public abstract class BaseElement {
         isEnabled = enabled;
     }
 
-    public String getGroovyCode() {
-        return groovyCode;
+    public String getScript() {
+        return script;
     }
 
-    public void setGroovyCode(String groovyCode) {
-        this.groovyCode = groovyCode;
+    public void setScript(String script) {
+        this.script = script;
     }
 
     public CustomPath getCustomPath() {

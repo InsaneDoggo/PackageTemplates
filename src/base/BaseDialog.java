@@ -17,9 +17,9 @@ public abstract class BaseDialog extends DialogWrapper {
     protected Project project;
     protected JPanel panel;
 
-    private static final int PADDING = 10;
-    private static final int MIN_WIDTH = 600;
-    private static final int MIN_HEIGHT = 520;
+    protected  static final int PADDING = 10;
+    protected  static final int MIN_WIDTH = 600;
+    protected  static final int MIN_HEIGHT = 520;
 
     public BaseDialog(@Nullable Project project) {
         super(project);

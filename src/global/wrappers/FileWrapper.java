@@ -5,24 +5,21 @@ import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.components.JBCheckBox;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.GridBag;
 import global.models.BaseElement;
 import global.models.File;
-import global.utils.factories.GridBagFactory;
 import global.utils.i18n.Localizer;
 import global.utils.templates.FileTemplateHelper;
 import global.utils.validation.FieldType;
 import global.utils.validation.TemplateValidator;
+import global.views.IconLabel;
 import icons.PluginIcons;
 import base.ElementVisitor;
+import net.miginfocom.layout.CC;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import global.utils.*;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 
 /**
@@ -38,7 +35,7 @@ public class FileWrapper extends ElementWrapper {
     public CreateFromTemplatePanel panelVariables;
 
     @Override
-    public void buildView(Project project, JPanel container, GridBag bag) {
+    public void buildView(Project project, JPanel container) {
         jlName = new JLabel(UIHelper.getIconByFileExtension(getFile().getExtension()), SwingConstants.LEFT);
         jlName.setDisabledIcon(jlName.getIcon());
         jlName.setText(getFile().getTemplateName());
@@ -46,16 +43,16 @@ public class FileWrapper extends ElementWrapper {
 
         etfName = UIHelper.getEditorTextField(getFile().getName(), project);
 
-        container.add(createOptionsBlock(), bag.nextLine().next());
-        container.add(etfName, bag.next().coverLine(2));
+        container.add(getOptionsPanel(), new CC().spanX().split(3));
+        container.add(etfName, new CC().wrap().pushX().growX());
         updateComponentsState();
 
         addMouseListener();
 
-        createUssageUI(container, bag);
+        createUsageUI(container);
     }
 
-    private void createUssageUI(JPanel container, GridBag bag) {
+    private void createUsageUI(JPanel container) {
         if (getPackageTemplateWrapper().getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
             return;
         }
@@ -70,33 +67,47 @@ public class FileWrapper extends ElementWrapper {
                 null
         );
 
-        JComponent component = panelVariables.getComponent();
-        UIHelper.setLeftPadding(component, UIHelper.PADDING);
-        container.add(component, bag.nextLine().next().coverLine());
+        container.add(panelVariables.getComponent(), new CC().spanX().pad(0, UIHelper.PADDING, 0, 0).wrap());
     }
 
     @NotNull
-    private JPanel createOptionsBlock() {
-        JPanel optionsPanel = new JPanel(new GridBagLayout());
-        GridBag optionsBag = GridBagFactory.getOptionsPanelGridBag();
+    private JPanel getOptionsPanel() {
+        JPanel optionsPanel = new JPanel(new MigLayout());
 
         cbEnabled = new JBCheckBox();
         cbEnabled.setSelected(file.isEnabled());
         cbEnabled.addItemListener(e -> setEnabled(cbEnabled.isSelected()));
+        cbEnabled.setToolTipText(Localizer.get("tooltip.IfCheckedElementWillBeCreated"));
 
-        jlGroovy = new JBLabel();
-        if (file.getGroovyCode() != null && !file.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(PluginIcons.GROOVY);
-        } else {
-            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
-        }
-        jlGroovy.setToolTipText(Localizer.get("ColoredWhenItemHasGroovyScript"));
-        cbEnabled.setToolTipText(Localizer.get("IfCheckedElementWillBeCreated"));
+        // Groovy
+        jlGroovy = new IconLabel(
+                Localizer.get("tooltip.ColoredWhenItemHasScript"),
+                PluginIcons.SCRIPT,
+                PluginIcons.SCRIPT_DISABLED
+        );
 
-        optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
-        optionsPanel.add(jlGroovy, optionsBag.next().insets(0, 0, 0, 12));
-        optionsPanel.add(jlName, optionsBag.next());
+        // CustomPath
+        jlCustomPath = new IconLabel(
+                Localizer.get("tooltip.ColoredWhenItemHasCustomPath"),
+                PluginIcons.CUSTOM_PATH,
+                PluginIcons.CUSTOM_PATH_DISABLED
+        );
+
+        updateOptionIcons();
+
+        optionsPanel.add(cbEnabled, new CC());
+        optionsPanel.add(jlGroovy, new CC());
+        optionsPanel.add(jlCustomPath, new CC());
+        optionsPanel.add(jlName, new CC());
         return optionsPanel;
+    }
+
+    @Override
+    public void updateComponentsState() {
+        updateOptionIcons();
+
+        jlName.setEnabled(file.isEnabled());
+        etfName.setEnabled(file.isEnabled());
     }
 
 
@@ -136,17 +147,6 @@ public class FileWrapper extends ElementWrapper {
     @Override
     public void removeMyself() {
         getParent().removeElement(this);
-    }
-
-    @Override
-    public void updateComponentsState() {
-        if (file.getGroovyCode() != null && !file.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(PluginIcons.GROOVY);
-        } else {
-            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
-        }
-        jlName.setEnabled(file.isEnabled());
-        etfName.setEnabled(file.isEnabled());
     }
 
 

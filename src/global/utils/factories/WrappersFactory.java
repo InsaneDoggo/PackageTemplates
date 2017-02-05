@@ -32,7 +32,7 @@ public class WrappersFactory {
         directory.setName("example");
         directory.setListBaseElement(new ArrayList<>());
         directory.setEnabled(true);
-        directory.setGroovyCode("");
+        directory.setScript("");
 
         PackageTemplate packageTemplate = new PackageTemplate();
         packageTemplate.setMapGlobalVars(new HashMap<>());
@@ -59,7 +59,7 @@ public class WrappersFactory {
         dir.setWriteBehavior(WriteBehavior.FROM_PARENT);
         dir.setName("unnamed");
         dir.setEnabled(true);
-        dir.setGroovyCode("");
+        dir.setScript("");
         dir.setListBaseElement(new ArrayList<>());
 
         DirectoryWrapper dirWrapper = new DirectoryWrapper();
@@ -81,7 +81,7 @@ public class WrappersFactory {
         file.setTemplateName(templateName);
         file.setExtension(extension);
         file.setEnabled(true);
-        file.setGroovyCode("");
+        file.setScript("");
         file.setMapProperties(new HashMap<>());
 
         fileWrapper.setParent(parent);

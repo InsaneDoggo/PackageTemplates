@@ -1,23 +1,22 @@
 package global.wrappers;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
-import com.intellij.ui.EditorSettingsProvider;
 import com.intellij.ui.EditorTextField;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.GridBag;
 import global.listeners.ClickListener;
-import core.groovy.GroovyDialog;
-import core.groovy.ScriptExecutor;
+import core.script.ScriptDialog;
+import core.script.ScriptExecutor;
 import global.utils.StringTools;
 import global.utils.highligt.HighlightHelper;
+import global.views.IconLabel;
 import icons.PluginIcons;
+import net.miginfocom.layout.CC;
+import net.miginfocom.layout.LC;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import global.models.GlobalVariable;
-import global.utils.factories.GridBagFactory;
 import global.utils.i18n.Localizer;
 import global.utils.UIHelper;
 
@@ -43,7 +42,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
     private EditorTextField tfValue;
     private JLabel jlVariable;
 
-    public void buildView(PackageTemplateWrapper ptWrapper, JPanel container, GridBag bag) {
+    public void buildView(PackageTemplateWrapper ptWrapper, JPanel container) {
         jlVariable = new JLabel(AllIcons.Nodes.Variable, JLabel.LEFT);
         jlVariable.setDisabledIcon(jlVariable.getIcon());
         jlVariable.setText("variable");
@@ -55,12 +54,9 @@ public class GlobalVariableWrapper extends BaseWrapper {
         tfValue = new EditorTextField(globalVariable.getValue());
         tfValue.setAlignmentX(Component.LEFT_ALIGNMENT);
         if (!globalVariable.getName().equals(ATTRIBUTE_BASE_NAME)) {
-            tfValue.addSettingsProvider(new EditorSettingsProvider() {
-                @Override
-                public void customizeSettings(EditorEx editor) {
-                    HighlightHelper.addHighlightListener(ptWrapper.getProject(), tfValue, editor, StringTools.PATTERN_BASE_NAME);
-                    HighlightHelper.applyHighlightRange(HighlightHelper.findResults(tfValue.getText(), StringTools.PATTERN_BASE_NAME), ptWrapper.getProject(), editor);
-                }
+            tfValue.addSettingsProvider(editor -> {
+                HighlightHelper.addHighlightListener(ptWrapper.getProject(), tfValue, editor, StringTools.PATTERN_BASE_NAME);
+                HighlightHelper.applyHighlightRange(HighlightHelper.findResults(tfValue.getText(), StringTools.PATTERN_BASE_NAME), ptWrapper.getProject(), editor);
             });
         }
 
@@ -83,30 +79,26 @@ public class GlobalVariableWrapper extends BaseWrapper {
             tfKey.setEnabled(false);
         }
 
-        tfKey.setPreferredWidth(0);
-        tfValue.setPreferredWidth(0);
-
-        container.add(createOptionsBlock(), bag.nextLine().next().weightx(0));
-        container.add(tfKey, bag.next().weightx(1));
-        container.add(tfValue, bag.next().weightx(1));
-
+        container.add(createOptionsBlock(), new CC().spanX().split(3));
+        container.add(tfKey, new CC());
+        container.add(tfValue, new CC().pushX().growX().wrap());
     }
 
     @NotNull
     private JPanel createOptionsBlock() {
-        JPanel optionsPanel = new JPanel(new GridBagLayout());
-        GridBag optionsBag = GridBagFactory.getOptionsPanelGridBag();
+        JPanel optionsPanel = new JPanel(new MigLayout(new LC()));
 
-        jlGroovy = new JBLabel();
-        if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(PluginIcons.GROOVY);
-        } else {
-            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
-        }
-        jlGroovy.setToolTipText(Localizer.get("ColoredWhenItemHasGroovyScript"));
+        // Groovy
+        jlGroovy = new IconLabel(
+                Localizer.get("tooltip.ColoredWhenItemHasScript"),
+                PluginIcons.SCRIPT,
+                PluginIcons.SCRIPT_DISABLED
+        );
 
-        optionsPanel.add(jlGroovy, optionsBag.nextLine().next().insets(0, 0, 0, 6));
-        optionsPanel.add(jlVariable, optionsBag.next());
+        updateComponentsState();
+
+        optionsPanel.add(jlGroovy, new CC().pad(0, 0, 0, 6));
+        optionsPanel.add(jlVariable, new CC());
         return optionsPanel;
     }
 
@@ -121,17 +113,17 @@ public class GlobalVariableWrapper extends BaseWrapper {
         itemDelete.addActionListener(e -> deleteVariable(ptWrapper));
 
         popupMenu.add(itemAddVariable);
-        addGroovyMenuItems(popupMenu, ptWrapper.getProject());
+        addScriptMenuItems(popupMenu, ptWrapper.getProject());
         if (!getGlobalVariable().getName().equals(ATTRIBUTE_BASE_NAME)) {
             popupMenu.add(itemDelete);
         }
         return popupMenu;
     }
 
-    private void addGroovyMenuItems(JPopupMenu popupMenu, Project project) {
+    private void addScriptMenuItems(JPopupMenu popupMenu, Project project) {
         if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
-            JMenuItem itemEditGroovy = new JBMenuItem(Localizer.get("EditGroovyScript"), PluginIcons.GROOVY);
-            itemEditGroovy.addActionListener(e -> new GroovyDialog(project, globalVariable.getGroovyCode()) {
+            JMenuItem itemEditGroovy = new JBMenuItem(Localizer.get("EditScript"), PluginIcons.SCRIPT);
+            itemEditGroovy.addActionListener(e -> new ScriptDialog(project, globalVariable.getGroovyCode()) {
                 @Override
                 public void onSuccess(String code) {
                     globalVariable.setGroovyCode(code);
@@ -140,15 +132,15 @@ public class GlobalVariableWrapper extends BaseWrapper {
             }.show());
             popupMenu.add(itemEditGroovy);
 
-            JMenuItem itemDeleteGroovy = new JBMenuItem(Localizer.get("DeleteGroovyScript"), AllIcons.Actions.Delete);
+            JMenuItem itemDeleteGroovy = new JBMenuItem(Localizer.get("DeleteScript"), AllIcons.Actions.Delete);
             itemDeleteGroovy.addActionListener(e -> {
                 globalVariable.setGroovyCode("");
                 updateComponentsState();
             });
             popupMenu.add(itemDeleteGroovy);
         } else {
-            JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddGroovyScript"), PluginIcons.GROOVY);
-            itemAddGroovy.addActionListener(e -> new GroovyDialog(project) {
+            JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddScript"), PluginIcons.SCRIPT);
+            itemAddGroovy.addActionListener(e -> new ScriptDialog(project) {
                 @Override
                 public void onSuccess(String code) {
                     globalVariable.setGroovyCode(code);
@@ -197,9 +189,9 @@ public class GlobalVariableWrapper extends BaseWrapper {
     @Override
     public void updateComponentsState() {
         if (globalVariable.getGroovyCode() != null && !globalVariable.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(PluginIcons.GROOVY);
+            jlGroovy.enableIcon();
         } else {
-            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
+            jlGroovy.disableIcon();
         }
     }
 

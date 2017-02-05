@@ -5,16 +5,17 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.components.JBCheckBox;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.GridBag;
 import global.models.BaseElement;
 import global.models.Directory;
 import global.utils.UIHelper;
-import global.utils.factories.GridBagFactory;
 import global.utils.i18n.Localizer;
 import global.utils.validation.FieldType;
 import global.utils.validation.TemplateValidator;
+import global.views.IconLabel;
 import icons.PluginIcons;
+import net.miginfocom.layout.CC;
+import net.miginfocom.layout.LC;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -103,78 +104,80 @@ public class DirectoryWrapper extends ElementWrapper {
     private JPanel panel;
 
     @Override
-    public void buildView(Project project, JPanel container, GridBag bag) {
+    public void buildView(Project project, JPanel container) {
         if (panel == null) {
-            panel = new JPanel(new GridBagLayout());
+            panel = new JPanel(new MigLayout(new LC().fillX().debug()));
         } else {
             panel.removeAll();
         }
 
-        createPackageView(project, container, bag);
-        updateComponentsState();
-
-        GridBag gridBag = GridBagFactory.getBagForDirectory();
-
-        for (ElementWrapper elementWrapper : getListElementWrapper()) {
-            elementWrapper.buildView(project, panel, gridBag);
-        }
-
-        UIHelper.setLeftPadding(panel, UIHelper.PADDING + UIHelper.DEFAULT_PADDING);
-        container.add(panel, bag.nextLine().next().coverLine());
-    }
-
-    private void createPackageView(Project project, JPanel container, GridBag bag) {
         jlName = new JLabel(AllIcons.Nodes.Package, SwingConstants.LEFT);
         jlName.setDisabledIcon(jlName.getIcon());
         jlName.setText(Localizer.get("Directory"));
-        UIHelper.setRightPadding(jlName, UIHelper.PADDING_LABEL);
 
         etfName = UIHelper.getEditorTextField(getDirectory().getName(), project);
-
-        container.add(createOptionsBlock(), bag.nextLine().next());
-        container.add(etfName, bag.next().coverLine(2));
-
         addMouseListener();
+
+        container.add(getOptionsPanel(), new CC().spanX().split(4));
+        container.add(jlName, new CC().pad(0, 0, 0, UIHelper.PADDING_LABEL));
+        container.add(etfName, new CC().spanX().growX().pushX().wrap());
+
+        updateComponentsState();
+
+        //Children
+        if (!getListElementWrapper().isEmpty()) {
+            for (ElementWrapper elementWrapper : getListElementWrapper()) {
+                elementWrapper.buildView(project, panel);
+            }
+
+            UIHelper.setLeftPadding(panel, UIHelper.PADDING + UIHelper.DEFAULT_PADDING);
+            container.add(panel, new CC().spanX().growX().pushX().wrap());
+        }
     }
 
     @NotNull
-    private JPanel createOptionsBlock() {
+    private JPanel getOptionsPanel() {
+        //  isEnabled
         cbEnabled = new JBCheckBox();
         cbEnabled.setSelected(directory.isEnabled());
         cbEnabled.addItemListener(e -> setEnabled(cbEnabled.isSelected()));
+        cbEnabled.setToolTipText(Localizer.get("tooltip.IfCheckedElementWillBeCreated"));
 
-        jlGroovy = new JBLabel();
-        if (directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(PluginIcons.GROOVY);
-        } else {
-            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
-        }
-        jlGroovy.setToolTipText(Localizer.get("ColoredWhenItemHasGroovyScript"));
-        cbEnabled.setToolTipText(Localizer.get("IfCheckedElementWillBeCreated"));
+        // Groovy
+        jlGroovy = new IconLabel(
+                Localizer.get("tooltip.ColoredWhenItemHasScript"),
+                PluginIcons.SCRIPT,
+                PluginIcons.SCRIPT_DISABLED
+        );
 
-        GridBag optionsBag = GridBagFactory.getOptionsPanelGridBag();
-        JPanel optionsPanel = new JPanel(new GridBagLayout());
-        optionsPanel.add(cbEnabled, optionsBag.nextLine().next());
-        optionsPanel.add(jlGroovy, optionsBag.next().insets(0, 0, 0, 12));
-        optionsPanel.add(jlName, optionsBag.next());
+        // CustomPath
+        jlCustomPath = new IconLabel(
+                Localizer.get("tooltip.ColoredWhenItemHasCustomPath"),
+                PluginIcons.CUSTOM_PATH,
+                PluginIcons.CUSTOM_PATH_DISABLED
+        );
+
+        updateOptionIcons();
+
+        JPanel optionsPanel = new JPanel(new MigLayout(new LC()));
+        optionsPanel.add(cbEnabled, new CC());
+        optionsPanel.add(jlGroovy, new CC());
+        optionsPanel.add(jlCustomPath, new CC());
         return optionsPanel;
     }
 
     @Override
     public void updateComponentsState() {
-        if(getParent() == null){
-            if(getPackageTemplateWrapper().getPackageTemplate().isSkipRootDirectory()){
+        if (getParent() == null) {
+            if (getPackageTemplateWrapper().getPackageTemplate().isSkipRootDirectory()) {
                 Map attributes = jlName.getFont().getAttributes();
                 attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
                 jlName.setFont(new Font(attributes));
             }
         }
 
-        if (directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty()) {
-            jlGroovy.setIcon(PluginIcons.GROOVY);
-        } else {
-            jlGroovy.setIcon(PluginIcons.GROOVY_DISABLED);
-        }
+        updateOptionIcons();
+
         jlName.setEnabled(directory.isEnabled());
         etfName.setEnabled(directory.isEnabled());
     }

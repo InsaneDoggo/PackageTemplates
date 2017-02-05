@@ -1,6 +1,7 @@
 package global.wrappers;
 
 import com.intellij.ui.components.JBCheckBox;
+import global.views.IconLabel;
 
 import javax.swing.*;
 
@@ -9,8 +10,8 @@ import javax.swing.*;
  */
 public abstract class BaseWrapper {
 
-    JBCheckBox cbEnabled;
-    JLabel jlGroovy;
+    protected JBCheckBox cbEnabled;
+    protected IconLabel jlGroovy;
 
     public abstract void updateComponentsState();
 

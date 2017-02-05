@@ -23,6 +23,10 @@ public class SearchEngine {
         File curDir = startDir;
 
         for (SearchAction action : actions) {
+            if (curDir == null) {
+                return null;
+            }
+
             if (!curDir.isDirectory()) {
                 curDir = startDir.getParentFile();
             }
@@ -63,6 +67,9 @@ public class SearchEngine {
 
             // Next File
             currentFile = currentFile.getParentFile();
+            if (currentFile == null) {
+                return null;
+            }
 
             //Check Name
             if (isNameEquals(action, currentFile.getName())) {

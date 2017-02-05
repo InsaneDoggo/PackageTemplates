@@ -8,13 +8,15 @@ import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
-import com.intellij.util.ui.GridBag;
 import core.actions.newPackageTemplate.dialogs.select.fileTemplate.SelectFileTemplateDialog;
-import core.groovy.GroovyDialog;
+import core.script.ScriptDialog;
+import core.search.customPath.CustomPath;
+import core.search.customPath.dialog.CustomPathDialog;
 import global.listeners.ClickListener;
 import global.models.BaseElement;
 import global.utils.factories.WrappersFactory;
 import global.utils.i18n.Localizer;
+import global.views.IconLabel;
 import icons.PluginIcons;
 
 import javax.swing.*;
@@ -35,13 +37,21 @@ public abstract class ElementWrapper extends BaseWrapper {
     //  Abstraction
     //=================================================================
     public abstract void accept(ElementVisitor visitor);
-    public abstract void buildView(Project project, JPanel container, GridBag bag);
+
+    public abstract void buildView(Project project, JPanel container);
+
     public abstract void removeMyself();
+
     public abstract void addElement(ElementWrapper element);
+
     public abstract BaseElement getElement();
+
     public abstract boolean isDirectory();
+
     public abstract ValidationInfo isNameValid(List<String> listAllTemplates);
+
     public abstract ValidationInfo validateFields();
+
     public abstract void setEnabled(boolean isEnabled);
 
 
@@ -50,6 +60,7 @@ public abstract class ElementWrapper extends BaseWrapper {
     //=================================================================
     public JLabel jlName;
     public EditorTextField etfName;
+    public IconLabel jlCustomPath;
 
     private void createPopupForEditMode(MouseEvent mouseEvent) {
         JPopupMenu popupMenu = new JBPopupMenu();
@@ -61,16 +72,17 @@ public abstract class ElementWrapper extends BaseWrapper {
         itemAddFile.addActionListener(e -> AddFile());
         itemAddDirectory.addActionListener(e -> addDirectory());
         itemDelete.addActionListener(e -> deleteElement());
+        // if NOT root element
+        if (getParent() != null) {
+            popupMenu.add(itemDelete);
+        }
 
         popupMenu.add(itemAddFile);
         popupMenu.add(itemAddDirectory);
 
         addGroovyMenuItems(popupMenu);
+        addCustomPathMenuItems(popupMenu);
 
-        // if NOT root element
-        if (getParent() != null) {
-            popupMenu.add(itemDelete);
-        }
 
         popupMenu.show(jlName, mouseEvent.getX(), mouseEvent.getY());
     }
@@ -81,39 +93,88 @@ public abstract class ElementWrapper extends BaseWrapper {
 
     private void addGroovyMenuItems(JPopupMenu popupMenu) {
         // With Groovy script
-        if (getElement().getGroovyCode() != null && !getElement().getGroovyCode().isEmpty()) {
-            JMenuItem itemEditGroovy = new JBMenuItem(Localizer.get("EditGroovyScript"), PluginIcons.GROOVY);
-            JMenuItem itemDeleteGroovy = new JBMenuItem(Localizer.get("DeleteGroovyScript"), AllIcons.Actions.Delete);
+        if (getElement().getScript() != null && !getElement().getScript().isEmpty()) {
+            JMenuItem itemEdit = new JBMenuItem(Localizer.get("EditScript"), PluginIcons.SCRIPT);
+            JMenuItem itemDelete = new JBMenuItem(Localizer.get("DeleteScript"), AllIcons.Actions.Delete);
 
-            itemEditGroovy.addActionListener(e -> new GroovyDialog(
-                    getPackageTemplateWrapper().getProject(), getElement().getGroovyCode()) {
+            itemEdit.addActionListener(e -> new ScriptDialog(
+                    getPackageTemplateWrapper().getProject(), getElement().getScript()) {
                 @Override
                 public void onSuccess(String code) {
-                    getElement().setGroovyCode(code);
+                    getElement().setScript(code);
                     updateComponentsState();
                 }
             }.show());
 
-            itemDeleteGroovy.addActionListener(e -> {
-                getElement().setGroovyCode("");
+            itemDelete.addActionListener(e -> {
+                getElement().setScript("");
                 updateComponentsState();
             });
 
-            popupMenu.add(itemEditGroovy);
-            popupMenu.add(itemDeleteGroovy);
+            popupMenu.add(itemEdit);
+            popupMenu.add(itemDelete);
         } else {
             // Without Groovy script
-            JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddGroovyScript"), PluginIcons.GROOVY);
+            JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddScript"), PluginIcons.SCRIPT);
 
-            itemAddGroovy.addActionListener(e -> new GroovyDialog(getPackageTemplateWrapper().getProject()) {
+            itemAddGroovy.addActionListener(e -> new ScriptDialog(getPackageTemplateWrapper().getProject()) {
                 @Override
                 public void onSuccess(String code) {
-                    getElement().setGroovyCode(code);
+                    getElement().setScript(code);
                     updateComponentsState();
                 }
             }.show());
 
             popupMenu.add(itemAddGroovy);
+        }
+    }
+
+    private void addCustomPathMenuItems(JPopupMenu popupMenu) {
+        if (getElement().getCustomPath() != null) {
+            JMenuItem itemEdit = new JBMenuItem(Localizer.get("EditCustomPath"), PluginIcons.CUSTOM_PATH);
+            JMenuItem itemDelete = new JBMenuItem(Localizer.get("DeleteCustomPath"), AllIcons.Actions.Delete);
+
+            itemEdit.addActionListener(e -> new CustomPathDialog(getPackageTemplateWrapper().getProject(), getElement().getCustomPath()) {
+                @Override
+                public void onSuccess(CustomPath customPath) {
+                    getElement().setCustomPath(customPath);
+                    updateComponentsState();
+                }
+            }.show());
+
+            itemDelete.addActionListener(e -> {
+                getElement().setCustomPath(null);
+                updateComponentsState();
+            });
+
+            popupMenu.add(itemEdit);
+            popupMenu.add(itemDelete);
+        } else {
+            JMenuItem itemAdd = new JBMenuItem(Localizer.get("AddCustomPath"), PluginIcons.SCRIPT);
+
+            itemAdd.addActionListener(e -> new CustomPathDialog(getPackageTemplateWrapper().getProject(),null) {
+                @Override
+                public void onSuccess(CustomPath customPath) {
+                    getElement().setCustomPath(customPath);
+                    updateComponentsState();
+                }
+            }.show());
+
+            popupMenu.add(itemAdd);
+        }
+    }
+
+    protected void updateOptionIcons() {
+        if (getElement().getScript() != null && !getElement().getScript().isEmpty()) {
+            jlGroovy.enableIcon();
+        } else {
+            jlGroovy.disableIcon();
+        }
+
+        if (getElement().getCustomPath() != null) {
+            jlCustomPath.enableIcon();
+        } else {
+            jlCustomPath.disableIcon();
         }
     }
 

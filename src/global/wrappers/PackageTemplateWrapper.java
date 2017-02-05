@@ -22,6 +22,7 @@ import global.utils.file.FileWriter;
 import global.utils.i18n.Localizer;
 import global.visitors.*;
 import net.miginfocom.layout.CC;
+import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -64,16 +65,14 @@ public class PackageTemplateWrapper {
     public JCheckBox cbShouldRegisterAction;
     public JCheckBox cbSkipDefiningNames;
     public JCheckBox cbSkipRootDirectory;
-    private GridBag gridBag;
 
     public JPanel buildView() {
         if (panel == null) {
-            panel = new JPanel(new GridBagLayout());
-            gridBag = GridBagFactory.getBagForPackageTemplate();
+            panel = new JPanel(new MigLayout(new LC().fillX()));
         }
 
         // Properties
-        JPanel jpProperties = new JPanel(new MigLayout());
+        JPanel jpProperties = new JPanel(new MigLayout(new LC()));
 
         if (mode != ViewMode.USAGE) {
             // Header
@@ -85,10 +84,10 @@ public class PackageTemplateWrapper {
             etfName = UIHelper.getEditorTextField(packageTemplate.getName(), project);
             etfDescription = UIHelper.getEditorTextField(packageTemplate.getDescription(), project);
 
-            panel.add(jlName, gridBag.nextLine().next());
-            panel.add(etfName, gridBag.next().coverLine(2));
-            panel.add(jlDescription, gridBag.nextLine().next());
-            panel.add(etfDescription, gridBag.next().coverLine(2));
+            panel.add(jlName, new CC().wrap().spanX());
+            panel.add(etfName, new CC().spanX().growX().pushX().wrap());
+            panel.add(jlDescription, new CC().wrap().spanX());
+            panel.add(etfDescription, new CC().spanX().growX().pushX().wrap());
 
             // Properties
             cbShouldRegisterAction = new JBCheckBox(Localizer.get("property.ShouldRegisterAction"), packageTemplate.isShouldRegisterAction());
@@ -103,23 +102,23 @@ public class PackageTemplateWrapper {
             collectDataFromFields();
             reBuildView();
         });
-        jpProperties.add(cbSkipRootDirectory, new CC().wrap().spanX());
-        panel.add(jpProperties, gridBag.nextLine().next().coverLine());
+        jpProperties.add(cbSkipRootDirectory, new CC().spanX().wrap());
+        panel.add(jpProperties, new CC().spanX().wrap());
 
-        panel.add(new SeparatorComponent(10), gridBag.nextLine().next().coverLine());
+        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
 
 
         // Globals
         JLabel jlGlobals = new JLabel(Localizer.get("GlobalVariables"), JLabel.CENTER);
-        panel.add(jlGlobals, gridBag.nextLine().next().fillCellHorizontally().coverLine());
+        panel.add(jlGlobals, new CC().wrap().growX().pushX().spanX());
 
         for (GlobalVariableWrapper variableWrapper : getListGlobalVariableWrapper()) {
-            variableWrapper.buildView(this, panel, gridBag);
+            variableWrapper.buildView(this, panel);
         }
 
         // Files and Directories
-        panel.add(new SeparatorComponent(10), gridBag.nextLine().next().coverLine());
-        rootElement.buildView(project, panel, gridBag);
+        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
+        rootElement.buildView(project, panel);
 
         return panel;
     }
@@ -136,7 +135,6 @@ public class PackageTemplateWrapper {
 
     public void reBuildView() {
         panel.removeAll();
-        gridBag = GridBagFactory.getBagForPackageTemplate();
         buildView();
     }
 
@@ -165,7 +163,7 @@ public class PackageTemplateWrapper {
     }
 
     /**
-     * Replace BASE_NAME and Run GROOVY
+     * Replace BASE_NAME and Run SCRIPT
      */
     public void prepareGlobals() {
         packageTemplate.setMapGlobalVars(new HashMap<>());
@@ -176,7 +174,7 @@ public class PackageTemplateWrapper {
                 if (!variableWrapper.getGlobalVariable().getName().equals(ATTRIBUTE_BASE_NAME)) {
                     variableWrapper.replaceBaseName(packageTemplate.getMapGlobalVars().get(ATTRIBUTE_BASE_NAME));
                 }
-                // GROOVY
+                // SCRIPT
                 variableWrapper.runGroovyScript();
             }
             packageTemplate.getMapGlobalVars().put(variableWrapper.getGlobalVariable().getName(), variableWrapper.getGlobalVariable().getValue());

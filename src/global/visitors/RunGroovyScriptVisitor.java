@@ -1,7 +1,7 @@
 package global.visitors;
 
 import base.ElementVisitor;
-import core.groovy.ScriptExecutor;
+import core.script.ScriptExecutor;
 import global.models.Directory;
 import global.models.File;
 import global.wrappers.DirectoryWrapper;
@@ -17,8 +17,8 @@ public class RunGroovyScriptVisitor implements ElementVisitor {
     public void visit(DirectoryWrapper wrapper) {
         Directory directory = wrapper.getDirectory();
 
-        if (directory.getGroovyCode() != null && !directory.getGroovyCode().isEmpty()) {
-            directory.setName(ScriptExecutor.runScript(directory.getGroovyCode(), directory.getName()));
+        if (directory.getScript() != null && !directory.getScript().isEmpty()) {
+            directory.setName(ScriptExecutor.runScript(directory.getScript(), directory.getName()));
         }
 
         for (ElementWrapper elementWrapper : wrapper.getListElementWrapper()) {
@@ -30,8 +30,8 @@ public class RunGroovyScriptVisitor implements ElementVisitor {
     public void visit(FileWrapper wrapper) {
         File file = wrapper.getFile();
 
-        if (file.getGroovyCode() != null && !file.getGroovyCode().isEmpty()) {
-            file.setName(ScriptExecutor.runScript(file.getGroovyCode(), file.getName()));
+        if (file.getScript() != null && !file.getScript().isEmpty()) {
+            file.setName(ScriptExecutor.runScript(file.getScript(), file.getName()));
         }
     }
 
