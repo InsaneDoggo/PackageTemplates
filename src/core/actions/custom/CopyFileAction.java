@@ -34,7 +34,6 @@ public class CopyFileAction extends SimpleAction {
             return false;
         }
 
-        //todo check existence
         PsiFile psiDuplicate = psiParent.findFile(fileTo.getName());
         if(psiDuplicate != null){
             Logger.log("Delete psiDuplicate " + psiDuplicate.getName());
@@ -42,9 +41,10 @@ public class CopyFileAction extends SimpleAction {
         }
 
         try {
-//            psiParent.copyFileFrom(fileTo.getName(), psiFrom);
-            PsiFile psiCreatedFile = psiParent.createFile(fileTo.getName());
-            psiCreatedFile.getVirtualFile().setBinaryContent(psiFrom.getVirtualFile().contentsToByteArray());
+            psiParent.copyFileFrom(fileTo.getName(), psiFrom);
+
+//            PsiFile psiCreatedFile = psiParent.createFile(fileTo.getName());
+//            psiCreatedFile.getVirtualFile().setBinaryContent(psiFrom.getVirtualFile().contentsToByteArray());
         } catch (Exception ex) {
             Logger.log("CopyFileAction " + ex.getMessage());
             isDone = false;
