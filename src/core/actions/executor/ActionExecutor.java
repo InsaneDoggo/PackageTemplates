@@ -1,11 +1,15 @@
 package core.actions.executor;
 
+import com.intellij.notification.Notification;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.vcs.changes.committed.VcsConfigurationChangeListener;
 import core.actions.custom.base.SimpleAction;
 import global.utils.Logger;
+import global.utils.NotificationHeler;
 
 import java.util.List;
 import java.util.concurrent.FutureTask;
@@ -43,8 +47,15 @@ public class ActionExecutor {
         // Handle result
         CommandProcessor.getInstance().executeCommand(project, futureTask, actionLabel, null);
         try {
-            return futureTask.get();
+            Boolean isSuccess = futureTask.get();
+            if (isSuccess) {
+                NotificationHeler.info(actionLabel, "Success!");
+            } else {
+                NotificationHeler.error(actionLabel, "Failed!");
+            }
+            return isSuccess;
         } catch (Exception ex) {
+            NotificationHeler.error(actionLabel, "Failed!");
             Logger.log("runAsTransaction: " + ex.getMessage());
             ex.printStackTrace();
             return false;
