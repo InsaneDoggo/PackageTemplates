@@ -3,6 +3,7 @@ package core.actions.newPackageTemplate;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -76,7 +77,7 @@ public class NewPackageTemplateAction extends AnAction {
         List<SimpleAction> listSimpleAction = new ArrayList<>();
         ptWrapper.collectSimpleActions(project, virtualFile, listSimpleAction);
 
-        if (ActionExecutor.runAsTransaction(project, listSimpleAction, "ExecutePackageTemplate", AccessPrivileges.WRITE)) {
+        if (ActionExecutor.runAsTransaction(project, listSimpleAction, "ExecutePackageTemplate", AccessPrivileges.WRITE, UndoConfirmationPolicy.REQUEST_CONFIRMATION)) {
             Logger.log("ExecutePackageTemplate  Done!");
         } else {
             Logger.log("ExecutePackageTemplate  Fail!");

@@ -1,6 +1,7 @@
 package core.importTemplates;
 
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
+import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.project.Project;
 import core.actions.custom.CopyFileAction;
 import core.actions.custom.DeleteFileAction;
@@ -88,7 +89,8 @@ public class ImportHelper {
             }
         }
 
-        if (ActionExecutor.runAsTransaction(project, ctx.listSimpleAction, "Import PackageTemplates", AccessPrivileges.WRITE)) {
+        if (ActionExecutor.runAsTransaction(project, ctx.listSimpleAction, "Import PackageTemplates",
+                AccessPrivileges.WRITE, UndoConfirmationPolicy.REQUEST_CONFIRMATION)) {
             Logger.log("importPackageTemplate  Done!");
         } else {
             //todo revert?
@@ -177,7 +179,7 @@ public class ImportHelper {
         final boolean[] result = {false};
         new SkipableConfirmationDialog(
                 ctx.project,
-                Localizer.get("question.Overwrite"),
+                String.format(Localizer.get("question.OverwriteArg"), templateFile.getName()),
                 dialogTitle,
                 Localizer.get("action.Overwrite"),
                 Localizer.get("action.CancelImport")

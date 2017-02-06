@@ -7,7 +7,7 @@ import com.intellij.notification.Notifications;
 /**
  * Created by Arsen on 06.02.2017.
  */
-public class NotificationHeler {
+public class NotificationHelper {
 
     public static void error(String title, String message){
         Notifications.Bus.notify(new Notification("PackageTemplates Plugin", title, message, NotificationType.ERROR));

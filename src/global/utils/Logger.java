@@ -11,4 +11,8 @@ public class Logger {
         if (Const.IS_DEBUG) System.out.println(text);
     }
 
+    public static void printStack(Exception e) {
+        if (Const.IS_DEBUG) e.printStackTrace();
+    }
+
 }

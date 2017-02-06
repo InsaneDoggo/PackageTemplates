@@ -1,6 +1,7 @@
 package core.export;
 
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
+import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.project.Project;
 import core.actions.custom.*;
 import core.actions.custom.base.SimpleAction;
@@ -58,7 +59,7 @@ public class ExportHelper {
 
     private static void askAboutFileConflict(Context ctx, File rootDir) {
         new SimpleConfirmationDialog(ctx.project,
-                Localizer.get("question.Overwrite"),
+                String.format(Localizer.get("question.OverwriteArg"), rootDir.getName()),
                 Localizer.get("warning.PackageTemplateAlreadyExist"),
                 Localizer.get("action.Overwrite"),
                 Localizer.get("action.Cancel")
@@ -111,7 +112,8 @@ public class ExportHelper {
             }
         }
 
-        if (ActionExecutor.runAsTransaction(ctx.project, ctx.listSimpleAction, "Export PackageTemplates", AccessPrivileges.WRITE)) {
+        if (ActionExecutor.runAsTransaction(ctx.project, ctx.listSimpleAction, "Export PackageTemplates",
+                AccessPrivileges.WRITE, UndoConfirmationPolicy.REQUEST_CONFIRMATION)) {
             Logger.log("ExportPackageTemplate  Done!");
         } else {
             //todo revert?

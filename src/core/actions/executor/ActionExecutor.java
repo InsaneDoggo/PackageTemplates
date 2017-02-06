@@ -1,15 +1,13 @@
 package core.actions.executor;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.Notifications;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vcs.changes.committed.VcsConfigurationChangeListener;
 import core.actions.custom.base.SimpleAction;
 import global.utils.Logger;
-import global.utils.NotificationHeler;
+import global.utils.NotificationHelper;
 
 import java.util.List;
 import java.util.concurrent.FutureTask;
@@ -19,7 +17,7 @@ import java.util.concurrent.FutureTask;
  */
 public class ActionExecutor {
 
-    public static boolean runAsTransaction(Project project, List<SimpleAction> actions, String actionLabel, AccessPrivileges accessPrivileges) {
+    public static boolean runAsTransaction(Project project, List<SimpleAction> actions, String actionLabel, AccessPrivileges accessPrivileges, UndoConfirmationPolicy confirmationPolicy) {
         // Action
         Computable<Boolean> computable = () -> {
             for (SimpleAction action : actions) {
@@ -45,19 +43,19 @@ public class ActionExecutor {
         });
 
         // Handle result
-        CommandProcessor.getInstance().executeCommand(project, futureTask, actionLabel, null);
+        CommandProcessor.getInstance().executeCommand(project, futureTask, actionLabel, null, confirmationPolicy);
         try {
             Boolean isSuccess = futureTask.get();
             if (isSuccess) {
-                NotificationHeler.info(actionLabel, "Success!");
+                NotificationHelper.info(actionLabel, "Success!");
             } else {
-                NotificationHeler.error(actionLabel, "Failed!");
+                NotificationHelper.error(actionLabel, "Failed!");
             }
             return isSuccess;
-        } catch (Exception ex) {
-            NotificationHeler.error(actionLabel, "Failed!");
-            Logger.log("runAsTransaction: " + ex.getMessage());
-            ex.printStackTrace();
+        } catch (Exception e) {
+            NotificationHelper.error(actionLabel, "Failed!");
+            Logger.log("runAsTransaction: " + e.getMessage());
+            Logger.printStack(e);
             return false;
         }
     }
