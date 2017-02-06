@@ -11,7 +11,7 @@ public class GlobalVariable{
 
     @Expose @SerializedName("name") private String name;
     @Expose @SerializedName("isEnabled") private boolean isEnabled;
-    @Expose @SerializedName("groovyCode") private String groovyCode;
+    @Expose @SerializedName("script") private String script;
     @Expose @SerializedName("value") private String value;
 
     public String getName() {
@@ -30,12 +30,12 @@ public class GlobalVariable{
         isEnabled = enabled;
     }
 
-    public String getGroovyCode() {
-        return groovyCode;
+    public String getScript() {
+        return script;
     }
 
-    public void setGroovyCode(String groovyCode) {
-        this.groovyCode = groovyCode;
+    public void setScript(String script) {
+        this.script = script;
     }
 
     public String getValue() {

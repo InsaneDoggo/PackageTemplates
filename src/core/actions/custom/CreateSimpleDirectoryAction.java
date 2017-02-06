@@ -25,8 +25,8 @@ public class CreateSimpleDirectoryAction extends SimpleAction {
     }
 
     @Override
-    public boolean run(SimpleAction parentAction) {
-        PsiDirectory psiParent = PsiHelper.getPsiDirByPath(project, directory.getParentFile().getPath());
+    public boolean run() {
+        PsiDirectory psiParent = PsiHelper.findPsiDirByPath(project, directory.getParentFile().getPath());
         if (psiParent == null) {
             isDone = false;
             return false;
@@ -41,11 +41,12 @@ public class CreateSimpleDirectoryAction extends SimpleAction {
             }
         } catch (IncorrectOperationException ex) {
             Logger.log("CreateSimpleDirectoryAction " + ex.getMessage());
+            Logger.printStack(ex);
             isDone = false;
             return false;
         }
 
-        return super.run(this);
+        return super.run();
     }
 
 }

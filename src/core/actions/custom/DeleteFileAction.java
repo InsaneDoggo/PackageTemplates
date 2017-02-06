@@ -21,7 +21,7 @@ public class DeleteFileAction extends SimpleAction {
     }
 
     @Override
-    public boolean run(SimpleAction parentAction) {
+    public boolean run() {
         // save temp data
         pathToRestore = fileToDelete.getPath();
 
@@ -34,7 +34,7 @@ public class DeleteFileAction extends SimpleAction {
             return false;
         }
 
-        return super.run(this);
+        return super.run();
     }
 
 

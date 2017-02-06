@@ -11,6 +11,7 @@ import global.Const;
 import global.models.Favourite;
 import global.models.PackageTemplate;
 import global.utils.Logger;
+import global.utils.NotificationHelper;
 import global.utils.factories.GsonFactory;
 import global.utils.factories.WrappersFactory;
 import global.utils.file.FileReaderUtil;
@@ -51,17 +52,29 @@ public class PackageTemplateHelper {
     //=================================================================
     //  Getters
     //=================================================================
+
+    /**
+     * @return коллекцию шаблонов из Favourites
+     */
     public static ArrayList<PackageTemplate> getListPackageTemplate() {
-        //todo getListPackageTemplate
         ArrayList<Favourite> favourites = SaveUtil.reader().getListFavourite();
+        ArrayList<Favourite> favouritesToDelete = new ArrayList<>();
         ArrayList<PackageTemplate> templates = new ArrayList<>();
 
         for (Favourite item : favourites) {
             PackageTemplate pt = PackageTemplateHelper.getPackageTemplate(item.getPath());
             if (pt != null) {
                 templates.add(pt);
+            } else {
+                favouritesToDelete.add(item);
             }
         }
+
+        for (Favourite item : favouritesToDelete) {
+            //todo notify about removeFavourite
+            SaveUtil.editor().removeFavourite(item);
+        }
+        SaveUtil.editor().save();
 
         return templates;
     }
@@ -87,6 +100,7 @@ public class PackageTemplateHelper {
             return pt;
         } catch (Exception e) {
             Logger.log(e.getMessage());
+//            Logger.printStack(e);
         }
 
         return null;

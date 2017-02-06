@@ -35,6 +35,7 @@ public class ScriptExecutor {
             return (String) ((Invocable) getEngine()).invokeFunction(FUNCTION_NAME, variable);
         } catch (Exception e) {
             Logger.log("Run script ex: " + e.getMessage());
+            Logger.printStack(e);
             return Localizer.get("GroovyScriptError");
         }
     }

@@ -21,7 +21,7 @@ public class ActionExecutor {
         // Action
         Computable<Boolean> computable = () -> {
             for (SimpleAction action : actions) {
-                if (!action.run(null)) {
+                if (!action.run()) {
                     return false;
                 }
             }
@@ -62,7 +62,7 @@ public class ActionExecutor {
 
     public static boolean runAction(Project project, SimpleAction action, String actionLabel, AccessPrivileges accessPrivileges) {
         // Action
-        Computable<Boolean> computable = () -> action.run(null);
+        Computable<Boolean> computable = action::run;
 
         // Execution
         FutureTask<Boolean> futureTask = new FutureTask<>(() -> {
@@ -84,6 +84,7 @@ public class ActionExecutor {
             return futureTask.get();
         } catch (Exception ex) {
             Logger.log("run Action: " + ex.getMessage());
+            Logger.printStack(ex);
             return false;
         }
     }

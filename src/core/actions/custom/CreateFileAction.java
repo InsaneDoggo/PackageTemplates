@@ -28,8 +28,8 @@ public class CreateFileAction extends SimpleAction {
     }
 
     @Override
-    public boolean run(SimpleAction parentAction) {
-        PsiDirectory psiParent = PsiHelper.getPsiDirByPath(project, file.getParentFile().getPath());
+    public boolean run() {
+        PsiDirectory psiParent = PsiHelper.findPsiDirByPath(project, file.getParentFile().getPath());
         if(psiParent==null){
             isDone = false;
             return false;
@@ -42,11 +42,12 @@ public class CreateFileAction extends SimpleAction {
             psiParent.add(psiResultFile);
         } catch (IncorrectOperationException ex){
             Logger.log("CreateFileAction " + ex.getMessage());
+            Logger.printStack(ex);
             isDone = false;
             return false;
         }
 
-        return super.run(this);
+        return super.run();
     }
 
 }

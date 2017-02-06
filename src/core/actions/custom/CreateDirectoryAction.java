@@ -1,15 +1,21 @@
 package core.actions.custom;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.util.IncorrectOperationException;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.interfaces.IHasPsiDirectory;
+import core.actions.custom.interfaces.IHasWriteRules;
 import core.search.SearchAction;
 import core.search.SearchEngine;
+import global.dialogs.impl.NeverShowAskCheckBox;
 import global.models.BaseElement;
 import global.models.Directory;
+import global.models.WriteRules;
 import global.utils.Logger;
 import global.utils.file.PsiHelper;
+import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -17,13 +23,13 @@ import java.util.ArrayList;
 /**
  * Created by Arsen on 09.01.2017.
  */
-public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirectory {
+public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirectory, IHasWriteRules {
 
     private Directory directory;
     private Project project;
 
     //result
-    private PsiDirectory psiDirectoryCreated;
+    private PsiDirectory psiDirectoryResult;
 
     public CreateDirectoryAction(Directory directory, Project project) {
         this.directory = directory;
@@ -31,10 +37,10 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
     }
 
     @Override
-    public boolean run(SimpleAction parentAction) {
-        psiDirectoryCreated = null;
+    public boolean run() {
+        psiDirectoryResult = null;
 
-        if(parentAction instanceof IHasPsiDirectory){
+        if (parentAction instanceof IHasPsiDirectory) {
             PsiDirectory psiParent = ((IHasPsiDirectory) parentAction).getPsiDirectory();
 
             // Custom Path
@@ -48,30 +54,104 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
             }
 
             // check existence
-            psiDirectoryCreated = psiParent.findSubdirectory(directory.getName());
-            if(psiDirectoryCreated == null){
+            psiDirectoryResult = psiParent.findSubdirectory(directory.getName());
+            if (psiDirectoryResult == null) {
                 // create new one
-                psiDirectoryCreated = psiParent.createSubdirectory(directory.getName());
+                psiDirectoryResult = psiParent.createSubdirectory(directory.getName());
+            } else {
+                // WRITE CONFLICT
+                WriteRules rules = directory.getWriteRules();
+                if (rules == WriteRules.FROM_PARENT) {
+                    rules = geWriteRulesFromParent(parentAction);
+                }
+
+                switch (rules) {
+                    default:
+                    case ASK_ME:
+                        if (!onAsk(psiDirectoryResult)) {
+                            return false;
+                        }
+                        break;
+                    case OVERWRITE:
+                        if (!onOverwrite(psiDirectoryResult)) {
+                            return false;
+                        }
+                        break;
+                    case USE_EXISTING:
+                        if (!onUseExisting(psiDirectoryResult)) {
+                            return false;
+                        }
+                        break;
+                }
             }
         }
 
-        if(psiDirectoryCreated == null){
+        if (psiDirectoryResult == null) {
             isDone = false;
             return false;
         }
 
-        return super.run(this);
+        return super.run();
     }
 
-    @Override
-    public PsiDirectory getPsiDirectory() {
-        return psiDirectoryCreated;
+    private boolean onAsk(PsiDirectory psiDuplicate) {
+        int dialogAnswerCode = Messages.showYesNoDialog(project,
+                String.format(Localizer.get("warning.ArgDirectoryAlreadyExists"), psiDuplicate.getName()),
+                Localizer.get("title.WriteConflict"),
+                Localizer.get("action.Overwrite"),
+                Localizer.get("action.UseExisting"),
+                Messages.getQuestionIcon(),
+                new NeverShowAskCheckBox()
+        );
+        if (dialogAnswerCode == Messages.OK) {
+            if (!onOverwrite(psiDuplicate)) {
+                return false;
+            }
+        } else {
+            if(!onUseExisting(psiDuplicate)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean onOverwrite(PsiDirectory psiDuplicate) {
+        PsiDirectory psiParent = psiDuplicate.getParent();
+        String name = psiDuplicate.getName();
+
+        try {
+            //Remove
+            psiDuplicate.delete();
+            // Create
+            psiDirectoryResult = psiParent.createSubdirectory(name);
+            return true;
+        } catch (Exception e) {
+            Logger.log("CreateDirectoryAction " + e.getMessage());
+            Logger.printStack(e);
+            isDone = false;
+            return false;
+        }
+    }
+
+    private boolean onUseExisting(PsiDirectory psiDuplicate) {
+        psiDirectoryResult = psiDuplicate;
+        return true;
     }
 
 
     //=================================================================
     //  Utils
     //=================================================================
+    @Override
+    public PsiDirectory getPsiDirectory() {
+        return psiDirectoryResult;
+    }
+
+    @Override
+    public WriteRules getWriteRules() {
+        return directory.getWriteRules();
+    }
+
     @Nullable
     private PsiDirectory getPsiDirectoryFromCustomPath(BaseElement element, String pathFrom) {
         ArrayList<SearchAction> actions = element.getCustomPath().getListSearchAction();
@@ -84,7 +164,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
             return null;
         }
 
-        return PsiHelper.getPsiDirByPath(project, searchResultFile.getPath());
+        return PsiHelper.findPsiDirByPath(project, searchResultFile.getPath());
     }
 
 }

@@ -3,7 +3,6 @@ package core.actions.custom;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
 import core.actions.custom.base.SimpleAction;
 import global.utils.Logger;
 import global.utils.file.PsiHelper;
@@ -26,9 +25,9 @@ public class CopyFileAction extends SimpleAction {
     }
 
     @Override
-    public boolean run(SimpleAction parentAction) {
-        PsiDirectory psiParent = PsiHelper.getPsiDirByPath(project, fileTo.getParentFile().getPath());
-        PsiFile psiFrom = PsiHelper.getPsiFileByPath(project, fileFrom.getPath());
+    public boolean run() {
+        PsiDirectory psiParent = PsiHelper.findPsiDirByPath(project, fileTo.getParentFile().getPath());
+        PsiFile psiFrom = PsiHelper.findPsiFileByPath(project, fileFrom.getPath());
         if (psiParent == null || psiFrom == null) {
             isDone = false;
             return false;
@@ -47,6 +46,7 @@ public class CopyFileAction extends SimpleAction {
 //            psiCreatedFile.getVirtualFile().setBinaryContent(psiFrom.getVirtualFile().contentsToByteArray());
         } catch (Exception ex) {
             Logger.log("CopyFileAction " + ex.getMessage());
+            Logger.printStack(ex);
             isDone = false;
             return false;
         }
@@ -56,7 +56,7 @@ public class CopyFileAction extends SimpleAction {
 //            return false;
 //        }
 
-        return super.run(this);
+        return super.run();
     }
 
 }

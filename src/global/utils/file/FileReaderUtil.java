@@ -31,6 +31,7 @@ public class FileReaderUtil {
             return sb.toString();
         } catch (Exception e) {
             Logger.log("Error read file " + e.getMessage());
+            Logger.printStack(e);
             return null;
         }
     }

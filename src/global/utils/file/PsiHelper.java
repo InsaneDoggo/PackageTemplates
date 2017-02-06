@@ -13,32 +13,32 @@ import global.utils.Logger;
  */
 public class PsiHelper {
 
-    public static PsiDirectory getPsiDirByPath(Project project, String path) {
+    public static PsiDirectory findPsiDirByPath(Project project, String path) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
         if (virtualFile == null) {
-            Logger.log("getPsiDirByPath virtualFile is NULL");
+            Logger.log("findPsiDirByPath virtualFile is NULL");
             return null;
         }
 
         PsiDirectory psiParentDir = PsiManager.getInstance(project).findDirectory(virtualFile);
         if (psiParentDir == null) {
-            Logger.log("getPsiDirByPath psiDirectory is NULL");
+            Logger.log("findPsiDirByPath psiDirectory is NULL");
             return null;
         }
 
         return psiParentDir;
     }
 
-    public static PsiFile getPsiFileByPath(Project project, String path) {
+    public static PsiFile findPsiFileByPath(Project project, String path) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
         if (virtualFile == null) {
-            Logger.log("getPsiFileByPath virtualFile is NULL");
+            Logger.log("findPsiFileByPath virtualFile is NULL");
             return null;
         }
 
         PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
         if (psiFile == null) {
-            Logger.log("getPsiFileByPath psiFile is NULL");
+            Logger.log("findPsiFileByPath psiFile is NULL");
             return null;
         }
 

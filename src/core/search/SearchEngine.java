@@ -51,7 +51,6 @@ public class SearchEngine {
     //=================================================================
     //  Search
     //=================================================================
-
     /**
      * Поиск директории среди родителей файла(recursive getParentFile).
      */
@@ -163,7 +162,6 @@ public class SearchEngine {
         if (files != null) {
             for (File file : files) {
                 if (isNameEquals(action, file.getName())) {
-                    System.out.println("compare " + file.getName());
                     return file;
                 }
             }

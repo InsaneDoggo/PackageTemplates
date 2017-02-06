@@ -6,7 +6,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -64,6 +63,7 @@ public class FileWriter {
             return runnableFuture.get();
         } catch (InterruptedException | ExecutionException e) {
             Logger.log("runnableFuture  " + e.getMessage());
+            Logger.printStack(e);
         }
 
         return null;
@@ -87,6 +87,7 @@ public class FileWriter {
             return psiDirectoryFutureTask.get();
         } catch (Exception ex) {
             Logger.log(ex.getMessage());
+            Logger.printStack(ex);
             dirWrapper.setWriteException(ex);
             dirWrapper.getPackageTemplateWrapper().getFailedElements().add(dirWrapper);
             return null;
@@ -112,6 +113,7 @@ public class FileWriter {
                         return FileTemplateUtil.createFromTemplate(template, fileWrapper.getFile().getName(), properties, dir);
                     } catch (Exception e) {
                         Logger.log(e.getMessage());
+                        Logger.printStack(e);
                         fileWrapper.setWriteException(e);
                         fileWrapper.getPackageTemplateWrapper().getFailedElements().add(fileWrapper);
                         return null;
@@ -123,6 +125,7 @@ public class FileWriter {
             element = runnableFuture.get();
         } catch (InterruptedException | ExecutionException e) {
             Logger.log("runnableFuture  " + e.getMessage());
+            Logger.printStack(e);
         }
 
         fileWrapper.getPackageTemplateWrapper().getWrittenElements().add(element);
@@ -130,7 +133,7 @@ public class FileWriter {
     }
 
     public static PsiElement createFileFromTemplate(Project project, FileTemplate template, String fileName, Properties properties, String parentPath) {
-        PsiDirectory psiParentDir = PsiHelper.getPsiDirByPath(project, parentPath);
+        PsiDirectory psiParentDir = PsiHelper.findPsiDirByPath(project, parentPath);
         if(psiParentDir==null){
             return null;
         }
@@ -139,6 +142,7 @@ public class FileWriter {
             return FileTemplateUtil.createFromTemplate(template, fileName, properties, psiParentDir);
         } catch (Exception e) {
             Logger.log("createFileFromTemplate ex: " + e.getMessage());
+            Logger.printStack(e);
             return null;
         }
     }
@@ -164,6 +168,7 @@ public class FileWriter {
             return true;
         } catch (Exception e) {
             Logger.log(e.getMessage());
+            Logger.printStack(e);
             return false;
         }
     }
@@ -175,12 +180,13 @@ public class FileWriter {
             return true;
         } catch (IOException e) {
             Logger.log("copyFile ex: " + e.getMessage());
+            Logger.printStack(e);
             return false;
         }
     }
 
     public static PsiDirectory createDirectory(Project project, File dir) {
-        PsiDirectory psiParentDir = PsiHelper.getPsiDirByPath(project, dir.getParentFile().getPath());
+        PsiDirectory psiParentDir = PsiHelper.findPsiDirByPath(project, dir.getParentFile().getPath());
         if(psiParentDir==null){
             return null;
         }
@@ -194,6 +200,7 @@ public class FileWriter {
             return true;
         } catch (IOException e) {
             Logger.log("createDirectory ex: " + e.getMessage());
+            Logger.printStack(e);
             return false;
         }
     }
@@ -208,6 +215,7 @@ public class FileWriter {
             return true;
         } catch (Exception e) {
             Logger.log("removeDirectory ex: " + e.getMessage());
+            Logger.printStack(e);
             return false;
         }
     }
@@ -240,6 +248,7 @@ public class FileWriter {
             return true;
         } catch (IOException e) {
             Logger.log("removeDirectory ex: " + e.getMessage());
+            Logger.printStack(e);
             return false;
         }
     }
@@ -250,6 +259,7 @@ public class FileWriter {
             return true;
         } catch (IOException e) {
             Logger.log("removeFile ex: " + e.getMessage());
+            Logger.printStack(e);
             return false;
         }
     }
@@ -260,6 +270,7 @@ public class FileWriter {
             return true;
         } catch (IncorrectOperationException e) {
             Logger.log("removeFile ex: " + e.getMessage());
+            Logger.printStack(e);
             return false;
         }
     }

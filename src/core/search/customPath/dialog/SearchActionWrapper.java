@@ -60,6 +60,7 @@ public class SearchActionWrapper {
                 action.setDeepLimit((Integer) spnDeepLimit.getValue());
             } catch (Exception e){
                 Logger.log("collectData spnDeepLimit.getValue: " + e.getMessage());
+                Logger.printStack(e);
                 action.setDeepLimit(SearchEngine.DEEP_LIMITLESS);
             }
         } else {
@@ -77,6 +78,7 @@ public class SearchActionWrapper {
                 int testValue = (Integer) spnDeepLimit.getValue();
             } catch (Exception e){
                 Logger.log("collectData spnDeepLimit.getValue: " + e.getMessage());
+                Logger.printStack(e);
                 return new ValidationInfo(Localizer.get("warning.InvalidNumber"), tfName);
             }
         }

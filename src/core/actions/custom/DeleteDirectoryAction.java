@@ -24,8 +24,8 @@ public class DeleteDirectoryAction extends SimpleAction {
     }
 
     @Override
-    public boolean run(SimpleAction parentAction) {
-        PsiDirectory psiDirectory = PsiHelper.getPsiDirByPath(project, fileDirToDelete.getPath());
+    public boolean run() {
+        PsiDirectory psiDirectory = PsiHelper.findPsiDirByPath(project, fileDirToDelete.getPath());
         if(psiDirectory==null){
             isDone = false;
             return false;
@@ -35,11 +35,12 @@ public class DeleteDirectoryAction extends SimpleAction {
             psiDirectory.delete();
         } catch (IncorrectOperationException ex){
             Logger.log("DeleteDirectoryAction " + ex.getMessage());
+            Logger.printStack(ex);
             isDone = false;
             return false;
         }
 
-        return super.run(this);
+        return super.run();
     }
 
 }

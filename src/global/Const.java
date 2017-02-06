@@ -22,6 +22,7 @@ public interface Const {
 
     String PACKAGE_TEMPLATES_DIR_NAME = "packageTemplates";
     String PACKAGE_TEMPLATES_EXTENSION = "json";
+    String FILE_EXTENSION_SEPARATOR = ".";
 
     int MESSAGE_MAX_LENGTH = 50;
 

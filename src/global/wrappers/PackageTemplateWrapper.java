@@ -9,7 +9,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBCheckBox;
-import com.intellij.util.ui.GridBag;
 import core.actions.custom.CreateDirectoryAction;
 import core.actions.custom.DummyDirectoryAction;
 import core.actions.custom.base.SimpleAction;
@@ -17,7 +16,6 @@ import global.dialogs.FailedFilesDialog;
 import global.models.*;
 import global.utils.Logger;
 import global.utils.UIHelper;
-import global.utils.factories.GridBagFactory;
 import global.utils.file.FileWriter;
 import global.utils.i18n.Localizer;
 import global.visitors.*;
@@ -26,7 +24,6 @@ import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -278,6 +275,7 @@ public class PackageTemplateWrapper {
                             }
                         } catch (Exception ex) {
                             Logger.log(ex.getMessage());
+                            Logger.printStack(ex);
                         }
                     });
 

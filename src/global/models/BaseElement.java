@@ -13,7 +13,7 @@ public abstract class BaseElement {
     @Expose @SerializedName("isEnabled") private boolean isEnabled;
     @Expose @SerializedName("script") private String script;
     @Expose @SerializedName("customPath") private CustomPath customPath;
-    @Expose @SerializedName("writeBehavior") private WriteBehavior writeBehavior;
+    @Expose @SerializedName("writeRules") private WriteRules writeRules;
 
     public abstract boolean isDirectory();
 
@@ -49,11 +49,11 @@ public abstract class BaseElement {
         this.customPath = customPath;
     }
 
-    public WriteBehavior getWriteBehavior() {
-        return writeBehavior;
+    public WriteRules getWriteRules() {
+        return writeRules;
     }
 
-    public void setWriteBehavior(WriteBehavior writeBehavior) {
-        this.writeBehavior = writeBehavior;
+    public void setWriteRules(WriteRules writeRules) {
+        this.writeRules = writeRules;
     }
 }

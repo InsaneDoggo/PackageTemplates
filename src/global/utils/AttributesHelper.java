@@ -51,6 +51,7 @@ public class AttributesHelper {
             return fileTemplate.getUnsetAttributes(properties, ptWrapper.getProject());
         } catch (ParseException e) {
             Logger.log("getUnsetAttributes ex: " + e.getMessage());
+            Logger.printStack(e);
             return new String[0];
         }
     }

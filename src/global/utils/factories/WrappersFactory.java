@@ -28,8 +28,8 @@ public class WrappersFactory {
 
     public static PackageTemplateWrapper createAndWrapPackageTemplate(Project project, PackageTemplateWrapper.ViewMode mode) {
         Directory directory = new Directory();
-        directory.setWriteBehavior(WriteBehavior.CREATE_IF_NOT_EXIST);
-        directory.setName("example");
+        directory.setWriteRules(WriteRules.ASK_ME);
+        directory.setName(PackageTemplateWrapper.PATTERN_BASE_NAME);
         directory.setListBaseElement(new ArrayList<>());
         directory.setEnabled(true);
         directory.setScript("");
@@ -46,7 +46,7 @@ public class WrappersFactory {
         globalVariable.setName(PackageTemplateWrapper.ATTRIBUTE_BASE_NAME);
         globalVariable.setValue("Example");
         globalVariable.setEnabled(true);
-        globalVariable.setGroovyCode("");
+        globalVariable.setScript("");
 
         packageTemplate.getListGlobalVariable().add(globalVariable);
 
@@ -56,7 +56,7 @@ public class WrappersFactory {
     @NotNull
     public static DirectoryWrapper createNewWrappedDirectory(DirectoryWrapper parent) {
         Directory dir = new Directory();
-        dir.setWriteBehavior(WriteBehavior.FROM_PARENT);
+        dir.setWriteRules(WriteRules.FROM_PARENT);
         dir.setName("unnamed");
         dir.setEnabled(true);
         dir.setScript("");
@@ -76,7 +76,7 @@ public class WrappersFactory {
         FileWrapper fileWrapper = new FileWrapper();
 
         File file = new File();
-        file.setWriteBehavior(WriteBehavior.FROM_PARENT);
+        file.setWriteRules(WriteRules.FROM_PARENT);
         file.setName("Unnamed");
         file.setTemplateName(templateName);
         file.setExtension(extension);
