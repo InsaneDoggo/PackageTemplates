@@ -9,13 +9,13 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.ui.EditorTextField;
-import com.intellij.ui.JBIntSpinner;
 import com.intellij.ui.components.JBCheckBox;
 import core.search.SearchAction;
 import core.search.SearchActionType;
 import core.search.SearchEngine;
 import global.utils.Logger;
 import global.utils.i18n.Localizer;
+import global.views.spinner.IntSpinner;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
@@ -94,7 +94,7 @@ public class SearchActionWrapper {
     public ComboBox<SearchActionType> cmbActionTypes;
     public EditorTextField tfName;
     public JBCheckBox cbDeepLimit;
-    public JSpinner spnDeepLimit;
+    public IntSpinner spnDeepLimit;
     public JBCheckBox cbIsRegex;
 
     private final int DEFAULT_DEEP_LIMIT = 1;
@@ -120,7 +120,7 @@ public class SearchActionWrapper {
 
         //DeepLimit
         cbDeepLimit = new JBCheckBox(Localizer.get("label.DeepLimit"), action.getDeepLimit() != SearchEngine.DEEP_LIMITLESS);
-        spnDeepLimit = new JBIntSpinner(DEFAULT_DEEP_LIMIT, MIN_DEEP_LIMIT, MAX_DEEP_LIMIT);
+        spnDeepLimit = new IntSpinner(DEFAULT_DEEP_LIMIT, MIN_DEEP_LIMIT, MAX_DEEP_LIMIT);
         spnDeepLimit.setEnabled(cbDeepLimit.isSelected());
         spnDeepLimit.setValue(action.getDeepLimit() >= 0 ? action.getDeepLimit() : 0);
 

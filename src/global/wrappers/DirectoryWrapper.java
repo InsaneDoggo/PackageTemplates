@@ -106,7 +106,7 @@ public class DirectoryWrapper extends ElementWrapper {
     @Override
     public void buildView(Project project, JPanel container) {
         if (panel == null) {
-            panel = new JPanel(new MigLayout(new LC().fillX().debug()));
+            panel = new JPanel(new MigLayout(new LC().fillX()));
         } else {
             panel.removeAll();
         }
