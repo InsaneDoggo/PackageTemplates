@@ -10,6 +10,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.custom.base.SimpleAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
+import core.actions.executor.request.ActionRequest;
+import core.actions.executor.request.ActionRequestBuilder;
 import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
 import core.search.customPath.CustomPath;
@@ -77,7 +79,15 @@ public class NewPackageTemplateAction extends AnAction {
         List<SimpleAction> listSimpleAction = new ArrayList<>();
         ptWrapper.collectSimpleActions(project, virtualFile, listSimpleAction);
 
-        if (ActionExecutor.runAsTransaction(project, listSimpleAction, "ExecutePackageTemplate", AccessPrivileges.WRITE, UndoConfirmationPolicy.REQUEST_CONFIRMATION)) {
+        ActionRequest actionRequest = new ActionRequestBuilder()
+                .setProject(project)
+                .setActions(listSimpleAction)
+                .setActionLabel("Execute PackageTemplate")
+                .setAccessPrivileges(AccessPrivileges.WRITE)
+                .setConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
+                .build();
+
+        if (ActionExecutor.runAsTransaction(actionRequest)) {
             Logger.log("ExecutePackageTemplate  Done!");
         } else {
             Logger.log("ExecutePackageTemplate  Fail!");

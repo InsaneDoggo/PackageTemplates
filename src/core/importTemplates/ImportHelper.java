@@ -6,8 +6,12 @@ import com.intellij.openapi.project.Project;
 import core.actions.custom.CopyFileAction;
 import core.actions.custom.DeleteFileAction;
 import core.actions.custom.base.SimpleAction;
+import core.actions.custom.undoTransparent.TransparentCopyFileAction;
+import core.actions.custom.undoTransparent.TransparentDeleteFileAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
+import core.actions.executor.request.ActionRequest;
+import core.actions.executor.request.ActionRequestBuilder;
 import core.export.ExportHelper;
 import global.Const;
 import global.dialogs.SkipableConfirmationDialog;
@@ -69,7 +73,7 @@ public class ImportHelper {
                 break;
             }
 
-            ctx.listSimpleAction.add(new CopyFileAction(project, file, fileTo));
+            ctx.listSimpleAction.add(new TransparentCopyFileAction(file, fileTo));
         }
 
         // FileTemplate Actions
@@ -83,14 +87,21 @@ public class ImportHelper {
                         break;
                     }
 
-                    ctx.listSimpleAction.add(new CopyFileAction(project, template, fileTo));
+                    ctx.listSimpleAction.add(new TransparentCopyFileAction(template, fileTo));
                     break;
                 }
             }
         }
 
-        if (ActionExecutor.runAsTransaction(project, ctx.listSimpleAction, "Import PackageTemplates",
-                AccessPrivileges.WRITE, UndoConfirmationPolicy.REQUEST_CONFIRMATION)) {
+        ActionRequest actionRequest = new ActionRequestBuilder()
+                .setProject(project)
+                .setActions(ctx.listSimpleAction)
+                .setActionLabel("Import PackageTemplates")
+                .setAccessPrivileges(AccessPrivileges.WRITE)
+                .setConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
+                .build();
+
+        if (ActionExecutor.runAsTransaction(actionRequest)) {
             Logger.log("importPackageTemplate  Done!");
         } else {
             //todo revert?
@@ -186,7 +197,7 @@ public class ImportHelper {
         ) {
             @Override
             public void onOk() {
-                ctx.listSimpleAction.add(new DeleteFileAction(templateFile));
+                ctx.listSimpleAction.add(new TransparentDeleteFileAction(templateFile));
             }
 
             @Override

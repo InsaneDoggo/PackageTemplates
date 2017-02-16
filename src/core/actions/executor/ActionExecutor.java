@@ -6,6 +6,7 @@ import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import core.actions.custom.base.SimpleAction;
+import core.actions.executor.request.ActionRequest;
 import global.utils.Logger;
 import global.utils.NotificationHelper;
 
@@ -17,10 +18,10 @@ import java.util.concurrent.FutureTask;
  */
 public class ActionExecutor {
 
-    public static boolean runAsTransaction(Project project, List<SimpleAction> actions, String actionLabel, AccessPrivileges accessPrivileges, UndoConfirmationPolicy confirmationPolicy) {
+    public static boolean runAsTransaction(ActionRequest request) {
         // Action
         Computable<Boolean> computable = () -> {
-            for (SimpleAction action : actions) {
+            for (SimpleAction action : request.actions) {
                 if (!action.run()) {
                     return false;
                 }
@@ -30,7 +31,7 @@ public class ActionExecutor {
 
         // Execution
         FutureTask<Boolean> futureTask = new FutureTask<>(() -> {
-            switch (accessPrivileges) {
+            switch (request.accessPrivileges) {
                 case NONE:
                     return computable.compute();
                 case READ:
@@ -38,35 +39,40 @@ public class ActionExecutor {
                 case WRITE:
                     return ApplicationManager.getApplication().runWriteAction(computable);
                 default:
-                    throw new RuntimeException("Unknown AccessPrivileges " + accessPrivileges.name());
+                    throw new RuntimeException("Unknown AccessPrivileges " + request.accessPrivileges.name());
             }
         });
 
         // Handle result
-        CommandProcessor.getInstance().executeCommand(project, futureTask, actionLabel, null, confirmationPolicy);
+        if (request.isUndoable) {
+            CommandProcessor.getInstance().executeCommand(request.project, futureTask, request.actionLabel, request.groupId, request.confirmationPolicy);
+        } else {
+            CommandProcessor.getInstance().runUndoTransparentAction(futureTask);
+        }
+
         try {
             Boolean isSuccess = futureTask.get();
             if (isSuccess) {
-                NotificationHelper.info(actionLabel, "Success!");
+                NotificationHelper.info(request.actionLabel, "Success!");
             } else {
-                NotificationHelper.error(actionLabel, "Failed!");
+                NotificationHelper.error(request.actionLabel, "Failed!");
             }
             return isSuccess;
         } catch (Exception e) {
-            NotificationHelper.error(actionLabel, "Failed!");
+            NotificationHelper.error(request.actionLabel, "Failed!");
             Logger.log("runAsTransaction: " + e.getMessage());
             Logger.printStack(e);
             return false;
         }
     }
 
-    public static boolean runAction(Project project, SimpleAction action, String actionLabel, AccessPrivileges accessPrivileges) {
+    public static boolean runAction(ActionRequest request) {
         // Action
-        Computable<Boolean> computable = action::run;
+        Computable<Boolean> computable = request.actions.get(0)::run;
 
         // Execution
         FutureTask<Boolean> futureTask = new FutureTask<>(() -> {
-            switch (accessPrivileges) {
+            switch (request.accessPrivileges) {
                 case NONE:
                     return computable.compute();
                 case READ:
@@ -74,12 +80,17 @@ public class ActionExecutor {
                 case WRITE:
                     return ApplicationManager.getApplication().runWriteAction(computable);
                 default:
-                    throw new RuntimeException("Unknown AccessPrivileges " + accessPrivileges.name());
+                    throw new RuntimeException("Unknown AccessPrivileges " + request.accessPrivileges.name());
             }
         });
 
         // Handle result
-        CommandProcessor.getInstance().executeCommand(project, futureTask, actionLabel, null);
+        if (request.isUndoable) {
+            CommandProcessor.getInstance().executeCommand(request.project, futureTask, request.actionLabel, request.groupId, request.confirmationPolicy);
+        } else {
+            CommandProcessor.getInstance().runUndoTransparentAction(futureTask);
+        }
+
         try {
             return futureTask.get();
         } catch (Exception ex) {

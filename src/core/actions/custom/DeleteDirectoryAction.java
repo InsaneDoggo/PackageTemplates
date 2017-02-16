@@ -17,8 +17,7 @@ public class DeleteDirectoryAction extends SimpleAction {
     private File fileDirToDelete;
     private Project project;
 
-    public
-    DeleteDirectoryAction(File fileDirToDelete, Project project) {
+    public DeleteDirectoryAction(File fileDirToDelete, Project project) {
         this.fileDirToDelete = fileDirToDelete;
         this.project = project;
     }

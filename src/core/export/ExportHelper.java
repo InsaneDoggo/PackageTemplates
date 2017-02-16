@@ -3,10 +3,15 @@ package core.export;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.project.Project;
-import core.actions.custom.*;
 import core.actions.custom.base.SimpleAction;
+import core.actions.custom.undoTransparent.TransparentCopyFileAction;
+import core.actions.custom.undoTransparent.TransparentCreateFileAction;
+import core.actions.custom.undoTransparent.TransparentCreateSimpleDirectoryAction;
+import core.actions.custom.undoTransparent.TransparentDeleteDirectoryAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
+import core.actions.executor.request.ActionRequest;
+import core.actions.executor.request.ActionRequestBuilder;
 import global.Const;
 import global.dialogs.SimpleConfirmationDialog;
 import global.models.PackageTemplate;
@@ -66,7 +71,7 @@ public class ExportHelper {
         ) {
             @Override
             public void onOk() {
-                ctx.listSimpleAction.add(new DeleteDirectoryAction(rootDir, ctx.project));
+                ctx.listSimpleAction.add(new TransparentDeleteDirectoryAction(rootDir));
                 onExportConfirmed(ctx, rootDir);
             }
         };
@@ -76,7 +81,7 @@ public class ExportHelper {
         // Write PackageTemplate
         String ptJson = GsonFactory.getInstance().toJson(ctx.ptWrapper.getPackageTemplate(), PackageTemplate.class);
 
-        ctx.listSimpleAction.add(new CreateSimpleDirectoryAction(ctx.project, rootDir));
+        ctx.listSimpleAction.add(new TransparentCreateSimpleDirectoryAction(rootDir));
 
         File ptFile = new File(String.format("%s%s%s.%s",
                 rootDir.getPath(),
@@ -85,11 +90,11 @@ public class ExportHelper {
                 Const.PACKAGE_TEMPLATES_EXTENSION
         ));
 
-        ctx.listSimpleAction.add(new CreateFileAction(ctx.project, ptFile, ptJson));
+        ctx.listSimpleAction.add(new TransparentCreateFileAction(ptFile, ptJson));
 
         //Create Dir for FileTemplates
         File fileTemplateParentDir = new File(rootDir.getPath() + File.separator + FileTemplatesScheme.TEMPLATES_DIR);
-        ctx.listSimpleAction.add(new CreateSimpleDirectoryAction(ctx.project, fileTemplateParentDir));
+        ctx.listSimpleAction.add(new TransparentCreateSimpleDirectoryAction(fileTemplateParentDir));
 
         // Write FileTemplates
         File[] userFiles = new File(getFileTemplatesDirPath() + Const.DIR_USER).listFiles();
@@ -99,7 +104,7 @@ public class ExportHelper {
         for (String name : ctx.hsFileTemplateNames) {
             File file = findInArrays(name, userFiles, internalFiles, j2eeFiles);
             if (file != null) {
-                ctx.listSimpleAction.add(new CopyFileAction(ctx.project, file,
+                ctx.listSimpleAction.add(new TransparentCopyFileAction(file,
                         Paths.get(rootDir.getPath()
                                 + File.separator
                                 + FileTemplatesScheme.TEMPLATES_DIR
@@ -112,8 +117,16 @@ public class ExportHelper {
             }
         }
 
-        if (ActionExecutor.runAsTransaction(ctx.project, ctx.listSimpleAction, "Export PackageTemplates",
-                AccessPrivileges.WRITE, UndoConfirmationPolicy.REQUEST_CONFIRMATION)) {
+        ActionRequest actionRequest = new ActionRequestBuilder()
+                .setProject(ctx.project)
+                .setActions(ctx.listSimpleAction)
+                .setActionLabel("Export PackageTemplates")
+                .setAccessPrivileges(AccessPrivileges.WRITE)
+                .setConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
+                .setUndoable(false)
+                .build();
+
+        if (ActionExecutor.runAsTransaction(actionRequest)) {
             Logger.log("ExportPackageTemplate  Done!");
         } else {
             //todo revert?
