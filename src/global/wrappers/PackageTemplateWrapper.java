@@ -65,7 +65,7 @@ public class PackageTemplateWrapper {
 
     public JPanel buildView() {
         if (panel == null) {
-            panel = new JPanel(new MigLayout(new LC().fillX()));
+            panel = new JPanel(new MigLayout(new LC().fillX().gridGapY("0")));
         }
 
         // Properties
@@ -75,15 +75,13 @@ public class PackageTemplateWrapper {
             // Header
             JLabel jlName = new JLabel(Localizer.get("Name"));
             JLabel jlDescription = new JLabel(Localizer.get("Description"));
-            UIHelper.setRightPadding(jlName, UIHelper.PADDING_LABEL);
-            UIHelper.setRightPadding(jlDescription, UIHelper.PADDING_LABEL);
 
             etfName = UIHelper.getEditorTextField(packageTemplate.getName(), project);
             etfDescription = UIHelper.getEditorTextField(packageTemplate.getDescription(), project);
 
-            panel.add(jlName, new CC().wrap().spanX());
+            panel.add(jlName, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("0","8"));
             panel.add(etfName, new CC().spanX().growX().pushX().wrap());
-            panel.add(jlDescription, new CC().wrap().spanX());
+            panel.add(jlDescription, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("8","8"));
             panel.add(etfDescription, new CC().spanX().growX().pushX().wrap());
 
             // Properties
@@ -254,7 +252,7 @@ public class PackageTemplateWrapper {
     private SimpleAction wrapInDummyDirAction(SimpleAction simpleAction, PsiDirectory currentDir) {
         DummyDirectoryAction dummyAction = new DummyDirectoryAction(project, currentDir);
         dummyAction.addAction(simpleAction);
-        return  dummyAction;
+        return dummyAction;
     }
 
     private void checkWrittenElements(final Project project) {

@@ -80,8 +80,8 @@ public class GlobalVariableWrapper extends BaseWrapper {
         }
 
         container.add(createOptionsBlock(), new CC().spanX().split(3));
-        container.add(tfKey, new CC());
-        container.add(tfValue, new CC().pushX().growX().wrap());
+        container.add(tfKey, new CC().width("0").pushX().growX());
+        container.add(tfValue, new CC().width("0").pushX().growX().wrap());
     }
 
     @NotNull

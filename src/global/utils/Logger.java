@@ -2,17 +2,32 @@ package global.utils;
 
 import global.Const;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Created by CeH9 on 14.06.2016.
  */
 public class Logger {
 
     public static void log(String text) {
-        if (Const.IS_DEBUG) System.out.println(text);
+        if (Const.IS_DEBUG) {
+            System.out.println(text);
+            NotificationHelper.error("PackageTemplate DEBUG", text);
+        }
     }
 
     public static void printStack(Exception e) {
-        if (Const.IS_DEBUG) e.printStackTrace();
+        if (Const.IS_DEBUG) {
+            e.printStackTrace();
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            NotificationHelper.error("PackageTemplate TRACE", sw.toString());
+        }
     }
+
 
 }
