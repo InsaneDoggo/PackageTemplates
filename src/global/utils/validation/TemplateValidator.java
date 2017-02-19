@@ -137,19 +137,6 @@ public class TemplateValidator {
     //=================================================================
     //  PackageTemplate
     //=================================================================
-    public static boolean isPackageTemplateNameUnique(String text) {
-        ArrayList<PackageTemplate> listPackageTemplate = PackageTemplateHelper.getListPackageTemplate();
-        if(listPackageTemplate == null || listPackageTemplate.isEmpty()){
-            return true;
-        }
-
-        for(PackageTemplate pt : listPackageTemplate){
-            if(pt.getName().equals(text)) return false;
-        }
-
-        return true;
-    }
-
     @Nullable
     public static ValidationInfo validateProperties(PackageTemplateWrapper ptWrapper) {
         ValidationInfo result;
@@ -168,20 +155,6 @@ public class TemplateValidator {
         for (GlobalVariableWrapper gvWrapper : ptWrapper.getListGlobalVariableWrapper()) {
             result = TemplateValidator.validateText(gvWrapper.getTfValue(), gvWrapper.getTfValue().getText(), FieldType.GLOBAL_VARIABLE);
             if (result != null) return result;
-        }
-        return null;
-    }
-
-    public static ValidationInfo checkExisting(PackageTemplateWrapper ptWrapper, VirtualFile virtualFile, Project project) {
-        PsiDirectory currentDir = FileWriter.findCurrentDirectory(project, virtualFile);
-        if (currentDir != null) {
-            VirtualFile existingFile = currentDir.getVirtualFile().findChild(ptWrapper.getRootElement().getDirectory().getName());
-            if (existingFile != null) {
-                return new ValidationInfo(String.format(
-                        Localizer.get("warning.DirectoryAlreadyExist"),
-                        ptWrapper.getRootElement().getDirectory().getName()
-                ));
-            }
         }
         return null;
     }

@@ -1,7 +1,7 @@
 package core.actions.custom.base;
 
 import core.actions.custom.interfaces.IHasWriteRules;
-import global.models.WriteRules;
+import core.writeRules.WriteRules;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,7 @@
 package global.utils.factories;
 
 import com.intellij.openapi.project.Project;
+import core.writeRules.WriteRules;
 import global.models.*;
 import org.jetbrains.annotations.NotNull;
 import global.wrappers.DirectoryWrapper;
@@ -28,7 +29,7 @@ public class WrappersFactory {
 
     public static PackageTemplateWrapper createAndWrapPackageTemplate(Project project, PackageTemplateWrapper.ViewMode mode) {
         Directory directory = new Directory();
-        directory.setWriteRules(WriteRules.ASK_ME);
+        directory.setWriteRules(WriteRules.OVERWRITE);
         directory.setName(PackageTemplateWrapper.PATTERN_BASE_NAME);
         directory.setListBaseElement(new ArrayList<>());
         directory.setEnabled(true);

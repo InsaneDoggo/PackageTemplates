@@ -12,11 +12,16 @@ import core.actions.newPackageTemplate.dialogs.select.fileTemplate.SelectFileTem
 import core.script.ScriptDialog;
 import core.search.customPath.CustomPath;
 import core.search.customPath.dialog.CustomPathDialog;
+import core.writeRules.dialog.WriteRulesDialog;
 import global.listeners.ClickListener;
 import global.models.BaseElement;
+import core.writeRules.WriteRules;
+import global.models.File;
+import global.utils.Logger;
 import global.utils.factories.WrappersFactory;
 import global.utils.i18n.Localizer;
 import global.views.IconLabel;
+import global.views.IconLabelCustom;
 import icons.PluginIcons;
 
 import javax.swing.*;
@@ -61,6 +66,7 @@ public abstract class ElementWrapper extends BaseWrapper {
     public JLabel jlName;
     public EditorTextField etfName;
     public IconLabel jlCustomPath;
+    public IconLabelCustom<? extends BaseElement> jlWriteRules;
 
     private void createPopupForEditMode(MouseEvent mouseEvent) {
         JPopupMenu popupMenu = new JBPopupMenu();
@@ -82,6 +88,7 @@ public abstract class ElementWrapper extends BaseWrapper {
 
         addScriptMenuItems(popupMenu);
         addCustomPathMenuItems(popupMenu);
+        addWriteRulesMenuItems(popupMenu);
 
 
         popupMenu.show(jlName, mouseEvent.getX(), mouseEvent.getY());
@@ -91,6 +98,10 @@ public abstract class ElementWrapper extends BaseWrapper {
         packageTemplateWrapper.reBuildView();
     }
 
+
+    //=================================================================
+    //  Menu items
+    //=================================================================
     private void addScriptMenuItems(JPopupMenu popupMenu) {
         // With Script
         if (getElement().getScript() != null && !getElement().getScript().isEmpty()) {
@@ -152,7 +163,7 @@ public abstract class ElementWrapper extends BaseWrapper {
         } else {
             JMenuItem itemAdd = new JBMenuItem(Localizer.get("AddCustomPath"), PluginIcons.CUSTOM_PATH);
 
-            itemAdd.addActionListener(e -> new CustomPathDialog(getPackageTemplateWrapper().getProject(),null) {
+            itemAdd.addActionListener(e -> new CustomPathDialog(getPackageTemplateWrapper().getProject(), null) {
                 @Override
                 public void onSuccess(CustomPath customPath) {
                     getElement().setCustomPath(customPath);
@@ -162,6 +173,26 @@ public abstract class ElementWrapper extends BaseWrapper {
 
             popupMenu.add(itemAdd);
         }
+    }
+
+    private void addWriteRulesMenuItems(JPopupMenu popupMenu) {
+        WriteRules writeRules = getElement().getWriteRules();
+        if (writeRules == null) {
+            Logger.log("ElementWrapper getWriteRules NULL");
+            return;
+        }
+
+        JMenuItem itemEdit = new JBMenuItem(Localizer.get("EditWriteRules"), writeRules.toIcon());
+
+        itemEdit.addActionListener(e -> new WriteRulesDialog(getPackageTemplateWrapper().getProject(), writeRules, getParent() != null) {
+            @Override
+            public void onSuccess(WriteRules writeRules) {
+                getElement().setWriteRules(writeRules);
+                updateComponentsState();
+            }
+        }.show());
+
+        popupMenu.add(itemEdit);
     }
 
     protected void updateOptionIcons() {
@@ -176,6 +207,11 @@ public abstract class ElementWrapper extends BaseWrapper {
         } else {
             jlCustomPath.disableIcon();
         }
+
+        if (getElement().getWriteRules() != null) {
+            jlWriteRules.updateIcon();
+        }
+
     }
 
 

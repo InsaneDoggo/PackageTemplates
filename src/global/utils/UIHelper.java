@@ -16,7 +16,7 @@ public class UIHelper {
 
     public static final int DEFAULT_PADDING = 0;
     public static final int PADDING = 28;
-    public static final int PADDING_LABEL = 8;
+    public static final int PADDING_LABEL = 16;
     public static int PADDING_VERTICAL = 8;
 
     public static EditorTextField getEditorTextField(String defValue, Project project) {

@@ -52,7 +52,7 @@ public class ImplementPresenterImpl implements ImplementPresenter {
 
         prepareFields();
 
-        return TemplateValidator.checkExisting(ptWrapper, virtualFile, project);
+        return null;
     }
 
     private void prepareFields() {

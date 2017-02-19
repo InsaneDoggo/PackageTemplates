@@ -13,11 +13,11 @@ public class Logger {
     public static void log(String text) {
         if (Const.IS_DEBUG) {
             System.out.println(text);
-            NotificationHelper.error("PackageTemplate DEBUG", text);
+            NotificationHelper.info("PackageTemplate LOG ", text);
         }
     }
 
-    public static void printStack(Exception e) {
+    public static void printStack(Throwable e) {
         if (Const.IS_DEBUG) {
             e.printStackTrace();
 
@@ -26,6 +26,18 @@ public class Logger {
             e.printStackTrace(pw);
 
             NotificationHelper.error("PackageTemplate TRACE", sw.toString());
+        }
+    }
+
+    public static void logAndPrintStack(String text, Throwable e) {
+        if (Const.IS_DEBUG) {
+            e.printStackTrace();
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+
+            NotificationHelper.error("PackageTemplate ", text + "\n" + sw.toString());
         }
     }
 

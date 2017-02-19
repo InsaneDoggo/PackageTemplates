@@ -5,6 +5,7 @@ import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.components.JBCheckBox;
+import core.writeRules.WriteRules;
 import global.models.BaseElement;
 import global.models.File;
 import global.utils.i18n.Localizer;
@@ -12,6 +13,7 @@ import global.utils.templates.FileTemplateHelper;
 import global.utils.validation.FieldType;
 import global.utils.validation.TemplateValidator;
 import global.views.IconLabel;
+import global.views.IconLabelCustom;
 import icons.PluginIcons;
 import base.ElementVisitor;
 import net.miginfocom.layout.CC;
@@ -39,11 +41,11 @@ public class FileWrapper extends ElementWrapper {
         jlName = new JLabel(UIHelper.getIconByFileExtension(getFile().getExtension()), SwingConstants.LEFT);
         jlName.setDisabledIcon(jlName.getIcon());
         jlName.setText(getFile().getTemplateName());
-        UIHelper.setRightPadding(jlName, UIHelper.PADDING_LABEL);
 
         etfName = UIHelper.getEditorTextField(getFile().getName(), project);
 
         container.add(getOptionsPanel(), new CC().spanX().split(3));
+        container.add(jlName, new CC().pad(0, 0, 0, UIHelper.PADDING_LABEL));
         container.add(etfName, new CC().wrap().pushX().growX());
         updateComponentsState();
 
@@ -93,12 +95,20 @@ public class FileWrapper extends ElementWrapper {
                 PluginIcons.CUSTOM_PATH_DISABLED
         );
 
+        // WriteRules
+        jlWriteRules = new IconLabelCustom<File>(Localizer.get("tooltip.WriteRules"), file) {
+            @Override
+            public void onUpdateIcon(File item) {
+                setIcon(item.getWriteRules().toIcon());
+            }
+        };
+
         updateOptionIcons();
 
         optionsPanel.add(cbEnabled, new CC());
         optionsPanel.add(jlScript, new CC());
         optionsPanel.add(jlCustomPath, new CC());
-        optionsPanel.add(jlName, new CC());
+        optionsPanel.add(jlWriteRules, new CC());
         return optionsPanel;
     }
 

@@ -12,6 +12,7 @@ import global.utils.i18n.Localizer;
 import global.utils.validation.FieldType;
 import global.utils.validation.TemplateValidator;
 import global.views.IconLabel;
+import global.views.IconLabelCustom;
 import icons.PluginIcons;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
@@ -118,9 +119,9 @@ public class DirectoryWrapper extends ElementWrapper {
         etfName = UIHelper.getEditorTextField(getDirectory().getName(), project);
         addMouseListener();
 
-        container.add(getOptionsPanel(), new CC().spanX().split(4));
+        container.add(getOptionsPanel(), new CC().spanX().split(3));
         container.add(jlName, new CC().pad(0, 0, 0, UIHelper.PADDING_LABEL));
-        container.add(etfName, new CC().spanX().growX().pushX().wrap());
+        container.add(etfName, new CC().growX().pushX().wrap());
 
         updateComponentsState();
 
@@ -157,12 +158,21 @@ public class DirectoryWrapper extends ElementWrapper {
                 PluginIcons.CUSTOM_PATH_DISABLED
         );
 
+        // WriteRules
+        jlWriteRules = new IconLabelCustom<Directory>(Localizer.get("tooltip.WriteRules"), directory) {
+            @Override
+            public void onUpdateIcon(Directory item) {
+                setIcon(item.getWriteRules().toIcon());
+            }
+        };
+
         updateOptionIcons();
 
         JPanel optionsPanel = new JPanel(new MigLayout(new LC()));
         optionsPanel.add(cbEnabled, new CC());
         optionsPanel.add(jlScript, new CC());
         optionsPanel.add(jlCustomPath, new CC());
+        optionsPanel.add(jlWriteRules, new CC());
         return optionsPanel;
     }
 

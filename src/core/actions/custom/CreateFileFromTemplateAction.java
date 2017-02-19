@@ -2,7 +2,6 @@ package core.actions.custom;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
@@ -17,12 +16,11 @@ import global.Const;
 import global.dialogs.impl.NeverShowAskCheckBox;
 import global.models.BaseElement;
 import global.models.File;
-import global.models.WriteRules;
+import core.writeRules.WriteRules;
 import global.utils.Logger;
 import global.utils.file.FileWriter;
 import global.utils.file.PsiHelper;
 import global.utils.i18n.Localizer;
-import groovy.util.logging.Log;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

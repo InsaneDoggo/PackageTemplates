@@ -1,6 +1,6 @@
 package core.actions.custom.interfaces;
 
-import global.models.WriteRules;
+import core.writeRules.WriteRules;
 
 /**
  * Created by Arsen on 02.02.2017.
