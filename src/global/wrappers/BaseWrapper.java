@@ -11,7 +11,7 @@ import javax.swing.*;
 public abstract class BaseWrapper {
 
     protected JBCheckBox cbEnabled;
-    protected IconLabel jlGroovy;
+    protected IconLabel jlScript;
 
     public abstract void updateComponentsState();
 

@@ -36,13 +36,13 @@ public class ScriptExecutor {
         } catch (Exception e) {
             Logger.log("Run script ex: " + e.getMessage());
             Logger.printStack(e);
-            return Localizer.get("GroovyScriptError");
+            return Localizer.get("ScriptError");
         }
     }
 
-    public static ValidationInfo ValidateGroovyCode(EditorTextField etfCode, String variable) {
+    public static ValidationInfo ValidateScript(EditorTextField etfCode, String variable) {
         try {
-            return TemplateValidator.validateText(etfCode, runScript(etfCode.getText(), variable), FieldType.GROOVY_SCRIPT);
+            return TemplateValidator.validateText(etfCode, runScript(etfCode.getText(), variable), FieldType.SCRIPT);
         } catch (Exception e) {
             return new ValidationInfo(e.getMessage());
         }

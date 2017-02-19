@@ -46,7 +46,7 @@ public abstract class ScriptDialog extends BaseDialog {
     @Override
     public void preShow() {
         panel.setLayout(new GridBagLayout());
-        GridBag gridBag = GridBagFactory.getBagForGroovyDialog();
+        GridBag gridBag = GridBagFactory.getBagForScriptDialog();
 
         createEditorField();
         createViews();
@@ -100,7 +100,7 @@ public abstract class ScriptDialog extends BaseDialog {
 
     @Override
     protected ValidationInfo doValidate() {
-        return ScriptExecutor.ValidateGroovyCode(etfCode, etfName.getText());
+        return ScriptExecutor.ValidateScript(etfCode, etfName.getText());
     }
 
 }

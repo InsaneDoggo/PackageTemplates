@@ -36,7 +36,7 @@ public class GridBagFactory {
                 .setDefaultWeightX(1);
     }
 
-    public static GridBag getBagForGroovyDialog() {
+    public static GridBag getBagForScriptDialog() {
         return new GridBag()
                 .setDefaultFill(GridBagConstraints.HORIZONTAL)
                 .setDefaultInsets(new JBInsets(4, 4, 4, 4))

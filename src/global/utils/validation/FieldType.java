@@ -8,6 +8,6 @@ public enum FieldType {
     CLASS_NAME,
     DIRECTORY_NAME,
     PACKAGE_TEMPLATE_NAME,
-    GROOVY_SCRIPT,
+    SCRIPT,
     PLAIN_TEXT
 }

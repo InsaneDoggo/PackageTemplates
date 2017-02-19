@@ -88,8 +88,8 @@ public class GlobalVariableWrapper extends BaseWrapper {
     private JPanel createOptionsBlock() {
         JPanel optionsPanel = new JPanel(new MigLayout(new LC()));
 
-        // Groovy
-        jlGroovy = new IconLabel(
+        // Script
+        jlScript = new IconLabel(
                 Localizer.get("tooltip.ColoredWhenItemHasScript"),
                 PluginIcons.SCRIPT,
                 PluginIcons.SCRIPT_DISABLED
@@ -97,7 +97,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
 
         updateComponentsState();
 
-        optionsPanel.add(jlGroovy, new CC().pad(0, 0, 0, 6));
+        optionsPanel.add(jlScript, new CC().pad(0, 0, 0, 6));
         optionsPanel.add(jlVariable, new CC());
         return optionsPanel;
     }
@@ -122,32 +122,32 @@ public class GlobalVariableWrapper extends BaseWrapper {
 
     private void addScriptMenuItems(JPopupMenu popupMenu, Project project) {
         if (globalVariable.getScript() != null && !globalVariable.getScript().isEmpty()) {
-            JMenuItem itemEditGroovy = new JBMenuItem(Localizer.get("EditScript"), PluginIcons.SCRIPT);
-            itemEditGroovy.addActionListener(e -> new ScriptDialog(project, globalVariable.getScript()) {
+            JMenuItem itemEditScript = new JBMenuItem(Localizer.get("EditScript"), PluginIcons.SCRIPT);
+            itemEditScript.addActionListener(e -> new ScriptDialog(project, globalVariable.getScript()) {
                 @Override
                 public void onSuccess(String code) {
                     globalVariable.setScript(code);
                     updateComponentsState();
                 }
             }.show());
-            popupMenu.add(itemEditGroovy);
+            popupMenu.add(itemEditScript);
 
-            JMenuItem itemDeleteGroovy = new JBMenuItem(Localizer.get("DeleteScript"), AllIcons.Actions.Delete);
-            itemDeleteGroovy.addActionListener(e -> {
+            JMenuItem itemDeleteScript = new JBMenuItem(Localizer.get("DeleteScript"), AllIcons.Actions.Delete);
+            itemDeleteScript.addActionListener(e -> {
                 globalVariable.setScript("");
                 updateComponentsState();
             });
-            popupMenu.add(itemDeleteGroovy);
+            popupMenu.add(itemDeleteScript);
         } else {
-            JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddScript"), PluginIcons.SCRIPT);
-            itemAddGroovy.addActionListener(e -> new ScriptDialog(project) {
+            JMenuItem itemAddScript = new JBMenuItem(Localizer.get("AddScript"), PluginIcons.SCRIPT);
+            itemAddScript.addActionListener(e -> new ScriptDialog(project) {
                 @Override
                 public void onSuccess(String code) {
                     globalVariable.setScript(code);
                     updateComponentsState();
                 }
             }.show());
-            popupMenu.add(itemAddGroovy);
+            popupMenu.add(itemAddScript);
         }
     }
 
@@ -180,7 +180,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
         globalVariable.setValue(tfValue.getText());
     }
 
-    public void runGroovyScript() {
+    public void runScript() {
         if (globalVariable.getScript() != null && !globalVariable.getScript().isEmpty()) {
             globalVariable.setValue(ScriptExecutor.runScript(globalVariable.getScript(), globalVariable.getValue()));
         }
@@ -189,9 +189,9 @@ public class GlobalVariableWrapper extends BaseWrapper {
     @Override
     public void updateComponentsState() {
         if (globalVariable.getScript() != null && !globalVariable.getScript().isEmpty()) {
-            jlGroovy.enableIcon();
+            jlScript.enableIcon();
         } else {
-            jlGroovy.disableIcon();
+            jlScript.disableIcon();
         }
     }
 

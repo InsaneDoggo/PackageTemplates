@@ -9,9 +9,9 @@ import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
 
 /**
- * Выполняет Groovy Script.
+ * Выполняет Script.
  */
-public class RunGroovyScriptVisitor implements ElementVisitor {
+public class RunScriptVisitor implements ElementVisitor {
 
     @Override
     public void visit(DirectoryWrapper wrapper) {

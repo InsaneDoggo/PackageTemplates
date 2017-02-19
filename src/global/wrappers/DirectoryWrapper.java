@@ -143,8 +143,8 @@ public class DirectoryWrapper extends ElementWrapper {
         cbEnabled.addItemListener(e -> setEnabled(cbEnabled.isSelected()));
         cbEnabled.setToolTipText(Localizer.get("tooltip.IfCheckedElementWillBeCreated"));
 
-        // Groovy
-        jlGroovy = new IconLabel(
+        // Script
+        jlScript = new IconLabel(
                 Localizer.get("tooltip.ColoredWhenItemHasScript"),
                 PluginIcons.SCRIPT,
                 PluginIcons.SCRIPT_DISABLED
@@ -161,7 +161,7 @@ public class DirectoryWrapper extends ElementWrapper {
 
         JPanel optionsPanel = new JPanel(new MigLayout(new LC()));
         optionsPanel.add(cbEnabled, new CC());
-        optionsPanel.add(jlGroovy, new CC());
+        optionsPanel.add(jlScript, new CC());
         optionsPanel.add(jlCustomPath, new CC());
         return optionsPanel;
     }

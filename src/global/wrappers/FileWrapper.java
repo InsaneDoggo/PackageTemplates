@@ -79,8 +79,8 @@ public class FileWrapper extends ElementWrapper {
         cbEnabled.addItemListener(e -> setEnabled(cbEnabled.isSelected()));
         cbEnabled.setToolTipText(Localizer.get("tooltip.IfCheckedElementWillBeCreated"));
 
-        // Groovy
-        jlGroovy = new IconLabel(
+        // Script
+        jlScript = new IconLabel(
                 Localizer.get("tooltip.ColoredWhenItemHasScript"),
                 PluginIcons.SCRIPT,
                 PluginIcons.SCRIPT_DISABLED
@@ -96,7 +96,7 @@ public class FileWrapper extends ElementWrapper {
         updateOptionIcons();
 
         optionsPanel.add(cbEnabled, new CC());
-        optionsPanel.add(jlGroovy, new CC());
+        optionsPanel.add(jlScript, new CC());
         optionsPanel.add(jlCustomPath, new CC());
         optionsPanel.add(jlName, new CC());
         return optionsPanel;

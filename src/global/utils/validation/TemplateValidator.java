@@ -95,7 +95,7 @@ public class TemplateValidator {
                 break;
             case CLASS_NAME:
             case DIRECTORY_NAME:
-            case GROOVY_SCRIPT:
+            case SCRIPT:
             case GLOBAL_VARIABLE:
 //                if (text.trim().isEmpty()) {
 //                    return new ValidationInfo(EMPTY_FIELDS, jComponent);

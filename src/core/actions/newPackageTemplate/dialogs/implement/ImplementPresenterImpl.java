@@ -60,7 +60,7 @@ public class ImplementPresenterImpl implements ImplementPresenter {
         ptWrapper.prepareGlobals();
         ptWrapper.addGlobalVariablesToFileTemplates();
         ptWrapper.replaceNameVariable();
-        ptWrapper.runElementsGroovyScript();
+        ptWrapper.runElementsScript();
     }
 
 }

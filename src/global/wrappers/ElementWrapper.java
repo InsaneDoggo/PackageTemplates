@@ -80,7 +80,7 @@ public abstract class ElementWrapper extends BaseWrapper {
         popupMenu.add(itemAddFile);
         popupMenu.add(itemAddDirectory);
 
-        addGroovyMenuItems(popupMenu);
+        addScriptMenuItems(popupMenu);
         addCustomPathMenuItems(popupMenu);
 
 
@@ -91,8 +91,8 @@ public abstract class ElementWrapper extends BaseWrapper {
         packageTemplateWrapper.reBuildView();
     }
 
-    private void addGroovyMenuItems(JPopupMenu popupMenu) {
-        // With Groovy script
+    private void addScriptMenuItems(JPopupMenu popupMenu) {
+        // With Script
         if (getElement().getScript() != null && !getElement().getScript().isEmpty()) {
             JMenuItem itemEdit = new JBMenuItem(Localizer.get("EditScript"), PluginIcons.SCRIPT);
             JMenuItem itemDelete = new JBMenuItem(Localizer.get("DeleteScript"), AllIcons.Actions.Delete);
@@ -114,10 +114,10 @@ public abstract class ElementWrapper extends BaseWrapper {
             popupMenu.add(itemEdit);
             popupMenu.add(itemDelete);
         } else {
-            // Without Groovy script
-            JMenuItem itemAddGroovy = new JBMenuItem(Localizer.get("AddScript"), PluginIcons.SCRIPT);
+            // Without Script
+            JMenuItem itemAddScript = new JBMenuItem(Localizer.get("AddScript"), PluginIcons.SCRIPT);
 
-            itemAddGroovy.addActionListener(e -> new ScriptDialog(getPackageTemplateWrapper().getProject()) {
+            itemAddScript.addActionListener(e -> new ScriptDialog(getPackageTemplateWrapper().getProject()) {
                 @Override
                 public void onSuccess(String code) {
                     getElement().setScript(code);
@@ -125,7 +125,7 @@ public abstract class ElementWrapper extends BaseWrapper {
                 }
             }.show());
 
-            popupMenu.add(itemAddGroovy);
+            popupMenu.add(itemAddScript);
         }
     }
 
@@ -166,9 +166,9 @@ public abstract class ElementWrapper extends BaseWrapper {
 
     protected void updateOptionIcons() {
         if (getElement().getScript() != null && !getElement().getScript().isEmpty()) {
-            jlGroovy.enableIcon();
+            jlScript.enableIcon();
         } else {
-            jlGroovy.disableIcon();
+            jlScript.disableIcon();
         }
 
         if (getElement().getCustomPath() != null) {

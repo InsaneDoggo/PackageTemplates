@@ -170,7 +170,7 @@ public class PackageTemplateWrapper {
                     variableWrapper.replaceBaseName(packageTemplate.getMapGlobalVars().get(ATTRIBUTE_BASE_NAME));
                 }
                 // SCRIPT
-                variableWrapper.runGroovyScript();
+                variableWrapper.runScript();
             }
             packageTemplate.getMapGlobalVars().put(variableWrapper.getGlobalVariable().getName(), variableWrapper.getGlobalVariable().getValue());
         }
@@ -216,8 +216,8 @@ public class PackageTemplateWrapper {
         }
     }
 
-    public void runElementsGroovyScript() {
-        rootElement.accept(new RunGroovyScriptVisitor());
+    public void runElementsScript() {
+        rootElement.accept(new RunScriptVisitor());
     }
 
     public void collectSimpleActions(Project project, VirtualFile virtualFile, List<SimpleAction> listSimpleAction) {

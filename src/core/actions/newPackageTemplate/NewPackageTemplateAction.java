@@ -14,8 +14,6 @@ import core.actions.executor.request.ActionRequest;
 import core.actions.executor.request.ActionRequestBuilder;
 import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
-import core.search.customPath.CustomPath;
-import core.search.customPath.dialog.CustomPathDialog;
 import global.models.PackageTemplate;
 import global.utils.Logger;
 import global.utils.factories.WrappersFactory;
@@ -57,7 +55,7 @@ public class NewPackageTemplateAction extends AnAction {
         ptWrapper.prepareGlobals();
         ptWrapper.addGlobalVariablesToFileTemplates();
         ptWrapper.replaceNameVariable();
-        ptWrapper.runElementsGroovyScript();
+        ptWrapper.runElementsScript();
 
         collectAndExecuteActions(project, virtualFile, ptWrapper);
 //        });
