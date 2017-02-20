@@ -11,7 +11,7 @@ Be familiar with tutorials from **jetbrains** listed below:<br>
 
 IDE allow you to bind shortcuts to **Action**. Plugin uses **Action** for start **Main Dialog**. Also you can register **Action** for each **Package Template** by mark corresponding checkbox when [edit][4] template.
 
-В настройках пользуйтесь поиском по имени. Action **Основного диалога** зарегистрирован под именем **"{{ site.data.const.main_action_name }}"**. Actions шаблонов используют их имена.
+U can use search in IDE settings dialog. Action of plugin's **Home Dialog** registred as **"{{ site.data.const.main_action_name }}"**. Actions of PackageTemplates uses corresponding names.
 
 ### Action's Context
 Where template will be created? For successful use of shortcuts **focus** should be on:

@@ -4,8 +4,6 @@ lang: en
 order: 9
 ---
 
-# todo translate to eng ^_^
-
 ### Unique names for File Templates
 At this moment import **File Templates** in the IDEA-based IDE implemented with **silent replace**. When you import settings with ** File -> Import Setting .. ** **File Templates** with same name will be replaced without any notification. we recommend you to use unique names to avoid replacement.
 

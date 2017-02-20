@@ -17,6 +17,7 @@ forum_plugin: https://intellij-support.jetbrains.com/hc/en-us/community/posts/20
 # GitHub
 github_releases: https://github.com/CeH9/PackageTemplates/releases
 github_todo_project: https://github.com/CeH9/PackageTemplates/projects/1
+github_issues: https://github.com/CeH9/PackageTemplates/issues
 
 # Mails
 mailto_plugin: mailto:senya.dev@gmail.com?subject=Package%20Templates

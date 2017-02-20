@@ -12,8 +12,7 @@ Package Templates это плагин реализующий Multiple [File Temp
 
 * Intellij Idea Community Edition.
 * Android Studio.
-
-Так же плагин требует наличие groovy plugin, который являяется стандартным и поставляется в комплекте с IDE.
+* PyCharm.
 
 ### Подробнее:
 {% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" | sort: 'order' %}
@@ -26,9 +25,9 @@ Package Templates это плагин реализующий Multiple [File Temp
 
 ### Контакты
 
-1. [Пост][4] на форуме. (Скоро появится)
-2. [Почта][2] для вопросов связанных с плагином. В теме указать **"Package Templates"**
-3. [Почта][3] для общих вопросов к разработчику.
+1. [Почта][2] для вопросов связанных с плагином. В теме указать **"Package Templates"**
+2. [Почта][3] для общих вопросов к разработчику.
+3. Так же можно оставлять вопросы с помощью [Issues][6] на GitHub. С Label **question**
 
 ### Awards
 Понравился плагин? Ставь лойс: <a class="github-button" href="https://github.com/CeH9/PackageTemplates" data-icon="octicon-star" data-count-href="/CeH9/PackageTemplates/stargazers" data-count-api="/repos/CeH9/PackageTemplates#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star CeH9/PackageTemplates on GitHub">Star</a>
@@ -36,5 +35,5 @@ Package Templates это плагин реализующий Multiple [File Temp
 [1]: https://www.jetbrains.com/help/idea/2016.2/file-and-code-templates.html
 [2]: {{ site.data.links.mailto_plugin }}
 [3]: {{ site.data.links.mailto_developer }}
-[4]: {{ site.data.links.forum_plugin }}
 [5]: {{ site.data.links.github_todo_project }}
+[6]: {{ site.data.links.github_issues }}
