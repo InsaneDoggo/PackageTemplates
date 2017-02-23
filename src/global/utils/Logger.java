@@ -13,7 +13,10 @@ public class Logger {
     public static void log(String text) {
         if (Const.IS_DEBUG) {
             System.out.println(text);
-            NotificationHelper.info("PackageTemplate LOG ", text);
+
+            if (Const.SHOULD_LOG_TO_NOTIFICATION) {
+                NotificationHelper.info("PackageTemplate LOG ", text);
+            }
         }
     }
 
@@ -21,11 +24,13 @@ public class Logger {
         if (Const.IS_DEBUG) {
             e.printStackTrace();
 
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
+            if (Const.SHOULD_LOG_TO_NOTIFICATION) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
 
-            NotificationHelper.error("PackageTemplate TRACE", sw.toString());
+                NotificationHelper.error("PackageTemplate TRACE", sw.toString());
+            }
         }
     }
 
@@ -33,11 +38,13 @@ public class Logger {
         if (Const.IS_DEBUG) {
             e.printStackTrace();
 
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
+            if (Const.SHOULD_LOG_TO_NOTIFICATION) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
 
-            NotificationHelper.error("PackageTemplate ", text + "\n" + sw.toString());
+                NotificationHelper.error("PackageTemplate ", text + "\n" + sw.toString());
+            }
         }
     }
 

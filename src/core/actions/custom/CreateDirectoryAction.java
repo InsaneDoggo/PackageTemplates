@@ -1,13 +1,8 @@
 package core.actions.custom;
 
-import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
-import com.jetbrains.cidr.lang.actions.newFile.OCNewFileHelper;
-import com.jetbrains.cidr.lang.actions.newFile.OCNewFileHelperProvider;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.interfaces.IHasPsiDirectory;
 import core.actions.custom.interfaces.IHasWriteRules;
@@ -61,7 +56,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
             psiDirectoryResult = psiParent.findSubdirectory(directory.getName());
             if (psiDirectoryResult == null) {
                 // create new one
-                createNewOne(psiParent, directory.getName());
+                createSubDir(psiParent, directory.getName());
             } else {
                 // WRITE CONFLICT
                 WriteRules rules = directory.getWriteRules();
@@ -127,7 +122,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
             //Remove
             psiDuplicate.delete();
             // Create
-            createNewOne(psiParent, name);
+            createSubDir(psiParent, name);
             return true;
         } catch (Exception e) {
             Logger.log("CreateDirectoryAction " + e.getMessage());
@@ -142,34 +137,8 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
         return true;
     }
 
-    private void createNewOne(PsiDirectory psiParent, String name) {
-        try {
-            OCNewFileHelper helper = getFileHelperProvider();
-//                DialogWrapper dialogWrapper = new XcodeCreateFileDialog();
-            PsiFile[] psiFiles = new PsiFile[1];
-            DialogWrapper dialogWrapper = null;
-
-            helper.doCreateFiles(project, psiParent, new String[]{"myName.swift"}, psiFiles, dialogWrapper, null);
-            psiDirectoryResult = (PsiDirectory) psiFiles[0];
-            Logger.log("AppCode psiDirectoryResult:  " + psiDirectoryResult);
-        } catch (NoClassDefFoundError e) {
-            Logger.logAndPrintStack("AppCode CreateFiles " + name, e.fillInStackTrace());
-
-            psiDirectoryResult = psiParent.createSubdirectory(name);
-        } catch (Exception e) {
-            Logger.logAndPrintStack("AppCode CreateFiles " + name, e);
-            psiDirectoryResult = psiParent.createSubdirectory(name);
-        }
-    }
-
-    private OCNewFileHelper getFileHelperProvider() {
-        OCNewFileHelperProvider[] providers = Extensions.getExtensions(OCNewFileHelperProvider.EP_NAME);
-//            OCNewFileHelperProvider[] providers = Extensions.getExtensions(ExtensionPointName.create("cidr.lang.newFileHelperProvider"));
-        if (providers.length == 1) {
-            return providers[0].createHelper();
-        }
-
-        return null;
+    private void createSubDir(PsiDirectory psiParent, String name) {
+        psiDirectoryResult = psiParent.createSubdirectory(name);
     }
 
 

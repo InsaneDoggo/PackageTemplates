@@ -17,13 +17,6 @@
 
     <depends>com.intellij.modules.lang</depends>
 
-    <depends optional="true" config-file="cidr.support.xml">
-        com.intellij.modules.cidr.lang
-    </depends>
-    <depends optional="true" config-file="appcode.support.xml">
-        com.intellij.modules.appcode
-    </depends>
-
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceInterface="core.state.Config" serviceImplementation="core.state.Config"/>
     </extensions>

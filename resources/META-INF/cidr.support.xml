@@ -1,8 +1,0 @@
-<idea-plugin version="1">
-    <extensions defaultExtensionNs="cidr">
-        <lang.newFileHelperProvider implementation="" />
-        <
-
-    </extensions>
-</idea-plugin>
-
