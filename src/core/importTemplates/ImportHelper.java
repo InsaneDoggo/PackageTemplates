@@ -15,6 +15,7 @@ import core.actions.executor.request.ActionRequestBuilder;
 import core.export.ExportHelper;
 import global.Const;
 import global.dialogs.SkipableConfirmationDialog;
+import global.dialogs.SkipableNonCancelDialog;
 import global.utils.Logger;
 import global.utils.StringTools;
 import global.utils.i18n.Localizer;
@@ -188,21 +189,15 @@ public class ImportHelper {
      */
     private static boolean askAboutFileConflict(Context ctx, final File templateFile, String dialogTitle) {
         final boolean[] result = {false};
-        new SkipableConfirmationDialog(
+        new SkipableNonCancelDialog(
                 ctx.project,
                 String.format(Localizer.get("question.OverwriteArg"), templateFile.getName()),
                 dialogTitle,
-                Localizer.get("action.Overwrite"),
-                Localizer.get("action.CancelImport")
+                Localizer.get("action.Overwrite")
         ) {
             @Override
             public void onOk() {
                 ctx.listSimpleAction.add(new TransparentDeleteFileAction(templateFile));
-            }
-
-            @Override
-            public void onCancel() {
-                result[0] = true;
             }
         };
 

@@ -14,6 +14,7 @@ import core.actions.executor.request.ActionRequest;
 import core.actions.executor.request.ActionRequestBuilder;
 import global.Const;
 import global.dialogs.SimpleConfirmationDialog;
+import global.dialogs.SkipableNonCancelDialog;
 import global.models.PackageTemplate;
 import global.utils.Logger;
 import global.utils.StringTools;
@@ -63,11 +64,10 @@ public class ExportHelper {
     }
 
     private static void askAboutFileConflict(Context ctx, File rootDir) {
-        new SimpleConfirmationDialog(ctx.project,
+        new SkipableNonCancelDialog(ctx.project,
                 String.format(Localizer.get("question.OverwriteArg"), rootDir.getName()),
                 Localizer.get("warning.PackageTemplateAlreadyExist"),
-                Localizer.get("action.Overwrite"),
-                Localizer.get("action.Cancel")
+                Localizer.get("action.Overwrite")
         ) {
             @Override
             public void onOk() {
