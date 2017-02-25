@@ -2,7 +2,9 @@ package global.utils.file;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
@@ -133,18 +135,31 @@ public class FileWriter {
     }
 
     public static PsiElement createFileFromTemplate(Project project, FileTemplate template, String fileName, Properties properties, String parentPath) {
-        PsiDirectory psiParentDir = PsiHelper.findPsiDirByPath(project, parentPath);
-        if(psiParentDir==null){
-            return null;
-        }
+        final PsiElement[] psiElement = {null};
+
+        ApplicationManager.getApplication().invokeAndWait(() ->
+                psiElement[0] = ApplicationManager.getApplication().runWriteAction((Computable<PsiElement>) () -> {
+                    PsiDirectory psiParentDir = PsiHelper.findPsiDirByPath(project, parentPath);
+                    if (psiParentDir == null) {
+                        return null;
+                    }
+
+                    try {
+                        return FileTemplateUtil.createFromTemplate(template, fileName, properties, psiParentDir);
+                    } catch (Exception e) {
+                        Logger.logAndPrintStack("createFileFromTemplate", e);
+                        return null;
+                    }
+                })
+        );
 
         try {
-            return FileTemplateUtil.createFromTemplate(template, fileName, properties, psiParentDir);
-        } catch (Exception e) {
-            Logger.log("createFileFromTemplate ex: " + e.getMessage());
-            Logger.printStack(e);
-            return null;
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+        return psiElement[0];
     }
 
 
@@ -187,7 +202,7 @@ public class FileWriter {
 
     public static PsiDirectory createDirectory(Project project, File dir) {
         PsiDirectory psiParentDir = PsiHelper.findPsiDirByPath(project, dir.getParentFile().getPath());
-        if(psiParentDir==null){
+        if (psiParentDir == null) {
             return null;
         }
 

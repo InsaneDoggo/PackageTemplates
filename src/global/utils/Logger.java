@@ -22,7 +22,7 @@ public class Logger {
 
     public static void printStack(Throwable e) {
         if (Const.IS_DEBUG) {
-            e.printStackTrace();
+            e.printStackTrace(System.out);
 
             if (Const.SHOULD_LOG_TO_NOTIFICATION) {
                 StringWriter sw = new StringWriter();
@@ -35,17 +35,8 @@ public class Logger {
     }
 
     public static void logAndPrintStack(String text, Throwable e) {
-        if (Const.IS_DEBUG) {
-            e.printStackTrace();
-
-            if (Const.SHOULD_LOG_TO_NOTIFICATION) {
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                e.printStackTrace(pw);
-
-                NotificationHelper.error("PackageTemplate ", text + "\n" + sw.toString());
-            }
-        }
+        log(text);
+        printStack(e);
     }
 
 

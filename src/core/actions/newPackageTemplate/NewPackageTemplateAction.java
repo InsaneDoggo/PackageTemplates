@@ -16,6 +16,7 @@ import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
 import global.models.PackageTemplate;
 import global.utils.Logger;
+import global.utils.ProgressHelper;
 import global.utils.factories.WrappersFactory;
 import global.utils.i18n.Localizer;
 import global.wrappers.PackageTemplateWrapper;
@@ -91,17 +92,8 @@ public class NewPackageTemplateAction extends AnAction {
             Logger.log("ExecutePackageTemplate  Fail!");
             //todo error dialog with info
             Messages.showErrorDialog("Execution Failed.\nYou can use Ctrl+Z or 'Undo Action' from toolbar to revert changes.", "PackageTemplate Failed");
-
-//            SimpleAction simpleAction = new SimpleAction() {
-//                @Override
-//                public boolean run(SimpleAction parentAction) {
-//                    UndoManager.getInstance(project).undo(null);
-//                    return true;
-//                }
-//            };
-//
-//            ActionExecutor.runAction(project, simpleAction, "UndoActionTest", AccessPrivileges.WRITE);
         }
+
     }
 
 }

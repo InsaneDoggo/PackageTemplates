@@ -1,8 +1,12 @@
 package core.actions.custom;
 
+import com.intellij.ide.fileTemplates.FileTemplateUtil;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiDirectory;
+import com.intellij.psi.PsiElement;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.interfaces.IHasPsiDirectory;
 import core.actions.custom.interfaces.IHasWriteRules;
@@ -138,7 +142,11 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
     }
 
     private void createSubDir(PsiDirectory psiParent, String name) {
-        psiDirectoryResult = psiParent.createSubdirectory(name);
+        ApplicationManager.getApplication().invokeAndWait(() ->
+                psiDirectoryResult = ApplicationManager.getApplication().runWriteAction((Computable<PsiDirectory>) () -> {
+                    return psiParent.createSubdirectory(name);
+                })
+        );
     }
 
 

@@ -2,15 +2,15 @@ package core.actions.executor;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.command.UndoConfirmationPolicy;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import core.actions.custom.base.SimpleAction;
 import core.actions.executor.request.ActionRequest;
+import core.errors.ErrorHelper;
 import global.utils.Logger;
 import global.utils.NotificationHelper;
+import global.utils.ProgressHelper;
 
-import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 /**
@@ -20,14 +20,16 @@ public class ActionExecutor {
 
     public static boolean runAsTransaction(ActionRequest request) {
         // Action
-        Computable<Boolean> computable = () -> {
+        Computable<Boolean> computable = () -> ProgressHelper.runProcessWithProgress(request.project, new FutureTask<>(() -> {
+            ErrorHelper.add("another thread");
+
             for (SimpleAction action : request.actions) {
                 if (!action.run()) {
                     return false;
                 }
             }
             return true;
-        };
+        }));
 
         // Execution
         FutureTask<Boolean> futureTask = new FutureTask<>(() -> {
@@ -50,20 +52,9 @@ public class ActionExecutor {
             CommandProcessor.getInstance().runUndoTransparentAction(futureTask);
         }
 
-        try {
-            Boolean isSuccess = futureTask.get();
-            if (isSuccess) {
-                NotificationHelper.info(request.actionLabel, "Success!");
-            } else {
-                NotificationHelper.error(request.actionLabel, "Failed!");
-            }
-            return isSuccess;
-        } catch (Exception e) {
-            NotificationHelper.error(request.actionLabel, "Failed!");
-            Logger.log("runAsTransaction: " + e.getMessage());
-            Logger.printStack(e);
-            return false;
-        }
+        Logger.log(ErrorHelper.get());
+        NotificationHelper.info(request.actionLabel, "Success!");
+        return true;
     }
 
     public static boolean runAction(ActionRequest request) {
