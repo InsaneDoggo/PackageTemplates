@@ -3,7 +3,6 @@ package core.importTemplates;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.project.Project;
-import core.actions.custom.CopyFileAction;
 import core.actions.custom.DeleteFileAction;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.undoTransparent.TransparentCopyFileAction;
@@ -12,9 +11,8 @@ import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
 import core.actions.executor.request.ActionRequest;
 import core.actions.executor.request.ActionRequestBuilder;
-import core.export.ExportHelper;
+import core.exportTemplates.ExportHelper;
 import global.Const;
-import global.dialogs.SkipableConfirmationDialog;
 import global.dialogs.SkipableNonCancelDialog;
 import global.utils.Logger;
 import global.utils.StringTools;
@@ -68,12 +66,6 @@ public class ImportHelper {
         //PackageTemplate Actions
         for (File file : selectedFiles) {
             File fileTo = new File(PackageTemplateHelper.getRootDirPath() + file.getName());
-
-            if (!inOrderToDelete(ctx, fileTo) && fileTo.exists() && !fileTo.isDirectory()) {
-                Logger.log("Skip file: " + fileTo.getName());
-                break;
-            }
-
             ctx.listSimpleAction.add(new TransparentCopyFileAction(file, fileTo));
         }
 
@@ -82,12 +74,6 @@ public class ImportHelper {
             for (File template : ctx.availableFileTemplates) {
                 if (StringTools.getNameWithoutExtension(template.getName()).equals(name)) {
                     File fileTo = new File(templatesDir.getPath() + File.separator + template.getName());
-
-                    if (!inOrderToDelete(ctx, fileTo) && fileTo.exists() && !fileTo.isDirectory()) {
-                        Logger.log("Skip file: " + fileTo.getName());
-                        break;
-                    }
-
                     ctx.listSimpleAction.add(new TransparentCopyFileAction(template, fileTo));
                     break;
                 }
@@ -103,19 +89,6 @@ public class ImportHelper {
                 .build();
 
         ActionExecutor.runAsTransaction(actionRequest);
-    }
-
-    private static boolean inOrderToDelete(Context ctx, File fileTo) {
-        for (SimpleAction action : ctx.listSimpleAction) {
-            if (action instanceof DeleteFileAction) {
-                File fileToDelete = ((DeleteFileAction) action).getFileToDelete();
-                if (fileToDelete.getPath().equals(fileTo.getPath())) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     private static boolean isResourcesAvailable(Context ctx) {

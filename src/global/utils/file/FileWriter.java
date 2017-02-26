@@ -34,15 +34,21 @@ import java.util.concurrent.RunnableFuture;
 public class FileWriter {
 
     public static PsiDirectory findCurrentDirectory(Project project, VirtualFile file) {
-        if (file == null || project == null) {
-            return null;
-        }
+        final PsiDirectory[] result = new PsiDirectory[1];
+        ApplicationManager.getApplication().invokeAndWait(() ->
+                result[0] = ApplicationManager.getApplication().runReadAction((Computable<PsiDirectory>) () -> {
+                    if (file == null || project == null) {
+                        return null;
+                    }
 
-        if (file.isDirectory()) {
-            return PsiManager.getInstance(project).findDirectory(file);
-        } else {
-            return PsiManager.getInstance(project).findDirectory(file.getParent());
-        }
+                    if (file.isDirectory()) {
+                        return PsiManager.getInstance(project).findDirectory(file);
+                    } else {
+                        return PsiManager.getInstance(project).findDirectory(file.getParent());
+                    }
+                })
+        );
+        return result[0];
     }
 
     public static PsiDirectory writeDirectory(PsiDirectory dir, DirectoryWrapper dirWrapper, Project project) {
@@ -171,33 +177,37 @@ public class FileWriter {
     }
 
     public static boolean writeStringToFile(String text, File file) {
-        try {
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Const.charsets.UTF_8));
+        return wrapInWriteLater(() -> {
+            try {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+                Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Const.charsets.UTF_8));
 
-            out.write(text);
+                out.write(text);
 
-            out.flush();
-            out.close();
-            return true;
-        } catch (Exception e) {
-            Logger.log(e.getMessage());
-            Logger.printStack(e);
-            return false;
-        }
+                out.flush();
+                out.close();
+                return true;
+            } catch (Exception e) {
+                Logger.log(e.getMessage());
+                Logger.printStack(e);
+                return false;
+            }
+        });
     }
 
     public static boolean copyFile(Path from, Path to) {
-        try {
-            to.toFile().getParentFile().mkdirs();
-            Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
-            return true;
-        } catch (IOException e) {
-            Logger.log("copyFile ex: " + e.getMessage());
-            Logger.printStack(e);
-            return false;
-        }
+        return wrapInWriteLater(() -> {
+            try {
+                to.toFile().getParentFile().mkdirs();
+                Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+                return true;
+            } catch (IOException e) {
+                Logger.log("copyFile ex: " + e.getMessage());
+                Logger.printStack(e);
+                return false;
+            }
+        });
     }
 
     public static PsiDirectory createDirectory(Project project, File dir) {
@@ -210,14 +220,16 @@ public class FileWriter {
     }
 
     public static boolean createDirectories(Path path) {
-        try {
-            Files.createDirectories(path);
-            return true;
-        } catch (IOException e) {
-            Logger.log("createDirectory ex: " + e.getMessage());
-            Logger.printStack(e);
-            return false;
-        }
+        return wrapInWriteLater(() -> {
+            try {
+                Files.createDirectories(path);
+                return true;
+            } catch (IOException e) {
+                Logger.log("createDirectory ex: " + e.getMessage());
+                Logger.printStack(e);
+                return false;
+            }
+        });
     }
 
 
@@ -225,69 +237,90 @@ public class FileWriter {
     //  Delete
     //=================================================================
     public static boolean removeDirectory(PsiDirectory psiDirectory) {
-        try {
-            psiDirectory.delete();
-            return true;
-        } catch (Exception e) {
-            Logger.log("removeDirectory ex: " + e.getMessage());
-            Logger.printStack(e);
-            return false;
-        }
+        return wrapInWriteLater(() -> {
+            try {
+                psiDirectory.delete();
+                return true;
+            } catch (Exception e) {
+                Logger.log("removeDirectory ex: " + e.getMessage());
+                Logger.printStack(e);
+                return false;
+            }
+        });
     }
 
     public static boolean removeDirectory(File dir) {
-        try {
-            Files.walkFileTree(dir.toPath(), new FileVisitor<Path>() {
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    return FileVisitResult.CONTINUE;
-                }
+        return wrapInWriteLater(() -> {
+            try {
+                Files.walkFileTree(dir.toPath(), new FileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                        return FileVisitResult.CONTINUE;
+                    }
 
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.deleteIfExists(file);
-                    return FileVisitResult.CONTINUE;
-                }
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.deleteIfExists(file);
+                        return FileVisitResult.CONTINUE;
+                    }
 
-                @Override
-                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-                    return FileVisitResult.CONTINUE;
-                }
+                    @Override
+                    public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                        return FileVisitResult.CONTINUE;
+                    }
 
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    Files.deleteIfExists(dir);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-            return true;
-        } catch (IOException e) {
-            Logger.log("removeDirectory ex: " + e.getMessage());
-            Logger.printStack(e);
-            return false;
-        }
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.deleteIfExists(dir);
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+                return true;
+            } catch (IOException e) {
+                Logger.log("removeDirectory ex: " + e.getMessage());
+                Logger.printStack(e);
+                return false;
+            }
+        });
     }
 
     public static boolean removeFile(File file) {
-        try {
-            Files.delete(file.toPath());
-            return true;
-        } catch (IOException e) {
-            Logger.log("removeFile ex: " + e.getMessage());
-            Logger.printStack(e);
-            return false;
-        }
+        return wrapInWriteLater(() -> {
+            try {
+                Files.delete(file.toPath());
+                return true;
+            } catch (IOException e) {
+                Logger.log("removeFile ex: " + e.getMessage());
+                Logger.printStack(e);
+                return false;
+            }
+        });
     }
 
     public static boolean removeFile(PsiElement psiFile) {
-        try {
-            psiFile.delete();
-            return true;
-        } catch (IncorrectOperationException e) {
-            Logger.log("removeFile ex: " + e.getMessage());
-            Logger.printStack(e);
-            return false;
-        }
+        return wrapInWriteLater(() -> {
+            try {
+                psiFile.delete();
+                return true;
+            } catch (IncorrectOperationException e) {
+                Logger.log("removeFile ex: " + e.getMessage());
+                Logger.printStack(e);
+                return false;
+            }
+        });
+    }
+
+
+    //=================================================================
+    //  utils
+    //=================================================================
+    private static boolean wrapInWriteLater(Computable<Boolean> computable) {
+        final boolean[] result = new boolean[1];
+
+        ApplicationManager.getApplication().invokeAndWait(() ->
+                result[0] = ApplicationManager.getApplication().runWriteAction(computable));
+
+        return result[0];
     }
 
 }

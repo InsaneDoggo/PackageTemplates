@@ -41,8 +41,6 @@ public class ActionExecutor {
     }
 
     private static void preFinish(ActionRequest request) {
-        Logger.log("preFinish " + Thread.currentThread().getName());
-
         if (ReportHelper.getState() == ExecutionState.SUCCESS) {
             NotificationHelper.info(request.actionLabel, "Success!");
 

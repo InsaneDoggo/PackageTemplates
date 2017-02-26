@@ -2,16 +2,13 @@ package global.utils.templates;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
-import core.export.ExportHelper;
+import core.exportTemplates.ExportHelper;
 import core.importTemplates.ImportHelper;
-import core.state.Config;
 import core.state.util.SaveUtil;
-import core.state.util.StateReader;
 import global.Const;
 import global.models.Favourite;
 import global.models.PackageTemplate;
 import global.utils.Logger;
-import global.utils.NotificationHelper;
 import global.utils.factories.GsonFactory;
 import global.utils.factories.WrappersFactory;
 import global.utils.file.FileReaderUtil;

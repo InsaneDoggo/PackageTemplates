@@ -1,4 +1,4 @@
-package core.export;
+package core.exportTemplates;
 
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
@@ -13,7 +13,6 @@ import core.actions.executor.ActionExecutor;
 import core.actions.executor.request.ActionRequest;
 import core.actions.executor.request.ActionRequestBuilder;
 import global.Const;
-import global.dialogs.SimpleConfirmationDialog;
 import global.dialogs.SkipableNonCancelDialog;
 import global.models.PackageTemplate;
 import global.utils.Logger;
