@@ -4,6 +4,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import core.actions.custom.base.SimpleAction;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import global.utils.Logger;
 import global.utils.file.PsiHelper;
 
@@ -25,12 +27,12 @@ public class CopyFileAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
+    public void doRun() {
         PsiDirectory psiParent = PsiHelper.findPsiDirByPath(project, fileTo.getParentFile().getPath());
         PsiFile psiFrom = PsiHelper.findPsiFileByPath(project, fileFrom.getPath());
         if (psiParent == null || psiFrom == null) {
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
 
         PsiFile psiDuplicate = psiParent.findFile(fileTo.getName());
@@ -41,22 +43,12 @@ public class CopyFileAction extends SimpleAction {
 
         try {
             psiParent.copyFileFrom(fileTo.getName(), psiFrom);
-
-//            PsiFile psiCreatedFile = psiParent.createFile(fileTo.getName());
-//            psiCreatedFile.getVirtualFile().setBinaryContent(psiFrom.getVirtualFile().contentsToByteArray());
         } catch (Exception ex) {
             Logger.log("CopyFileAction " + ex.getMessage());
             Logger.printStack(ex);
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
-
-//        if(!FileWriter.copyFile(fileFrom.toPath(), fileTo.toPath())){
-//            isDone = false;
-//            return false;
-//        }
-
-        return super.run();
     }
 
 }

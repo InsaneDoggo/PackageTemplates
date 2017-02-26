@@ -4,6 +4,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.util.IncorrectOperationException;
 import core.actions.custom.base.SimpleAction;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import global.utils.Logger;
 import global.utils.file.PsiHelper;
 
@@ -25,28 +27,26 @@ public class CreateSimpleDirectoryAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
+    public void doRun() {
         PsiDirectory psiParent = PsiHelper.findPsiDirByPath(project, directory.getParentFile().getPath());
         if (psiParent == null) {
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
 
         try {
             // check existence
             psiDirectoryCreated = psiParent.findSubdirectory(directory.getName());
-            if(psiDirectoryCreated == null){
+            if (psiDirectoryCreated == null) {
                 // create new one
                 psiDirectoryCreated = psiParent.createSubdirectory(directory.getName());
             }
         } catch (IncorrectOperationException ex) {
             Logger.log("CreateSimpleDirectoryAction " + ex.getMessage());
             Logger.printStack(ex);
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
-
-        return super.run();
     }
 
 }

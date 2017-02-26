@@ -7,6 +7,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.util.IncorrectOperationException;
 import core.actions.custom.base.SimpleAction;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import global.utils.Logger;
 import global.utils.file.PsiHelper;
 
@@ -28,11 +30,11 @@ public class CreateFileAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
+    public void doRun() {
         PsiDirectory psiParent = PsiHelper.findPsiDirByPath(project, file.getParentFile().getPath());
         if(psiParent==null){
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
 
         try {
@@ -43,11 +45,9 @@ public class CreateFileAction extends SimpleAction {
         } catch (IncorrectOperationException ex){
             Logger.log("CreateFileAction " + ex.getMessage());
             Logger.printStack(ex);
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
-
-        return super.run();
     }
 
 }

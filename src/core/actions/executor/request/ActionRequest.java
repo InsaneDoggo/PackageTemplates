@@ -12,6 +12,11 @@ import java.util.List;
  */
 public class ActionRequest {
 
+    public interface ActionFinishListener {
+        void onFinish();
+        void onFail();
+    }
+
     public Project project;
     public List<SimpleAction> actions;
     public String actionLabel;
@@ -19,5 +24,6 @@ public class ActionRequest {
     public AccessPrivileges accessPrivileges;
     public UndoConfirmationPolicy confirmationPolicy;
     public boolean isUndoable;
+    public ActionFinishListener actionFinishListener;
 
 }

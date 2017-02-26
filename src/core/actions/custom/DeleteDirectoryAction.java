@@ -4,6 +4,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.util.IncorrectOperationException;
 import core.actions.custom.base.SimpleAction;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import global.utils.Logger;
 import global.utils.file.PsiHelper;
 
@@ -23,23 +25,21 @@ public class DeleteDirectoryAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
+    public void doRun() {
         PsiDirectory psiDirectory = PsiHelper.findPsiDirByPath(project, fileDirToDelete.getPath());
-        if(psiDirectory==null){
-            isDone = false;
-            return false;
+        if (psiDirectory == null) {
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
 
         try {
             psiDirectory.delete();
-        } catch (IncorrectOperationException ex){
+        } catch (IncorrectOperationException ex) {
             Logger.log("DeleteDirectoryAction " + ex.getMessage());
             Logger.printStack(ex);
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
-
-        return super.run();
     }
 
 }

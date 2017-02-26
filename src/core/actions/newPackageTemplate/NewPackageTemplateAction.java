@@ -84,15 +84,22 @@ public class NewPackageTemplateAction extends AnAction {
                 .setActionLabel("Execute PackageTemplate")
                 .setAccessPrivileges(AccessPrivileges.WRITE)
                 .setConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
+                .setActionListener(new ActionRequest.ActionFinishListener() {
+                    @Override
+                    public void onFinish() {
+                        Logger.log("onFinish "+ Thread.currentThread().getName());
+                    }
+
+                    @Override
+                    public void onFail() {
+                        //todo error dialog with info
+                        Logger.log("onFail "+ Thread.currentThread().getName());
+                        Messages.showErrorDialog("Execution Failed.\nYou can use Ctrl+Z or 'Undo Action' from toolbar to revert changes.", "PackageTemplate Failed");
+                    }
+                })
                 .build();
 
-        if (ActionExecutor.runAsTransaction(actionRequest)) {
-            Logger.log("ExecutePackageTemplate  Done!");
-        } else {
-            Logger.log("ExecutePackageTemplate  Fail!");
-            //todo error dialog with info
-            Messages.showErrorDialog("Execution Failed.\nYou can use Ctrl+Z or 'Undo Action' from toolbar to revert changes.", "PackageTemplate Failed");
-        }
+        ActionExecutor.runAsTransaction(actionRequest);
 
     }
 

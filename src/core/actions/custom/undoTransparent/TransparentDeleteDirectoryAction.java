@@ -1,6 +1,8 @@
 package core.actions.custom.undoTransparent;
 
 import core.actions.custom.base.SimpleAction;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import global.utils.file.FileWriter;
 
 import java.io.File;
@@ -17,14 +19,11 @@ public class TransparentDeleteDirectoryAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
+    public void doRun() {
         if (!FileWriter.removeDirectory(fileDirToDelete)) {
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
-
-        isDone = true;
-        return super.run();
     }
 
 }

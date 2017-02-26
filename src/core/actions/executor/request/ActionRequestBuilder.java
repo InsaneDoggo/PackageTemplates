@@ -76,4 +76,9 @@ public class ActionRequestBuilder {
         return this;
     }
 
+    public ActionRequestBuilder setActionListener(ActionRequest.ActionFinishListener actionFinishListener) {
+        request.actionFinishListener = actionFinishListener;
+        return this;
+    }
+
 }

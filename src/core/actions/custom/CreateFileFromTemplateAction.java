@@ -10,6 +10,8 @@ import com.intellij.util.IncorrectOperationException;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.interfaces.IHasPsiDirectory;
 import core.actions.custom.interfaces.IHasWriteRules;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import core.search.SearchAction;
 import core.search.SearchEngine;
 import core.writeRules.WriteRules;
@@ -47,7 +49,7 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
     }
 
     @Override
-    public boolean run() {
+    public void doRun() {
         psiElementResult = null;
 
         if (parentAction instanceof IHasPsiDirectory) {
@@ -59,8 +61,8 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
                 path = getCustomPath(file, path);
 
                 if (path == null) {
-                    isDone = false;
-                    return false;
+                    ReportHelper.setState(ExecutionState.FAILED);
+                    return;
                 }
             }
 
@@ -77,17 +79,20 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
                     default:
                     case ASK_ME:
                         if (!onAsk(fileDuplicate)) {
-                            return false;
+                            ReportHelper.setState(ExecutionState.FAILED);
+                            return;
                         }
                         break;
                     case OVERWRITE:
                         if (!onOverwrite(fileDuplicate)) {
-                            return false;
+                            ReportHelper.setState(ExecutionState.FAILED);
+                            return;
                         }
                         break;
                     case USE_EXISTING:
                         if (!onUseExisting(fileDuplicate)) {
-                            return false;
+                            ReportHelper.setState(ExecutionState.FAILED);
+                            return;
                         }
                         break;
                 }
@@ -98,11 +103,10 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
         }
 
         if (psiElementResult == null) {
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
 
-        return super.run();
     }
 
     private boolean onAsk(java.io.File fileDuplicate) {
@@ -135,7 +139,6 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
             } catch (IncorrectOperationException e) {
                 Logger.log("CreateFileFromTemplateAction " + e.getMessage());
                 Logger.printStack(e);
-                isDone = false;
                 return false;
             }
         }

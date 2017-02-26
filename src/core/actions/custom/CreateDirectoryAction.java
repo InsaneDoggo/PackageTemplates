@@ -1,21 +1,21 @@
 package core.actions.custom;
 
-import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.interfaces.IHasPsiDirectory;
 import core.actions.custom.interfaces.IHasWriteRules;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import core.search.SearchAction;
 import core.search.SearchEngine;
+import core.writeRules.WriteRules;
 import global.dialogs.impl.NeverShowAskCheckBox;
 import global.models.BaseElement;
 import global.models.Directory;
-import core.writeRules.WriteRules;
 import global.utils.Logger;
 import global.utils.file.PsiHelper;
 import global.utils.i18n.Localizer;
@@ -40,7 +40,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
     }
 
     @Override
-    public boolean run() {
+    public void doRun() {
         psiDirectoryResult = null;
 
         if (parentAction instanceof IHasPsiDirectory) {
@@ -51,8 +51,8 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
                 psiParent = getPsiDirectoryFromCustomPath(directory, psiParent.getVirtualFile().getPath());
 
                 if (psiParent == null) {
-                    isDone = false;
-                    return false;
+                    ReportHelper.setState(ExecutionState.FAILED);
+                    return;
                 }
             }
 
@@ -72,17 +72,20 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
                     default:
                     case ASK_ME:
                         if (!onAsk(psiDirectoryResult)) {
-                            return false;
+                            ReportHelper.setState(ExecutionState.FAILED);
+                            return;
                         }
                         break;
                     case OVERWRITE:
                         if (!onOverwrite(psiDirectoryResult)) {
-                            return false;
+                            ReportHelper.setState(ExecutionState.FAILED);
+                            return;
                         }
                         break;
                     case USE_EXISTING:
                         if (!onUseExisting(psiDirectoryResult)) {
-                            return false;
+                            ReportHelper.setState(ExecutionState.FAILED);
+                            return;
                         }
                         break;
                 }
@@ -90,11 +93,9 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
         }
 
         if (psiDirectoryResult == null) {
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
-
-        return super.run();
     }
 
     private boolean onAsk(PsiDirectory psiDuplicate) {
@@ -131,7 +132,6 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
         } catch (Exception e) {
             Logger.log("CreateDirectoryAction " + e.getMessage());
             Logger.printStack(e);
-            isDone = false;
             return false;
         }
     }
@@ -143,10 +143,8 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
 
     private void createSubDir(PsiDirectory psiParent, String name) {
         ApplicationManager.getApplication().invokeAndWait(() ->
-                psiDirectoryResult = ApplicationManager.getApplication().runWriteAction((Computable<PsiDirectory>) () -> {
-                    return psiParent.createSubdirectory(name);
-                })
-        );
+                psiDirectoryResult = ApplicationManager.getApplication().runWriteAction((Computable<PsiDirectory>)
+                        () -> psiParent.createSubdirectory(name)));
     }
 
 

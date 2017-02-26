@@ -2,94 +2,66 @@ package core.actions.executor;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.util.Computable;
 import core.actions.custom.base.SimpleAction;
 import core.actions.executor.request.ActionRequest;
-import core.errors.ErrorHelper;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import global.utils.Logger;
 import global.utils.NotificationHelper;
 import global.utils.ProgressHelper;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 
 /**
  * Created by Arsen on 14.01.2017.
  */
 public class ActionExecutor {
 
-    public static boolean runAsTransaction(ActionRequest request) {
+    public static void runAsTransaction(ActionRequest request) {
         // Action
-        Computable<Boolean> computable = () -> ProgressHelper.runProcessWithProgress(request.project, new FutureTask<>(() -> {
-            ErrorHelper.add("another thread");
+        Runnable runnable = () -> ProgressHelper.runProcessWithProgress(request.project, () -> {
+            ReportHelper.setState(ExecutionState.IN_PROGRESS);
 
             for (SimpleAction action : request.actions) {
-                if (!action.run()) {
-                    return false;
+                action.run();
+                if (!ReportHelper.shouldContinue()) {
+                    preFinish(request);
+                    return;
                 }
             }
-            return true;
-        }));
 
-        // Execution
-        FutureTask<Boolean> futureTask = new FutureTask<>(() -> {
-            switch (request.accessPrivileges) {
-                case NONE:
-                    return computable.compute();
-                case READ:
-                    return ApplicationManager.getApplication().runReadAction(computable);
-                case WRITE:
-                    return ApplicationManager.getApplication().runWriteAction(computable);
-                default:
-                    throw new RuntimeException("Unknown AccessPrivileges " + request.accessPrivileges.name());
-            }
+            ReportHelper.setState(ExecutionState.SUCCESS);
+            preFinish(request);
         });
 
-        // Handle result
+        // execute
         if (request.isUndoable) {
-            CommandProcessor.getInstance().executeCommand(request.project, futureTask, request.actionLabel, request.groupId, request.confirmationPolicy);
+            CommandProcessor.getInstance().executeCommand(request.project, runnable, request.actionLabel, request.groupId, request.confirmationPolicy);
         } else {
-            CommandProcessor.getInstance().runUndoTransparentAction(futureTask);
-        }
-
-        Logger.log(ErrorHelper.get());
-        NotificationHelper.info(request.actionLabel, "Success!");
-        return true;
-    }
-
-    public static boolean runAction(ActionRequest request) {
-        // Action
-        Computable<Boolean> computable = request.actions.get(0)::run;
-
-        // Execution
-        FutureTask<Boolean> futureTask = new FutureTask<>(() -> {
-            switch (request.accessPrivileges) {
-                case NONE:
-                    return computable.compute();
-                case READ:
-                    return ApplicationManager.getApplication().runReadAction(computable);
-                case WRITE:
-                    return ApplicationManager.getApplication().runWriteAction(computable);
-                default:
-                    throw new RuntimeException("Unknown AccessPrivileges " + request.accessPrivileges.name());
-            }
-        });
-
-        // Handle result
-        if (request.isUndoable) {
-            CommandProcessor.getInstance().executeCommand(request.project, futureTask, request.actionLabel, request.groupId, request.confirmationPolicy);
-        } else {
-            CommandProcessor.getInstance().runUndoTransparentAction(futureTask);
-        }
-
-        try {
-            return futureTask.get();
-        } catch (Exception ex) {
-            Logger.log("run Action: " + ex.getMessage());
-            Logger.printStack(ex);
-            return false;
+            CommandProcessor.getInstance().runUndoTransparentAction(runnable);
         }
     }
 
+    private static void preFinish(ActionRequest request) {
+        Logger.log("preFinish " + Thread.currentThread().getName());
+
+        if (ReportHelper.getState() == ExecutionState.SUCCESS) {
+            NotificationHelper.info(request.actionLabel, "Success!");
+
+            // callback
+            ApplicationManager.getApplication().invokeLater(() -> {
+                if (request.actionFinishListener != null) {
+                    request.actionFinishListener.onFinish();
+                }
+            });
+        } else {
+            NotificationHelper.info(request.actionLabel, "Failed!");
+
+            // callback
+            ApplicationManager.getApplication().invokeLater(() -> {
+                if (request.actionFinishListener != null) {
+                    request.actionFinishListener.onFail();
+                }
+            });
+        }
+    }
 
 }

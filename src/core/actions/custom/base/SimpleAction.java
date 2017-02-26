@@ -1,7 +1,9 @@
 package core.actions.custom.base;
 
 import core.actions.custom.interfaces.IHasWriteRules;
+import core.report.ReportHelper;
 import core.writeRules.WriteRules;
+import global.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,6 @@ import java.util.List;
  */
 public abstract class SimpleAction {
 
-    protected boolean isEnabled = true;
     protected List<SimpleAction> actions;
     protected SimpleAction parentAction;
 
@@ -19,35 +20,30 @@ public abstract class SimpleAction {
         this.actions = new ArrayList<>();
     }
 
-    /**
-     * true когда {@link #run()} успешно выполнен, false когда неудачно
-     */
-    protected boolean isDone = false;
-    protected boolean isChildrenDone = false;
-
-    /**
-     * Contract:
-     * 1) set isDone to true if success;
-     * 2) Call super in the end;
-     */
-    public boolean run() {
-        return runChildren();
+    public void run() {
+        doRun();
+        runChildren();
     }
 
-    public boolean runChildren() {
-        if (actions != null && !actions.isEmpty()) {
-            for (SimpleAction action : actions) {
-                action.parentAction = this;
-                if (!action.run()) {
-                    isChildrenDone = false;
-                    return false;
-                }
-            }
+    private void runChildren() {
+        if (actions == null || actions.isEmpty()) {
+            return;
         }
 
-        isChildrenDone = true;
-        return true;
+        for (SimpleAction action : actions) {
+            action.parentAction = this;
+            action.run();
+            if (!ReportHelper.shouldContinue()) {
+                return;
+            }
+        }
     }
+
+
+    //=================================================================
+    //  Abstraction
+    //=================================================================
+    protected abstract void doRun();
 
 
     //=================================================================
@@ -72,14 +68,6 @@ public abstract class SimpleAction {
     //=================================================================
     //  Getter | Setter
     //=================================================================
-    public boolean isEnabled() {
-        return isEnabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
-    }
-
     public void addAction(SimpleAction action) {
         actions.add(action);
     }

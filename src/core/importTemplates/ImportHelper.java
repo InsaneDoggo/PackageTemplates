@@ -102,12 +102,7 @@ public class ImportHelper {
                 .setConfirmationPolicy(UndoConfirmationPolicy.REQUEST_CONFIRMATION)
                 .build();
 
-        if (ActionExecutor.runAsTransaction(actionRequest)) {
-            Logger.log("importPackageTemplate  Done!");
-        } else {
-            //todo revert?
-            Logger.log("importPackageTemplate  Fail!");
-        }
+        ActionExecutor.runAsTransaction(actionRequest);
     }
 
     private static boolean inOrderToDelete(Context ctx, File fileTo) {

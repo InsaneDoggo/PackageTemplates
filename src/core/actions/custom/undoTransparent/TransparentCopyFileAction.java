@@ -1,6 +1,8 @@
 package core.actions.custom.undoTransparent;
 
 import core.actions.custom.base.SimpleAction;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import global.utils.Logger;
 import global.utils.file.FileWriter;
 
@@ -20,19 +22,16 @@ public class TransparentCopyFileAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
+    public void doRun() {
         if(fileTo.exists()){
             //todo ask
             Logger.log("TransparentCopyFileAction file Exists");
         }
 
         if(!FileWriter.copyFile(fileFrom.toPath(), fileTo.toPath())){
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
-
-        isDone = true;
-        return super.run();
     }
 
 }

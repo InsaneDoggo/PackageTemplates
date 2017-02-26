@@ -1,6 +1,8 @@
 package core.actions.custom;
 
 import core.actions.custom.base.SimpleAction;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import global.utils.file.FileReaderUtil;
 import global.utils.file.FileWriter;
 
@@ -13,28 +15,16 @@ public class DeleteFileAction extends SimpleAction {
 
     private File fileToDelete;
 
-    private String pathToRestore;
-    private String contentToRestore;
-
     public DeleteFileAction(File fileToDelete) {
         this.fileToDelete = fileToDelete;
     }
 
     @Override
-    public boolean run() {
-        // save temp data
-        pathToRestore = fileToDelete.getPath();
-
-        contentToRestore = FileReaderUtil.readFile(fileToDelete);
-        if (contentToRestore == null) {
-            throw new RuntimeException("Saving contentToRestore Failed");
+    public void doRun() {
+        if (!FileWriter.removeFile(fileToDelete)) {
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
-        if(!FileWriter.removeFile(fileToDelete)){
-            isDone = false;
-            return false;
-        }
-
-        return super.run();
     }
 
 
@@ -45,11 +35,4 @@ public class DeleteFileAction extends SimpleAction {
         return fileToDelete;
     }
 
-    public String getPathToRestore() {
-        return pathToRestore;
-    }
-
-    public String getContentToRestore() {
-        return contentToRestore;
-    }
 }

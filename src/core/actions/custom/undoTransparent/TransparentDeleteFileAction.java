@@ -1,7 +1,8 @@
 package core.actions.custom.undoTransparent;
 
 import core.actions.custom.base.SimpleAction;
-import global.utils.file.FileReaderUtil;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import global.utils.file.FileWriter;
 
 import java.io.File;
@@ -18,14 +19,11 @@ public class TransparentDeleteFileAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
-        if(!FileWriter.removeFile(fileToDelete)){
-            isDone = false;
-            return false;
+    public void doRun() {
+        if(!FileWriter.removeFile(fileToDelete)) {
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
-
-        isDone = true;
-        return super.run();
     }
 
 }

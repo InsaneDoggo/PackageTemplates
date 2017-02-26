@@ -19,10 +19,8 @@ public class DummyDirectoryAction extends SimpleAction implements IHasPsiDirecto
     }
 
     @Override
-    public boolean run() {
-        isDone = true;
-        isDone = super.run();
-        return isDone;
+    public void doRun() {
+        //nothing
     }
 
     @Override

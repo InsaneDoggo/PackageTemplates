@@ -126,12 +126,7 @@ public class ExportHelper {
                 .setUndoable(false)
                 .build();
 
-        if (ActionExecutor.runAsTransaction(actionRequest)) {
-            Logger.log("ExportPackageTemplate  Done!");
-        } else {
-            //todo revert?
-            Logger.log("ExportPackageTemplate  Fail!");
-        }
+        ActionExecutor.runAsTransaction(actionRequest);
     }
 
 

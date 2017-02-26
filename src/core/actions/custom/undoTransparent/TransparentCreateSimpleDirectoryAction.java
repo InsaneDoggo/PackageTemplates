@@ -1,6 +1,8 @@
 package core.actions.custom.undoTransparent;
 
 import core.actions.custom.base.SimpleAction;
+import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
 import global.utils.Logger;
 import global.utils.file.FileWriter;
 
@@ -18,19 +20,16 @@ public class TransparentCreateSimpleDirectoryAction extends SimpleAction {
     }
 
     @Override
-    public boolean run() {
+    public void doRun() {
         if (directory.exists()) {
             //todo ask
             Logger.log("TransparentCreateSimpleDirectoryAction dir Exists");
         }
 
         if (!FileWriter.createDirectories(directory.toPath())) {
-            isDone = false;
-            return false;
+            ReportHelper.setState(ExecutionState.FAILED);
+            return;
         }
-
-        isDone = true;
-        return super.run();
     }
 
 }
