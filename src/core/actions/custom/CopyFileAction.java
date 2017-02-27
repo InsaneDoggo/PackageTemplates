@@ -8,6 +8,7 @@ import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
 import global.utils.Logger;
 import global.utils.file.PsiHelper;
+import global.utils.i18n.Localizer;
 
 import java.io.File;
 
@@ -36,7 +37,7 @@ public class CopyFileAction extends SimpleAction {
         }
 
         PsiFile psiDuplicate = psiParent.findFile(fileTo.getName());
-        if(psiDuplicate != null){
+        if (psiDuplicate != null) {
             Logger.log("Delete psiDuplicate " + psiDuplicate.getName());
             psiDuplicate.delete();
         }
@@ -49,6 +50,19 @@ public class CopyFileAction extends SimpleAction {
             ReportHelper.setState(ExecutionState.FAILED);
             return;
         }
+    }
+
+
+    //=================================================================
+    //  Utils
+    //=================================================================
+    @Override
+    public String toString() {
+        return String.format("%s: from %s to %s",
+                getClass().getSimpleName(),
+                fileFrom.getName(),
+                fileTo.getName()
+        );
     }
 
 }

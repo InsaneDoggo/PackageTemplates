@@ -12,6 +12,10 @@ public class SuccessActionReport extends BaseReport {
         super(action, message);
     }
 
+    public SuccessActionReport(SimpleAction action, String message, String debugMessage) {
+        super(action, message, debugMessage);
+    }
+
     @Override
     public ReportType getType() {
         return ReportType.SUCCESS_ACTION;

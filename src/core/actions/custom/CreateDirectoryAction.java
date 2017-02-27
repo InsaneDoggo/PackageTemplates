@@ -11,6 +11,8 @@ import core.actions.custom.interfaces.IHasPsiDirectory;
 import core.actions.custom.interfaces.IHasWriteRules;
 import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
+import core.report.models.FailedActionReport;
+import core.report.models.SuccessActionReport;
 import core.search.SearchAction;
 import core.search.SearchEngine;
 import core.writeRules.WriteRules;
@@ -53,6 +55,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
 
                 if (psiParent == null) {
                     ReportHelper.setState(ExecutionState.FAILED);
+                    ReportHelper.addReport(new FailedActionReport(this, Localizer.get("error.CustomPathNotFound"), "Custom Path result == null"));
                     return;
                 }
             }
@@ -97,6 +100,8 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
             ReportHelper.setState(ExecutionState.FAILED);
             return;
         }
+
+        ReportHelper.addReport(new SuccessActionReport(this, toString()));
     }
 
     private boolean onAsk(PsiDirectory psiDuplicate) {
@@ -133,6 +138,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
         } catch (Exception e) {
             Logger.log("CreateDirectoryAction " + e.getMessage());
             Logger.printStack(e);
+            ReportHelper.addReport(new FailedActionReport(this, e.getMessage()));
             return false;
         }
     }
@@ -180,6 +186,13 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
         }
 
         return PsiHelper.findPsiDirByPath(project, searchResultFile.getPath());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Create Directory: %s",
+                directory.getName()
+        );
     }
 
 }

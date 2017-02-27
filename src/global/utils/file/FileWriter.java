@@ -13,7 +13,9 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.IncorrectOperationException;
+import core.actions.custom.CreateFileFromTemplateAction;
 import core.report.ReportHelper;
+import core.report.models.FailedActionReport;
 import global.Const;
 import global.utils.Logger;
 import global.utils.templates.FileTemplateHelper;
@@ -141,7 +143,7 @@ public class FileWriter {
         return element;
     }
 
-    public static PsiElement createFileFromTemplate(Project project, FileTemplate template, String fileName, Properties properties, String parentPath) {
+    public static PsiElement createFileFromTemplate(CreateFileFromTemplateAction action, Project project, FileTemplate template, String fileName, Properties properties, String parentPath) {
         final PsiElement[] psiElement = {null};
 
         ApplicationManager.getApplication().invokeAndWait(() -> {
@@ -156,6 +158,7 @@ public class FileWriter {
                                 return FileTemplateUtil.createFromTemplate(template, fileName, properties, psiParentDir);
                             } catch (Exception e) {
                                 Logger.logAndPrintStack("createFileFromTemplate", e);
+                                ReportHelper.addReport(new FailedActionReport(action, e.getMessage()));
                                 return null;
                             }
                         });
@@ -164,11 +167,11 @@ public class FileWriter {
                 }
         );
 
-        try {
-            Thread.sleep(1000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(1000L);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         return psiElement[0];
     }

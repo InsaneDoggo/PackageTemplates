@@ -12,6 +12,10 @@ public class FailedActionReport extends BaseReport {
         super(action, message);
     }
 
+    public FailedActionReport(SimpleAction action, String message, String debugMessage) {
+        super(action, message, debugMessage);
+    }
+
     @Override
     public ReportType getType() {
         return ReportType.FAILED_ACTION;

@@ -5,9 +5,6 @@ import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.changes.RunnableBackgroundableWrapper;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-
 /**
  * Created by Arsen on 10.10.2016.
  */
@@ -17,8 +14,8 @@ public class ProgressHelper {
         ProgressWindow progressIndicator = new ProgressWindow(false, project);
         progressIndicator.setIndeterminate(true);
 
-//        runSync(project, runnable);
-        runAsync(project, runnable, progressIndicator);
+        runSync(project, runnable);
+//        runAsync(project, runnable, progressIndicator);
     }
 
     private static void runSync(Project project,  Runnable runnable) {

@@ -10,12 +10,17 @@ public abstract class BaseReport {
 
     protected SimpleAction action;
     protected String message;
+    protected String debugMessage;
 
     public BaseReport(SimpleAction action, String message) {
-        this.action = action;
-        this.message = message;
+        this(action, message, message);
     }
 
+    public BaseReport(SimpleAction action, String message, String debugMessage) {
+        this.action = action;
+        this.message = message;
+        this.debugMessage = debugMessage;
+    }
 
     //=================================================================
     //  Abstract
@@ -41,4 +46,11 @@ public abstract class BaseReport {
         this.message = message;
     }
 
+    public String getDebugMessage() {
+        return debugMessage;
+    }
+
+    public void setDebugMessage(String debugMessage) {
+        this.debugMessage = debugMessage;
+    }
 }

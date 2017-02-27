@@ -12,11 +12,15 @@ import java.util.ArrayList;
 public class ReportHelper {
 
     private ExecutionState state;
-    private ArrayList<BaseReport> listFailedActionReport;
+    private ArrayList<BaseReport> reports;
 
     private ReportHelper() {
+        init();
+    }
+
+    private void init() {
         state = ExecutionState.NONE;
-        listFailedActionReport = new ArrayList<>();
+        reports = new ArrayList<>();
     }
 
 
@@ -32,11 +36,15 @@ public class ReportHelper {
     }
 
     public static void addReport(BaseReport report) {
-        getInstance().listFailedActionReport.add(report);
+        getInstance().reports.add(report);
     }
 
     public static ArrayList<BaseReport> getReports() {
-        return getInstance().listFailedActionReport;
+        return getInstance().reports;
+    }
+
+    public static void clear() {
+        getInstance().init();
     }
 
     public static boolean shouldContinue() {
