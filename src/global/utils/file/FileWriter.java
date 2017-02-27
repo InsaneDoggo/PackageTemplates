@@ -13,6 +13,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.IncorrectOperationException;
+import core.report.ReportHelper;
 import global.Const;
 import global.utils.Logger;
 import global.utils.templates.FileTemplateHelper;
@@ -143,27 +144,31 @@ public class FileWriter {
     public static PsiElement createFileFromTemplate(Project project, FileTemplate template, String fileName, Properties properties, String parentPath) {
         final PsiElement[] psiElement = {null};
 
-        ApplicationManager.getApplication().invokeAndWait(() ->
-                psiElement[0] = ApplicationManager.getApplication().runWriteAction((Computable<PsiElement>) () -> {
-                    PsiDirectory psiParentDir = PsiHelper.findPsiDirByPath(project, parentPath);
-                    if (psiParentDir == null) {
-                        return null;
-                    }
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+                    Runnable runnable = () -> {
+                        psiElement[0] = ApplicationManager.getApplication().runWriteAction((Computable<PsiElement>) () -> {
+                            PsiDirectory psiParentDir = PsiHelper.findPsiDirByPath(project, parentPath);
+                            if (psiParentDir == null) {
+                                return null;
+                            }
 
-                    try {
-                        return FileTemplateUtil.createFromTemplate(template, fileName, properties, psiParentDir);
-                    } catch (Exception e) {
-                        Logger.logAndPrintStack("createFileFromTemplate", e);
-                        return null;
-                    }
-                })
+                            try {
+                                return FileTemplateUtil.createFromTemplate(template, fileName, properties, psiParentDir);
+                            } catch (Exception e) {
+                                Logger.logAndPrintStack("createFileFromTemplate", e);
+                                return null;
+                            }
+                        });
+                    };
+                    CommandProcessor.getInstance().executeCommand(project, runnable, "testId", "testId");
+                }
         );
 
-//        try {
-//            Thread.sleep(1000L);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Thread.sleep(1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         return psiElement[0];
     }

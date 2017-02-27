@@ -17,8 +17,8 @@ public class ProgressHelper {
         ProgressWindow progressIndicator = new ProgressWindow(false, project);
         progressIndicator.setIndeterminate(true);
 
-        runSync(project, runnable);
-//        runAsync(project, runnable, progressIndicator);
+//        runSync(project, runnable);
+        runAsync(project, runnable, progressIndicator);
     }
 
     private static void runSync(Project project,  Runnable runnable) {

@@ -6,7 +6,6 @@ import core.actions.custom.base.SimpleAction;
 import core.actions.executor.request.ActionRequest;
 import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
-import global.utils.Logger;
 import global.utils.NotificationHelper;
 import global.utils.ProgressHelper;
 

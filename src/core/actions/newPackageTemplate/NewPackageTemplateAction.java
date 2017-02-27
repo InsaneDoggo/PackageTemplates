@@ -67,9 +67,7 @@ public class NewPackageTemplateAction extends AnAction {
                 packageTemplate.getName()), packageTemplate, virtualFile) {
             @Override
             public void onSuccess(PackageTemplateWrapper ptWrapper) {
-//                ProgressHelper.runProcessWithProgress(project, () -> {
                 collectAndExecuteActions(project, virtualFile, ptWrapper);
-//                });
             }
         }.show();
     }

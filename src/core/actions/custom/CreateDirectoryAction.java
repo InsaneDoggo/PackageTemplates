@@ -1,6 +1,7 @@
 package core.actions.custom;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Computable;
@@ -142,9 +143,14 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
     }
 
     private void createSubDir(PsiDirectory psiParent, String name) {
-        ApplicationManager.getApplication().invokeAndWait(() ->
-                psiDirectoryResult = ApplicationManager.getApplication().runWriteAction((Computable<PsiDirectory>)
-                        () -> psiParent.createSubdirectory(name)));
+        ApplicationManager.getApplication().invokeAndWait(() -> {
+                    Runnable runnable = () ->
+                            psiDirectoryResult = ApplicationManager.getApplication().runWriteAction(
+                                    (Computable<PsiDirectory>) () -> psiParent.createSubdirectory(name));
+
+                    CommandProcessor.getInstance().executeCommand(project, runnable, "testId", "testId");
+                }
+        );
     }
 
 
