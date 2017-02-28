@@ -55,7 +55,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
 
                 if (psiParent == null) {
                     ReportHelper.setState(ExecutionState.FAILED);
-                    ReportHelper.addReport(new FailedActionReport(this, Localizer.get("error.CustomPathNotFound"), "Custom Path result == null"));
+                    ReportHelper.putReport(new FailedActionReport(this, Localizer.get("error.CustomPathNotFound"), "Custom Path result == null"));
                     return;
                 }
             }
@@ -101,7 +101,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
             return;
         }
 
-        ReportHelper.addReport(new SuccessActionReport(this, toString()));
+        ReportHelper.putReport(new SuccessActionReport(this, toString()));
     }
 
     private boolean onAsk(PsiDirectory psiDuplicate) {
@@ -138,7 +138,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
         } catch (Exception e) {
             Logger.log("CreateDirectoryAction " + e.getMessage());
             Logger.printStack(e);
-            ReportHelper.addReport(new FailedActionReport(this, e.getMessage()));
+            ReportHelper.putReport(new FailedActionReport(this, e.getMessage()));
             return false;
         }
     }

@@ -64,7 +64,7 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
 
                 if (path == null) {
                     ReportHelper.setState(ExecutionState.FAILED);
-                    ReportHelper.addReport(new FailedActionReport(this, Localizer.get("error.CustomPathNotFound"), "Custom Path result == null"));
+                    ReportHelper.putReport(new FailedActionReport(this, Localizer.get("error.CustomPathNotFound"), "Custom Path result == null"));
                     return;
                 }
             }
@@ -112,7 +112,7 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
             return;
         }
 
-        ReportHelper.addReport(new SuccessActionReport(this, toString()));
+        ReportHelper.putReport(new SuccessActionReport(this, toString()));
     }
 
     private boolean onAsk(java.io.File fileDuplicate) {
@@ -145,7 +145,7 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
             } catch (IncorrectOperationException e) {
                 Logger.log("CreateFileFromTemplateAction " + e.getMessage());
                 Logger.printStack(e);
-                ReportHelper.addReport(new FailedActionReport(this, e.getMessage()));
+                ReportHelper.putReport(new FailedActionReport(this, e.getMessage()));
                 return false;
             }
         }

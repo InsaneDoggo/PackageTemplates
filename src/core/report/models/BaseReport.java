@@ -22,10 +22,12 @@ public abstract class BaseReport {
         this.debugMessage = debugMessage;
     }
 
+
     //=================================================================
     //  Abstract
     //=================================================================
     public abstract ReportType getType();
+
 
     //=================================================================
     //  get | set

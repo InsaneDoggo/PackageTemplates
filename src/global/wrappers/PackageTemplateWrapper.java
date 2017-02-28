@@ -12,9 +12,7 @@ import com.intellij.ui.components.JBCheckBox;
 import core.actions.custom.CreateDirectoryAction;
 import core.actions.custom.DummyDirectoryAction;
 import core.actions.custom.base.SimpleAction;
-import global.dialogs.FailedFilesDialog;
 import global.models.*;
-import global.utils.Logger;
 import global.utils.UIHelper;
 import global.utils.file.FileWriter;
 import global.utils.i18n.Localizer;
@@ -246,40 +244,12 @@ public class PackageTemplateWrapper {
                 }
             }
         });
-        //ApplicationManager.getApplication().invokeLater(() -> checkWrittenElements(project));
     }
 
     private SimpleAction wrapInDummyDirAction(SimpleAction simpleAction, PsiDirectory currentDir) {
         DummyDirectoryAction dummyAction = new DummyDirectoryAction(project, currentDir);
         dummyAction.addAction(simpleAction);
         return dummyAction;
-    }
-
-    private void checkWrittenElements(final Project project) {
-        if (!failedElements.isEmpty()) {
-            //show dialog
-            new FailedFilesDialog(project, Localizer.get("ErrorDialog"), this) {
-                @Override
-                public void onSuccess() {
-                }
-
-                @Override
-                public void onCancel() {
-                    ApplicationManager.getApplication().runWriteAction(() -> {
-                        try {
-                            for (int pos = writtenElements.size() - 1; pos >= 0; pos--) {
-                                PsiElement item = writtenElements.get(pos);
-                                item.delete();
-                            }
-                        } catch (Exception ex) {
-                            Logger.log(ex.getMessage());
-                            Logger.printStack(ex);
-                        }
-                    });
-
-                }
-            }.show();
-        }
     }
 
     public void initDefaultProperties() {

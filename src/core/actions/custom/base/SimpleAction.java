@@ -15,6 +15,7 @@ public abstract class SimpleAction {
 
     protected List<SimpleAction> actions;
     protected SimpleAction parentAction;
+    protected Integer id;
 
     public SimpleAction() {
         this.actions = new ArrayList<>();
@@ -64,6 +65,10 @@ public abstract class SimpleAction {
         return DEFAULT_WRITE_RULES;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 
     //=================================================================
     //  Getter | Setter
@@ -78,5 +83,13 @@ public abstract class SimpleAction {
 
     public SimpleAction getParentAction() {
         return parentAction;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

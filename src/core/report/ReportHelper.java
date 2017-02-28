@@ -5,6 +5,7 @@ import core.report.models.BaseReport;
 import global.utils.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Arsen on 25.02.2017.
@@ -12,7 +13,8 @@ import java.util.ArrayList;
 public class ReportHelper {
 
     private ExecutionState state;
-    private ArrayList<BaseReport> reports;
+    private HashMap<Integer, BaseReport> reports;
+    private int generatedId;
 
     private ReportHelper() {
         init();
@@ -20,7 +22,8 @@ public class ReportHelper {
 
     private void init() {
         state = ExecutionState.NONE;
-        reports = new ArrayList<>();
+        reports = new HashMap<>();
+        generatedId = 0;
     }
 
 
@@ -35,15 +38,15 @@ public class ReportHelper {
         return getInstance().state;
     }
 
-    public static void addReport(BaseReport report) {
-        getInstance().reports.add(report);
+    public static void putReport(BaseReport report) {
+        getInstance().reports.put(report.getAction().getId(), report);
     }
 
-    public static ArrayList<BaseReport> getReports() {
+    public static HashMap<Integer, BaseReport> getReports() {
         return getInstance().reports;
     }
 
-    public static void clear() {
+    public static void reset() {
         getInstance().init();
     }
 
@@ -58,6 +61,13 @@ public class ReportHelper {
             case FAILED:
                 return false;
         }
+    }
+
+    public static int getGenerateId() {
+        int id = getInstance().generatedId;
+        // update
+        getInstance().generatedId++;
+        return id;
     }
 
 

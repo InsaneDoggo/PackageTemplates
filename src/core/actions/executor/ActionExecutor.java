@@ -6,6 +6,7 @@ import core.actions.custom.base.SimpleAction;
 import core.actions.executor.request.ActionRequest;
 import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
+import core.report.models.PendingActionReport;
 import global.utils.NotificationHelper;
 import global.utils.ProgressHelper;
 
@@ -17,7 +18,13 @@ public class ActionExecutor {
     public static void runAsTransaction(ActionRequest request) {
         // Action
         Runnable runnable = () -> ProgressHelper.runProcessWithProgress(request.project, () -> {
+            ReportHelper.reset();
             ReportHelper.setState(ExecutionState.IN_PROGRESS);
+
+            for (SimpleAction action : request.actions) {
+                action.setId(ReportHelper.getGenerateId());
+                ReportHelper.putReport(new PendingActionReport(action));
+            }
 
             for (SimpleAction action : request.actions) {
                 action.run();

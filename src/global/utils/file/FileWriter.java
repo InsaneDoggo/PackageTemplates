@@ -2,9 +2,7 @@ package global.utils.file;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
@@ -158,7 +156,7 @@ public class FileWriter {
                                 return FileTemplateUtil.createFromTemplate(template, fileName, properties, psiParentDir);
                             } catch (Exception e) {
                                 Logger.logAndPrintStack("createFileFromTemplate", e);
-                                ReportHelper.addReport(new FailedActionReport(action, e.getMessage()));
+                                ReportHelper.putReport(new FailedActionReport(action, e.getMessage()));
                                 return null;
                             }
                         });

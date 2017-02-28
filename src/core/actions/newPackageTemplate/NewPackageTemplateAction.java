@@ -90,7 +90,7 @@ public class NewPackageTemplateAction extends AnAction {
                     @Override
                     public void onFail() {
                         //todo error dialog with info
-                        Messages.showErrorDialog("Execution Failed.\nYou can use Ctrl+Z or 'Undo Action' from toolbar to revert changes.", "PackageTemplate Failed");
+                        Messages.showErrorDialog("Execution Failed.\nYou can use default 'Undo Action' to revert changes.", "PackageTemplate Failed");
                     }
                 })
                 .build();

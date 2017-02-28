@@ -5,5 +5,6 @@ package core.report.enums;
  */
 public enum ReportType {
     FAILED_ACTION,
-    SUCCESS_ACTION
+    SUCCESS_ACTION,
+    PENDING_ACTION
 }
