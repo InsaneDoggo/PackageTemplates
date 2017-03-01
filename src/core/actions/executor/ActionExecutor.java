@@ -2,6 +2,7 @@ package core.actions.executor;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
+import core.actions.custom.DummyDirectoryAction;
 import core.actions.custom.base.SimpleAction;
 import core.actions.executor.request.ActionRequest;
 import core.report.ReportHelper;
@@ -18,10 +19,13 @@ public class ActionExecutor {
     public static void runAsTransaction(ActionRequest request) {
         // Action
         Runnable runnable = () -> ProgressHelper.runProcessWithProgress(request.project, () -> {
-            ReportHelper.reset();
             ReportHelper.setState(ExecutionState.IN_PROGRESS);
 
             for (SimpleAction action : request.actions) {
+                if(action instanceof DummyDirectoryAction){
+                    continue;
+                }
+
                 action.setId(ReportHelper.getGenerateId());
                 ReportHelper.putReport(new PendingActionReport(action));
             }

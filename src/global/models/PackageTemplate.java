@@ -20,6 +20,15 @@ public class PackageTemplate {
     @Expose @SerializedName("skipRootDirectory") private boolean skipRootDirectory;
     @Expose @SerializedName("skipDefiningNames") private boolean skipDefiningNames;
     @Expose @SerializedName("shouldRegisterAction") private boolean shouldRegisterAction;
+    @Expose @SerializedName("shouldShowReport") private boolean shouldShowReport;
+
+    public boolean shouldShowReport() {
+        return shouldShowReport;
+    }
+
+    public void setShouldShowReport(boolean shouldShowReport) {
+        this.shouldShowReport = shouldShowReport;
+    }
 
     public boolean isSkipRootDirectory() {
         return skipRootDirectory;

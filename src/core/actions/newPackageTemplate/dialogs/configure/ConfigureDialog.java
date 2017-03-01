@@ -3,16 +3,12 @@ package core.actions.newPackageTemplate.dialogs.configure;
 import base.BaseDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.intellij.util.ui.GridBag;
 import global.models.PackageTemplate;
-import global.utils.factories.GridBagFactory;
 import global.wrappers.PackageTemplateWrapper;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
-
-import java.awt.*;
 
 /**
  * Created by CeH9 on 22.06.2016.

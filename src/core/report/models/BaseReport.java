@@ -1,7 +1,11 @@
 package core.report.models;
 
+import com.intellij.icons.AllIcons;
+import core.actions.custom.CreateFileFromTemplateAction;
 import core.actions.custom.base.SimpleAction;
 import core.report.enums.ReportType;
+
+import javax.swing.*;
 
 /**
  * Created by Arsen on 26.02.2017.
@@ -27,6 +31,18 @@ public abstract class BaseReport {
     //  Abstract
     //=================================================================
     public abstract ReportType getType();
+
+
+    //=================================================================
+    //  Utils
+    //=================================================================
+    public Icon toIcon(){
+        if (action instanceof CreateFileFromTemplateAction) {
+            return AllIcons.FileTypes.Any_type;
+        } else {
+            return AllIcons.Nodes.Package;
+        }
+    }
 
 
     //=================================================================

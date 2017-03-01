@@ -190,7 +190,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
 
     @Override
     public String toString() {
-        return String.format("Create Directory: %s",
+        return String.format("Create Directory:    %s",
                 directory.getName()
         );
     }

@@ -189,7 +189,7 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
 
     @Override
     public String toString() {
-        return String.format("Create from FileTemplate: %s.%s",
+        return String.format("Create from FileTemplate:    %s.%s",
                 file.getName(),
                 file.getExtension()
         );

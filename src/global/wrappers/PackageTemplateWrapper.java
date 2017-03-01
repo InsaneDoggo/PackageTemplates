@@ -12,6 +12,8 @@ import com.intellij.ui.components.JBCheckBox;
 import core.actions.custom.CreateDirectoryAction;
 import core.actions.custom.DummyDirectoryAction;
 import core.actions.custom.base.SimpleAction;
+import core.report.ReportHelper;
+import core.report.models.PendingActionReport;
 import global.models.*;
 import global.utils.UIHelper;
 import global.utils.file.FileWriter;
@@ -60,6 +62,7 @@ public class PackageTemplateWrapper {
     public JCheckBox cbShouldRegisterAction;
     public JCheckBox cbSkipDefiningNames;
     public JCheckBox cbSkipRootDirectory;
+    public JCheckBox cbShowReportDialog;
 
     public JPanel buildView() {
         if (panel == null) {
@@ -95,7 +98,14 @@ public class PackageTemplateWrapper {
             collectDataFromFields();
             reBuildView();
         });
+        cbShowReportDialog = new JBCheckBox(Localizer.get("property.ShowReportDialog"), packageTemplate.shouldShowReport());
+        cbShowReportDialog.addItemListener(e -> {
+            collectDataFromFields();
+            reBuildView();
+        });
+
         jpProperties.add(cbSkipRootDirectory, new CC().spanX().wrap());
+        jpProperties.add(cbShowReportDialog, new CC().spanX().wrap());
         panel.add(jpProperties, new CC().spanX().wrap());
 
         panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
@@ -147,6 +157,7 @@ public class PackageTemplateWrapper {
             packageTemplate.setSkipDefiningNames(cbSkipDefiningNames.isSelected());
         }
         packageTemplate.setSkipRootDirectory(cbSkipRootDirectory.isSelected());
+        packageTemplate.setShouldShowReport(cbShowReportDialog.isSelected());
 
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
             variableWrapper.collectDataFromFields();

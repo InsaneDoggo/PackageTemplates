@@ -14,6 +14,8 @@ import core.actions.executor.request.ActionRequest;
 import core.actions.executor.request.ActionRequestBuilder;
 import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
+import core.report.ReportHelper;
+import core.report.dialogs.ReportDialog;
 import global.models.PackageTemplate;
 import global.utils.Logger;
 import global.utils.ProgressHelper;
@@ -85,18 +87,30 @@ public class NewPackageTemplateAction extends AnAction {
                 .setActionListener(new ActionRequest.ActionFinishListener() {
                     @Override
                     public void onFinish() {
+                        if(ptWrapper.getPackageTemplate().shouldShowReport()){
+                            showReportDialog(project);
+                        }
+                        ReportHelper.reset();
+
                     }
 
                     @Override
                     public void onFail() {
-                        //todo error dialog with info
-                        Messages.showErrorDialog("Execution Failed.\nYou can use default 'Undo Action' to revert changes.", "PackageTemplate Failed");
+                        showReportDialog(project);
+                        ReportHelper.reset();
                     }
                 })
                 .build();
 
         ActionExecutor.runAsTransaction(actionRequest);
+    }
 
+    private static void showReportDialog(final Project project) {
+        new ReportDialog(project) {
+            @Override
+            public void onSuccess() {
+            }
+        }.show();
     }
 
 }

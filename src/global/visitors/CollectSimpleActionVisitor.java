@@ -5,6 +5,8 @@ import com.intellij.openapi.project.Project;
 import core.actions.custom.CreateDirectoryAction;
 import core.actions.custom.CreateFileFromTemplateAction;
 import core.actions.custom.base.SimpleAction;
+import core.report.ReportHelper;
+import core.report.models.PendingActionReport;
 import global.models.File;
 import global.utils.templates.FileTemplateHelper;
 import global.wrappers.DirectoryWrapper;
@@ -61,6 +63,11 @@ public class CollectSimpleActionVisitor implements ElementVisitor {
 
         CreateDirectoryAction directoryAction = new CreateDirectoryAction(wrapper.getDirectory(), project);
         getLastAction().addAction(directoryAction);
+
+        // Add Report
+        directoryAction.setId(ReportHelper.getGenerateId());
+        ReportHelper.putReport(new PendingActionReport(directoryAction));
+
         pushAction(directoryAction);
 
         for (ElementWrapper element : wrapper.getListElementWrapper()) {
@@ -82,12 +89,18 @@ public class CollectSimpleActionVisitor implements ElementVisitor {
         properties.putAll(wrapper.getPackageTemplateWrapper().getDefaultProperties());
         properties.putAll(wrapper.getFile().getMapProperties());
 
-        getLastAction().addAction(new CreateFileFromTemplateAction(
+        CreateFileFromTemplateAction createFileFromTemplateAction = new CreateFileFromTemplateAction(
                 properties,
                 FileTemplateHelper.getTemplate(wrapper.getFile().getTemplateName()),
                 file,
                 project
-        ));
+        );
+
+        // Add Report
+        createFileFromTemplateAction.setId(ReportHelper.getGenerateId());
+        ReportHelper.putReport(new PendingActionReport(createFileFromTemplateAction));
+
+        getLastAction().addAction(createFileFromTemplateAction);
         //        FileWriter.writeFile(getLastAction(), wrapper);
     }
 
