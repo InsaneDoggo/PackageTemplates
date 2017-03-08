@@ -7,6 +7,11 @@ lang: ru
 ### Описание
 Package Templates это плагин реализующий Multiple [File Templates][1]. Он позволяет создавать шаблоны, состоящие из директорий и File Tamplates.
 
+### Подробнее:
+{% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" | sort: 'order' %}
+{% for tutorial in listTutorials %}
+* [{{ tutorial.title }}]({{ site.baseurl }}{{ tutorial.url }}){% endfor %}
+
 ### Поддерживаемые IDE
 Плагин должен работать на всех **IntelliJ IDEA-based IDEs**, но тестировался только на следующих:
 
@@ -14,10 +19,8 @@ Package Templates это плагин реализующий Multiple [File Temp
 * Android Studio.
 * PyCharm.
 
-### Подробнее:
-{% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" | sort: 'order' %}
-{% for tutorial in listTutorials %}
-* [{{ tutorial.title }}]({{ site.baseurl }}{{ tutorial.url }}){% endfor %}
+### Известные проблемы
+* [Appcode Groups][7]
 
 ### Запланированные фичи
 [Список][5] фич на *github*.<br>
@@ -37,3 +40,4 @@ Package Templates это плагин реализующий Multiple [File Temp
 [3]: {{ site.data.links.mailto_developer }}
 [5]: {{ site.data.links.github_todo_project }}
 [6]: {{ site.data.links.github_issues }}
+[7]: {{ site.baseurl}}{{ site.data.links.other_appcode_groups[page.lang]}}

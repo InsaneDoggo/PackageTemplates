@@ -7,6 +7,9 @@ collections:
   tutorials:
     output: true
     permalink: /tutorials/:path/
+  other:
+    output: true
+    permalink: /other/:path/
         
 
 defaults:

@@ -8,11 +8,24 @@ order: 2
 
 ![context_menu]({{ site.baseurl }}/images/tutorial/context_menu.png){: .imageFragment}
 
-Шаблоны можно создавать, удалять и редактировать.
 
-![select_package_template]({{ site.baseurl }}/images/tutorial/select_package_template.png){: .image}
+![main_dialog]({{ site.baseurl }}/images/tutorial/main_dialog.png){: .image}
 
-Чтобы воспользоваться шаблоном выделите его и нажмите **{{ site.data.const.button_select }}**
+1. Создать
+2. Редактировать
+3. В Добавить\Удалить в\из **{{ site.data.const.favourites }}**.
+4. Настройки Плагина
+5. Экспорт
+6. Импорт
 
+### Выбор шаблона
+Есть два варианта выбора:
+
+**А.** Указав путь к файлу (.json)<br>
+**B.** Из **{{ site.data.const.favourites }}**<br>
+
+**Примечание:** **{{ site.data.const.favourites }}** запоминает путь к файлу. Если при запуске IDE по сохраненному пути не будет файла, то шаблон автоматически удалится из списка **{{ site.data.const.favourites }}**. 
+
+В **{{ site.data.const.favourites }}** можно добавлять несколько шаблонов.
 
 [1]: {{ site.baseurl}}{{ site.data.links.tutorial_shortcuts[page.lang] }}

@@ -23,6 +23,10 @@ github_issues: https://github.com/CeH9/PackageTemplates/issues
 mailto_plugin: mailto:senya.dev@gmail.com?subject=Package%20Templates
 mailto_developer: mailto:doter.ua@gmail.com
 
+#miscellaneous
+javascript: https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics
+
+
 tutorials: /tutorials/
 
 # tutorials by lang key: example[page.lang]
@@ -32,12 +36,20 @@ tutorial_presettings:
 tutorial_global_variables:
   ru: /tutorials/ru/global_variables/
   en: /tutorials/en/global_variables/
-tutorial_groovy_script:
-  ru: /tutorials/ru/groovy_script/
-  en: /tutorials/en/groovy_script/
+tutorial_script:
+  ru: /tutorials/ru/script/
+  en: /tutorials/en/script/
 tutorial_create_template:
   ru: /tutorials/ru/create_template/
   en: /tutorials/en/create_template/
 tutorial_shortcuts:
   ru: /tutorials/ru/shortcuts/
   en: /tutorials/en/shortcuts/
+tutorial_write_rules:
+  ru: /tutorials/ru/write_rules/
+  en: /tutorials/en/write_rules/
+
+# other by lang key: example[page.lang]
+other_appcode_groups:
+  ru: /other/ru/appcode_groups/
+  en: /other/en/appcode_groups/
