@@ -334,6 +334,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     public void updateFavouritesUI() {
         buildFavouritesUI();
         favouritesPanel.revalidate();
+        pack();
     }
 
     @Override
