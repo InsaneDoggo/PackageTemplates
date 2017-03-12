@@ -28,11 +28,6 @@ Backward compatibility guaranteed after release 1.0.0+ version. Don't make a lot
 
 **Note:** Feel free to make a lot of [File Templates][4], it supported by IDE ([JetBrains][5]).
 
-### Undo
-**Undo** Ctrl + Z (Command ⌘ + Z for *mac*) doesn't work for whole template, it work for each element(files and directories). E.g. if you want to undo **Template** that consist of 1 directory and 2 files then you need to use **undo** 3 times ^_^.
-
-**Note:** In most cases better way for undo is **select** created root directory and press **delete**.
-
 
 [1]: {{ site.data.links.file_template_variables }}
 [2]: {{ site.baseurl}}{{ site.data.links.tutorial_groovy_script[page.lang] }}
