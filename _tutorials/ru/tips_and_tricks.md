@@ -1,7 +1,7 @@
 ---
-title: Советы и Хитрости
+title: Советы
 lang: ru
-order: 9
+order: 11
 ---
 
 ### Уникальные имена для File Template
@@ -15,11 +15,11 @@ order: 9
 ### Порядок выполнения
 Для ясности нужно понимать какие операции и в каком порядке выполняются:
 
-1. Выполнение [Groovy скрипта][2] у глобальной переменной BASE_NAME.
+1. Выполнение [Script][2] у глобальной переменной BASE_NAME.
 2. Вставка <font class="variable">${BASE_NAME}</font> в остальные [глобальные переменные][3].
-3. Выполнение **Groovy скриптов** у остальных **глобальных переменных**.
+3. Выполнение **Script** у остальных **глобальных переменных**.
 4. Вставка **глобальных переменных** в имена **директорий** и **файлов**.
-5. Выполнение Groovy скриптов у **директорий** и **файлов**.
+5. Выполнение Script у **директорий** и **файлов**.
 6. Добавление **глобальных переменных** к уже имеющимся [переменным в File Template][1]. 
 7. Создание директорий и файлов.
 
@@ -32,7 +32,7 @@ order: 9
 
 
 [1]: {{ site.data.links.file_template_variables }}
-[2]: {{ site.baseurl}}{{ site.data.links.tutorial_groovy_script[page.lang] }}
+[2]: {{ site.baseurl}}{{ site.data.links.tutorial_script[page.lang] }}
 [3]: {{ site.baseurl}}{{ site.data.links.tutorial_global_variables[page.lang] }}
 [4]: {{ site.data.links.file_templates }}
 [5]: {{ site.data.links.jetbrains }}

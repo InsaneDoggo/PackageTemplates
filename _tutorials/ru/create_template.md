@@ -14,7 +14,7 @@ order: 3
 6. Структура шаблона. Добавлять\удалять элементы можно с помощью ПКМ.<br>
 **A.** Вкл\Выкл элемент, в момент исполнения шаблона будут созданы только отмеченные элементы.<br>
 **B.** [Script][5]<br>
-**C.** Custom Path<br>
+**C.** [Custom Path][6]<br>
 **D.** [Write Rules][2]<br>
 
 
@@ -35,3 +35,4 @@ order: 3
 [3]: {{ site.baseurl}}{{ site.data.links.tutorial_presettings[page.lang] }}
 [4]: {{ site.baseurl}}{{ site.data.links.tutorial_shortcuts[page.lang] }}
 [5]: {{ site.baseurl}}{{ site.data.links.tutorial_script[page.lang] }}
+[6]: {{ site.baseurl}}{{ site.data.links.tutorial_custom_path[page.lang] }}

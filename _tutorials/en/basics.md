@@ -8,11 +8,22 @@ Open context menu and select **PackageTemplates** from **new** to open **Package
 
 ![context_menu]({{ site.baseurl }}/images/tutorial/context_menu.png){: .imageFragment}
 
-You can create, delete or edit templates.
 
-![select_package_template]({{ site.baseurl }}/images/tutorial/select_package_template.png){: .image}
+![main_dialog]({{ site.baseurl }}/images/tutorial/main_dialog.png){: .image}
 
-**Usage:** select template and press **{{ site.data.const.button_select }}**.
+1. Create
+2. Edit
+3. Add\Remove to\from **{{ site.data.const.favourites }}**.
+4. General Settings
+5. Export
+6. Import
 
+### Selection
+Exists two way:
+
+**А.** Specify path to file (.json)<br>
+**B.** From **{{ site.data.const.favourites }}**<br>
+
+**Note:** **{{ site.data.const.favourites }}** store path to file. If file will be not found while IDE starts then template will be removed from **{{ site.data.const.favourites }}** automatically. 
 
 [1]: {{ site.baseurl}}{{ site.data.links.tutorial_shortcuts[page.lang] }}

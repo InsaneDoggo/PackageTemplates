@@ -7,6 +7,7 @@ order: 4
 When you select a template you will see **Presettings Dialog**. It similar to the **Edit Dialog** but with less options:
 
 * On \ off elements with checkbox.
+* Show report.
 * Skip the root directory.
 * Editing element names.
 * Editing global variables.

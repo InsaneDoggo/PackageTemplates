@@ -48,6 +48,9 @@ tutorial_shortcuts:
 tutorial_write_rules:
   ru: /tutorials/ru/write_rules/
   en: /tutorials/en/write_rules/
+tutorial_custom_path:
+  ru: /tutorials/ru/custom_path/
+  en: /tutorials/en/custom_path/
 
 # other by lang key: example[page.lang]
 other_appcode_groups:
