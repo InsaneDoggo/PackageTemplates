@@ -56,3 +56,6 @@ tutorial_custom_path:
 other_appcode_groups:
   ru: /other/ru/appcode_groups/
   en: /other/en/appcode_groups/
+other_changelog:
+  ru: /other/ru/changelog/
+  en: /other/en/changelog/

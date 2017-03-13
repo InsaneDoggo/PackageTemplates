@@ -12,6 +12,9 @@ Package Templates это плагин реализующий Multiple [File Temp
 {% for tutorial in listTutorials %}
 * [{{ tutorial.title }}]({{ site.baseurl }}{{ tutorial.url }}){% endfor %}
 
+### История изменений
+[Изменения][8]
+
 ### Поддерживаемые IDE
 Плагин должен работать на всех **IntelliJ IDEA-based IDEs**, но тестировался только на следующих:
 
@@ -41,3 +44,4 @@ Package Templates это плагин реализующий Multiple [File Temp
 [5]: {{ site.data.links.github_todo_project }}
 [6]: {{ site.data.links.github_issues }}
 [7]: {{ site.baseurl}}{{ site.data.links.other_appcode_groups[page.lang]}}
+[8]: {{ site.baseurl}}{{ site.data.links.other_changelog[page.lang]}}

@@ -1,7 +1,7 @@
 ---
 title: Советы
 lang: ru
-order: 11
+order: 12
 ---
 
 ### Уникальные имена для File Template

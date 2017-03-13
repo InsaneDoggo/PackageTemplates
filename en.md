@@ -14,6 +14,9 @@ Package Templates make Multiple [File Templates][1] possible. Plugin let you cre
 {% for tutorial in listTutorials %}
 * [{{ tutorial.title }}]({{ site.baseurl }}{{ tutorial.url }}){% endfor %}
 
+### Changelog
+[Changelog][8]
+
 ### Supported IDE
 Plugin must work with all **IntelliJ IDEA-based IDEs**, but tested with listed below only:
 
@@ -44,3 +47,4 @@ Do you like this plugin and think it's useful? Then you could <a class="github-b
 [5]: {{ site.data.links.github_todo_project }}
 [6]: {{site.baseurl}}/ru
 [7]: {{ site.baseurl}}{{ site.data.links.other_appcode_groups[page.lang]}}
+[8]: {{ site.baseurl}}{{ site.data.links.other_changelog[page.lang]}}
