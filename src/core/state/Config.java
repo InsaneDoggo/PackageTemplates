@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
  */
 
 @State(
-        name = "PackageTemplateSettings",
+        name = "PackageTemplateSettings_v0.2",
         storages = {
-                @Storage(file = "PackageTemplateSettings.xml")
+                @Storage(file = "PackageTemplateSettings_v0.2.xml")
         }
 )
 public class Config implements PersistentStateComponent<StateWrapper> {
