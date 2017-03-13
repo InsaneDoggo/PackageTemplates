@@ -8,7 +8,7 @@ css: home.css
 ![ru]({{ site.baseurl }}/images/lang/ru.png) [Русский][2]
 
 <details >
-<summary class="Spoiler">YouTube demo</summary>
+<summary class="Spoiler">YouTube demo v0.1.0 (demo for v0.2.0 coming soon)</summary>
 
 <iframe src="http://www.youtube.com/embed/AypkKJc1LMc"
 width="400" height="240" frameborder="0" allowfullscreen/>
