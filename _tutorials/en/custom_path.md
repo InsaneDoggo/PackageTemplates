@@ -4,7 +4,7 @@ lang: en
 order: 9
 ---
 
-This feature allows you to search for directories and files. Each element of the template can use **CustomPath**. The found directory will be the parent for the template element (If ** CustomPath ** searches for the file then the item will be created in the same directory with file).
+This feature allows you to search for directories and files. Each element of the template can use **CustomPath**. The found directory will be the parent for the template element (If **CustomPath** searches for the file then the item will be created in the same directory with file).
 
 **Note:** Search algorithm works with file system, so it know nothing about IDE's UI features i.e. Groups in AppCode or some dirs in Android Studio.
 
