@@ -11,7 +11,8 @@ order: 3
 3. Skip root directory. Let you create files only.
 4. Show report after successful execution.
 5. [Global variables][1].
-6. Template structure. You can add\remove elements by right-click menu. Also you can on\off element creating with checkbox.<br>
+6. Template structure. You can add\remove elements by right-click menu.<br>
+**A.** On\Off element creating<br>
 **B.** [Script][5]<br>
 **C.** [Custom Path][6]<br>
 **D.** [Write Rules][2]<br>
