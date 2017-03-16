@@ -231,10 +231,6 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         actionImport = new BaseAction(PlatformIcons.IMPORT_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
-                //todo delete
-                //clear file lock
-
-
                 presenter.onImportAction();
             }
         };

@@ -97,8 +97,6 @@ public class FileWriter {
         } catch (Exception ex) {
             Logger.log(ex.getMessage());
             Logger.printStack(ex);
-            dirWrapper.setWriteException(ex);
-            dirWrapper.getPackageTemplateWrapper().getFailedElements().add(dirWrapper);
             return null;
         }
     }
@@ -123,8 +121,6 @@ public class FileWriter {
                     } catch (Exception e) {
                         Logger.log(e.getMessage());
                         Logger.printStack(e);
-                        fileWrapper.setWriteException(e);
-                        fileWrapper.getPackageTemplateWrapper().getFailedElements().add(fileWrapper);
                         return null;
                     }
                 }));
@@ -136,8 +132,6 @@ public class FileWriter {
             Logger.log("runnableFuture  " + e.getMessage());
             Logger.printStack(e);
         }
-
-        fileWrapper.getPackageTemplateWrapper().getWrittenElements().add(element);
         return element;
     }
 

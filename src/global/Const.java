@@ -10,7 +10,7 @@ import java.nio.charset.Charset;
  */
 public interface Const {
 
-    boolean IS_DEBUG = false;
+    boolean IS_DEBUG = true;
     boolean SHOULD_LOG_TO_NOTIFICATION = false;
 
     String EXPORT_FILE_NAME = "Templates.json";
@@ -34,6 +34,11 @@ public interface Const {
     interface charsets {
         Charset UTF_8 = Charset.forName("UTF-8");
         Charset ISO_8859_1 = Charset.forName("ISO-8859-1");
+    }
+
+    interface Key {
+        String CTX_FULL_PATH = "CTX_FULL_PATH";
+        String CTX_DIR_PATH = "CTX_DIR_PATH";
     }
 
 }

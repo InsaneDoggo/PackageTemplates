@@ -12,8 +12,10 @@ import com.intellij.ui.components.JBCheckBox;
 import core.actions.custom.CreateDirectoryAction;
 import core.actions.custom.DummyDirectoryAction;
 import core.actions.custom.base.SimpleAction;
+import core.actions.newPackageTemplate.models.ExecutionContext;
 import core.report.ReportHelper;
 import core.report.models.PendingActionReport;
+import global.Const;
 import global.models.*;
 import global.utils.UIHelper;
 import global.utils.file.FileWriter;
@@ -45,11 +47,11 @@ public class PackageTemplateWrapper {
     private DirectoryWrapper rootElement;
     private ArrayList<GlobalVariableWrapper> listGlobalVariableWrapper;
     private ViewMode mode;
-    private ArrayList<ElementWrapper> failedElements;
-    private ArrayList<PsiElement> writtenElements;
+    private ExecutionContext executionContext;
 
     public PackageTemplateWrapper(Project project) {
         this.project = project;
+        this.executionContext = new ExecutionContext();
     }
 
 
@@ -80,9 +82,9 @@ public class PackageTemplateWrapper {
             etfName = UIHelper.getEditorTextField(packageTemplate.getName(), project);
             etfDescription = UIHelper.getEditorTextField(packageTemplate.getDescription(), project);
 
-            panel.add(jlName, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("0","8"));
+            panel.add(jlName, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("0", "8"));
             panel.add(etfName, new CC().spanX().growX().pushX().wrap());
-            panel.add(jlDescription, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("8","8"));
+            panel.add(jlDescription, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("8", "8"));
             panel.add(etfDescription, new CC().spanX().growX().pushX().wrap());
 
             // Properties
@@ -171,11 +173,15 @@ public class PackageTemplateWrapper {
      */
     public void prepareGlobals() {
         packageTemplate.setMapGlobalVars(new HashMap<>());
+        // Context Vars
+        packageTemplate.getMapGlobalVars().put(Const.Key.CTX_FULL_PATH, executionContext.ctxFullPath);
+        packageTemplate.getMapGlobalVars().put(Const.Key.CTX_DIR_PATH, executionContext.ctxDirPath);
 
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
             if (getMode() == ViewMode.USAGE) {
                 // Replace ${BASE_NAME}
                 if (!variableWrapper.getGlobalVariable().getName().equals(ATTRIBUTE_BASE_NAME)) {
+                    //todo global Smart replace ${var}
                     variableWrapper.replaceBaseName(packageTemplate.getMapGlobalVars().get(ATTRIBUTE_BASE_NAME));
                 }
                 // SCRIPT
@@ -232,27 +238,27 @@ public class PackageTemplateWrapper {
     public void collectSimpleActions(Project project, VirtualFile virtualFile, List<SimpleAction> listSimpleAction) {
         ApplicationManager.getApplication().runReadAction(() -> {
             PsiDirectory currentDir = FileWriter.findCurrentDirectory(project, virtualFile);
-            if (currentDir != null) {
-                failedElements = new ArrayList<>();
-                writtenElements = new ArrayList<>();
-                initDefaultProperties();
+            if (currentDir == null) {
+                return;
+            }
 
-                SimpleAction rootAction;
-                if (packageTemplate.isSkipRootDirectory()) {
-                    // Without root
-                    rootAction = new DummyDirectoryAction(project, currentDir);
-                    listSimpleAction.add(rootAction);
-                } else {
-                    // With root
-                    rootAction = new CreateDirectoryAction(packageTemplate.getDirectory(), project);
-                    listSimpleAction.add(wrapInDummyDirAction(rootAction, currentDir));
-                }
+            initDefaultProperties();
 
-                CollectSimpleActionVisitor visitor = new CollectSimpleActionVisitor(rootAction, project);
+            SimpleAction rootAction;
+            if (packageTemplate.isSkipRootDirectory()) {
+                // Without root
+                rootAction = new DummyDirectoryAction(project, currentDir);
+                listSimpleAction.add(rootAction);
+            } else {
+                // With root
+                rootAction = new CreateDirectoryAction(packageTemplate.getDirectory(), project);
+                listSimpleAction.add(wrapInDummyDirAction(rootAction, currentDir));
+            }
 
-                for (ElementWrapper elementWrapper : rootElement.getListElementWrapper()) {
-                    elementWrapper.accept(visitor);
-                }
+            CollectSimpleActionVisitor visitor = new CollectSimpleActionVisitor(rootAction, project);
+
+            for (ElementWrapper elementWrapper : rootElement.getListElementWrapper()) {
+                elementWrapper.accept(visitor);
             }
         });
     }
@@ -271,28 +277,20 @@ public class PackageTemplateWrapper {
     //=================================================================
     //  Getter | Setter
     //=================================================================
+    public ExecutionContext getExecutionContext() {
+        return executionContext;
+    }
+
+    public void setExecutionContext(ExecutionContext executionContext) {
+        this.executionContext = executionContext;
+    }
+
     public Project getProject() {
         return project;
     }
 
     public void setProject(Project project) {
         this.project = project;
-    }
-
-    public ArrayList<PsiElement> getWrittenElements() {
-        return writtenElements;
-    }
-
-    public void setWrittenElements(ArrayList<PsiElement> writtenElements) {
-        this.writtenElements = writtenElements;
-    }
-
-    public ArrayList<ElementWrapper> getFailedElements() {
-        return failedElements;
-    }
-
-    public void setFailedElements(ArrayList<ElementWrapper> failedElements) {
-        this.failedElements = failedElements;
     }
 
     public PackageTemplate getPackageTemplate() {

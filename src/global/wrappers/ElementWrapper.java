@@ -34,7 +34,6 @@ import java.util.List;
 public abstract class ElementWrapper extends BaseWrapper {
 
     private DirectoryWrapper parent;
-    private Exception writeException;
     private PackageTemplateWrapper packageTemplateWrapper;
 
 
@@ -300,12 +299,5 @@ public abstract class ElementWrapper extends BaseWrapper {
         this.packageTemplateWrapper = packageTemplateWrapper;
     }
 
-    public Exception getWriteException() {
-        return writeException;
-    }
-
-    public void setWriteException(Exception writeException) {
-        this.writeException = writeException;
-    }
 
 }

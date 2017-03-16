@@ -2,6 +2,8 @@ package global.utils.templates;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vcs.changes.FilePathsHelper;
+import com.intellij.openapi.vfs.VirtualFile;
 import core.exportTemplates.ExportHelper;
 import core.importTemplates.ImportHelper;
 import core.state.util.SaveUtil;
