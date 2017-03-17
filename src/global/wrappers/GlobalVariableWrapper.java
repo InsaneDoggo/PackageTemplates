@@ -8,7 +8,7 @@ import com.intellij.ui.EditorTextField;
 import global.listeners.ClickListener;
 import core.script.ScriptDialog;
 import core.script.ScriptExecutor;
-import global.utils.StringTools;
+import global.utils.text.StringTools;
 import global.utils.highligt.HighlightHelper;
 import global.views.IconLabel;
 import icons.PluginIcons;

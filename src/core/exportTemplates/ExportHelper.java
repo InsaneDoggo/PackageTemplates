@@ -16,7 +16,7 @@ import global.Const;
 import global.dialogs.SkipableNonCancelDialog;
 import global.models.PackageTemplate;
 import global.utils.Logger;
-import global.utils.StringTools;
+import global.utils.text.StringTools;
 import global.utils.factories.GsonFactory;
 import global.utils.i18n.Localizer;
 import global.wrappers.PackageTemplateWrapper;

@@ -3,7 +3,7 @@ package global.visitors;
 import base.ElementVisitor;
 import global.models.Directory;
 import global.models.File;
-import global.utils.StringTools;
+import global.utils.text.StringTools;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;

@@ -12,6 +12,7 @@ import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import core.actions.custom.InjectTextAction;
 import core.actions.custom.base.SimpleAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
@@ -21,6 +22,12 @@ import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
 import core.report.ReportHelper;
 import core.report.dialogs.ReportDialog;
+import core.search.SearchAction;
+import core.search.SearchActionType;
+import core.search.SearchEngine;
+import core.search.customPath.CustomPath;
+import core.textInjection.InjectDirection;
+import core.textInjection.TextInjection;
 import core.textInjection.VelocityHelper;
 import global.models.PackageTemplate;
 import global.utils.Logger;
@@ -50,15 +57,15 @@ public class NewPackageTemplateAction extends AnAction {
         virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         project = event.getProject();
 
-        Logger.log("actionPerformed ");
-        if (true) {
-            CommandProcessor.getInstance().executeCommand(project, () -> {
-                ApplicationManager.getApplication().runWriteAction(() -> {
-                    testCode(project, event);
-                });
-            }, "comTest", null);
-            return;
-        }
+//        Logger.log("actionPerformed ");
+//        if (true) {
+//            CommandProcessor.getInstance().executeCommand(project, () -> {
+//                ApplicationManager.getApplication().runWriteAction(() -> {
+//                    testCode(project, event);
+//                });
+//            }, "comTest", null);
+//            return;
+//        }
 
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
@@ -115,12 +122,17 @@ public class NewPackageTemplateAction extends AnAction {
     //=================================================================
 
 
-    public static void executeTemplateSilently(PackageTemplate pt, Project project, VirtualFile virtualFile) {
-        PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.USAGE);
+    private static void preExecuteTemplate(Project project, VirtualFile virtualFile, PackageTemplateWrapper ptWrapper) {
         ptWrapper.getExecutionContext().virtualFile = virtualFile;
         ptWrapper.getExecutionContext().project = project;
         ptWrapper.getExecutionContext().ctxFullPath = virtualFile.getPath();
         ptWrapper.getExecutionContext().ctxDirPath = PathHelper.toDirPath(virtualFile);
+    }
+
+    public static void executeTemplateSilently(PackageTemplate pt, Project project, VirtualFile virtualFile) {
+        PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.USAGE);
+        preExecuteTemplate(project, virtualFile, ptWrapper);
+
         ptWrapper.prepareGlobals();
         ptWrapper.addGlobalVariablesToFileTemplates();
         ptWrapper.replaceNameVariable();
@@ -134,6 +146,7 @@ public class NewPackageTemplateAction extends AnAction {
                 packageTemplate.getName()), packageTemplate, virtualFile) {
             @Override
             public void onSuccess(PackageTemplateWrapper ptWrapper) {
+                preExecuteTemplate(project, virtualFile, ptWrapper);
                 collectAndExecuteActions(project, virtualFile, ptWrapper);
             }
         }.show();
@@ -142,7 +155,22 @@ public class NewPackageTemplateAction extends AnAction {
     private static void collectAndExecuteActions(Project project, VirtualFile virtualFile, PackageTemplateWrapper ptWrapper) {
         List<SimpleAction> listSimpleAction = new ArrayList<>();
 
-        ptWrapper.collectSimpleActions(project, virtualFile, listSimpleAction);
+//        ptWrapper.collectSimpleActions(project, virtualFile, listSimpleAction);
+
+        TextInjection textInjection = new TextInjection();
+
+        ArrayList<SearchAction> listSearchAction = new ArrayList<>();
+        listSearchAction.add(new SearchAction(SearchActionType.FILE, "Main.java", SearchEngine.DEEP_LIMITLESS, false));
+
+
+        textInjection.setCustomPath(new CustomPath(listSearchAction));
+        textInjection.setDescription("sds");
+        textInjection.setInjectDirection(InjectDirection.BEFORE);
+        textInjection.setRegexp(false);
+        textInjection.setTextToInject("TestText");
+        textInjection.setTextToSearch("MyToken");
+
+        listSimpleAction.add(new InjectTextAction(project, textInjection,ptWrapper.getPackageTemplate().getMapGlobalVars()));
 
         ActionRequest actionRequest = new ActionRequestBuilder()
                 .setProject(project)

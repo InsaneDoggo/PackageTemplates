@@ -2,8 +2,11 @@ package core.actions.custom.base;
 
 import core.actions.custom.interfaces.IHasWriteRules;
 import core.report.ReportHelper;
+import core.report.enums.ExecutionState;
+import core.report.models.FailedActionReport;
 import core.writeRules.WriteRules;
 import global.utils.Logger;
+import global.utils.i18n.Localizer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +25,13 @@ public abstract class SimpleAction {
     }
 
     public void run() {
-        doRun();
+        try {
+            doRun();
+        } catch (Exception e){
+            ReportHelper.setState(ExecutionState.FAILED);
+            ReportHelper.putReport(new FailedActionReport(this, Localizer.get("error.internalError"), "SimpleAction catch: " + e.getMessage()));
+            Logger.logAndPrintStack("SimpleAction catch: " + e.getMessage(), e);
+        }
         runChildren();
     }
 

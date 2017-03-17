@@ -40,6 +40,7 @@ public class ReportHelper {
 
     public static void putReport(BaseReport report) {
         getInstance().reports.put(report.getAction().getId(), report);
+        Logger.log(report.getMessage() + "  " + report.getDebugMessage());
     }
 
     public static HashMap<Integer, BaseReport> getReports() {

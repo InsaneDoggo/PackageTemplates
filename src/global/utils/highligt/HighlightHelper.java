@@ -11,15 +11,12 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorTextField;
 import global.models.TextRange;
-import global.utils.StringTools;
+import global.utils.text.StringTools;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static global.utils.StringTools.PATTERN_ATTRIBUTE;
-import static global.utils.StringTools.PATTERN_BASE_NAME;
 
 /**
  * Created by Arsen on 04.10.2016.

@@ -1,8 +1,9 @@
-package global.utils;
+package global.utils.text;
 
 import global.wrappers.PackageTemplateWrapper;
 
 import java.util.Map;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,11 +42,45 @@ public class StringTools {
     }
 
     private static String greedy(String text) {
-        return ".*" +  text + ".*";
+        return ".*" + text + ".*";
     }
 
     public static String getNameWithoutExtension(String name) {
         return name.replaceFirst("[.][^.]+$", "");
+    }
+
+
+    //=================================================================
+    //  Search
+    //=================================================================
+    public static int matchCount(String text, String textToSearch) {
+        int indexFrom = 0;
+        int count = 0;
+
+        while (indexFrom != -1) {
+            indexFrom = text.indexOf(textToSearch, indexFrom);
+
+            if (indexFrom != -1) {
+                count++;
+                indexFrom += textToSearch.length();
+            }
+        }
+
+        return count;
+    }
+
+    public static MatchResult match(String text, String token) {
+        int start = text.indexOf(token);
+        if(start==-1){
+            return null;
+        }
+
+        NonRegexResult result = new NonRegexResult();
+        result.setStart(start);
+        result.setEnd(start + token.length());
+        result.setGroup(token);
+
+        return result;
     }
 
 }
