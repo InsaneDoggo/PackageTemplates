@@ -95,7 +95,7 @@ public class PackageTemplateHelper {
         try {
             PackageTemplate pt = GsonFactory.getInstance().fromJson(json, PackageTemplate.class);
             pt.setName(file.getName().replace("." + Const.PACKAGE_TEMPLATES_EXTENSION, ""));
-            //todo prevent NPE
+            preventNPE(pt);
             return pt;
         } catch (Exception e) {
             Logger.log(e.getMessage());
@@ -104,6 +104,16 @@ public class PackageTemplateHelper {
 
         return null;
     }
+
+    private static void preventNPE(PackageTemplate template) {
+        //todo prevent NPE
+        if(template.getListTextInjection() == null) template.setListTextInjection(new ArrayList<>());
+    }
+
+
+    //=================================================================
+    //  Utils
+    //=================================================================
 
 
     //=================================================================

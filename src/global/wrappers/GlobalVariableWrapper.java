@@ -159,7 +159,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
         ptWrapper.removeGlobalVariable(this);
 
         ptWrapper.collectDataFromFields();
-        ptWrapper.reBuildView();
+        ptWrapper.reBuildGlobals();
     }
 
     private void addVariable(PackageTemplateWrapper ptWrapper) {
@@ -172,7 +172,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
         gVariable.setScript("");
 
         ptWrapper.addGlobalVariable(new GlobalVariableWrapper(gVariable));
-        ptWrapper.reBuildView();
+        ptWrapper.reBuildGlobals();
     }
 
     public void collectDataFromFields() {

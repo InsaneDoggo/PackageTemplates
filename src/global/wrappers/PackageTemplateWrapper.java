@@ -5,19 +5,23 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.util.IconUtil;
 import core.actions.custom.CreateDirectoryAction;
 import core.actions.custom.DummyDirectoryAction;
 import core.actions.custom.base.SimpleAction;
+import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
 import core.actions.newPackageTemplate.models.ExecutionContext;
-import core.report.ReportHelper;
-import core.report.models.PendingActionReport;
+import core.textInjection.TextInjection;
+import core.textInjection.dialog.TextInjectionDialog;
+import core.textInjection.dialog.TextInjectionWrapper;
 import global.Const;
+import global.listeners.ClickListener;
 import global.models.*;
 import global.utils.UIHelper;
+import global.utils.factories.WrappersFactory;
 import global.utils.file.FileWriter;
 import global.utils.i18n.Localizer;
 import global.visitors.*;
@@ -26,6 +30,7 @@ import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +51,7 @@ public class PackageTemplateWrapper {
     private PackageTemplate packageTemplate;
     private DirectoryWrapper rootElement;
     private ArrayList<GlobalVariableWrapper> listGlobalVariableWrapper;
+    private ArrayList<TextInjectionWrapper> listTextInjectionWrapper;
     private ViewMode mode;
     private ExecutionContext executionContext;
 
@@ -65,6 +71,10 @@ public class PackageTemplateWrapper {
     public JCheckBox cbSkipDefiningNames;
     public JCheckBox cbSkipRootDirectory;
     public JCheckBox cbShowReportDialog;
+    private JPanel panelProperties;
+    private JPanel panelElements;
+    private JPanel panelTextInjection;
+    private JPanel panelGlobals;
 
     public JPanel buildView() {
         if (panel == null) {
@@ -72,8 +82,52 @@ public class PackageTemplateWrapper {
         }
 
         // Properties
-        JPanel jpProperties = new JPanel(new MigLayout(new LC()));
+         panelProperties = new JPanel(new MigLayout(new LC()));
+        buildProperties();
+        panel.add(panelProperties, new CC().spanX().wrap().pushX().growX());
 
+
+        // Globals
+        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
+        JLabel jlGlobals = new JLabel(Localizer.get("GlobalVariables"), JLabel.CENTER);
+        panel.add(jlGlobals, new CC().wrap().growX().pushX().spanX());
+
+        panelGlobals = new JPanel(new MigLayout());
+        buildGlobals();
+        panel.add(panelGlobals, new CC().spanX().pushX().growX().wrap());
+
+
+        // Files and Directories | Elements
+        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
+        JLabel jlFilesAndDirs = new JLabel(Localizer.get("FilesAndDirs"), JLabel.CENTER);
+        panel.add(jlFilesAndDirs, new CC().wrap().growX().pushX().spanX());
+
+        panelElements = new JPanel(new MigLayout());
+        buildElements();
+        panel.add(panelElements, new CC().spanX().pushX().growX().wrap());
+
+        // Text Injection
+        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
+        JLabel jlTextInjection = new JLabel(Localizer.get("TextInjection"), JLabel.CENTER);
+        panel.add(jlTextInjection, new CC().wrap().growX().pushX().spanX());
+
+        panelTextInjection = new JPanel(new MigLayout());
+        buildTextInjections();
+        panel.add(panelTextInjection, new CC().spanX().pushX().growX().wrap());
+
+        JButton btnAdd = new JButton(Localizer.get("action.AddTextInjection"), IconUtil.getAddIcon());
+        btnAdd.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                createTextInjection();
+            }
+        });
+        panel.add(btnAdd, new CC().wrap());
+
+        return panel;
+    }
+
+    private void buildProperties() {
         if (mode != ViewMode.USAGE) {
             // Header
             JLabel jlName = new JLabel(Localizer.get("Name"));
@@ -82,50 +136,63 @@ public class PackageTemplateWrapper {
             etfName = UIHelper.getEditorTextField(packageTemplate.getName(), project);
             etfDescription = UIHelper.getEditorTextField(packageTemplate.getDescription(), project);
 
-            panel.add(jlName, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("0", "8"));
-            panel.add(etfName, new CC().spanX().growX().pushX().wrap());
-            panel.add(jlDescription, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("8", "8"));
-            panel.add(etfDescription, new CC().spanX().growX().pushX().wrap());
+            panelProperties.add(jlName, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("0", "8"));
+            panelProperties.add(etfName, new CC().spanX().growX().pushX().wrap());
+            panelProperties.add(jlDescription, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("8", "8"));
+            panelProperties.add(etfDescription, new CC().spanX().growX().pushX().wrap());
 
             // Properties
             cbShouldRegisterAction = new JBCheckBox(Localizer.get("property.ShouldRegisterAction"), packageTemplate.isShouldRegisterAction());
             cbSkipDefiningNames = new JBCheckBox(Localizer.get("property.SkipPresettings"), packageTemplate.isSkipDefiningNames());
-            jpProperties.add(cbShouldRegisterAction, new CC().wrap().spanX());
-            jpProperties.add(cbSkipDefiningNames, new CC().wrap().spanX());
+            panelProperties.add(cbShouldRegisterAction, new CC().wrap().spanX());
+            panelProperties.add(cbSkipDefiningNames, new CC().wrap().spanX());
         }
 
         // Properties
         cbSkipRootDirectory = new JBCheckBox(Localizer.get("property.SkipRootDirectory"), packageTemplate.isSkipRootDirectory());
         cbSkipRootDirectory.addItemListener(e -> {
             collectDataFromFields();
-            reBuildView();
+            reBuildProperties();
+            reBuildElements();
         });
         cbShowReportDialog = new JBCheckBox(Localizer.get("property.ShowReportDialog"), packageTemplate.shouldShowReport());
         cbShowReportDialog.addItemListener(e -> {
             collectDataFromFields();
-            reBuildView();
+            reBuildProperties();
         });
 
-        jpProperties.add(cbSkipRootDirectory, new CC().spanX().wrap());
-        jpProperties.add(cbShowReportDialog, new CC().spanX().wrap());
-        panel.add(jpProperties, new CC().spanX().wrap());
+        panelProperties.add(cbSkipRootDirectory, new CC().spanX().wrap());
+        panelProperties.add(cbShowReportDialog, new CC().spanX().wrap());
+    }
 
-        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
+    private void buildElements() {
+        rootElement.buildView(project, panelElements);
+    }
 
-
-        // Globals
-        JLabel jlGlobals = new JLabel(Localizer.get("GlobalVariables"), JLabel.CENTER);
-        panel.add(jlGlobals, new CC().wrap().growX().pushX().spanX());
-
+    private void buildGlobals() {
         for (GlobalVariableWrapper variableWrapper : getListGlobalVariableWrapper()) {
-            variableWrapper.buildView(this, panel);
+            variableWrapper.buildView(this, panelGlobals);
         }
+    }
 
-        // Files and Directories
-        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
-        rootElement.buildView(project, panel);
+    private void buildTextInjections() {
+        for (TextInjectionWrapper wrapper : getListTextInjectionWrapper()) {
+            wrapper.buildView(this, panelTextInjection);
+        }
+    }
 
-        return panel;
+
+    //=================================================================
+    //  UI Actions
+    //=================================================================
+    private void createTextInjection() {
+        new TextInjectionDialog(project, null) {
+            @Override
+            public void onSuccess(TextInjection textInjection) {
+                addTextInjection(WrappersFactory.wrapTextInjection(textInjection));
+                reBuildTextInjections();
+            }
+        };
     }
 
     public void addGlobalVariable(GlobalVariableWrapper gvWrapper) {
@@ -138,9 +205,60 @@ public class PackageTemplateWrapper {
         listGlobalVariableWrapper.remove(gvWrapper);
     }
 
-    public void reBuildView() {
-        panel.removeAll();
-        buildView();
+    public void addTextInjection(TextInjectionWrapper wrapper) {
+        listTextInjectionWrapper.add(wrapper);
+        packageTemplate.getListTextInjection().add(wrapper.getTextInjection());
+    }
+
+    public void removeTextInjection(TextInjectionWrapper wrapper) {
+        packageTemplate.getListTextInjection().remove(wrapper.getTextInjection());
+        listTextInjectionWrapper.remove(wrapper);
+    }
+
+
+    //=================================================================
+    //  UI ReBuild
+    //=================================================================
+    ConfigureDialog.UpdateUICallback updateUICallback;
+
+    public void setUpdateUICallback(ConfigureDialog.UpdateUICallback updateUICallback) {
+        this.updateUICallback = updateUICallback;
+    }
+
+    public void fullReBuild() {
+        reBuildProperties();
+        reBuildGlobals();
+        reBuildElements();
+        reBuildTextInjections();
+    }
+
+    public void reBuildProperties() {
+        panelProperties.removeAll();
+        buildProperties();
+    }
+
+    public void reBuildGlobals() {
+        panelGlobals.removeAll();
+        buildTextInjections();
+        packParentContainer();
+    }
+
+    public void reBuildElements() {
+        panelElements.removeAll();
+        buildElements();
+        packParentContainer();
+    }
+
+    public void reBuildTextInjections() {
+        panelTextInjection.removeAll();
+        buildTextInjections();
+        packParentContainer();
+    }
+
+    private void packParentContainer() {
+        if(updateUICallback != null){
+            updateUICallback.pack();
+        }
     }
 
 
@@ -162,6 +280,10 @@ public class PackageTemplateWrapper {
         packageTemplate.setShouldShowReport(cbShowReportDialog.isSelected());
 
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
+            variableWrapper.collectDataFromFields();
+        }
+
+        for (TextInjectionWrapper variableWrapper : listTextInjectionWrapper) {
             variableWrapper.collectDataFromFields();
         }
 
@@ -224,10 +346,15 @@ public class PackageTemplateWrapper {
         return result;
     }
 
-    public void wrapGlobals() {
+    public void initCollections() {
         listGlobalVariableWrapper = new ArrayList<>();
-        for (GlobalVariable globalVariable : packageTemplate.getListGlobalVariable()) {
-            listGlobalVariableWrapper.add(new GlobalVariableWrapper(globalVariable));
+        for (GlobalVariable item : packageTemplate.getListGlobalVariable()) {
+            listGlobalVariableWrapper.add(new GlobalVariableWrapper(item));
+        }
+
+        listTextInjectionWrapper = new ArrayList<>();
+        for (TextInjection item : packageTemplate.getListTextInjection()) {
+            listTextInjectionWrapper.add(new TextInjectionWrapper(item));
         }
     }
 
@@ -329,4 +456,11 @@ public class PackageTemplateWrapper {
         return defaultProperties;
     }
 
+    public ArrayList<TextInjectionWrapper> getListTextInjectionWrapper() {
+        return listTextInjectionWrapper;
+    }
+
+    public void setListTextInjectionWrapper(ArrayList<TextInjectionWrapper> listTextInjectionWrapper) {
+        this.listTextInjectionWrapper = listTextInjectionWrapper;
+    }
 }

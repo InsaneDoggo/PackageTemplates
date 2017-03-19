@@ -31,9 +31,19 @@ public abstract class ConfigureDialog extends BaseDialog implements ConfigureVie
     @Override
     public void buildView(PackageTemplateWrapper ptWrapper) {
         panel.setLayout(new MigLayout(new LC().fillX()));
+        ptWrapper.setUpdateUICallback(updateUICallback);
         panel.add(ptWrapper.buildView(), new CC().pushX().growX().wrap());
     }
 
+
+    //=================================================================
+    //  Utils
+    //=================================================================
+    public interface UpdateUICallback {
+        void pack();
+    }
+
+    private UpdateUICallback updateUICallback = ConfigureDialog.this::pack;
 
     //=================================================================
     //  Dialog specific stuff

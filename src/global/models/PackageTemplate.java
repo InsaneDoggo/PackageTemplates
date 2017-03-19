@@ -2,6 +2,7 @@ package global.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import core.textInjection.TextInjection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ public class PackageTemplate {
     @Expose @SerializedName("directory") private Directory directory;
     @Expose @SerializedName("mapGlobalVars") private HashMap<String, String> mapGlobalVars;
     @Expose @SerializedName("listGlobalVariable") private ArrayList<GlobalVariable> listGlobalVariable;
+    @Expose @SerializedName("listTextInjection") private ArrayList<TextInjection> listTextInjection;
     @Expose @SerializedName("postGeneratedResults") private PostGeneratedResults postGeneratedResults;
     @Expose @SerializedName("skipRootDirectory") private boolean skipRootDirectory;
     @Expose @SerializedName("skipDefiningNames") private boolean skipDefiningNames;
@@ -100,6 +102,14 @@ public class PackageTemplate {
 
     public void setPostGeneratedResults(PostGeneratedResults postGeneratedResults) {
         this.postGeneratedResults = postGeneratedResults;
+    }
+
+    public ArrayList<TextInjection> getListTextInjection() {
+        return listTextInjection;
+    }
+
+    public void setListTextInjection(ArrayList<TextInjection> listTextInjection) {
+        this.listTextInjection = listTextInjection;
     }
 
 }

@@ -9,6 +9,7 @@ import core.search.customPath.CustomPath;
  */
 public class TextInjection {
 
+    @Expose @SerializedName("isEnabled") private boolean isEnabled;
     @Expose @SerializedName("description") private String description;
     @Expose @SerializedName("customPath") private CustomPath customPath;
     @Expose @SerializedName("injectDirection") private InjectDirection injectDirection;
@@ -16,10 +17,27 @@ public class TextInjection {
     @Expose @SerializedName("isRegexp") private boolean isRegexp;
     @Expose @SerializedName("textToInject") private String textToInject;
 
+    public TextInjection() {
+        isEnabled = true;
+        description = "";
+        customPath = null;
+        injectDirection = InjectDirection.NEXT_LINE;
+        textToSearch = "";
+        isRegexp = false;
+        textToInject = "";
+    }
 
     //=================================================================
     //  Get|Set
     //=================================================================
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
     public String getDescription() {
         return description;
     }

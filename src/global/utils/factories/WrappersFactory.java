@@ -1,6 +1,8 @@
 package global.utils.factories;
 
 import com.intellij.openapi.project.Project;
+import core.textInjection.TextInjection;
+import core.textInjection.dialog.TextInjectionWrapper;
 import core.writeRules.WriteRules;
 import global.models.*;
 import org.jetbrains.annotations.NotNull;
@@ -16,11 +18,15 @@ import java.util.HashMap;
  */
 public class WrappersFactory {
 
+    public static TextInjectionWrapper wrapTextInjection(TextInjection textInjection){
+        return new TextInjectionWrapper(textInjection);
+    }
+
     public static PackageTemplateWrapper wrapPackageTemplate(Project project, PackageTemplate packageTemplate, PackageTemplateWrapper.ViewMode mode){
         PackageTemplateWrapper ptWrapper = new PackageTemplateWrapper(project);
         ptWrapper.setMode(mode);
         ptWrapper.setPackageTemplate(packageTemplate);
-        ptWrapper.wrapGlobals();
+        ptWrapper.initCollections();
         ptWrapper.setRootElement(ptWrapper.wrapDirectory(packageTemplate.getDirectory(), null));
         ptWrapper.setProject(project);
 
@@ -38,6 +44,7 @@ public class WrappersFactory {
         PackageTemplate packageTemplate = new PackageTemplate();
         packageTemplate.setMapGlobalVars(new HashMap<>());
         packageTemplate.setListGlobalVariable(new ArrayList<>());
+        packageTemplate.setListTextInjection(new ArrayList<>());
         packageTemplate.setName("New_Package_Template");
         packageTemplate.setDescription("");
         packageTemplate.setDirectory(directory);

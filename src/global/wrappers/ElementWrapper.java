@@ -16,7 +16,6 @@ import core.writeRules.dialog.WriteRulesDialog;
 import global.listeners.ClickListener;
 import global.models.BaseElement;
 import core.writeRules.WriteRules;
-import global.models.File;
 import global.utils.Logger;
 import global.utils.factories.WrappersFactory;
 import global.utils.i18n.Localizer;
@@ -93,8 +92,8 @@ public abstract class ElementWrapper extends BaseWrapper {
         popupMenu.show(jlName, mouseEvent.getX(), mouseEvent.getY());
     }
 
-    public void reBuild() {
-        packageTemplateWrapper.reBuildView();
+    public void reBuildEllements() {
+        packageTemplateWrapper.reBuildElements();
     }
 
 
@@ -246,14 +245,14 @@ public abstract class ElementWrapper extends BaseWrapper {
         }
 
         dirParent.addElement(WrappersFactory.createNewWrappedDirectory(dirParent));
-        dirParent.reBuild();
+        dirParent.reBuildEllements();
     }
 
     public void deleteElement() {
         removeMyself();
 
         getParent().getPackageTemplateWrapper().collectDataFromFields();
-        getParent().reBuild();
+        getParent().reBuildEllements();
     }
 
     public void AddFile() {
@@ -269,7 +268,7 @@ public abstract class ElementWrapper extends BaseWrapper {
                     parent = getParent();
                 }
                 parent.addElement(WrappersFactory.createNewWrappedFile(parent, fileTemplate.getName(), fileTemplate.getExtension()));
-                parent.reBuild();
+                parent.reBuildEllements();
             }
 
             @Override
