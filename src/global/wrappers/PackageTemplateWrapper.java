@@ -192,7 +192,7 @@ public class PackageTemplateWrapper {
                 addTextInjection(WrappersFactory.wrapTextInjection(textInjection));
                 reBuildTextInjections();
             }
-        };
+        }.show();
     }
 
     public void addGlobalVariable(GlobalVariableWrapper gvWrapper) {
