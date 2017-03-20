@@ -22,6 +22,7 @@ import core.search.customPath.dialog.SearchActionWrapper;
 import core.textInjection.InjectDirection;
 import core.textInjection.TextInjection;
 import global.listeners.ClickListener;
+import global.utils.Logger;
 import global.utils.i18n.Localizer;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
@@ -126,8 +127,16 @@ public abstract class TextInjectionDialog extends BaseDialog {
 
     @Override
     public void onOKAction() {
-        //todo collect
+        collectDataFromFields();
         onSuccess(textInjection);
+    }
+
+    private void collectDataFromFields() {
+        textInjection.setDescription(tfDescription.getText());
+        textInjection.setInjectDirection((InjectDirection) cmbDirection.getSelectedItem());
+        textInjection.setRegexp(cbRegexp.isSelected());
+        textInjection.setTextToSearch(tfToSearch.getText());
+        textInjection.setTextToInject(tfToInject.getText());
     }
 
     @Override
@@ -136,7 +145,29 @@ public abstract class TextInjectionDialog extends BaseDialog {
 
     @Override
     protected ValidationInfo doValidate() {
-        return new ValidationInfo(Localizer.get("warning.CreateAtLeastOneAction"), panel);
+        // textToSearch
+        String description = tfDescription.getText();
+        if (description == null || description.isEmpty()) {
+            return new ValidationInfo(Localizer.get("warning.FillEmptyFields"), tfDescription);
+        }
+
+//        if (textInjection.getCustomPath() == null) {
+//            return new ValidationInfo(Localizer.get("warning.ShouldCreateCustomPath"), panel);
+//        }
+
+        // textToSearch
+        String textToSearch = tfToSearch.getText();
+        if (textToSearch == null || textToSearch.isEmpty()) {
+            return new ValidationInfo(Localizer.get("warning.FillEmptyFields"), tfToSearch);
+        }
+
+        // textToSearch
+        String textToInject = tfToInject.getText();
+        if (textToInject == null || textToInject.isEmpty()) {
+            return new ValidationInfo(Localizer.get("warning.FillEmptyFields"), tfToInject);
+        }
+
+        return null;
     }
 
     @Override
