@@ -21,7 +21,7 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
 
     private SettingsPresenter presenter;
     private JLabel jlLanguage;
-    private JComboBox<Language> comboLanguages;
+    private ComboBox comboLanguages;
 
     public SettingsDialog(Project project) {
         super(project);

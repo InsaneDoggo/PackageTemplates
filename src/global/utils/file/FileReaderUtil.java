@@ -1,6 +1,7 @@
 package global.utils.file;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiDirectory;
@@ -21,27 +22,27 @@ public class FileReaderUtil {
     public static String readFile(File file) {
         final String[] result = new String[1];
         ApplicationManager.getApplication().invokeAndWait(() ->
-                result[0] = ApplicationManager.getApplication().runReadAction((Computable<String>) () -> {
-                    try {
-                        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), Const.charsets.UTF_8));
-                        StringBuilder sb = new StringBuilder();
-                        String line = br.readLine();
+                        result[0] = ApplicationManager.getApplication().runReadAction((Computable<String>) () -> {
+                            try {
+                                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), Const.charsets.UTF_8));
+                                StringBuilder sb = new StringBuilder();
+                                String line = br.readLine();
 
-                        while (line != null) {
-                            sb.append(line);
-                            sb.append("\n");
-                            line = br.readLine();
-                        }
+                                while (line != null) {
+                                    sb.append(line);
+                                    sb.append("\n");
+                                    line = br.readLine();
+                                }
 
-                        br.close();
-                        return sb.toString();
-                    } catch (Exception e) {
-                        Logger.log("Error read file " + e.getMessage());
-                        Logger.printStack(e);
-                        return null;
-                    }
-                })
-        );
+                                br.close();
+                                return sb.toString();
+                            } catch (Exception e) {
+                                Logger.log("Error read file " + e.getMessage());
+                                Logger.printStack(e);
+                                return null;
+                            }
+                        })
+                , ModalityState.defaultModalityState());
         return result[0];
     }
 

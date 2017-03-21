@@ -3,6 +3,7 @@ package global.utils.file;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
@@ -37,18 +38,18 @@ public class FileWriter {
     public static PsiDirectory findCurrentDirectory(Project project, VirtualFile file) {
         final PsiDirectory[] result = new PsiDirectory[1];
         ApplicationManager.getApplication().invokeAndWait(() ->
-                result[0] = ApplicationManager.getApplication().runReadAction((Computable<PsiDirectory>) () -> {
-                    if (file == null || project == null) {
-                        return null;
-                    }
+                        result[0] = ApplicationManager.getApplication().runReadAction((Computable<PsiDirectory>) () -> {
+                            if (file == null || project == null) {
+                                return null;
+                            }
 
-                    if (file.isDirectory()) {
-                        return PsiManager.getInstance(project).findDirectory(file);
-                    } else {
-                        return PsiManager.getInstance(project).findDirectory(file.getParent());
-                    }
-                })
-        );
+                            if (file.isDirectory()) {
+                                return PsiManager.getInstance(project).findDirectory(file);
+                            } else {
+                                return PsiManager.getInstance(project).findDirectory(file.getParent());
+                            }
+                        })
+                , ModalityState.defaultModalityState());
         return result[0];
     }
 
@@ -157,7 +158,7 @@ public class FileWriter {
                     };
                     CommandProcessor.getInstance().executeCommand(project, runnable, "testId", "testId");
                 }
-        );
+                , ModalityState.defaultModalityState());
 
 //        try {
 //            Thread.sleep(1000L);
@@ -318,7 +319,8 @@ public class FileWriter {
         final boolean[] result = new boolean[1];
 
         ApplicationManager.getApplication().invokeAndWait(() ->
-                result[0] = ApplicationManager.getApplication().runWriteAction(computable));
+                result[0] = ApplicationManager.getApplication().runWriteAction(computable),
+                ModalityState.defaultModalityState());
 
         return result[0];
     }

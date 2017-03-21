@@ -1,39 +1,23 @@
 package core.textInjection.dialog;
 
 import base.BaseDialog;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.FileTypes;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
-import com.intellij.openapi.fileTypes.impl.FileTypeRenderer;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.util.IconUtil;
-import core.search.SearchAction;
-import core.search.SearchActionType;
-import core.search.customPath.CustomPath;
-import core.search.customPath.dialog.SearchActionTypeCellRenderer;
-import core.search.customPath.dialog.SearchActionWrapper;
 import core.textInjection.InjectDirection;
 import core.textInjection.TextInjection;
-import global.listeners.ClickListener;
-import global.utils.Logger;
 import global.utils.i18n.Localizer;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Arsen on 19.07.2016.
@@ -57,7 +41,7 @@ public abstract class TextInjectionDialog extends BaseDialog {
     //=================================================================
     public EditorTextField tfDescription;
     public JButton btnCustomPath;
-    public ComboBox<InjectDirection> cmbDirection;
+    public ComboBox cmbDirection;
     public EditorTextField tfToSearch;
     public JBCheckBox cbRegexp;
     public EditorTextField tfToInject;

@@ -3,7 +3,6 @@ package core.search.customPath.dialog;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.fileTypes.PlainTextLanguage;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
@@ -16,6 +15,7 @@ import core.search.SearchEngine;
 import global.utils.Logger;
 import global.utils.i18n.Localizer;
 import global.views.spinner.IntSpinner;
+import com.intellij.openapi.ui.ComboBox;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
@@ -55,10 +55,10 @@ public class SearchActionWrapper {
         action.setRegexp(cbIsRegex.isSelected());
 
         //Deep Limit
-        if(cbDeepLimit.isSelected()){
+        if (cbDeepLimit.isSelected()) {
             try {
                 action.setDeepLimit((Integer) spnDeepLimit.getValue());
-            } catch (Exception e){
+            } catch (Exception e) {
                 Logger.log("collectData spnDeepLimit.getValue: " + e.getMessage());
                 Logger.printStack(e);
                 action.setDeepLimit(SearchEngine.DEEP_LIMITLESS);
@@ -69,14 +69,14 @@ public class SearchActionWrapper {
     }
 
     public ValidationInfo doValidate() {
-        if(tfName.getText().trim().isEmpty()){
+        if (tfName.getText().trim().isEmpty()) {
             return new ValidationInfo(Localizer.get("warning.FillEmptyFields"), tfName);
         }
 
-        if(cbDeepLimit.isSelected()){
+        if (cbDeepLimit.isSelected()) {
             try {
                 int testValue = (Integer) spnDeepLimit.getValue();
-            } catch (Exception e){
+            } catch (Exception e) {
                 Logger.log("collectData spnDeepLimit.getValue: " + e.getMessage());
                 Logger.printStack(e);
                 return new ValidationInfo(Localizer.get("warning.InvalidNumber"), tfName);
@@ -91,7 +91,7 @@ public class SearchActionWrapper {
     //  UI
     //=================================================================
     public JPanel panel;
-    public ComboBox<SearchActionType> cmbActionTypes;
+    public ComboBox cmbActionTypes;
     public EditorTextField tfName;
     public JBCheckBox cbDeepLimit;
     public IntSpinner spnDeepLimit;

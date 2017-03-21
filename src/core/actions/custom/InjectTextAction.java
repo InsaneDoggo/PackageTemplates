@@ -1,6 +1,7 @@
 package core.actions.custom;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
@@ -53,7 +54,7 @@ public class InjectTextAction extends SimpleAction {
                     doRunInWriteThread();
                 });
             }, getClass().getSimpleName(), getClass().getSimpleName());
-        });
+        }, ModalityState.defaultModalityState());
     }
 
     private void doRunInWriteThread() {

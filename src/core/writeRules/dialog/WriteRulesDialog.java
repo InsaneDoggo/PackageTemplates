@@ -37,7 +37,7 @@ public abstract class WriteRulesDialog extends BaseDialog {
     //=================================================================
     //  UI
     //=================================================================
-    private ComboBox<WriteRules> comboBoxRules;
+    private ComboBox comboBoxRules;
 
     @Override
     public void preShow() {
