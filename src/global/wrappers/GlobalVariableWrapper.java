@@ -53,14 +53,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
         tfKey.setAlignmentX(Component.LEFT_ALIGNMENT);
         UIHelper.setRightPadding(tfKey, PADDING_LABEL);
 
-        tfValue = new EditorTextField(globalVariable.getValue());
-        tfValue.setAlignmentX(Component.LEFT_ALIGNMENT);
-        if (!globalVariable.getName().equals(ATTRIBUTE_BASE_NAME)) {
-            tfValue.addSettingsProvider(editor -> {
-                HighlightHelper.addHighlightListener(ptWrapper.getProject(), tfValue, editor, StringTools.PATTERN_BASE_NAME);
-                HighlightHelper.applyHighlightRange(HighlightHelper.findResults(tfValue.getText(), StringTools.PATTERN_BASE_NAME), ptWrapper.getProject(), editor);
-            });
-        }
+        tfValue = UIHelper.getEditorTextField(globalVariable.getValue(), ptWrapper.getProject());
 
         if (ptWrapper.getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
             tfKey.setEnabled(false);

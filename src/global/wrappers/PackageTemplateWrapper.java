@@ -401,9 +401,13 @@ public class PackageTemplateWrapper {
     }
 
     public void collectInjectionActions(Project project, List<SimpleAction> listSimpleAction) {
-        HashMap<String, String> map = getPackageTemplate().getMapGlobalVars();
+        HashMap<String, String> map = getAllProperties();
 
         for (TextInjectionWrapper wrapper : listTextInjectionWrapper) {
+            if(!wrapper.getTextInjection().isEnabled()){
+                continue;
+            }
+
             listSimpleAction.add(new InjectTextAction(project, wrapper.getTextInjection(), map));
         }
     }
