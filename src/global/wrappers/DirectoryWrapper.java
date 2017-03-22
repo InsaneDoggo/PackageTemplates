@@ -107,7 +107,7 @@ public class DirectoryWrapper extends ElementWrapper {
     @Override
     public void buildView(Project project, JPanel container) {
         if (panel == null) {
-            panel = new JPanel(new MigLayout(new LC().gridGapY("0").fillX()));
+            panel = new JPanel(new MigLayout(new LC().insets("0").gridGapY("2pt").fillX()));
         } else {
             panel.removeAll();
         }
@@ -168,7 +168,7 @@ public class DirectoryWrapper extends ElementWrapper {
 
         updateOptionIcons();
 
-        JPanel optionsPanel = new JPanel(new MigLayout(new LC()));
+        JPanel optionsPanel = new JPanel(new MigLayout(new LC().insets("0").gridGap("2pt","0")));
         optionsPanel.add(cbEnabled, new CC());
         optionsPanel.add(jlScript, new CC());
         optionsPanel.add(jlCustomPath, new CC());

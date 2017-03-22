@@ -51,14 +51,14 @@ public class TextInjectionWrapper {
                     showEditDialog(ptWrapper);
                 }
             });
-            container.add(cbEnabled, new CC().spanX().split(4));
+            container.add(cbEnabled, new CC());
             container.add(btnDelete, new CC());
             container.add(btnEdit, new CC());
         } else {
-            container.add(cbEnabled, new CC().spanX().split(2));
+            container.add(cbEnabled, new CC());
         }
 
-        container.add(jlDescription, new CC().wrap().pushX().growX());
+        container.add(jlDescription, new CC().wrap().pushX().growX().gapLeft("4pt"));
     }
 
     private void showEditDialog(PackageTemplateWrapper ptWrapper) {

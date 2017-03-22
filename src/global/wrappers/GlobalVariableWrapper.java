@@ -51,7 +51,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
 
         tfKey = new EditorTextField(globalVariable.getName());
         tfKey.setAlignmentX(Component.LEFT_ALIGNMENT);
-        UIHelper.setRightPadding(tfKey, PADDING_LABEL);
+//        UIHelper.setRightPadding(tfKey, PADDING_LABEL);
 
         tfValue = UIHelper.getEditorTextField(globalVariable.getValue(), ptWrapper.getProject());
 

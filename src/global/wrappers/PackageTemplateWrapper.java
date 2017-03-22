@@ -79,11 +79,11 @@ public class PackageTemplateWrapper {
 
     public JPanel buildView() {
         if (panel == null) {
-            panel = new JPanel(new MigLayout(new LC().fillX().gridGapY("0")));
+            panel = new JPanel(new MigLayout(new LC().insets("0").fillX().gridGapY("1pt")));
         }
 
         // Properties
-        panelProperties = new JPanel(new MigLayout(new LC()));
+        panelProperties = new JPanel(new MigLayout(new LC().insets("0").gridGap("0","0")));
         buildProperties();
         panel.add(panelProperties, new CC().spanX().wrap().pushX().growX());
 
@@ -91,9 +91,9 @@ public class PackageTemplateWrapper {
         // Globals
         panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
         JLabel jlGlobals = new JLabel(Localizer.get("GlobalVariables"), JLabel.CENTER);
-        panel.add(jlGlobals, new CC().wrap().growX().pushX().spanX());
+        panel.add(jlGlobals, new CC().wrap().growX().pushX().spanX().gapY("0","4pt"));
 
-        panelGlobals = new JPanel(new MigLayout());
+        panelGlobals = new JPanel(new MigLayout(new LC().insets("0").gridGap("0","0")));
         buildGlobals();
         panel.add(panelGlobals, new CC().spanX().pushX().growX().wrap());
 
@@ -101,9 +101,9 @@ public class PackageTemplateWrapper {
         // Files and Directories | Elements
         panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
         JLabel jlFilesAndDirs = new JLabel(Localizer.get("FilesAndDirs"), JLabel.CENTER);
-        panel.add(jlFilesAndDirs, new CC().wrap().growX().pushX().spanX());
+        panel.add(jlFilesAndDirs, new CC().wrap().growX().pushX().spanX().gapY("0","4pt"));
 
-        panelElements = new JPanel(new MigLayout());
+        panelElements = new JPanel(new MigLayout(new LC().insets("0").gridGap("0","2pt")));
         buildElements();
         panel.add(panelElements, new CC().spanX().pushX().growX().wrap());
 
@@ -112,7 +112,7 @@ public class PackageTemplateWrapper {
         JLabel jlTextInjection = new JLabel(Localizer.get("TextInjection"), JLabel.CENTER);
         panel.add(jlTextInjection, new CC().wrap().growX().pushX().spanX());
 
-        panelTextInjection = new JPanel(new MigLayout());
+        panelTextInjection = new JPanel(new MigLayout(new LC().insets("0").gridGap("0","0")));
         buildTextInjections();
         panel.add(panelTextInjection, new CC().spanX().pushX().growX().wrap());
 
@@ -137,10 +137,10 @@ public class PackageTemplateWrapper {
             etfName = UIHelper.getEditorTextField(packageTemplate.getName(), project);
             etfDescription = UIHelper.getEditorTextField(packageTemplate.getDescription(), project);
 
-            panelProperties.add(jlName, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("0", "8"));
+            panelProperties.add(jlName, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("0", "4pt"));
             panelProperties.add(etfName, new CC().spanX().growX().pushX().wrap());
-            panelProperties.add(jlDescription, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("8", "8"));
-            panelProperties.add(etfDescription, new CC().spanX().growX().pushX().wrap());
+            panelProperties.add(jlDescription, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("4pt", "4pt"));
+            panelProperties.add(etfDescription, new CC().spanX().growX().pushX().wrap().gapY("0", "4pt"));
 
             // Properties
             cbShouldRegisterAction = new JBCheckBox(Localizer.get("property.ShouldRegisterAction"), packageTemplate.isShouldRegisterAction());

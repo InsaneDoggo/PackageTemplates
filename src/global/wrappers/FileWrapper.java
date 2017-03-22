@@ -17,6 +17,7 @@ import global.views.IconLabelCustom;
 import icons.PluginIcons;
 import base.ElementVisitor;
 import net.miginfocom.layout.CC;
+import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import global.utils.*;
@@ -74,7 +75,7 @@ public class FileWrapper extends ElementWrapper {
 
     @NotNull
     private JPanel getOptionsPanel() {
-        JPanel optionsPanel = new JPanel(new MigLayout());
+        JPanel optionsPanel = new JPanel(new MigLayout(new LC().insets("0").gridGap("2pt","0")));
 
         cbEnabled = new JBCheckBox();
         cbEnabled.setSelected(file.isEnabled());
