@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.EditorTextField;
+import core.textInjection.VelocityHelper;
 import global.listeners.ClickListener;
 import core.script.ScriptDialog;
 import core.script.ScriptExecutor;
@@ -23,6 +24,7 @@ import global.utils.UIHelper;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashMap;
 
 import static global.utils.UIHelper.PADDING_LABEL;
 import static global.wrappers.PackageTemplateWrapper.ATTRIBUTE_BASE_NAME;
@@ -195,8 +197,8 @@ public class GlobalVariableWrapper extends BaseWrapper {
         }
     }
 
-    public void replaceBaseName(String baseName) {
-        globalVariable.setValue(globalVariable.getValue().replace(PATTERN_BASE_NAME, baseName));
+    public void evaluteVelocity(HashMap<String, String> map) {
+        globalVariable.setValue(VelocityHelper.fromTemplate(globalVariable.getValue(), map));
     }
 
 

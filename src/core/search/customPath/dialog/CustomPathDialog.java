@@ -160,11 +160,6 @@ public abstract class CustomPathDialog extends BaseDialog {
                 case DIR_BELOW:
                     return new ValidationInfo(Localizer.get("warning.LastActionShouldSearchFile"), actionsPanel);
             }
-        } else {
-            switch (lastActionType) {
-                case FILE:
-                    return new ValidationInfo(Localizer.get("warning.LastActionShouldSearchDirectory"), actionsPanel);
-            }
         }
 
         return null;

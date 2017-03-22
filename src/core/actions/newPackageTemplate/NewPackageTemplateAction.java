@@ -127,6 +127,7 @@ public class NewPackageTemplateAction extends AnAction {
         ptWrapper.getExecutionContext().project = project;
         ptWrapper.getExecutionContext().ctxFullPath = virtualFile.getPath();
         ptWrapper.getExecutionContext().ctxDirPath = PathHelper.toDirPath(virtualFile);
+        ptWrapper.initDefaultProperties();
     }
 
     public static void executeTemplateSilently(PackageTemplate pt, Project project, VirtualFile virtualFile) {

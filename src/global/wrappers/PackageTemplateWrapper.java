@@ -29,13 +29,11 @@ import global.visitors.*;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by Arsen on 07.07.2016.
@@ -240,7 +238,7 @@ public class PackageTemplateWrapper {
 
     public void reBuildGlobals() {
         panelGlobals.removeAll();
-        buildTextInjections();
+        buildGlobals();
         packParentContainer();
     }
 
@@ -301,18 +299,30 @@ public class PackageTemplateWrapper {
         packageTemplate.getMapGlobalVars().put(Const.Key.CTX_FULL_PATH, executionContext.ctxFullPath);
         packageTemplate.getMapGlobalVars().put(Const.Key.CTX_DIR_PATH, executionContext.ctxDirPath);
 
+        // Init temp map
+        HashMap<String, String> mapAllProperties = getAllProperties();
+
         for (GlobalVariableWrapper variableWrapper : listGlobalVariableWrapper) {
             if (getMode() == ViewMode.USAGE) {
-                // Replace ${BASE_NAME}
-                if (!variableWrapper.getGlobalVariable().getName().equals(ATTRIBUTE_BASE_NAME)) {
-                    //todo global Smart replace ${var}
-                    variableWrapper.replaceBaseName(packageTemplate.getMapGlobalVars().get(ATTRIBUTE_BASE_NAME));
-                }
+                variableWrapper.evaluteVelocity(mapAllProperties);
                 // SCRIPT
                 variableWrapper.runScript();
             }
             packageTemplate.getMapGlobalVars().put(variableWrapper.getGlobalVariable().getName(), variableWrapper.getGlobalVariable().getValue());
+            mapAllProperties.put(variableWrapper.getGlobalVariable().getName(), variableWrapper.getGlobalVariable().getValue());
         }
+    }
+
+    @NotNull
+    private HashMap<String, String> getAllProperties() {
+        HashMap<String, String> mapAllProperties = new HashMap<>();
+        //Globals + Context
+        mapAllProperties.putAll(packageTemplate.getMapGlobalVars());
+        // Default
+        for (Map.Entry<Object, Object> entry : getDefaultProperties().entrySet()) {
+            mapAllProperties.put((String) entry.getKey(), (String) entry.getValue());
+        }
+        return mapAllProperties;
     }
 
     public void addGlobalVariablesToFileTemplates() {
@@ -371,8 +381,6 @@ public class PackageTemplateWrapper {
                 return;
             }
 
-            initDefaultProperties();
-
             SimpleAction rootAction;
             if (packageTemplate.isSkipRootDirectory()) {
                 // Without root
@@ -396,7 +404,7 @@ public class PackageTemplateWrapper {
         HashMap<String, String> map = getPackageTemplate().getMapGlobalVars();
 
         for (TextInjectionWrapper wrapper : listTextInjectionWrapper) {
-            listSimpleAction.add(new InjectTextAction(project, wrapper.getTextInjection(),map ));
+            listSimpleAction.add(new InjectTextAction(project, wrapper.getTextInjection(), map));
         }
     }
 
