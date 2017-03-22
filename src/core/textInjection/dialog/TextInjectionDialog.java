@@ -8,9 +8,13 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBScrollPane;
+import core.search.customPath.CustomPath;
+import core.search.customPath.dialog.CustomPathDialog;
 import core.textInjection.InjectDirection;
 import core.textInjection.TextInjection;
+import global.utils.factories.GsonFactory;
 import global.utils.i18n.Localizer;
+import icons.PluginIcons;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
@@ -54,10 +58,20 @@ public abstract class TextInjectionDialog extends BaseDialog {
         tfDescription = new EditorTextField(textInjection.getDescription());
 
         if (textInjection.getCustomPath() == null) {
-            btnCustomPath = new JButton(Localizer.get("AddCustomPath"));
+            btnCustomPath = new JButton(Localizer.get("AddCustomPath"), PluginIcons.CUSTOM_PATH_DISABLED);
         } else {
-            btnCustomPath = new JButton(Localizer.get("EditCustomPath"));
+            btnCustomPath = new JButton(Localizer.get("EditCustomPath"), PluginIcons.CUSTOM_PATH);
         }
+        btnCustomPath.addActionListener(e -> {
+            CustomPath customPath = textInjection.getCustomPath() == null ? null : GsonFactory.cloneObject(textInjection.getCustomPath(), CustomPath.class);
+            new CustomPathDialog(project, customPath, true) {
+                @Override
+                public void onSuccess(CustomPath customPath) {
+                    textInjection.setCustomPath(customPath);
+                    btnCustomPath.setIcon(PluginIcons.CUSTOM_PATH);
+                }
+            }.show();
+        });
 
         //Type
         ArrayList<InjectDirection> directions = new ArrayList<>();
@@ -129,7 +143,7 @@ public abstract class TextInjectionDialog extends BaseDialog {
 
     @Override
     protected ValidationInfo doValidate() {
-        // textToSearch
+        // description
         String description = tfDescription.getText();
         if (description == null || description.isEmpty()) {
             return new ValidationInfo(Localizer.get("warning.FillEmptyFields"), tfDescription);
@@ -145,10 +159,10 @@ public abstract class TextInjectionDialog extends BaseDialog {
             return new ValidationInfo(Localizer.get("warning.FillEmptyFields"), tfToSearch);
         }
 
-        // textToSearch
+        // textToInject
         String textToInject = tfToInject.getText();
-        if (textToInject == null || textToInject.isEmpty()) {
-            return new ValidationInfo(Localizer.get("warning.FillEmptyFields"), tfToInject);
+        if (textToInject == null) {
+            textToInject = "";
         }
 
         return null;

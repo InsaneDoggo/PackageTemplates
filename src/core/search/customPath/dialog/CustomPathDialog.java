@@ -7,6 +7,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.IconUtil;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
 import core.search.SearchAction;
+import core.search.SearchActionType;
 import core.search.customPath.CustomPath;
 import global.listeners.ClickListener;
 import global.utils.Logger;
@@ -29,9 +30,15 @@ import java.util.List;
 public abstract class CustomPathDialog extends BaseDialog {
 
     private CustomPath customPath;
+    private boolean returnFile = false;
 
     public CustomPathDialog(Project project, CustomPath customPath) {
+        this(project, customPath, false);
+    }
+
+    public CustomPathDialog(Project project, CustomPath customPath, boolean returnFile) {
         super(project);
+        this.returnFile = returnFile;
         this.customPath = customPath;
 
         if (customPath == null) {
@@ -143,6 +150,20 @@ public abstract class CustomPathDialog extends BaseDialog {
             ValidationInfo validationInfo = wrapper.doValidate();
             if (validationInfo != null) {
                 return validationInfo;
+            }
+        }
+
+        SearchActionType lastActionType = wrappers.get(wrappers.size() - 1).getAction().getActionType();
+        if (returnFile) {
+            switch (lastActionType) {
+                case DIR_ABOVE:
+                case DIR_BELOW:
+                    return new ValidationInfo(Localizer.get("warning.LastActionShouldSearchFile"), actionsPanel);
+            }
+        } else {
+            switch (lastActionType) {
+                case FILE:
+                    return new ValidationInfo(Localizer.get("warning.LastActionShouldSearchDirectory"), actionsPanel);
             }
         }
 

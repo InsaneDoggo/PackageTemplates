@@ -27,6 +27,15 @@ public class TextInjection {
         textToInject = "";
     }
 
+    public void copyPropertiesFrom(TextInjection result) {
+        setDescription(result.getDescription());
+        setCustomPath(result.getCustomPath());
+        setInjectDirection(result.getInjectDirection());
+        setTextToSearch(result.getTextToSearch());
+        setRegexp(result.isRegexp());
+        setTextToInject(result.getTextToInject());
+    }
+
     //=================================================================
     //  Get|Set
     //=================================================================
@@ -85,4 +94,5 @@ public class TextInjection {
     public void setTextToInject(String textToInject) {
         this.textToInject = textToInject;
     }
+
 }

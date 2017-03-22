@@ -22,6 +22,8 @@ import net.miginfocom.swing.MigLayout;
 import org.intellij.lang.regexp.RegExpFileType;
 
 import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 /**
@@ -113,6 +115,11 @@ public class SearchActionWrapper {
         cmbActionTypes = new ComboBox(actionTypes.toArray());
         cmbActionTypes.setRenderer(new SearchActionTypeCellRenderer());
         cmbActionTypes.setSelectedItem(action.getActionType());
+        cmbActionTypes.addItemListener(event -> {
+            if (event.getStateChange() == ItemEvent.SELECTED) {
+                action.setActionType((SearchActionType) cmbActionTypes.getSelectedItem());
+            }
+        });
 
         // Name
         PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("Name", PlainTextLanguage.INSTANCE, action.getName());

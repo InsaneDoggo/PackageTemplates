@@ -4,7 +4,7 @@ import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.IconUtil;
 import core.textInjection.TextInjection;
 import global.listeners.ClickListener;
-import global.utils.Logger;
+import global.utils.factories.GsonFactory;
 import global.wrappers.PackageTemplateWrapper;
 import net.miginfocom.layout.CC;
 
@@ -38,26 +38,37 @@ public class TextInjectionWrapper {
         btnDelete.addMouseListener(new ClickListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                //todo delete
-                Logger.log("delete");
+                ptWrapper.removeTextInjection(TextInjectionWrapper.this);
+                ptWrapper.reBuildTextInjections();
             }
         });
 
-        container.add(cbEnabled, new CC().spanX().split(3).pushX().growX());
-        container.add(btnDelete, new CC());
 
         if (ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
             btnEdit.addMouseListener(new ClickListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    //todo edit
-                    Logger.log("edit");
+                    showEditDialog(ptWrapper);
                 }
             });
+            container.add(cbEnabled, new CC().spanX().split(4));
+            container.add(btnDelete, new CC());
             container.add(btnEdit, new CC());
+        } else {
+            container.add(cbEnabled, new CC().spanX().split(2));
         }
 
-        container.add(jlDescription, new CC().wrap());
+        container.add(jlDescription, new CC().wrap().pushX().growX());
+    }
+
+    private void showEditDialog(PackageTemplateWrapper ptWrapper) {
+        new TextInjectionDialog(ptWrapper.getProject(), GsonFactory.cloneObject(textInjection, TextInjection.class)) {
+            @Override
+            public void onSuccess(TextInjection result) {
+                textInjection.copyPropertiesFrom(result);
+                ptWrapper.reBuildTextInjections();
+            }
+        }.show();
     }
 
 
@@ -66,6 +77,7 @@ public class TextInjectionWrapper {
     //=================================================================
     public void collectDataFromFields() {
         //nothing
+        textInjection.setEnabled(cbEnabled.isSelected());
     }
 
 

@@ -17,6 +17,7 @@ import global.listeners.ClickListener;
 import global.models.BaseElement;
 import core.writeRules.WriteRules;
 import global.utils.Logger;
+import global.utils.factories.GsonFactory;
 import global.utils.factories.WrappersFactory;
 import global.utils.i18n.Localizer;
 import global.views.IconLabel;
@@ -143,7 +144,8 @@ public abstract class ElementWrapper extends BaseWrapper {
             JMenuItem itemEdit = new JBMenuItem(Localizer.get("EditCustomPath"), PluginIcons.CUSTOM_PATH);
             JMenuItem itemDelete = new JBMenuItem(Localizer.get("DeleteCustomPath"), AllIcons.Actions.Delete);
 
-            itemEdit.addActionListener(e -> new CustomPathDialog(getPackageTemplateWrapper().getProject(), getElement().getCustomPath()) {
+            CustomPath customPath = getElement().getCustomPath() == null ? null : GsonFactory.cloneObject(getElement().getCustomPath(), CustomPath.class);
+            itemEdit.addActionListener(e -> new CustomPathDialog(getPackageTemplateWrapper().getProject(), customPath) {
                 @Override
                 public void onSuccess(CustomPath customPath) {
                     getElement().setCustomPath(customPath);

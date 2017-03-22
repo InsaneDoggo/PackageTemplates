@@ -13,6 +13,7 @@ import core.actions.custom.base.SimpleAction;
 import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
 import core.report.models.FailedActionReport;
+import core.report.models.SuccessActionReport;
 import core.search.SearchAction;
 import core.search.SearchEngine;
 import core.search.customPath.CustomPath;
@@ -76,6 +77,7 @@ public class InjectTextAction extends SimpleAction {
             }
 
             injectText(psiFile);
+            ReportHelper.putReport(new SuccessActionReport(this, toString()));
         } catch (IncorrectOperationException ex) {
             Logger.logAndPrintStack("InjectTextAction " + ex.getMessage(), ex);
             ReportHelper.setState(ExecutionState.FAILED);

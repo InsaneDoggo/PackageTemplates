@@ -131,6 +131,20 @@ public class NewPackageTemplateAction extends AnAction {
 
     public static void executeTemplateSilently(PackageTemplate pt, Project project, VirtualFile virtualFile) {
         PackageTemplateWrapper ptWrapper = WrappersFactory.wrapPackageTemplate(project, pt, PackageTemplateWrapper.ViewMode.USAGE);
+        executeTemplate(project, virtualFile, ptWrapper);
+    }
+
+    public static void showDialog(PackageTemplate packageTemplate, Project project, VirtualFile virtualFile) {
+        new ImplementDialog(project, String.format(Localizer.get("NewPackageFromS"),
+                packageTemplate.getName()), packageTemplate, virtualFile) {
+            @Override
+            public void onSuccess(PackageTemplateWrapper ptWrapper) {
+                executeTemplate(project, virtualFile, ptWrapper);
+            }
+        }.show();
+    }
+
+    private static void executeTemplate(Project project, VirtualFile virtualFile, PackageTemplateWrapper ptWrapper) {
         preExecuteTemplate(project, virtualFile, ptWrapper);
 
         ptWrapper.prepareGlobals();
@@ -141,36 +155,26 @@ public class NewPackageTemplateAction extends AnAction {
         collectAndExecuteActions(project, virtualFile, ptWrapper);
     }
 
-    public static void showDialog(PackageTemplate packageTemplate, Project project, VirtualFile virtualFile) {
-        new ImplementDialog(project, String.format(Localizer.get("NewPackageFromS"),
-                packageTemplate.getName()), packageTemplate, virtualFile) {
-            @Override
-            public void onSuccess(PackageTemplateWrapper ptWrapper) {
-                preExecuteTemplate(project, virtualFile, ptWrapper);
-                collectAndExecuteActions(project, virtualFile, ptWrapper);
-            }
-        }.show();
-    }
-
     private static void collectAndExecuteActions(Project project, VirtualFile virtualFile, PackageTemplateWrapper ptWrapper) {
         List<SimpleAction> listSimpleAction = new ArrayList<>();
 
-//        ptWrapper.collectSimpleActions(project, virtualFile, listSimpleAction);
+        ptWrapper.collectSimpleActions(project, virtualFile, listSimpleAction);
+        ptWrapper.collectInjectionActions(project, listSimpleAction);
 
-        TextInjection textInjection = new TextInjection();
-
-        ArrayList<SearchAction> listSearchAction = new ArrayList<>();
-        listSearchAction.add(new SearchAction(SearchActionType.FILE, "Main.java", SearchEngine.DEEP_LIMITLESS, false));
-
-
-        textInjection.setCustomPath(new CustomPath(listSearchAction));
-        textInjection.setDescription("sds");
-        textInjection.setInjectDirection(InjectDirection.BEFORE);
-        textInjection.setRegexp(false);
-        textInjection.setTextToInject("TestText");
-        textInjection.setTextToSearch("MyToken");
-
-        listSimpleAction.add(new InjectTextAction(project, textInjection,ptWrapper.getPackageTemplate().getMapGlobalVars()));
+//        TextInjection textInjection = new TextInjection();
+//
+//        ArrayList<SearchAction> listSearchAction = new ArrayList<>();
+//        listSearchAction.add(new SearchAction(SearchActionType.FILE, "Main.java", SearchEngine.DEEP_LIMITLESS, false));
+//
+//
+//        textInjection.setCustomPath(new CustomPath(listSearchAction));
+//        textInjection.setDescription("sds");
+//        textInjection.setInjectDirection(InjectDirection.BEFORE);
+//        textInjection.setRegexp(false);
+//        textInjection.setTextToInject("TestText");
+//        textInjection.setTextToSearch("MyToken");
+//
+//        listSimpleAction.add(new InjectTextAction(project, textInjection,ptWrapper.getPackageTemplate().getMapGlobalVars()));
 
         ActionRequest actionRequest = new ActionRequestBuilder()
                 .setProject(project)

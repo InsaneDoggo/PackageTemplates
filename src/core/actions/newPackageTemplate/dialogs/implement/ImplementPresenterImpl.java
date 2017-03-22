@@ -32,6 +32,7 @@ public class ImplementPresenterImpl implements ImplementPresenter {
 
     @Override
     public void onOKAction() {
+        ptWrapper.collectDataFromFields();
         view.onSuccess(ptWrapper);
     }
 
@@ -50,17 +51,7 @@ public class ImplementPresenterImpl implements ImplementPresenter {
         result = ptWrapper.getRootElement().validateFields();
         if (result != null) return result;
 
-        prepareFields();
-
         return null;
-    }
-
-    private void prepareFields() {
-        ptWrapper.collectDataFromFields();
-        ptWrapper.prepareGlobals();
-        ptWrapper.addGlobalVariablesToFileTemplates();
-        ptWrapper.replaceNameVariable();
-        ptWrapper.runElementsScript();
     }
 
 }

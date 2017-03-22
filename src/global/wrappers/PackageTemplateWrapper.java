@@ -11,6 +11,7 @@ import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.IconUtil;
 import core.actions.custom.CreateDirectoryAction;
 import core.actions.custom.DummyDirectoryAction;
+import core.actions.custom.InjectTextAction;
 import core.actions.custom.base.SimpleAction;
 import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
 import core.actions.newPackageTemplate.models.ExecutionContext;
@@ -82,7 +83,7 @@ public class PackageTemplateWrapper {
         }
 
         // Properties
-         panelProperties = new JPanel(new MigLayout(new LC()));
+        panelProperties = new JPanel(new MigLayout(new LC()));
         buildProperties();
         panel.add(panelProperties, new CC().spanX().wrap().pushX().growX());
 
@@ -256,7 +257,7 @@ public class PackageTemplateWrapper {
     }
 
     private void packParentContainer() {
-        if(updateUICallback != null){
+        if (updateUICallback != null) {
             updateUICallback.pack();
         }
     }
@@ -286,6 +287,7 @@ public class PackageTemplateWrapper {
         for (TextInjectionWrapper variableWrapper : listTextInjectionWrapper) {
             variableWrapper.collectDataFromFields();
         }
+
 
         rootElement.accept(new СollectDataFromFieldsVisitor());
     }
@@ -388,6 +390,14 @@ public class PackageTemplateWrapper {
                 elementWrapper.accept(visitor);
             }
         });
+    }
+
+    public void collectInjectionActions(Project project, List<SimpleAction> listSimpleAction) {
+        HashMap<String, String> map = getPackageTemplate().getMapGlobalVars();
+
+        for (TextInjectionWrapper wrapper : listTextInjectionWrapper) {
+            listSimpleAction.add(new InjectTextAction(project, wrapper.getTextInjection(),map ));
+        }
     }
 
     private SimpleAction wrapInDummyDirAction(SimpleAction simpleAction, PsiDirectory currentDir) {
