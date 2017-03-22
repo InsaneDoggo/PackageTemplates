@@ -383,6 +383,11 @@ public class PackageTemplateWrapper {
                 return;
             }
 
+            // Disabled
+            if(!getRootElement().getDirectory().isEnabled()){
+                return;
+            }
+
             SimpleAction rootAction = getRootAction(project, listSimpleAction, currentDir);
 
             CollectSimpleActionVisitor visitor = new CollectSimpleActionVisitor(rootAction, project);
@@ -403,11 +408,10 @@ public class PackageTemplateWrapper {
         } else {
             // With root
             action = new CreateDirectoryAction(packageTemplate.getDirectory(), project);
+            action.setId(ReportHelper.getGenerateId());
+            ReportHelper.putReport(new PendingActionReport(action));
             listSimpleAction.add(wrapInDummyDirAction(action, currentDir));
         }
-
-        action.setId(ReportHelper.getGenerateId());
-        ReportHelper.putReport(new PendingActionReport(action));
         return action;
     }
 

@@ -11,8 +11,6 @@ public class NonRegexResult implements MatchResult {
     private int end;
     private String group;
 
-
-
     @Override
     public int start() {
         return start;

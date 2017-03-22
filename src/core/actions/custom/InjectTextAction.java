@@ -111,7 +111,15 @@ public class InjectTextAction extends SimpleAction {
         if (textToInsert == null) {
             return;
         }
-        document.insertString(offset, textToInsert);
+
+        // Replace
+        if (textInjection.getInjectDirection() == InjectDirection.REPLACE) {
+            doReplace(document, textToInsert);
+        }
+        // Insert
+        else {
+            document.insertString(offset, textToInsert);
+        }
     }
 
     private String fromVelocity(String velocityTemplate) {
@@ -131,10 +139,8 @@ public class InjectTextAction extends SimpleAction {
             case AFTER:
             case PREV_LINE:
             case NEXT_LINE:
-                return getDirectedOffset(document, injectDirection);
             case REPLACE:
-                //todo REPLACE
-                throw new RuntimeException("todo REPLACE InjectDirection");
+                return getDirectedOffset(document, injectDirection);
             case START_OF_FILE:
                 return 0;
             case END_OF_FILE:
@@ -188,12 +194,10 @@ public class InjectTextAction extends SimpleAction {
         }
 
         if (injectDirection == InjectDirection.BEFORE) {
-            int lineNumber = document.getLineNumber(matchResult.start());
-            return document.getLineStartOffset(lineNumber);
+            return matchResult.start();
         }
         if (injectDirection == InjectDirection.AFTER) {
-            int lineNumber = document.getLineNumber(matchResult.end());
-            return document.getLineEndOffset(lineNumber);
+            return matchResult.end();
         }
         if (injectDirection == InjectDirection.PREV_LINE) {
             int lineNumber = document.getLineNumber(matchResult.end());
@@ -202,6 +206,10 @@ public class InjectTextAction extends SimpleAction {
         if (injectDirection == InjectDirection.NEXT_LINE) {
             int lineNumber = document.getLineNumber(matchResult.end());
             return document.getLineStartOffset(getNextLine(lineNumber, document.getLineCount()));
+        }
+        if (injectDirection == InjectDirection.REPLACE) {
+            setReplaceArgs(matchResult);
+            return matchResult.start();
         }
 
         throw new RuntimeException("getDirectedOffset Unknown InjectDirection");
@@ -221,6 +229,20 @@ public class InjectTextAction extends SimpleAction {
         }
 
         return lineNumber - 1;
+    }
+
+
+    //=================================================================
+    //  Replace
+    //=================================================================
+    private MatchResult matchResultReplace;
+
+    private void setReplaceArgs(MatchResult matchResult) {
+        matchResultReplace = matchResult;
+    }
+
+    private void doReplace(Document document, String textToInsert) {
+        document.replaceString(matchResultReplace.start(), matchResultReplace.end(), textToInsert);
     }
 
 
