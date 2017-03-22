@@ -2,9 +2,6 @@ package core.report;
 
 import core.report.enums.ExecutionState;
 import core.report.models.BaseReport;
-import global.utils.Logger;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -40,7 +37,6 @@ public class ReportHelper {
 
     public static void putReport(BaseReport report) {
         getInstance().reports.put(report.getAction().getId(), report);
-        Logger.log(report.getMessage() + "  " + report.getDebugMessage());
     }
 
     public static HashMap<Integer, BaseReport> getReports() {
@@ -56,7 +52,7 @@ public class ReportHelper {
             case IN_PROGRESS:
                 return true;
             default:
-                Logger.log("Unknown ExecutionState!");
+                throw new RuntimeException("Unknown ExecutionState!");
             case NONE:
             case SUCCESS:
             case FAILED:

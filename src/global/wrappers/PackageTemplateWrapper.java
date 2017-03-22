@@ -15,6 +15,8 @@ import core.actions.custom.InjectTextAction;
 import core.actions.custom.base.SimpleAction;
 import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
 import core.actions.newPackageTemplate.models.ExecutionContext;
+import core.report.ReportHelper;
+import core.report.models.PendingActionReport;
 import core.textInjection.TextInjection;
 import core.textInjection.dialog.TextInjectionDialog;
 import core.textInjection.dialog.TextInjectionWrapper;
@@ -381,16 +383,7 @@ public class PackageTemplateWrapper {
                 return;
             }
 
-            SimpleAction rootAction;
-            if (packageTemplate.isSkipRootDirectory()) {
-                // Without root
-                rootAction = new DummyDirectoryAction(project, currentDir);
-                listSimpleAction.add(rootAction);
-            } else {
-                // With root
-                rootAction = new CreateDirectoryAction(packageTemplate.getDirectory(), project);
-                listSimpleAction.add(wrapInDummyDirAction(rootAction, currentDir));
-            }
+            SimpleAction rootAction = getRootAction(project, listSimpleAction, currentDir);
 
             CollectSimpleActionVisitor visitor = new CollectSimpleActionVisitor(rootAction, project);
 
@@ -398,6 +391,24 @@ public class PackageTemplateWrapper {
                 elementWrapper.accept(visitor);
             }
         });
+    }
+
+    @NotNull
+    private SimpleAction getRootAction(Project project, List<SimpleAction> listSimpleAction, PsiDirectory currentDir) {
+        SimpleAction action;
+        if (packageTemplate.isSkipRootDirectory()) {
+            // Without root
+            action = new DummyDirectoryAction(project, currentDir);
+            listSimpleAction.add(action);
+        } else {
+            // With root
+            action = new CreateDirectoryAction(packageTemplate.getDirectory(), project);
+            listSimpleAction.add(wrapInDummyDirAction(action, currentDir));
+        }
+
+        action.setId(ReportHelper.getGenerateId());
+        ReportHelper.putReport(new PendingActionReport(action));
+        return action;
     }
 
     public void collectInjectionActions(Project project, List<SimpleAction> listSimpleAction) {
