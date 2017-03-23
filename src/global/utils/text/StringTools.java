@@ -1,5 +1,6 @@
 package global.utils.text;
 
+import core.regexp.NonRegexResult;
 import global.wrappers.PackageTemplateWrapper;
 
 import java.util.Map;

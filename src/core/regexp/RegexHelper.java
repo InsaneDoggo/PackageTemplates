@@ -1,4 +1,4 @@
-package global.utils.text;
+package core.regexp;
 
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;

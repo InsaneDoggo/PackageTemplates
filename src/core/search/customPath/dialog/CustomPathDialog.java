@@ -6,6 +6,7 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.IconUtil;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
+import core.regexp.RegexpHelperDialog;
 import core.search.SearchAction;
 import core.search.SearchActionType;
 import core.search.customPath.CustomPath;
@@ -55,6 +56,7 @@ public abstract class CustomPathDialog extends BaseDialog {
     //  UI
     //=================================================================
     private JButton btnAdd;
+    private JButton btnRegexpHelper;
     private List<SearchActionWrapper> wrappers;
     private JPanel actionsPanel;
 
@@ -70,9 +72,22 @@ public abstract class CustomPathDialog extends BaseDialog {
         }
 
         btnAdd = getAddButton();
+        btnRegexpHelper = getRegexpButton();
 
         panel.add(actionsPanel, new CC().pushX().grow().spanX().wrap());
-        panel.add(btnAdd, new CC().spanX().wrap());
+        panel.add(btnAdd, new CC().spanX().split(2));
+        panel.add(btnRegexpHelper, new CC().wrap());
+    }
+
+    private JButton getRegexpButton() {
+        JButton btnRegexpHelper = new JButton(Localizer.get("label.RegexpHelperDialog"));
+        btnRegexpHelper.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new RegexpHelperDialog(project).show();
+            }
+        });
+        return btnRegexpHelper;
     }
 
     private JButton getAddButton() {

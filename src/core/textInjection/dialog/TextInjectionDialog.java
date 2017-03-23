@@ -8,10 +8,12 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBScrollPane;
+import core.regexp.RegexpHelperDialog;
 import core.search.customPath.CustomPath;
 import core.search.customPath.dialog.CustomPathDialog;
 import core.textInjection.InjectDirection;
 import core.textInjection.TextInjection;
+import global.listeners.ClickListener;
 import global.utils.factories.GsonFactory;
 import global.utils.i18n.Localizer;
 import icons.PluginIcons;
@@ -21,6 +23,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 /**
@@ -52,6 +55,7 @@ public abstract class TextInjectionDialog extends BaseDialog {
 
     @Override
     public void preShow() {
+        setTitle(Localizer.get("title.TextInjection"));
         panel.setLayout(new MigLayout(new LC().gridGap("0", "8pt")));
 
         JLabel jlDescription = new JLabel(Localizer.get("Description"));
@@ -92,6 +96,14 @@ public abstract class TextInjectionDialog extends BaseDialog {
         cbRegexp = new JBCheckBox(Localizer.get("label.IsRegExp"), textInjection.isRegexp());
         tfToSearch = new EditorTextField(textInjection.getTextToSearch());
 
+        JButton btnRegexpHelper = new JButton(Localizer.get("label.RegexpHelperDialog"));
+        btnRegexpHelper.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new RegexpHelperDialog(project).show();
+            }
+        });
+
         JLabel jlToInject = new JLabel(Localizer.get("label.TextToInject"));
         tfToInject = new EditorTextField(textInjection.getTextToInject());
         tfToInject.setOneLineMode(false);
@@ -109,6 +121,7 @@ public abstract class TextInjectionDialog extends BaseDialog {
         panel.add(jlToSearch, new CC().wrap().gapTop(topGapY));
         panel.add(cbRegexp, new CC().spanX().split(2));
         panel.add(tfToSearch, new CC().wrap().pushX().growX());
+        panel.add(btnRegexpHelper, new CC().wrap());
 
         panel.add(jlToInject, new CC().wrap().gapTop(topGapY));
         panel.add(tfToInject, new CC().wrap().push().grow());

@@ -21,6 +21,7 @@ import core.textInjection.TextInjection;
 import core.textInjection.dialog.TextInjectionDialog;
 import core.textInjection.dialog.TextInjectionWrapper;
 import global.Const;
+import global.dialogs.PredefinedVariablesDialog;
 import global.listeners.ClickListener;
 import global.models.*;
 import global.utils.UIHelper;
@@ -83,38 +84,50 @@ public class PackageTemplateWrapper {
         }
 
         // Properties
-        panelProperties = new JPanel(new MigLayout(new LC().insets("0").gridGap("0","0")));
+        panelProperties = new JPanel(new MigLayout(new LC().insets("0").gridGap("0", "0")));
         buildProperties();
         panel.add(panelProperties, new CC().spanX().wrap().pushX().growX());
 
 
         // Globals
-        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
+        panel.add(new SeparatorComponent(0), new CC().pushX().growX().wrap().spanX());
         JLabel jlGlobals = new JLabel(Localizer.get("GlobalVariables"), JLabel.CENTER);
-        panel.add(jlGlobals, new CC().wrap().growX().pushX().spanX().gapY("0","4pt"));
+        panel.add(jlGlobals, new CC().wrap().growX().pushX().spanX().gapY("0", "4pt"));
 
-        panelGlobals = new JPanel(new MigLayout(new LC().insets("0").gridGap("0","0")));
+        panelGlobals = new JPanel(new MigLayout(new LC().insets("0").gridGap("0", "0")));
         buildGlobals();
         panel.add(panelGlobals, new CC().spanX().pushX().growX().wrap());
+        initAvailableVariablesButton();
 
 
         // Files and Directories | Elements
         panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
         JLabel jlFilesAndDirs = new JLabel(Localizer.get("FilesAndDirs"), JLabel.CENTER);
-        panel.add(jlFilesAndDirs, new CC().wrap().growX().pushX().spanX().gapY("0","4pt"));
+        panel.add(jlFilesAndDirs, new CC().wrap().growX().pushX().spanX().gapY("0", "4pt"));
 
-        panelElements = new JPanel(new MigLayout(new LC().insets("0").gridGap("0","2pt")));
+        panelElements = new JPanel(new MigLayout(new LC().insets("0").gridGap("0", "2pt")));
         buildElements();
         panel.add(panelElements, new CC().spanX().pushX().growX().wrap());
+
 
         // Text Injection
         panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
         JLabel jlTextInjection = new JLabel(Localizer.get("TextInjection"), JLabel.CENTER);
         panel.add(jlTextInjection, new CC().wrap().growX().pushX().spanX());
 
-        panelTextInjection = new JPanel(new MigLayout(new LC().insets("0").gridGap("0","0")));
+        panelTextInjection = new JPanel(new MigLayout(new LC().insets("0").gridGap("0", "0")));
         buildTextInjections();
         panel.add(panelTextInjection, new CC().spanX().pushX().growX().wrap());
+
+        initTextInjectionAddButton();
+
+        return panel;
+    }
+
+    private void initTextInjectionAddButton() {
+        if(getMode() == ViewMode.USAGE){
+            return;
+        }
 
         JButton btnAdd = new JButton(Localizer.get("action.AddTextInjection"), IconUtil.getAddIcon());
         btnAdd.addMouseListener(new ClickListener() {
@@ -124,8 +137,21 @@ public class PackageTemplateWrapper {
             }
         });
         panel.add(btnAdd, new CC().wrap());
+    }
 
-        return panel;
+    private void initAvailableVariablesButton() {
+        if(getMode() == ViewMode.USAGE){
+            return;
+        }
+
+        JButton btnPredefinedVariables = new JButton(Localizer.get("label.PredefinedVariables"));
+        btnPredefinedVariables.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                new PredefinedVariablesDialog(project, PackageTemplateWrapper.this).show();
+            }
+        });
+        panel.add(btnPredefinedVariables, new CC().spanX().wrap());
     }
 
     private void buildProperties() {
@@ -327,6 +353,27 @@ public class PackageTemplateWrapper {
         return mapAllProperties;
     }
 
+    /**
+     * Properties with fake value for Helper Dialog
+     */
+    @NotNull
+    public Map<String, String> getFakeProperties() {
+        TreeMap<String, String> mapAllProperties = new TreeMap<>();
+        //mapAllProperties.putAll(packageTemplate.getMapGlobalVars());
+
+        // Context
+        mapAllProperties.put(Const.Key.CTX_FULL_PATH, "C:/foo/bar/src/com/company/Main.java");
+        mapAllProperties.put(Const.Key.CTX_DIR_PATH, "C:/foo/bar/src/com/company");
+
+        // Default
+        for (Map.Entry<Object, Object> entry : getDefaultProperties().entrySet()) {
+            mapAllProperties.put((String) entry.getKey(), (String) entry.getValue());
+        }
+
+        return mapAllProperties;
+    }
+
+
     public void addGlobalVariablesToFileTemplates() {
         rootElement.accept(new AddGlobalVariablesVisitor());
     }
@@ -384,7 +431,7 @@ public class PackageTemplateWrapper {
             }
 
             // Disabled
-            if(!getRootElement().getDirectory().isEnabled()){
+            if (!getRootElement().getDirectory().isEnabled()) {
                 return;
             }
 
@@ -419,7 +466,7 @@ public class PackageTemplateWrapper {
         HashMap<String, String> map = getAllProperties();
 
         for (TextInjectionWrapper wrapper : listTextInjectionWrapper) {
-            if(!wrapper.getTextInjection().isEnabled()){
+            if (!wrapper.getTextInjection().isEnabled()) {
                 continue;
             }
 
@@ -490,6 +537,10 @@ public class PackageTemplateWrapper {
     }
 
     public Properties getDefaultProperties() {
+        if (defaultProperties == null) {
+            initDefaultProperties();
+        }
+
         return defaultProperties;
     }
 

@@ -50,8 +50,6 @@ public class NewPackageTemplateAction extends AnAction {
 
     private VirtualFile virtualFile;
     private Project project;
-    private String contextDirectoryPath;
-    private String fullPath;
 
     @Override
     public void actionPerformed(AnActionEvent event) {

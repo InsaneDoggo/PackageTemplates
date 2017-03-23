@@ -6,18 +6,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBScrollPane;
-import core.report.ReportHelper;
-import core.report.enums.ExecutionState;
-import core.report.models.FailedActionReport;
 import global.listeners.ClickListener;
-import global.utils.Logger;
 import global.utils.i18n.Localizer;
-import global.utils.text.RegexHelper;
-import global.utils.text.StringTools;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.intellij.lang.regexp.RegExpFileType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -45,6 +40,7 @@ public class RegexpHelperDialog extends BaseDialog {
 
     @Override
     public void preShow() {
+        setTitle(Localizer.get("title.RegexpHelper"));
         panel.setLayout(new MigLayout(new LC().gridGap("0", "8pt")));
 
         JLabel jlPattern = new JLabel(Localizer.get("label.RegexpPattern"));
@@ -112,10 +108,12 @@ public class RegexpHelperDialog extends BaseDialog {
     private static final int MIN_WIDTH = 400;
     private static final int MIN_HEIGHT = 280;
 
-//    public abstract void onSuccess(TextInjection textInjection);
-
+    @NotNull
     @Override
-    public void onCancelAction() {
+    protected Action[] createActions() {
+        Action okAction = getOKAction();
+        okAction.putValue(Action.NAME, Localizer.get("action.Close"));
+        return new Action[]{okAction};
     }
 
     @Override

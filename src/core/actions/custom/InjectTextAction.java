@@ -22,7 +22,7 @@ import core.textInjection.TextInjection;
 import core.textInjection.VelocityHelper;
 import global.Const;
 import global.utils.Logger;
-import global.utils.text.RegexHelper;
+import core.regexp.RegexHelper;
 import global.utils.text.StringTools;
 import global.utils.file.PsiHelper;
 import global.utils.i18n.Localizer;
