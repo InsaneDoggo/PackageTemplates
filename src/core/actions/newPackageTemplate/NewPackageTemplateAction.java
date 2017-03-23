@@ -20,6 +20,7 @@ import core.actions.executor.request.ActionRequest;
 import core.actions.executor.request.ActionRequestBuilder;
 import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
+import core.regexp.RegexpHelperDialog;
 import core.report.ReportHelper;
 import core.report.dialogs.ReportDialog;
 import core.search.SearchAction;
@@ -61,7 +62,7 @@ public class NewPackageTemplateAction extends AnAction {
 //        if (true) {
 //            CommandProcessor.getInstance().executeCommand(project, () -> {
 //                ApplicationManager.getApplication().runWriteAction(() -> {
-//                    testCode(project, event);
+//                                        testCode(project, event);
 //                });
 //            }, "comTest", null);
 //            return;
