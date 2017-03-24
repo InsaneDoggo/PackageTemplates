@@ -14,12 +14,14 @@ import core.search.customPath.dialog.CustomPathDialog;
 import core.textInjection.InjectDirection;
 import core.textInjection.TextInjection;
 import global.listeners.ClickListener;
+import global.utils.UIHelper;
 import global.utils.factories.GsonFactory;
 import global.utils.i18n.Localizer;
 import icons.PluginIcons;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
+import org.intellij.lang.regexp.RegExpFileType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -94,7 +96,15 @@ public abstract class TextInjectionDialog extends BaseDialog {
 
         JLabel jlToSearch = new JLabel(Localizer.get("label.TextToSearch"));
         cbRegexp = new JBCheckBox(Localizer.get("label.IsRegExp"), textInjection.isRegexp());
-        tfToSearch = new EditorTextField(textInjection.getTextToSearch());
+        cbRegexp.addActionListener(e -> {
+            AbstractButton abstractButton = (AbstractButton) e.getSource();
+            if (abstractButton.getModel().isSelected()) {
+                tfToSearch.setFileType(RegExpFileType.INSTANCE);
+            } else {
+                tfToSearch.setFileType(PlainTextFileType.INSTANCE);
+            }
+        });
+        tfToSearch = new EditorTextField(textInjection.getTextToSearch(), project, PlainTextFileType.INSTANCE);
 
         JButton btnRegexpHelper = new JButton(Localizer.get("label.RegexpHelperDialog"));
         btnRegexpHelper.addMouseListener(new ClickListener() {
@@ -105,7 +115,7 @@ public abstract class TextInjectionDialog extends BaseDialog {
         });
 
         JLabel jlToInject = new JLabel(Localizer.get("label.TextToInject"));
-        tfToInject = new EditorTextField(textInjection.getTextToInject());
+        tfToInject = UIHelper.getEditorTextField(textInjection.getTextToInject(), project);
         tfToInject.setOneLineMode(false);
         tfToInject.setFileType(PlainTextFileType.INSTANCE);
 
