@@ -8,6 +8,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.JBTextField;
 import com.intellij.util.IconUtil;
 import core.actions.custom.CreateDirectoryAction;
 import core.actions.custom.DummyDirectoryAction;
@@ -24,7 +25,6 @@ import global.Const;
 import global.dialogs.PredefinedVariablesDialog;
 import global.listeners.ClickListener;
 import global.models.*;
-import global.utils.UIHelper;
 import global.utils.factories.WrappersFactory;
 import global.utils.file.FileWriter;
 import global.utils.i18n.Localizer;
@@ -67,8 +67,8 @@ public class PackageTemplateWrapper {
     //  UI
     //=================================================================
     private JPanel panel;
-    public EditorTextField etfName;
-    public EditorTextField etfDescription;
+    public JTextField jtfName;
+    public JTextArea jtaDescription;
     public JCheckBox cbShouldRegisterAction;
     public JCheckBox cbSkipDefiningNames;
     public JCheckBox cbSkipRootDirectory;
@@ -155,19 +155,22 @@ public class PackageTemplateWrapper {
     }
 
     private void buildProperties() {
-        if (mode != ViewMode.USAGE) {
-            // Header
-            JLabel jlName = new JLabel(Localizer.get("Name"));
-            JLabel jlDescription = new JLabel(Localizer.get("Description"));
+        // Header
+        JLabel jlName = new JLabel(Localizer.get("Name"));
+        JLabel jlDescription = new JLabel(Localizer.get("Description"));
 
-            etfName = UIHelper.getEditorTextField(packageTemplate.getName(), project);
-            etfDescription = UIHelper.getEditorTextField(packageTemplate.getDescription(), project);
+        jtfName = new JBTextField(packageTemplate.getName());
+        jtaDescription = new JTextArea(packageTemplate.getDescription());
 
-            panelProperties.add(jlName, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("0", "4pt"));
-            panelProperties.add(etfName, new CC().spanX().growX().pushX().wrap());
-            panelProperties.add(jlDescription, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("4pt", "4pt"));
-            panelProperties.add(etfDescription, new CC().spanX().growX().pushX().wrap().gapY("0", "4pt"));
+        panelProperties.add(jlName, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("0", "4pt"));
+        panelProperties.add(jtfName, new CC().spanX().growX().pushX().wrap());
+        panelProperties.add(jlDescription, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("4pt", "4pt"));
+        panelProperties.add(jtaDescription, new CC().spanX().growX().pushX().wrap().gapY("0", "4pt"));
 
+        if (mode == ViewMode.USAGE) {
+            jtfName.setEditable(false);
+            jtaDescription.setEditable(false);
+        } else {
             // Properties
             cbShouldRegisterAction = new JBCheckBox(Localizer.get("property.ShouldRegisterAction"), packageTemplate.isShouldRegisterAction());
             cbSkipDefiningNames = new JBCheckBox(Localizer.get("property.SkipPresettings"), packageTemplate.isSkipDefiningNames());
@@ -298,8 +301,8 @@ public class PackageTemplateWrapper {
 
     public void collectDataFromFields() {
         if (getMode() != ViewMode.USAGE) {
-            packageTemplate.setName(etfName.getText());
-            packageTemplate.setDescription(etfDescription.getText());
+            packageTemplate.setName(jtfName.getText());
+            packageTemplate.setDescription(jtaDescription.getText());
             packageTemplate.setShouldRegisterAction(cbShouldRegisterAction.isSelected());
             packageTemplate.setSkipDefiningNames(cbSkipDefiningNames.isSelected());
         }

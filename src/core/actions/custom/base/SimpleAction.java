@@ -1,5 +1,7 @@
 package core.actions.custom.base;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import core.actions.custom.interfaces.IHasWriteRules;
 import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
@@ -26,8 +28,10 @@ public abstract class SimpleAction {
 
     public void run() {
         try {
-            doRun();
-        } catch (Exception e){
+            ApplicationManager.getApplication().invokeAndWait(() ->
+                    ApplicationManager.getApplication().runReadAction(this::doRun)
+            , ModalityState.defaultModalityState());
+        } catch (Exception e) {
             ReportHelper.setState(ExecutionState.FAILED);
             ReportHelper.putReport(new FailedActionReport(this, Localizer.get("error.internalError"), "SimpleAction catch: " + e.getMessage()));
             Logger.logAndPrintStack("SimpleAction catch: " + e.getMessage(), e);

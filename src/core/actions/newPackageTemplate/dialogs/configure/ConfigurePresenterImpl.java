@@ -32,9 +32,9 @@ public class ConfigurePresenterImpl implements ConfigurePresenter {
         result = TemplateValidator.validateProperties(ptWrapper);
         if (result != null) return result;
 
-        if (ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.EDIT || !ptWrapper.getPackageTemplate().getName().equals(ptWrapper.etfName.getText())) {
-//            if (!TemplateValidator.isPackageTemplateNameUnique(ptWrapper.etfName.getText())) {
-//                return new ValidationInfo(Localizer.get("warning.TemplateWithSpecifiedNameAlreadyExists"), ptWrapper.etfName);
+        if (ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.EDIT || !ptWrapper.getPackageTemplate().getName().equals(ptWrapper.jtfName.getText())) {
+//            if (!TemplateValidator.isPackageTemplateNameUnique(ptWrapper.jtfName.getText())) {
+//                return new ValidationInfo(Localizer.get("warning.TemplateWithSpecifiedNameAlreadyExists"), ptWrapper.jtfName);
 //            }
             result = TemplateValidator.validateProperties(ptWrapper);
             if (result != null) return result;

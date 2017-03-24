@@ -18,36 +18,38 @@ public class ActionExecutor {
 
     public static void runAsTransaction(ActionRequest request) {
         // Action
-        Runnable runnable = () -> ProgressHelper.runProcessWithProgress(request.project, () -> {
-            ReportHelper.setState(ExecutionState.IN_PROGRESS);
+        ApplicationManager.getApplication().runWriteAction(() -> {
+            Runnable runnable = () -> ProgressHelper.runProcessWithProgress(request.project, () -> {
+                ReportHelper.setState(ExecutionState.IN_PROGRESS);
 
-            for (SimpleAction action : request.actions) {
-                if(action instanceof DummyDirectoryAction){
-                    continue;
+                for (SimpleAction action : request.actions) {
+                    if (action instanceof DummyDirectoryAction) {
+                        continue;
+                    }
+
+                    action.setId(ReportHelper.getGenerateId());
+                    ReportHelper.putReport(new PendingActionReport(action));
                 }
 
-                action.setId(ReportHelper.getGenerateId());
-                ReportHelper.putReport(new PendingActionReport(action));
-            }
-
-            for (SimpleAction action : request.actions) {
-                action.run();
-                if (!ReportHelper.shouldContinue()) {
-                    preFinish(request);
-                    return;
+                for (SimpleAction action : request.actions) {
+                    action.run();
+                    if (!ReportHelper.shouldContinue()) {
+                        preFinish(request);
+                        return;
+                    }
                 }
-            }
 
-            ReportHelper.setState(ExecutionState.SUCCESS);
-            preFinish(request);
+                ReportHelper.setState(ExecutionState.SUCCESS);
+                preFinish(request);
+            });
+
+            // execute
+            if (request.isUndoable) {
+                CommandProcessor.getInstance().executeCommand(request.project, runnable, request.actionLabel, request.groupId, request.confirmationPolicy);
+            } else {
+                CommandProcessor.getInstance().runUndoTransparentAction(runnable);
+            }
         });
-
-        // execute
-        if (request.isUndoable) {
-            CommandProcessor.getInstance().executeCommand(request.project, runnable, request.actionLabel, request.groupId, request.confirmationPolicy);
-        } else {
-            CommandProcessor.getInstance().runUndoTransparentAction(runnable);
-        }
     }
 
     private static void preFinish(ActionRequest request) {

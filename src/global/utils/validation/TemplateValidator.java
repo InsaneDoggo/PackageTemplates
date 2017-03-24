@@ -2,13 +2,7 @@ package global.utils.validation;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import global.models.PackageTemplate;
-import global.utils.file.FileWriter;
-import global.utils.templates.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
 import global.wrappers.ElementWrapper;
 import global.wrappers.GlobalVariableWrapper;
@@ -141,9 +135,9 @@ public class TemplateValidator {
     public static ValidationInfo validateProperties(PackageTemplateWrapper ptWrapper) {
         ValidationInfo result;
         if (ptWrapper.getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
-            result = TemplateValidator.validateText(ptWrapper.etfName, ptWrapper.etfName.getText(), FieldType.PACKAGE_TEMPLATE_NAME);
+            result = TemplateValidator.validateText(ptWrapper.jtfName, ptWrapper.jtfName.getText(), FieldType.PACKAGE_TEMPLATE_NAME);
             if (result != null) return result;
-            result = TemplateValidator.validateText(ptWrapper.etfDescription, ptWrapper.etfDescription.getText(), FieldType.PLAIN_TEXT);
+            result = TemplateValidator.validateText(ptWrapper.jtaDescription, ptWrapper.jtaDescription.getText(), FieldType.PLAIN_TEXT);
             if (result != null) return result;
         }
         return null;
