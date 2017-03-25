@@ -264,4 +264,9 @@ public class InjectTextAction extends SimpleAction {
         return searchResultFile.getPath();
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " " + textInjection.getDescription();
+    }
+
 }

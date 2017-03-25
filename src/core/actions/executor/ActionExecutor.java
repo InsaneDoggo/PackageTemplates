@@ -54,19 +54,15 @@ public class ActionExecutor {
 
     private static void preFinish(ActionRequest request) {
         if (ReportHelper.getState() == ExecutionState.SUCCESS) {
-            NotificationHelper.info(request.actionLabel, "Success!");
-
-            // callback
             ApplicationManager.getApplication().invokeLater(() -> {
+                NotificationHelper.info(request.actionLabel, "Success!");
                 if (request.actionFinishListener != null) {
                     request.actionFinishListener.onFinish();
                 }
             });
         } else {
-            NotificationHelper.info(request.actionLabel, "Failed!");
-
-            // callback
             ApplicationManager.getApplication().invokeLater(() -> {
+                NotificationHelper.info(request.actionLabel, "Failed!");
                 if (request.actionFinishListener != null) {
                     request.actionFinishListener.onFail();
                 }
