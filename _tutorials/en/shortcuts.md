@@ -1,7 +1,7 @@
 ---
 title: Shortcuts
 lang: en
-order: 7
+order: 12
 ---
 
 Be familiar with tutorials from **jetbrains** listed below:<br>

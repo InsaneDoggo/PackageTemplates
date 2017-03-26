@@ -13,20 +13,40 @@ order: 5
 
 ![add_global_variable]({{ site.baseurl }}/images/tutorial/add_global_variable.png){: .imageFragment}
 
-### Где работает
-* В тексте [File Templates][2]
-* В названиях директорий
-* В названиях файлов
-
 ### Пример
 Допустим у нас есть переменная **VARIABLE_NAME** со значением **FooBar**,<br>
 Тогда **Example<font class="variable">${VARIABLE_NAME}</font>File** преобразуется в **ExampleFooBarFile**
 
-### Особенности
-- В любом PackageTemplate шаблоне есть стандартная переменная **BASE_NAME**, которая может использоваться в пользовательских глобальных переменных.<br>
-Например, переменная **VARIABLE_NAME** со значением **Foo<font class="variable">${BASE_NAME}</font>Bar**
+### Где работает
+* В тексте [File Templates][2]
+* В названиях директорий
+* В названиях файлов
+* В глобальных переменных, которые объявлены ниже.
 
-<!-- - **File** Templates поддерживают вариант без скобок: **<font class="variable">$VARIABLE_NAME</font>**, однако в **Package**Templates скобки нужно указывать **всегда**. Это касается только диалога редактирования **Package Template**. В тексте **File Templates** по прежнему валидны оба варианта.  -->
+![global_vars_consistently]({{ site.baseurl }}/images/tutorial/global_vars_consistently.png){: .imageFragment}
+
+### Набор стандартных переменных
+
+В зависимости от IDE будут доступны различные наборы переменных. Просмотреть их можно с помощью соответсвующей кнопки(см. картинку выше). Они работают во всех глобальных переменных + там же, где и обычные глобальные переменные. Ниже пример из Intellij Idea CE:
+
+![global_vars_predefined]({{ site.baseurl }}/images/tutorial/global_vars_predefined.png){: .image}
+
+**Примечание:** Диалог не модальный (Можно переключаться между родительским окном и диалогом)
+
+* **CTX_FULL_PATH** - путь к элементу на котором был вызван плагин.
+* **CTX_DIR_PATH** - похожа на предыдущую переменную, но содержит путь к папке.
+
+Пример, когда плагин вызван на файле:
+
+* **CTX_FULL_PATH** C:/foo/bar/Main.java
+* **CTX_DIR_PATH** C:/foo/bar
+
+Пример, когда плагин вызван на папке:
+
+* **CTX_FULL_PATH** C:/foo/bar
+* **CTX_DIR_PATH** C:/foo/bar
+
+**Примечание:** Path separators всегда forward slash **/**.
 
 [1]: {{ site.data.links.file_template_variables }}
 [2]: {{ site.data.links.file_templates }}

@@ -1,7 +1,7 @@
 ---
 title: Tips and Tricks
 lang: en
-order: 12
+order: 13
 ---
 
 ### Unique names for File Templates
@@ -15,12 +15,12 @@ You can use prefixes like:
 ### Execution Order
 To clarify how plugin works you must be familiar with operations that executes when you use **Package Template**:
 
-1. Execute [Groovy script][2] of BASE_NAME global variable.
-2. Replace <font class="variable">${BASE_NAME}</font> value in other [global variables][3].
-3. Execute **Groovy scripts** of other **global variables**.
+1. Calculate values of [global variables][3].<br>
+   A) Replace predefined or early defined global <font class="variable">${variable}</font>.<br>
+   B) Execute [Script][2].<br>
 4. Replace **global variables** in **directory** and **file** names.
 5. Execute Groovy scripts of **directories** and **files**.
-6. Add **global variables** to array of [variables in File Template][1]. 
+6. Add **global variables** to array of [variables in File Template][1].
 7. Create directoies and files.
 
 ### Backward Compatibility

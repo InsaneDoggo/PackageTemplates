@@ -9,7 +9,7 @@ css: tutorials.css
 
 Первая версия.
 
-### v0.2.0 
+### v0.2.0
 
 Изменений много, лучше перечитайте документацию целиком.<br>
 Основные именения:
@@ -19,3 +19,13 @@ css: tutorials.css
 * Custom Path.
 * Write Rules.
 * Правки в UI.
+
+### v0.3.0
+
+* Добавлен [Text Injection][1]
+* Немного переделаны [Global Variables][2]
+* Правки в UI.
+
+
+[1]: {{ site.baseurl}}{{ site.data.links.tutorial_text_injection[page.lang] }}
+[2]: {{ site.baseurl}}{{ site.data.links.tutorial_global_variables[page.lang] }}

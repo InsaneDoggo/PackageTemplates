@@ -16,7 +16,9 @@ order: 3
 **B.** [Script][5]<br>
 **C.** [Custom Path][6]<br>
 **D.** [Write Rules][2]<br>
+7. Создать [Text Injection][7]
 
+### Добавление элемента
 
 ![add_element]({{ site.baseurl }}/images/tutorial/add_element.png){: .imageFragment}
 
@@ -36,3 +38,4 @@ order: 3
 [4]: {{ site.baseurl}}{{ site.data.links.tutorial_shortcuts[page.lang] }}
 [5]: {{ site.baseurl}}{{ site.data.links.tutorial_script[page.lang] }}
 [6]: {{ site.baseurl}}{{ site.data.links.tutorial_custom_path[page.lang] }}
+[7]: {{ site.baseurl}}{{ site.data.links.tutorial_text_injection[page.lang] }}

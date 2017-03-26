@@ -47,4 +47,4 @@ This CustomPath will find dir **src**, then **destination** and create file in t
 
 ![custom_path_example_result]({{ site.baseurl }}/images/tutorial/custom_path_example_result.png){: .imageFragment}
 
-[1]: http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
+[1]: {{ site.data.links.regexp_docs }}

@@ -8,10 +8,18 @@ css: home.css
 ![ru]({{ site.baseurl }}/images/lang/ru.png) [Русский][2]
 
 <details >
-<summary class="Spoiler">YouTube demo v0.1.0 (demo for v0.2.0 coming soon)</summary>
+<summary class="Spoiler">YouTube simple demo</summary>
 
-<iframe src="http://www.youtube.com/embed/AypkKJc1LMc"
-width="400" height="240" frameborder="0" allowfullscreen/>
+<iframe src="http://www.youtube.com/embed/mrxAw5jAvuI"
+width="400" height="240" frameborder="0" allowfullscreen></iframe>
+
+</details>
+<br>
+<details >
+<summary class="Spoiler">YouTube Android demo (MVP Activity example)</summary>
+
+<iframe src="http://www.youtube.com/embed/GvGndGyS-As"
+width="400" height="240" frameborder="0" allowfullscreen></iframe>
 
 </details>
 
