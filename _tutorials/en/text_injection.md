@@ -9,7 +9,7 @@ Text Injection allow you to insert text to file.
 ![text_injection_dialog]({{ site.baseurl }}/images/tutorial/text_injection_dialog.png){: .image}
 
 1. Short description.
-2. [Custom Path][1]
+2. [Custom Path][2]
 3. Inject Direction.
 4. Text to search.
 5. RegExp. Select checkbox to use pattern with inputfield (Plugin uses default impl from standart JDK (Java), [details][1])
@@ -34,4 +34,4 @@ You can use button(see picture above) to show dialog for testing your patterns:
 **Note:** Dialog isn't modal (Allow you to switch between dialog and parent window)
 
 [1]: {{ site.data.links.regexp_docs }}
-[2]: {{ site.baseurl}}{{ site.data.links.tutorial_global_variables[page.lang] }}
+[2]: {{ site.baseurl}}{{ site.data.links.tutorial_custom_path[page.lang] }}

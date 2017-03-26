@@ -3,14 +3,14 @@
 # {{ site.data.links.exampleCollection[key] }}
 
 # JetBrains
-file_template_variables: https://www.jetbrains.com/help/idea/2016.2/file-template-variables.html
-file_templates: https://www.jetbrains.com/help/idea/2016.2/file-and-code-templates.html
+file_template_variables: https://www.jetbrains.com/help/idea/2017.1/file-template-variables.html
+file_templates: https://www.jetbrains.com/help/idea/2017.1/file-and-code-templates.html
 
-shortcuts: https://www.jetbrains.com/help/idea/2016.2/configuring-keyboard-shortcuts.html#d2040983e232
-shortcuts_actions: https://www.jetbrains.com/help/idea/2016.2/keymap.html#d1413854e312
+shortcuts: https://www.jetbrains.com/help/idea/2017.1/configuring-keyboard-shortcuts.html#d2040983e232
+shortcuts_actions: https://www.jetbrains.com/help/idea/2017.1/keymap.html#d1413854e312
 jetbrains: https://www.jetbrains.com/
-plugin_from_disk: https://www.jetbrains.com/help/idea/2016.2/installing-plugin-from-disk.html
-plugin_from_repository: https://www.jetbrains.com/help/idea/2016.2/installing-updating-and-uninstalling-repository-plugins.html
+plugin_from_disk: https://www.jetbrains.com/help/idea/2017.1/installing-plugin-from-disk.html
+plugin_from_repository: https://www.jetbrains.com/help/idea/2017.1/installing-updating-and-uninstalling-repository-plugins.html
 
 forum_plugin: https://intellij-support.jetbrains.com/hc/en-us/community/posts/203420544-PackageTemplates-Plugin-Discussion
 
