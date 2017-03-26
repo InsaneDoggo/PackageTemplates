@@ -1,6 +1,7 @@
 package global.utils;
 
 import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.EditorTextField;
 import global.utils.highligt.HighlightHelper;
@@ -21,8 +22,13 @@ public class UIHelper {
     public static int PADDING_VERTICAL = 8;
 
     public static EditorTextField getEditorTextField(String defValue, Project project) {
+        return getEditorTextField(defValue,project, true);
+    }
+
+    public static EditorTextField getEditorTextField(String defValue, Project project, boolean isOneLineMode) {
         EditorTextField etfName = new EditorTextField();
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
+        etfName.setOneLineMode(isOneLineMode);
 
         etfName.addSettingsProvider(editor -> {
             HighlightHelper.addHighlightListener(project, etfName, editor, StringTools.PATTERN_ATTRIBUTE);

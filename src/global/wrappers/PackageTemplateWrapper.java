@@ -182,14 +182,9 @@ public class PackageTemplateWrapper {
         cbSkipRootDirectory = new JBCheckBox(Localizer.get("property.SkipRootDirectory"), packageTemplate.isSkipRootDirectory());
         cbSkipRootDirectory.addItemListener(e -> {
             collectDataFromFields();
-            reBuildProperties();
             reBuildElements();
         });
         cbShowReportDialog = new JBCheckBox(Localizer.get("property.ShowReportDialog"), packageTemplate.shouldShowReport());
-        cbShowReportDialog.addItemListener(e -> {
-            collectDataFromFields();
-            reBuildProperties();
-        });
 
         panelProperties.add(cbSkipRootDirectory, new CC().spanX().wrap());
         panelProperties.add(cbShowReportDialog, new CC().spanX().wrap());

@@ -60,7 +60,7 @@ public class HighlightHelper {
     }
 
     public static ArrayList<TextRange> findResults(String text, String regExpPattern) {
-        Pattern pattern = Pattern.compile(regExpPattern);
+        Pattern pattern = Pattern.compile(regExpPattern, Pattern.DOTALL);
         ArrayList<TextRange> result = new ArrayList<>();
 
         boolean doWork = true;

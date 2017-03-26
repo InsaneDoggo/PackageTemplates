@@ -43,7 +43,7 @@ public class StringTools {
     }
 
     private static String greedy(String text) {
-        return ".*" + text + ".*";
+        return "(?s).*" + text + ".*";
     }
 
     public static String getNameWithoutExtension(String name) {

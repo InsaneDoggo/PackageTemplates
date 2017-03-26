@@ -1,6 +1,7 @@
 package global.visitors;
 
 import base.ElementVisitor;
+import core.textInjection.VelocityHelper;
 import global.models.Directory;
 import global.models.File;
 import global.utils.text.StringTools;
@@ -26,7 +27,7 @@ public class ReplaceNameVariableVisitor implements ElementVisitor {
     public void visit(DirectoryWrapper wrapper) {
         Directory directory = wrapper.getDirectory();
 
-        directory.setName(StringTools.replaceGlobalVariables(directory.getName(), mapGlobalVars));
+        directory.setName(VelocityHelper.fromTemplate(directory.getName(), mapGlobalVars));
 
         for (ElementWrapper elementWrapper : wrapper.getListElementWrapper()) {
             elementWrapper.accept(this);
@@ -37,7 +38,7 @@ public class ReplaceNameVariableVisitor implements ElementVisitor {
     public void visit(FileWrapper wrapper) {
         File file = wrapper.getFile();
 
-        file.setName(StringTools.replaceGlobalVariables(file.getName(), mapGlobalVars));
+        file.setName(VelocityHelper.fromTemplate(file.getName(), mapGlobalVars));
     }
 
 }

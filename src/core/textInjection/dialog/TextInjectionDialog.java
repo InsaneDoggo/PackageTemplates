@@ -115,9 +115,7 @@ public abstract class TextInjectionDialog extends BaseDialog {
         });
 
         JLabel jlToInject = new JLabel(Localizer.get("label.TextToInject"));
-        tfToInject = UIHelper.getEditorTextField(textInjection.getTextToInject(), project);
-        tfToInject.setOneLineMode(false);
-        tfToInject.setFileType(PlainTextFileType.INSTANCE);
+        tfToInject = UIHelper.getEditorTextField(textInjection.getTextToInject(), project, false);
 
         String topGapY = "10pt";
 
@@ -172,9 +170,9 @@ public abstract class TextInjectionDialog extends BaseDialog {
             return new ValidationInfo(Localizer.get("warning.FillEmptyFields"), tfDescription);
         }
 
-//        if (textInjection.getCustomPath() == null) {
-//            return new ValidationInfo(Localizer.get("warning.ShouldCreateCustomPath"), panel);
-//        }
+        if (textInjection.getCustomPath() == null) {
+            return new ValidationInfo(Localizer.get("warning.ShouldCreateCustomPath"), panel);
+        }
 
         // textToSearch
         String textToSearch = tfToSearch.getText();
@@ -185,7 +183,7 @@ public abstract class TextInjectionDialog extends BaseDialog {
         // textToInject
         String textToInject = tfToInject.getText();
         if (textToInject == null) {
-            textToInject = "";
+            tfToInject.setText("");
         }
 
         return null;
