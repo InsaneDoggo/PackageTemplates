@@ -3,6 +3,7 @@ package core.importTemplates;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.project.Project;
+import core.actions.custom.CreateFileTemplateAction;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.undoTransparent.TransparentCopyFileAction;
 import core.actions.custom.undoTransparent.TransparentDeleteFileAction;
@@ -73,7 +74,8 @@ public class ImportHelper {
             for (File template : ctx.availableFileTemplates) {
                 if (StringTools.getNameWithoutExtension(template.getName()).equals(name)) {
                     File fileTo = new File(templatesDir.getPath() + File.separator + template.getName());
-                    ctx.listSimpleAction.add(new TransparentCopyFileAction(template, fileTo));
+//                    ctx.listSimpleAction.add(new TransparentCopyFileAction(template, fileTo));
+                    ctx.listSimpleAction.add(new CreateFileTemplateAction(project, template));
                     break;
                 }
             }

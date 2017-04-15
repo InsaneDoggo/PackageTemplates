@@ -50,6 +50,10 @@ public class StringTools {
         return name.replaceFirst("[.][^.]+$", "");
     }
 
+    public static String getExtensionFromName(String name) {
+        return name.replaceFirst("^.*[.]", "");
+    }
+
 
     //=================================================================
     //  Search
