@@ -27,4 +27,7 @@ public interface PluginIcons {
     Icon REPORT_NEUTRAL = IconLoader.getIcon("/icons/report/report_neutral.png");
     Icon REPORT_FAIL = IconLoader.getIcon("/icons/report/report_fail.png");
 
+    Icon AUTO_IMPORT = IconLoader.getIcon("/icons/sync/auto_import.png");
+    Icon AUTO_EXPORT = IconLoader.getIcon("/icons/sync/auto_export.png");
+
 }

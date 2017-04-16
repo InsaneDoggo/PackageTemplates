@@ -30,4 +30,6 @@ public interface SelectPackageTemplatePresenter {
     void addFavourite(String path);
 
     void removeFavourite(String path);
+
+    void onAutoImportAction();
 }

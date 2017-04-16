@@ -12,6 +12,7 @@ import core.actions.executor.ActionExecutor;
 import core.actions.executor.request.ActionRequest;
 import core.actions.executor.request.ActionRequestBuilder;
 import core.exportTemplates.ExportHelper;
+import core.writeRules.WriteRules;
 import global.Const;
 import global.dialogs.SkipableNonCancelDialog;
 import global.utils.Logger;
@@ -38,20 +39,27 @@ public class ImportHelper {
 
         ArrayList<File> availableFileTemplates;
         ArrayList<SimpleAction> listSimpleAction;
+        WriteRules writeRules;
 
-        Context(Project project, ArrayList<PackageTemplateWrapper> ptWrappers, HashSet<String> requiredTemplateNames, ArrayList<File> selectedFiles) {
+        ArrayList<String> templateNamesToDelete;
+        ArrayList<File> selectedFilesToDelete;
+
+        Context(Project project, ArrayList<PackageTemplateWrapper> ptWrappers, HashSet<String> requiredTemplateNames, ArrayList<File> selectedFiles, WriteRules writeRules) {
             this.project = project;
             this.ptWrappers = ptWrappers;
             this.requiredTemplateNames = requiredTemplateNames;
             this.selectedFiles = selectedFiles;
+            this.writeRules = writeRules;
 
             availableFileTemplates = new ArrayList<>();
             listSimpleAction = new ArrayList<>();
+            templateNamesToDelete = new ArrayList<>();
+            selectedFilesToDelete = new ArrayList<>();
         }
     }
 
-    public static void importPackageTemplate(Project project, ArrayList<PackageTemplateWrapper> ptWrappers, HashSet<String> requiredTemplateNames, ArrayList<File> selectedFiles) {
-        Context ctx = new Context(project, ptWrappers, requiredTemplateNames, selectedFiles);
+    public static void importPackageTemplate(Project project, ArrayList<PackageTemplateWrapper> ptWrappers, HashSet<String> requiredTemplateNames, ArrayList<File> selectedFiles, WriteRules writeRules) {
+        Context ctx = new Context(project, ptWrappers, requiredTemplateNames, selectedFiles, writeRules);
 
         //check all src
         if (!isResourcesAvailable(ctx)) {
@@ -60,10 +68,8 @@ public class ImportHelper {
             return;
         }
 
-        // Import
-        File templatesDir = new File(ExportHelper.getFileTemplatesDirPath());
-
-        //PackageTemplate Actions
+        // IMPORT
+        // PackageTemplate Actions
         for (File file : selectedFiles) {
             File fileTo = new File(PackageTemplateHelper.getRootDirPath() + file.getName());
             ctx.listSimpleAction.add(new TransparentCopyFileAction(file, fileTo));
@@ -73,8 +79,6 @@ public class ImportHelper {
         for (String name : requiredTemplateNames) {
             for (File template : ctx.availableFileTemplates) {
                 if (StringTools.getNameWithoutExtension(template.getName()).equals(name)) {
-                    File fileTo = new File(templatesDir.getPath() + File.separator + template.getName());
-//                    ctx.listSimpleAction.add(new TransparentCopyFileAction(template, fileTo));
                     ctx.listSimpleAction.add(new CreateFileTemplateAction(project, template));
                     break;
                 }
@@ -93,6 +97,8 @@ public class ImportHelper {
     }
 
     private static boolean isResourcesAvailable(Context ctx) {
+        ArrayList<String> scannedFileTemplateDirs = new ArrayList<>();
+
         for (File file : ctx.selectedFiles) {
             // Verify FileTemp Dir
             if (!containsDirectoryByName(file, FileTemplatesScheme.TEMPLATES_DIR)) {
@@ -102,6 +108,13 @@ public class ImportHelper {
 
             // collect FileTemplates
             File templatesDir = new File(file.getParentFile().getPath() + File.separator + FileTemplatesScheme.TEMPLATES_DIR);
+
+            // Avoid already scanned dirs
+            if (isAlreadyScanned(scannedFileTemplateDirs, templatesDir)) {
+                continue;
+            }
+            scannedFileTemplateDirs.add(templatesDir.getPath());
+
             File[] templates = templatesDir.listFiles();
 
             if (templates != null) {
@@ -128,9 +141,8 @@ public class ImportHelper {
         for (File file : ctx.selectedFiles) {
             File templateFile = new File(packageTemplatesDir.getPath() + File.separator + file.getName());
             if (templateFile.exists() && !templateFile.isDirectory()) {
-                boolean doCancel = askAboutFileConflict(ctx, templateFile, Localizer.get("warning.import.PackageTemplateAlreadyExist"));
-                if (doCancel) {
-                    return false;
+                if(shouldSkipFile(ctx, templateFile, Localizer.get("warning.import.PackageTemplateAlreadyExist"))){
+                    ctx.selectedFilesToDelete.add(file);
                 }
             }
         }
@@ -143,32 +155,62 @@ public class ImportHelper {
         for (String templateName : ctx.requiredTemplateNames) {
             File file = ExportHelper.findInArrays(templateName, userFiles, internalFiles, j2eeFiles);
             if (file != null) {
-                boolean doCancel = askAboutFileConflict(ctx, file, Localizer.get("warning.import.FileTemplateAlreadyExist"));
-                if (doCancel) {
-                    return false;
+                if(shouldSkipFile(ctx, file, Localizer.get("warning.import.FileTemplateAlreadyExist"))){
+                    ctx.templateNamesToDelete.add(templateName);
                 }
             }
+        }
+
+        // Delete conflicted
+        for( String name : ctx.templateNamesToDelete){
+            ctx.requiredTemplateNames.remove(name);
+        }
+
+        for( File file : ctx.selectedFilesToDelete){
+            ctx.selectedFiles.remove(file);
         }
 
         return true;
     }
 
-    /**
-     * @return флаг отмены, true - doCancel.
-     */
-    private static boolean askAboutFileConflict(Context ctx, final File templateFile, String dialogTitle) {
-        final boolean[] result = {false};
-        new SkipableNonCancelDialog(
-                ctx.project,
-                String.format(Localizer.get("question.OverwriteArg"), templateFile.getName()),
-                dialogTitle,
-                Localizer.get("action.Overwrite")
-        ) {
-            @Override
-            public void onOk() {
-                ctx.listSimpleAction.add(new TransparentDeleteFileAction(templateFile));
+    private static boolean isAlreadyScanned(ArrayList<String> scannedFileTemplateDirs, File templatesDir) {
+        String curPath = templatesDir.getPath();
+        for (String path : scannedFileTemplateDirs) {
+            if (path.equals(curPath)) {
+                return true;
             }
-        };
+        }
+
+        return false;
+    }
+
+    private static boolean shouldSkipFile(Context ctx, final File file, String dialogTitle) {
+        final boolean[] result = {false};
+
+        switch (ctx.writeRules) {
+            case ASK_ME:
+                result[0] = true;
+                new SkipableNonCancelDialog(
+                        ctx.project,
+                        String.format(Localizer.get("question.OverwriteArg"), file.getName()),
+                        dialogTitle,
+                        Localizer.get("action.Overwrite")
+                ) {
+                    @Override
+                    public void onOk() {
+                        result[0] = false;
+                        ctx.listSimpleAction.add(new TransparentDeleteFileAction(file));
+                    }
+                };
+                break;
+            case OVERWRITE:
+                result[0] = false;
+                ctx.listSimpleAction.add(new TransparentDeleteFileAction(file));
+                break;
+            case USE_EXISTING:
+                result[0] = true;
+                break;
+        }
 
         return result[0];
     }

@@ -2,6 +2,7 @@ package core.state.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import core.sync.AutoImport;
 import global.models.Favourite;
 import global.models.PackageTemplate;
 
@@ -15,6 +16,7 @@ public class StateModel {
     @Expose @SerializedName("modelVersion") private long modelVersion;
     @Expose @SerializedName("userSettings") private UserSettings userSettings;
     @Expose @SerializedName("listFavourite") private ArrayList<Favourite> listFavourite;
+    @Expose @SerializedName("autoImport") private AutoImport autoImport;
 
     public long getModelVersion() {
         return modelVersion;
@@ -38,5 +40,13 @@ public class StateModel {
 
     public void setListFavourite(ArrayList<Favourite> listFavourite) {
         this.listFavourite = listFavourite;
+    }
+
+    public AutoImport getAutoImport() {
+        return autoImport;
+    }
+
+    public void setAutoImport(AutoImport autoImport) {
+        this.autoImport = autoImport;
     }
 }

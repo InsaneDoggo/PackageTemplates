@@ -166,6 +166,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     private BaseAction actionExport;
     private BaseAction actionImport;
     private BaseAction actionAddToFavourites;
+    private BaseAction actionAutoImport;
 
     private void makeToolBar() {
         actionGroup = new DefaultActionGroup();
@@ -178,6 +179,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         actionGroup.add(actionSettings);
         actionGroup.add(actionExport);
         actionGroup.add(actionImport);
+        actionGroup.add(actionAutoImport);
 
         jpToolbar = new JPanel(new MigLayout());
         panel.add(jpToolbar, new CC().spanX());
@@ -255,6 +257,15 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                 }
             }
         };
+
+        // AutoImport
+        actionAutoImport = new BaseAction(PluginIcons.AUTO_IMPORT) {
+            @Override
+            public void actionPerformed(AnActionEvent e) {
+                presenter.onAutoImportAction();
+            }
+        };
+
     }
 
 

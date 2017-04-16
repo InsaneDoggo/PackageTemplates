@@ -10,6 +10,7 @@ import core.actions.custom.base.SimpleAction;
 import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
 import core.report.models.FailedActionReport;
+import core.report.models.SuccessActionReport;
 import global.utils.Logger;
 import global.utils.factories.GsonFactory;
 import global.utils.file.FileReaderUtil;
@@ -27,7 +28,7 @@ public class CreateFileTemplateAction extends SimpleAction {
 
     private File fileFrom;
     private Project project;
-    FileTemplate backupTemplate = null;
+    private FileTemplate backupTemplate = null;
 
     public CreateFileTemplateAction(Project project, File fileFrom) {
         this.fileFrom = fileFrom;
@@ -60,8 +61,8 @@ public class CreateFileTemplateAction extends SimpleAction {
         if (oldTemplate != null) {
             //todo ask?
 //            Logger.log("CreateFileTemplateAction file Exists");
-            backupTemplate = GsonFactory.cloneObject(oldTemplate, FileTemplate.class);
             ftm.removeTemplate(oldTemplate);
+            ftm.saveAllTemplates();
         }
 
         FileTemplate newTemplate = ftm.addTemplate(
@@ -71,7 +72,9 @@ public class CreateFileTemplateAction extends SimpleAction {
 
 
         newTemplate.setText(text);
-        ReportHelper.setState(ExecutionState.SUCCESS);
+        ftm.saveAllTemplates();
+
+        ReportHelper.putReport(new SuccessActionReport(this, toString()));
     }
 
 
@@ -90,4 +93,8 @@ public class CreateFileTemplateAction extends SimpleAction {
         }
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + " " + fileFrom.getName();
+    }
 }

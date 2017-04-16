@@ -7,6 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import core.exportTemplates.ExportHelper;
 import core.importTemplates.ImportHelper;
 import core.state.util.SaveUtil;
+import core.writeRules.WriteRules;
 import global.Const;
 import global.models.Favourite;
 import global.models.PackageTemplate;
@@ -43,8 +44,8 @@ public class PackageTemplateHelper {
         ExportHelper.exportPackageTemplate(project, pathDir, ptWrapper, visitor.getHsFileTemplateNames());
     }
 
-    public static void importPackageTemplate(Project project, ArrayList<PackageTemplateWrapper> ptWrappers, HashSet<String> hsFileTemplateNames, ArrayList<File> selectedFiles) {
-        ImportHelper.importPackageTemplate(project, ptWrappers, hsFileTemplateNames, selectedFiles);
+    public static void importPackageTemplate(Project project, ArrayList<PackageTemplateWrapper> ptWrappers, HashSet<String> hsFileTemplateNames, ArrayList<File> selectedFiles, WriteRules writeRules) {
+        ImportHelper.importPackageTemplate(project, ptWrappers, hsFileTemplateNames, selectedFiles, writeRules);
     }
 
 

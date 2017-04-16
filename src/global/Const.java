@@ -10,7 +10,7 @@ import java.nio.charset.Charset;
  */
 public interface Const {
 
-    boolean IS_DEBUG = false;
+    boolean IS_DEBUG = true;
     boolean SHOULD_LOG_TO_NOTIFICATION = false;
 
     String EXPORT_FILE_NAME = "Templates.json";

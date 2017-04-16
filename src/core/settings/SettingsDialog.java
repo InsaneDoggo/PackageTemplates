@@ -4,7 +4,10 @@ import base.BaseDialog;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.EnumComboBoxModel;
+import com.intellij.ui.SeparatorComponent;
+import com.intellij.util.IconUtil;
 import core.state.util.SaveUtil;
+import global.listeners.ClickListener;
 import global.utils.i18n.Language;
 import global.utils.i18n.Localizer;
 import net.miginfocom.layout.CC;
@@ -12,6 +15,7 @@ import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by CeH9 on 22.06.2016.
@@ -41,6 +45,24 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
 
         panel.add(jlLanguage, new CC());
         panel.add(comboLanguages, new CC().wrap());
+
+        // AutoImport
+        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
+        JLabel jlTextInjection = new JLabel(Localizer.get("settings.AutoImport"), JLabel.CENTER);
+        panel.add(jlTextInjection, new CC().wrap().growX().pushX().spanX());
+
+        JButton btnAdd = new JButton(Localizer.get("action.AddPath"), IconUtil.getAddIcon());
+        btnAdd.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                addPathToImport();
+            }
+        });
+        panel.add(btnAdd, new CC().wrap());
+    }
+
+    private void addPathToImport() {
+
     }
 
     private void createLanguageViews() {
@@ -74,3 +96,16 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
