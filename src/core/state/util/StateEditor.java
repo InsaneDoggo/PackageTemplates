@@ -2,11 +2,13 @@ package core.state.util;
 
 import core.state.models.StateModel;
 import core.state.models.UserSettings;
+import core.writeRules.WriteRules;
 import global.models.Favourite;
 import global.utils.i18n.Language;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Хелпер для взаимодествия с конфигом
@@ -49,7 +51,7 @@ public class StateEditor {
         return this;
     }
 
-    public StateEditor addFavourite(ArrayList<Favourite> list) {
+    public StateEditor addFavourite(List<Favourite> list) {
         model.getListFavourite().addAll(list);
         return this;
     }
@@ -71,6 +73,35 @@ public class StateEditor {
         for (int i = 0; i < listFavourite.size(); i++) {
             listFavourite.get(i).setOrder(i);
         }
+        return this;
+    }
+
+
+    //=================================================================
+    // AutoImport
+    //=================================================================
+    public StateEditor addAutoImportPath(String item) {
+        model.getAutoImport().getPaths().add(item);
+        return this;
+    }
+
+    public StateEditor addAutoImportPath(List<String> list) {
+        model.getAutoImport().getPaths().addAll(list);
+        return this;
+    }
+
+    public StateEditor removeAutoImportPath(String item) {
+        model.getAutoImport().getPaths().remove(item);
+        return this;
+    }
+
+    public StateEditor clearAutoImportPaths() {
+        model.getAutoImport().getPaths().clear();
+        return this;
+    }
+
+    public StateEditor setAutoImportWriteRules(WriteRules writeRules) {
+        model.getAutoImport().setWriteRules(writeRules);
         return this;
     }
 

@@ -202,9 +202,9 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
             ArrayList<VirtualFile> listVirtualFile = new ArrayList<>();
 
             if (autoImport.getPaths().isEmpty()) {
-                autoImport.getPaths().add("E:\\pluginTemp\\Idea\\plugins_sandbox\\config\\packageTemplates\\backups");
-//                Messages.showWarningDialog("Add at Least One Path in Settings!", "Auto Import");
-//                return;
+//                autoImport.getPaths().add("E:\\pluginTemp\\Idea\\plugins_sandbox\\config\\packageTemplates\\backups");
+                Messages.showWarningDialog("Add at Least One Path in Settings!", "Auto Import");
+                return;
             }
 
             for (String dirPath : autoImport.getPaths()) {
