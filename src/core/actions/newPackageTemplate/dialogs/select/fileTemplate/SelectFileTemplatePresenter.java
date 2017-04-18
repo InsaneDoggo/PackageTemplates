@@ -14,5 +14,4 @@ public interface SelectFileTemplatePresenter {
 
     void onCancel();
 
-    ArrayList<TemplateForSearch> getListTemplateForSearch(boolean addInternal, boolean addJ2EE);
 }

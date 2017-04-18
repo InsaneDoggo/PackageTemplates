@@ -28,6 +28,7 @@ import global.models.*;
 import global.utils.factories.WrappersFactory;
 import global.utils.file.FileWriter;
 import global.utils.i18n.Localizer;
+import global.utils.templates.FileTemplateHelper;
 import global.visitors.*;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
@@ -479,7 +480,7 @@ public class PackageTemplateWrapper {
     }
 
     public void initDefaultProperties() {
-        defaultProperties = FileTemplateManager.getInstance(getProject()).getDefaultProperties();
+        defaultProperties = FileTemplateHelper.getDefaultProperties(project);
     }
 
 

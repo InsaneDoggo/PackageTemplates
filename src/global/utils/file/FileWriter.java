@@ -102,40 +102,6 @@ public class FileWriter {
         }
     }
 
-    public static PsiElement writeFile(PsiDirectory dir, FileWrapper fileWrapper) {
-        FileTemplate template = FileTemplateHelper.getTemplate(fileWrapper.getFile().getTemplateName());
-
-        if (dir == null || template == null) {
-            //todo print error
-            return null;
-        }
-
-        Properties properties = new Properties();
-        properties.putAll(fileWrapper.getPackageTemplateWrapper().getDefaultProperties());
-        properties.putAll(fileWrapper.getFile().getMapProperties());
-
-        PsiElement element = null;
-        RunnableFuture<PsiElement> runnableFuture = new FutureTask<>(() ->
-                ApplicationManager.getApplication().runWriteAction((Computable<PsiElement>) () -> {
-                    try {
-                        return FileTemplateUtil.createFromTemplate(template, fileWrapper.getFile().getName(), properties, dir);
-                    } catch (Exception e) {
-                        Logger.log(e.getMessage());
-                        Logger.printStack(e);
-                        return null;
-                    }
-                }));
-
-        ApplicationManager.getApplication().invokeLater(runnableFuture);
-        try {
-            element = runnableFuture.get();
-        } catch (InterruptedException | ExecutionException e) {
-            Logger.log("runnableFuture  " + e.getMessage());
-            Logger.printStack(e);
-        }
-        return element;
-    }
-
     public static PsiElement createFileFromTemplate(CreateFileFromTemplateAction action, Project project, FileTemplate template, String fileName, Properties properties, String parentPath) {
         final PsiElement[] psiElement = {null};
 

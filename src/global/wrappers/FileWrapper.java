@@ -52,14 +52,14 @@ public class FileWrapper extends ElementWrapper {
 
         addMouseListener();
 
-        createUsageUI(container);
+        createUsageUI(container, project);
     }
 
-    private void createUsageUI(JPanel container) {
+    private void createUsageUI(JPanel container, Project project) {
         if (getPackageTemplateWrapper().getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
             return;
         }
-        FileTemplate fileTemplate = FileTemplateHelper.getTemplate(getFile().getTemplateName());
+        FileTemplate fileTemplate = FileTemplateHelper.getTemplate(getFile().getTemplateName(), project);
         if (fileTemplate == null) {
             return;
         }

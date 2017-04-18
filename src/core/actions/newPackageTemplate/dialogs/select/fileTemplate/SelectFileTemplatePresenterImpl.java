@@ -30,22 +30,4 @@ public class SelectFileTemplatePresenterImpl implements SelectFileTemplatePresen
         view.onCancel();
     }
 
-    @Override
-    public ArrayList<TemplateForSearch> getListTemplateForSearch(boolean addInternal, boolean addJ2EE) {
-        FileTemplateManager ftm = FileTemplateManager.getDefaultInstance();
-        FileTemplate[] fileTemplates = ftm.getAllTemplates();
-
-        if (addInternal)
-            fileTemplates = ArrayUtil.mergeArrays(fileTemplates, ftm.getInternalTemplates());
-        if (addJ2EE)
-            fileTemplates = ArrayUtil.mergeArrays(fileTemplates, ftm.getTemplates(FileTemplateManager.J2EE_TEMPLATES_CATEGORY));
-
-
-        ArrayList<TemplateForSearch> listTemplateForSearch = new ArrayList(fileTemplates.length);
-        for (FileTemplate template : fileTemplates) {
-            listTemplateForSearch.add(new TemplateForSearch(template));
-        }
-        return listTemplateForSearch;
-    }
-
 }

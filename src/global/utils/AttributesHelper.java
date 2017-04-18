@@ -4,6 +4,7 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.project.Project;
 import global.models.GlobalVariable;
+import global.utils.templates.FileTemplateHelper;
 import global.wrappers.PackageTemplateWrapper;
 import org.apache.velocity.runtime.parser.ParseException;
 
@@ -24,7 +25,7 @@ public class AttributesHelper {
             listDefaultAttributeNames.add(FileTemplate.ATTRIBUTE_NAME);
             listDefaultAttributeNames.add(FileTemplate.ATTRIBUTE_PACKAGE_NAME);
 
-            Properties defaultProperties = FileTemplateManager.getInstance(project).getDefaultProperties();
+            Properties defaultProperties = FileTemplateHelper.getDefaultProperties(project);
             for (Object Property : defaultProperties.keySet()) {
                 listDefaultAttributeNames.add((String) Property);
             }

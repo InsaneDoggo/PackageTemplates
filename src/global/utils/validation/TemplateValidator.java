@@ -1,17 +1,12 @@
 package global.utils.validation;
 
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.ui.ValidationInfo;
 import global.utils.i18n.Localizer;
-import global.wrappers.ElementWrapper;
 import global.wrappers.GlobalVariableWrapper;
 import global.wrappers.PackageTemplateWrapper;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by CeH9 on 14.06.2016.
@@ -27,21 +22,8 @@ public class TemplateValidator {
             return null;
         }
 
-        List<String> listAllTemplates = new ArrayList<>();
+        //todo validate?
 
-        for (FileTemplate template : FileTemplateManager.getDefaultInstance().getTemplates(FileTemplateManager.DEFAULT_TEMPLATES_CATEGORY)) {
-            listAllTemplates.add(template.getName());
-        }
-        for (FileTemplate template : FileTemplateManager.getDefaultInstance().getTemplates(FileTemplateManager.J2EE_TEMPLATES_CATEGORY)) {
-            listAllTemplates.add(template.getName());
-        }
-
-        for (ElementWrapper element : ptWrapper.getRootElement().getListElementWrapper()) {
-            ValidationInfo validationInfo = element.isNameValid(listAllTemplates);
-            if (validationInfo != null) {
-                return validationInfo;
-            }
-        }
         return null;
     }
 
