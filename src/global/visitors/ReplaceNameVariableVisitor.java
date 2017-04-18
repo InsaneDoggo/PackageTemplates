@@ -1,10 +1,11 @@
 package global.visitors;
 
 import base.ElementVisitor;
+import core.search.SearchAction;
+import core.search.customPath.CustomPath;
 import core.textInjection.VelocityHelper;
 import global.models.Directory;
 import global.models.File;
-import global.utils.text.StringTools;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
@@ -32,6 +33,8 @@ public class ReplaceNameVariableVisitor implements ElementVisitor {
         for (ElementWrapper elementWrapper : wrapper.getListElementWrapper()) {
             elementWrapper.accept(this);
         }
+
+        this.visitCustomPath(directory.getCustomPath());
     }
 
     @Override
@@ -39,6 +42,16 @@ public class ReplaceNameVariableVisitor implements ElementVisitor {
         File file = wrapper.getFile();
 
         file.setName(VelocityHelper.fromTemplate(file.getName(), mapGlobalVars));
+
+        this.visitCustomPath(file.getCustomPath());
     }
 
+    private void visitCustomPath(CustomPath customPath) {
+        if (customPath == null)
+            return;
+
+        for (SearchAction searchAction : customPath.getListSearchAction()) {
+            searchAction.setName(VelocityHelper.fromTemplate(searchAction.getName(), mapGlobalVars));
+        }
+    }
 }
