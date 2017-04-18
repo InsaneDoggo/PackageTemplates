@@ -27,6 +27,11 @@ public class SearchEngine {
                 return null;
             }
 
+            // if the SearchAction::name was set by global vars, it could be empty, this may means ignore this search
+            // action, so continue;
+            if (action.getName() == null || action.getName().isEmpty())
+                continue;
+
             if (!curDir.isDirectory()) {
                 curDir = startDir.getParentFile();
             }
