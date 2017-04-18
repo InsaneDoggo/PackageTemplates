@@ -30,13 +30,17 @@ public class UIHelper {
         etfName.setAlignmentX(Component.LEFT_ALIGNMENT);
         etfName.setOneLineMode(isOneLineMode);
 
+        addHighlightListener(project, etfName);
+
+        etfName.setText(defValue);
+        return etfName;
+    }
+
+    public static void addHighlightListener(Project project, EditorTextField etfName) {
         etfName.addSettingsProvider(editor -> {
             HighlightHelper.addHighlightListener(project, etfName, editor, StringTools.PATTERN_ATTRIBUTE);
             HighlightHelper.applyHighlightRange(HighlightHelper.findResults(etfName.getText(), StringTools.PATTERN_ATTRIBUTE), project, editor);
         });
-
-        etfName.setText(defValue);
-        return etfName;
     }
 
     public static void setLeftPadding(JComponent component, int padding) {

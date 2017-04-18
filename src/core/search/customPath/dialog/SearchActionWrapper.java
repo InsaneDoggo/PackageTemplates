@@ -13,6 +13,7 @@ import core.search.SearchAction;
 import core.search.SearchActionType;
 import core.search.SearchEngine;
 import global.utils.Logger;
+import global.utils.UIHelper;
 import global.utils.i18n.Localizer;
 import global.views.spinner.IntSpinner;
 import com.intellij.openapi.ui.ComboBox;
@@ -124,6 +125,8 @@ public class SearchActionWrapper {
         // Name
         PsiFile psiFile = PsiFileFactory.getInstance(project).createFileFromText("Name", PlainTextLanguage.INSTANCE, action.getName());
         tfName = new EditorTextField(PsiDocumentManager.getInstance(project).getDocument(psiFile), project, PlainTextFileType.INSTANCE);
+        UIHelper.addHighlightListener(project, tfName);
+
 
         //DeepLimit
         cbDeepLimit = new JBCheckBox(Localizer.get("label.DeepLimit"), action.getDeepLimit() != SearchEngine.DEEP_LIMITLESS);

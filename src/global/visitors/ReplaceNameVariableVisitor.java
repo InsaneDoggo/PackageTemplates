@@ -23,7 +23,6 @@ public class ReplaceNameVariableVisitor implements ElementVisitor {
         this.mapGlobalVars = mapGlobalVars;
     }
 
-
     @Override
     public void visit(DirectoryWrapper wrapper) {
         Directory directory = wrapper.getDirectory();
@@ -47,8 +46,9 @@ public class ReplaceNameVariableVisitor implements ElementVisitor {
     }
 
     private void visitCustomPath(CustomPath customPath) {
-        if (customPath == null)
+        if (customPath == null) {
             return;
+        }
 
         for (SearchAction searchAction : customPath.getListSearchAction()) {
             searchAction.setName(VelocityHelper.fromTemplate(searchAction.getName(), mapGlobalVars));

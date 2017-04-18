@@ -291,7 +291,7 @@ public class PackageTemplateWrapper {
     //  Utils
     //=================================================================
     public void replaceNameVariable() {
-        rootElement.accept(new ReplaceNameVariableVisitor(packageTemplate.getMapGlobalVars()));
+        rootElement.accept(new ReplaceNameVariableVisitor(getAllProperties()));
     }
 
     public void collectDataFromFields() {
