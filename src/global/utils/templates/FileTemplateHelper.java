@@ -10,6 +10,8 @@ import global.models.TemplateForSearch;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Properties;
 
 /**
@@ -35,29 +37,24 @@ public class FileTemplateHelper {
 
     @Nullable
     public static FileTemplate getTemplate(String name, Project project, FileTemplateSource fileTemplateSource) {
-        FileTemplate result;
+        FileTemplate result = null;
         FileTemplateManager projectManager = getProjectManager(project);
         FileTemplateManager defaultManager = getDefaultManager();
 
-        switch (fileTemplateSource){
+        switch (fileTemplateSource) {
             case DEFAULT_ONLY:
+                result = getDefaultTemplateOnly(name, projectManager, defaultManager);
                 break;
             case PROJECT_ONLY:
+                result = getProjectTemplateOnly(name, projectManager, defaultManager);
                 break;
             case PROJECT_PRIORITY:
+                result = getProjectTemplatePriority(name, projectManager, defaultManager);
                 break;
             case DEFAULT_PRIORITY:
+                result = getDefaultTemplatePriority(name, projectManager, defaultManager);
                 break;
         }
-
-
-        result = defaultManager.getTemplate(name);
-        if (result != null) {
-            return result;
-        }
-
-        // Custom (DEFAULT or PROJECT)
-        result = projectManager.getTemplate(name);
         if (result != null) {
             return result;
         }
@@ -74,20 +71,99 @@ public class FileTemplateHelper {
             return result;
         }
 
+        return result;
+    }
+
+    private static FileTemplate getDefaultTemplateOnly(String name, FileTemplateManager projectManager, FileTemplateManager defaultManager) {
+        FileTemplate result;
+
+        result = defaultManager.getTemplate(name);
+        if (result != null) {
+            return result;
+        }
+
         return null;
     }
 
-    public ArrayList<TemplateForSearch> getTemplates(Project project, boolean addInternal, boolean addJ2EE) {
-        FileTemplateManager ftm = FileTemplateManager.getDefaultInstance();
-        FileTemplate[] fileTemplates = ftm.getAllTemplates();
+    private static FileTemplate getProjectTemplateOnly(String name, FileTemplateManager projectManager, FileTemplateManager defaultManager) {
+        FileTemplate result;
 
-        if (addInternal)
-            fileTemplates = ArrayUtil.mergeArrays(fileTemplates, ftm.getInternalTemplates());
-        if (addJ2EE)
-            fileTemplates = ArrayUtil.mergeArrays(fileTemplates, ftm.getTemplates(FileTemplateManager.J2EE_TEMPLATES_CATEGORY));
+        result = projectManager.getTemplate(name);
+        if (result != null) {
+            return result;
+        }
+
+        return null;
+    }
+
+    private static FileTemplate getProjectTemplatePriority(String name, FileTemplateManager projectManager, FileTemplateManager defaultManager) {
+        FileTemplate result;
+
+        // Project
+        result = getProjectTemplateOnly(name, projectManager, defaultManager);
+        if (result != null) {
+            return result;
+        }
+
+        // Default
+        result = getDefaultTemplateOnly(name, projectManager, defaultManager);
+        if (result != null) {
+            return result;
+        }
+
+        return null;
+    }
+
+    private static FileTemplate getDefaultTemplatePriority(String name, FileTemplateManager projectManager, FileTemplateManager defaultManager) {
+        FileTemplate result;
+
+        // Default
+        result = getDefaultTemplateOnly(name, projectManager, defaultManager);
+        if (result != null) {
+            return result;
+        }
+
+        // Project
+        result = getProjectTemplateOnly(name, projectManager, defaultManager);
+        if (result != null) {
+            return result;
+        }
+
+        return null;
+    }
+
+    public ArrayList<TemplateForSearch> getTemplates(Project project, boolean addInternal, boolean addJ2EE, FileTemplateSource fileTemplateSource) {
+        FileTemplateManager projectManager = getProjectManager(project);
+        FileTemplateManager defaultManager = getDefaultManager();
+        HashSet<FileTemplate> fileTemplates = new HashSet<>();
+
+        switch (fileTemplateSource) {
+            case DEFAULT_ONLY:
+                fileTemplates.addAll(Arrays.asList(defaultManager.getAllTemplates()));
+                break;
+            case PROJECT_ONLY:
+                fileTemplates.addAll(Arrays.asList(projectManager.getAllTemplates()));
+                break;
+            case PROJECT_PRIORITY:
+                fileTemplates.addAll(Arrays.asList(projectManager.getAllTemplates()));
+                fileTemplates.addAll(Arrays.asList(defaultManager.getAllTemplates()));
+                break;
+            case DEFAULT_PRIORITY:
+                fileTemplates.addAll(Arrays.asList(defaultManager.getAllTemplates()));
+                fileTemplates.addAll(Arrays.asList(projectManager.getAllTemplates()));
+                break;
+        }
 
 
-        ArrayList<TemplateForSearch> listTemplateForSearch = new ArrayList(fileTemplates.length);
+        if (addInternal) {
+            fileTemplates.addAll(Arrays.asList(projectManager.getInternalTemplates()));
+        }
+        if (addJ2EE) {
+            fileTemplates.addAll(Arrays.asList(projectManager.getTemplates(FileTemplateManager.J2EE_TEMPLATES_CATEGORY)));
+        }
+
+
+        ArrayList<TemplateForSearch> listTemplateForSearch = new ArrayList(fileTemplates.size());
         for (FileTemplate template : fileTemplates) {
             listTemplateForSearch.add(new TemplateForSearch(template));
         }
