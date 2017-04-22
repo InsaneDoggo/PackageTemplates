@@ -2,6 +2,7 @@ package global.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import core.writeRules.WriteRules;
 import global.utils.templates.FileTemplateSource;
 
 import java.util.HashMap;
@@ -51,5 +52,18 @@ public class File extends BaseElement {
 
     public void setFileTemplateSource(FileTemplateSource fileTemplateSource) {
         this.fileTemplateSource = fileTemplateSource;
+    }
+
+    public static File newInstance(String templateName, String extension) {
+        File file = new File();
+        file.setWriteRules(WriteRules.FROM_PARENT);
+        file.setName("Unnamed");
+        file.setTemplateName(templateName);
+        file.setExtension(extension);
+        file.setEnabled(true);
+        file.setScript("");
+        file.setMapProperties(new HashMap<>());
+
+        return file;
     }
 }

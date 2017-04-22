@@ -8,6 +8,7 @@ import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
@@ -36,6 +37,7 @@ import global.utils.factories.WrappersFactory;
 import global.utils.file.PathHelper;
 import global.utils.file.PsiHelper;
 import global.utils.i18n.Localizer;
+import global.utils.templates.FileTemplateHelper;
 import global.wrappers.PackageTemplateWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -135,6 +137,15 @@ public class NewPackageTemplateAction extends AnAction {
     }
 
     public static void showDialog(PackageTemplate packageTemplate, Project project, VirtualFile virtualFile) {
+        switch (packageTemplate.getFileTemplateSource()) {
+            case PROJECT_ONLY:
+            case PROJECT_PRIORITY:
+                if (FileTemplateHelper.isDefaultScheme(project)) {
+                    Messages.showWarningDialog(project, Localizer.get("warning.SwitchToProjectScheme"), "Warning Dialog");
+                    return;
+                }
+        }
+
         new ImplementDialog(project, String.format(Localizer.get("NewPackageFromS"),
                 packageTemplate.getName()), packageTemplate, virtualFile) {
             @Override

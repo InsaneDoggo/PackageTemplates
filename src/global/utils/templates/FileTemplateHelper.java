@@ -19,6 +19,10 @@ import java.util.Properties;
  */
 public class FileTemplateHelper {
 
+    public static boolean isDefaultScheme(Project project) {
+        return getProjectManager(project).getCurrentScheme() == FileTemplatesScheme.DEFAULT;
+    }
+
     private static FileTemplateManager getProjectManager(Project project) {
         return FileTemplateManager.getInstance(project);
     }
@@ -132,7 +136,7 @@ public class FileTemplateHelper {
         return null;
     }
 
-    public ArrayList<TemplateForSearch> getTemplates(Project project, boolean addInternal, boolean addJ2EE, FileTemplateSource fileTemplateSource) {
+    public static ArrayList<TemplateForSearch> getTemplates(Project project, boolean addInternal, boolean addJ2EE, FileTemplateSource fileTemplateSource) {
         FileTemplateManager projectManager = getProjectManager(project);
         FileTemplateManager defaultManager = getDefaultManager();
         HashSet<FileTemplate> fileTemplates = new HashSet<>();

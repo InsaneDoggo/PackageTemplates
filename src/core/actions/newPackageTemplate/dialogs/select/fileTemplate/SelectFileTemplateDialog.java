@@ -12,6 +12,8 @@ import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBInsets;
 import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import global.models.TemplateForSearch;
+import global.utils.templates.FileTemplateHelper;
+import global.wrappers.PackageTemplateWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -27,9 +29,13 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper implements 
 
     private ComboBox comboBox;
     private SelectFileTemplatePresenter presenter;
+    private Project project;
+    private PackageTemplateWrapper ptWrapper;
 
-    public SelectFileTemplateDialog(Project project) {
+    public SelectFileTemplateDialog(Project project, PackageTemplateWrapper ptWrapper) {
         super(project);
+        this.project = project;
+        this.ptWrapper = ptWrapper;
         init();
     }
 
@@ -113,7 +119,12 @@ public abstract class SelectFileTemplateDialog extends DialogWrapper implements 
     //=================================================================
     @NotNull
     private ComboBox getSelector() {
-        ArrayList<TemplateForSearch> listTemplateForSearch = presenter.getListTemplateForSearch(cbAddInternal.isSelected(), cbAddJ2EE.isSelected());
+        ArrayList<TemplateForSearch> listTemplateForSearch = FileTemplateHelper.getTemplates(
+                project,
+                cbAddInternal.isSelected(),
+                cbAddJ2EE.isSelected(),
+                ptWrapper.getPackageTemplate().getFileTemplateSource()
+        );
 
         ComboBox comboBox = new ComboBox(listTemplateForSearch.toArray());
         comboBox.setRenderer(new ListCellRendererWrapper<TemplateForSearch>() {

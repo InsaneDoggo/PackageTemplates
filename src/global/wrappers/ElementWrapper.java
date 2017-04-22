@@ -6,6 +6,7 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
 import core.actions.newPackageTemplate.dialogs.select.fileTemplate.SelectFileTemplateDialog;
@@ -20,6 +21,7 @@ import global.utils.Logger;
 import global.utils.factories.GsonFactory;
 import global.utils.factories.WrappersFactory;
 import global.utils.i18n.Localizer;
+import global.utils.templates.FileTemplateHelper;
 import global.views.IconLabel;
 import global.views.IconLabelCustom;
 import icons.PluginIcons;
@@ -258,7 +260,16 @@ public abstract class ElementWrapper extends BaseWrapper {
     }
 
     public void AddFile() {
-        SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(getPackageTemplateWrapper().getProject()) {
+        switch (getPackageTemplateWrapper().getPackageTemplate().getFileTemplateSource()){
+            case PROJECT_ONLY:
+            case PROJECT_PRIORITY:
+                if(FileTemplateHelper.isDefaultScheme(getPackageTemplateWrapper().getProject())){
+                    Messages.showWarningDialog(getPackageTemplateWrapper().getProject(), Localizer.get("warning.SwitchToProjectScheme"), "Warning Dialog");
+                    return;
+                }
+        }
+
+        SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(getPackageTemplateWrapper().getProject(), getPackageTemplateWrapper()) {
             @Override
             public void onSuccess(FileTemplate fileTemplate) {
                 getPackageTemplateWrapper().collectDataFromFields();

@@ -59,7 +59,12 @@ public class FileWrapper extends ElementWrapper {
         if (getPackageTemplateWrapper().getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
             return;
         }
-        FileTemplate fileTemplate = FileTemplateHelper.getTemplate(getFile().getTemplateName(), project);
+        FileTemplate fileTemplate = FileTemplateHelper.getTemplate(
+                getFile().getTemplateName(),
+                project,
+                getPackageTemplateWrapper().getPackageTemplate().getFileTemplateSource()
+        );
+
         if (fileTemplate == null) {
             return;
         }

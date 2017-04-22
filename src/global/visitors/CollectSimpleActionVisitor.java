@@ -91,7 +91,11 @@ public class CollectSimpleActionVisitor implements ElementVisitor {
 
         CreateFileFromTemplateAction createFileFromTemplateAction = new CreateFileFromTemplateAction(
                 properties,
-                FileTemplateHelper.getTemplate(wrapper.getFile().getTemplateName(), project),
+                FileTemplateHelper.getTemplate(
+                        wrapper.getFile().getTemplateName(),
+                        project,
+                        wrapper.getPackageTemplateWrapper().getPackageTemplate().getFileTemplateSource()
+                ),
                 file,
                 project
         );

@@ -107,8 +107,11 @@ public class PackageTemplateHelper {
     }
 
     private static void preventNPE(PackageTemplate template) {
-        //todo prevent NPE
+        // 0.3.0+
         if(template.getListTextInjection() == null) template.setListTextInjection(new ArrayList<>());
+
+        // 0.4.0+
+        if(template.getFileTemplateSource() == null) template.setFileTemplateSource(FileTemplateSource.DEFAULT_PRIORITY);
     }
 
 

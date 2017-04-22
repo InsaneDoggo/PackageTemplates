@@ -1,11 +1,10 @@
 package global.wrappers;
 
-import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.ui.EditorTextField;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBTextField;
@@ -15,12 +14,15 @@ import core.actions.custom.DummyDirectoryAction;
 import core.actions.custom.InjectTextAction;
 import core.actions.custom.base.SimpleAction;
 import core.actions.newPackageTemplate.dialogs.configure.ConfigureDialog;
+import core.actions.newPackageTemplate.dialogs.configure.render.FileTemplateSourceCellRenderer;
 import core.actions.newPackageTemplate.models.ExecutionContext;
 import core.report.ReportHelper;
 import core.report.models.PendingActionReport;
 import core.textInjection.TextInjection;
 import core.textInjection.dialog.TextInjectionDialog;
 import core.textInjection.dialog.TextInjectionWrapper;
+import core.writeRules.WriteRules;
+import core.writeRules.dialog.WriteRulesCellRenderer;
 import global.Const;
 import global.dialogs.PredefinedVariablesDialog;
 import global.listeners.ClickListener;
@@ -29,6 +31,7 @@ import global.utils.factories.WrappersFactory;
 import global.utils.file.FileWriter;
 import global.utils.i18n.Localizer;
 import global.utils.templates.FileTemplateHelper;
+import global.utils.templates.FileTemplateSource;
 import global.visitors.*;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
@@ -36,6 +39,8 @@ import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.*;
 
@@ -74,6 +79,7 @@ public class PackageTemplateWrapper {
     public JCheckBox cbSkipDefiningNames;
     public JCheckBox cbSkipRootDirectory;
     public JCheckBox cbShowReportDialog;
+    private ComboBox cboxFileTemplateSource;
     private JPanel panelProperties;
     private JPanel panelElements;
     private JPanel panelTextInjection;
@@ -168,9 +174,24 @@ public class PackageTemplateWrapper {
         panelProperties.add(jlDescription, new CC().wrap().spanX().pad(0, 0, 0, 8).gapY("4pt", "4pt"));
         panelProperties.add(jtaDescription, new CC().spanX().growX().pushX().wrap().gapY("0", "4pt"));
 
+        //FileTemplate Source
+        ArrayList<FileTemplateSource> actionTypes = new ArrayList<>();
+        actionTypes.add(FileTemplateSource.DEFAULT_ONLY);
+        actionTypes.add(FileTemplateSource.PROJECT_ONLY);
+        actionTypes.add(FileTemplateSource.PROJECT_PRIORITY);
+        actionTypes.add(FileTemplateSource.DEFAULT_PRIORITY);
+
+        cboxFileTemplateSource = new ComboBox(actionTypes.toArray());
+        cboxFileTemplateSource.setRenderer(new FileTemplateSourceCellRenderer());
+        cboxFileTemplateSource.setSelectedItem(packageTemplate.getFileTemplateSource());
+        cboxFileTemplateSource.addActionListener (e -> {
+            packageTemplate.setFileTemplateSource((FileTemplateSource) cboxFileTemplateSource.getSelectedItem());
+        });
+
         if (mode == ViewMode.USAGE) {
             jtfName.setEditable(false);
             jtaDescription.setEditable(false);
+            cboxFileTemplateSource.setEditable(false);
         } else {
             // Properties
             cbShouldRegisterAction = new JBCheckBox(Localizer.get("property.ShouldRegisterAction"), packageTemplate.isShouldRegisterAction());
@@ -189,6 +210,8 @@ public class PackageTemplateWrapper {
 
         panelProperties.add(cbSkipRootDirectory, new CC().spanX().wrap());
         panelProperties.add(cbShowReportDialog, new CC().spanX().wrap());
+        panelProperties.add(cboxFileTemplateSource, new CC().pushX().growX().spanX().gapY("10","10"));
+
     }
 
     private void buildElements() {
@@ -301,6 +324,7 @@ public class PackageTemplateWrapper {
             packageTemplate.setDescription(jtaDescription.getText());
             packageTemplate.setShouldRegisterAction(cbShouldRegisterAction.isSelected());
             packageTemplate.setSkipDefiningNames(cbSkipDefiningNames.isSelected());
+            packageTemplate.setFileTemplateSource((FileTemplateSource) cboxFileTemplateSource.getSelectedItem());
         }
         packageTemplate.setSkipRootDirectory(cbSkipRootDirectory.isSelected());
         packageTemplate.setShouldShowReport(cbShowReportDialog.isSelected());

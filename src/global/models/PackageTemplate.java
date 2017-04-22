@@ -3,6 +3,7 @@ package global.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import core.textInjection.TextInjection;
+import global.utils.templates.FileTemplateSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,22 @@ public class PackageTemplate {
     @Expose @SerializedName("skipDefiningNames") private boolean skipDefiningNames;
     @Expose @SerializedName("shouldRegisterAction") private boolean shouldRegisterAction;
     @Expose @SerializedName("shouldShowReport") private boolean shouldShowReport;
+    @Expose @SerializedName("fileTemplateSource") private FileTemplateSource fileTemplateSource;
+
+    public static PackageTemplate newInstance() {
+        PackageTemplate pt = new PackageTemplate();
+
+        pt.setMapGlobalVars(new HashMap<>());
+        pt.setListGlobalVariable(new ArrayList<>());
+        pt.setListTextInjection(new ArrayList<>());
+        pt.setName("NewPackageTemplate");
+        pt.setDescription("Manual:\n1. Do foo\n2. Do bar");
+        pt.setSkipRootDirectory(false);
+        pt.setFileTemplateSource(FileTemplateSource.DEFAULT_PRIORITY);
+
+        return pt;
+    }
+
 
     public boolean shouldShowReport() {
         return shouldShowReport;
@@ -110,6 +127,18 @@ public class PackageTemplate {
 
     public void setListTextInjection(ArrayList<TextInjection> listTextInjection) {
         this.listTextInjection = listTextInjection;
+    }
+
+    public boolean isShouldShowReport() {
+        return shouldShowReport;
+    }
+
+    public FileTemplateSource getFileTemplateSource() {
+        return fileTemplateSource;
+    }
+
+    public void setFileTemplateSource(FileTemplateSource fileTemplateSource) {
+        this.fileTemplateSource = fileTemplateSource;
     }
 
 }

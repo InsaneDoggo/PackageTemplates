@@ -2,6 +2,8 @@ package global.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import core.writeRules.WriteRules;
+import global.wrappers.PackageTemplateWrapper;
 
 import java.util.ArrayList;
 
@@ -11,6 +13,19 @@ import java.util.ArrayList;
 public class Directory extends BaseElement {
 
     @Expose @SerializedName("listBaseElement") private ArrayList<BaseElement> listBaseElement;
+
+    public static Directory newInstance() {
+        Directory directory = new Directory();
+
+        directory.setName("unnamed");
+        directory.setWriteRules(WriteRules.FROM_PARENT);
+        directory.setEnabled(true);
+        directory.setScript("");
+        directory.setListBaseElement(new ArrayList<>());
+
+        return directory;
+    }
+
 
     public ArrayList<BaseElement> getListBaseElement() {
         return listBaseElement;
