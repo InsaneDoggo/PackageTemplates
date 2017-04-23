@@ -7,8 +7,10 @@ import com.intellij.openapi.options.SchemeState;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.ArrayUtil;
 import global.models.TemplateForSearch;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -29,6 +31,14 @@ public class FileTemplateHelper {
 
     private static FileTemplateManager getDefaultManager() {
         return FileTemplateManager.getDefaultInstance();
+    }
+
+    public static String getFileTemplatesDirPath(Project project) {
+        return getProjectManager(project).getCurrentScheme().getTemplatesDir() + File.separator;
+    }
+
+    public static String getFileTemplatesDefaultDirPath() {
+        return FileTemplatesScheme.DEFAULT.getTemplatesDir() + File.separator;
     }
 
 
@@ -139,33 +149,32 @@ public class FileTemplateHelper {
     public static ArrayList<TemplateForSearch> getTemplates(Project project, boolean addInternal, boolean addJ2EE, FileTemplateSource fileTemplateSource) {
         FileTemplateManager projectManager = getProjectManager(project);
         FileTemplateManager defaultManager = getDefaultManager();
-        HashSet<FileTemplate> fileTemplates = new HashSet<>();
+        ArrayList<FileTemplate> fileTemplates = new ArrayList<>();
 
         switch (fileTemplateSource) {
             case DEFAULT_ONLY:
-                fileTemplates.addAll(Arrays.asList(defaultManager.getAllTemplates()));
+                addIfNameUnique(fileTemplates, defaultManager.getAllTemplates());
                 break;
             case PROJECT_ONLY:
-                fileTemplates.addAll(Arrays.asList(projectManager.getAllTemplates()));
+                addIfNameUnique(fileTemplates, projectManager.getAllTemplates());
                 break;
             case PROJECT_PRIORITY:
-                fileTemplates.addAll(Arrays.asList(projectManager.getAllTemplates()));
-                fileTemplates.addAll(Arrays.asList(defaultManager.getAllTemplates()));
+                addIfNameUnique(fileTemplates, projectManager.getAllTemplates());
+                addIfNameUnique(fileTemplates, defaultManager.getAllTemplates());
                 break;
             case DEFAULT_PRIORITY:
-                fileTemplates.addAll(Arrays.asList(defaultManager.getAllTemplates()));
-                fileTemplates.addAll(Arrays.asList(projectManager.getAllTemplates()));
+                addIfNameUnique(fileTemplates, defaultManager.getAllTemplates());
+                addIfNameUnique(fileTemplates, projectManager.getAllTemplates());
                 break;
         }
 
 
         if (addInternal) {
-            fileTemplates.addAll(Arrays.asList(projectManager.getInternalTemplates()));
+            addIfNameUnique(fileTemplates, projectManager.getInternalTemplates());
         }
         if (addJ2EE) {
-            fileTemplates.addAll(Arrays.asList(projectManager.getTemplates(FileTemplateManager.J2EE_TEMPLATES_CATEGORY)));
+            addIfNameUnique(fileTemplates, projectManager.getTemplates(FileTemplateManager.J2EE_TEMPLATES_CATEGORY));
         }
-
 
         ArrayList<TemplateForSearch> listTemplateForSearch = new ArrayList(fileTemplates.size());
         for (FileTemplate template : fileTemplates) {
@@ -178,5 +187,27 @@ public class FileTemplateHelper {
     //=================================================================
     //  Edit
     //=================================================================
+
+
+    //=================================================================
+    //  Utils
+    //=================================================================
+    private static void addIfNameUnique(ArrayList<FileTemplate> to, FileTemplate[] from){
+        for (FileTemplate item : from){
+            if(!contains(to, item)){
+                to.add(item);
+            }
+        }
+    }
+
+    private static boolean contains(ArrayList<FileTemplate> list, FileTemplate template) {
+        for (FileTemplate item : list){
+            if(item.getName().equals(template.getName())){
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }

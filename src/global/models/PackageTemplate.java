@@ -35,7 +35,7 @@ public class PackageTemplate {
         pt.setName("NewPackageTemplate");
         pt.setDescription("Manual:\n1. Do foo\n2. Do bar");
         pt.setSkipRootDirectory(false);
-        pt.setFileTemplateSource(FileTemplateSource.DEFAULT_PRIORITY);
+        pt.setFileTemplateSource(FileTemplateSource.getDefault());
 
         return pt;
     }

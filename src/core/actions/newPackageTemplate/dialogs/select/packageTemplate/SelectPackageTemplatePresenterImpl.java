@@ -17,10 +17,10 @@ import global.Const;
 import global.models.Favourite;
 import global.models.PackageTemplate;
 import global.utils.Logger;
-import global.utils.NotificationHelper;
 import global.utils.factories.WrappersFactory;
 import global.utils.file.FileReaderUtil;
-import global.utils.file.FileValidator;
+import global.utils.file.FileWriter;
+import global.utils.templates.FileTemplateHelper;
 import global.utils.templates.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
 import global.utils.text.StringTools;
@@ -86,13 +86,34 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
         ConfigureDialog dialog = new ConfigureDialog(project) {
             @Override
             public void onSuccess(PackageTemplate packageTemplate) {
+                if (!FileTemplateHelper.isDefaultScheme(project)) {
+                    //ASK path
+                    int resultCode = Messages.showYesNoDialog(
+                            project,
+                            Localizer.get("title.SavePackageTemplate"),
+                            Localizer.get("text.WhereToSave"),
+                            Localizer.get("action.SelectPath"),
+                            Localizer.get("action.ToProjectDir"),
+                            Messages.getQuestionIcon()
+                    );
+                    //To Project
+                    if (resultCode == Messages.NO) {
+                        String rootDirPath = PackageTemplateHelper.getProjectRootDirPath(project);
+                        FileWriter.createDirectories( new File(rootDirPath).toPath());
+
+                        savePackageTemplate(packageTemplate, rootDirPath);
+                        return;
+                    }
+                }
+
+                selectPathAndSave(packageTemplate);
+            }
+
+            private void selectPathAndSave(PackageTemplate packageTemplate) {
                 VirtualFile[] files = FileChooser.chooseFiles(FileReaderUtil.getDirectoryDescriptor(), project,
                         LocalFileSystem.getInstance().findFileByIoFile(new File(PackageTemplateHelper.getRootDirPath())));
                 if (files.length > 0) {
-                    String path = String.format("%s/%s.%s", files[0].getPath(), packageTemplate.getName(), Const.PACKAGE_TEMPLATES_EXTENSION);
-                    PackageTemplateHelper.savePackageTemplate(packageTemplate, path);
-
-                    view.setPathBtnText(path);
+                    savePackageTemplate(packageTemplate, files[0].getPath() + File.separator);
                 }
             }
 
@@ -138,8 +159,8 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 
     @Override
     public void addFavourite(String path) {
-        if (!FileValidator.isUnderConfigDir(path)) {
-            Messages.showErrorDialog(project, String.format(Localizer.get("warning.select.fromConfigDir"), PackageTemplateHelper.getRootDirPath()), Localizer.get("title.SystemMessage"));
+        if(isDuplicateFavourite(path)){
+            Messages.showWarningDialog(Localizer.get("warning.FavouriteAlreadyExists"), "WarningDialog");
             return;
         }
 
@@ -148,6 +169,15 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
                 .save();
 
         view.updateFavouritesUI();
+    }
+
+    private boolean isDuplicateFavourite(String path) {
+        for(Favourite item : SaveUtil.reader().getListFavourite()){
+            if(item.getPath().equals(path)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -289,6 +319,12 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 
 
         PackageTemplateHelper.importPackageTemplate(project, ptWrappers, visitor.getHsFileTemplateNames(), selectedFiles, writeRules);
+    }
+
+    private void savePackageTemplate(PackageTemplate packageTemplate, String path) {
+        String finalPath = String.format("%s%s.%s", path, packageTemplate.getName(), Const.PACKAGE_TEMPLATES_EXTENSION);
+        PackageTemplateHelper.savePackageTemplate(packageTemplate, finalPath);
+        view.setPathBtnText(finalPath);
     }
 
 }

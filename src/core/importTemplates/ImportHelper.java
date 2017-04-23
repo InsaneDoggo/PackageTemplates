@@ -3,9 +3,12 @@ package core.importTemplates;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import core.actions.custom.CreateFileTemplateAction;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.undoTransparent.TransparentCopyFileAction;
+import core.actions.custom.undoTransparent.TransparentCreateFileAction;
+import core.actions.custom.undoTransparent.TransparentCreateSimpleDirectoryAction;
 import core.actions.custom.undoTransparent.TransparentDeleteFileAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
@@ -15,7 +18,12 @@ import core.exportTemplates.ExportHelper;
 import core.writeRules.WriteRules;
 import global.Const;
 import global.dialogs.SkipableNonCancelDialog;
+import global.models.PackageTemplate;
 import global.utils.Logger;
+import global.utils.factories.GsonFactory;
+import global.utils.file.FileWriter;
+import global.utils.templates.FileTemplateHelper;
+import global.utils.templates.FileTemplateSource;
 import global.utils.text.StringTools;
 import global.utils.i18n.Localizer;
 import global.utils.templates.PackageTemplateHelper;
@@ -44,6 +52,9 @@ public class ImportHelper {
         ArrayList<String> templateNamesToDelete;
         ArrayList<File> selectedFilesToDelete;
 
+        File packageTemplatesDir;
+        FileTemplateSource newFileTemplateSource;
+
         Context(Project project, ArrayList<PackageTemplateWrapper> ptWrappers, HashSet<String> requiredTemplateNames, ArrayList<File> selectedFiles, WriteRules writeRules) {
             this.project = project;
             this.ptWrappers = ptWrappers;
@@ -58,7 +69,8 @@ public class ImportHelper {
         }
     }
 
-    public static void importPackageTemplate(Project project, ArrayList<PackageTemplateWrapper> ptWrappers, HashSet<String> requiredTemplateNames, ArrayList<File> selectedFiles, WriteRules writeRules) {
+    public static void importPackageTemplate(Project project, ArrayList<PackageTemplateWrapper> ptWrappers,
+                                             HashSet<String> requiredTemplateNames, ArrayList<File> selectedFiles, WriteRules writeRules) {
         Context ctx = new Context(project, ptWrappers, requiredTemplateNames, selectedFiles, writeRules);
 
         //check all src
@@ -70,9 +82,22 @@ public class ImportHelper {
 
         // IMPORT
         // PackageTemplate Actions
-        for (File file : selectedFiles) {
-            File fileTo = new File(PackageTemplateHelper.getRootDirPath() + file.getName());
-            ctx.listSimpleAction.add(new TransparentCopyFileAction(file, fileTo));
+//        for (File file : selectedFiles) {
+        for (PackageTemplateWrapper ptWrapper: ptWrappers) {
+//            File fileTo = new File( ctx.packageTemplatesDir + File.separator +  file.getName());
+
+            ptWrapper.getPackageTemplate().setFileTemplateSource(ctx.newFileTemplateSource);
+            String ptJson = GsonFactory.getInstance().toJson(ptWrapper.getPackageTemplate(), PackageTemplate.class);
+
+            File ptFile = new File(String.format("%s%s%s.%s",
+                    ctx.packageTemplatesDir,
+                    File.separator,
+                    ptWrapper.getPackageTemplate().getName(),
+                    Const.PACKAGE_TEMPLATES_EXTENSION
+            ));
+
+            ctx.listSimpleAction.add(new TransparentCreateFileAction(ptFile, ptJson));
+//            ctx.listSimpleAction.add(new TransparentCopyFileAction(file, fileTo));
         }
 
         // FileTemplate Actions
@@ -137,36 +162,42 @@ public class ImportHelper {
         }
 
         //Verify existence of PackageTemplates in IDE
-        File packageTemplatesDir = PackageTemplateHelper.getRootDir();
+        File packageTemplatesDir = getCurrentRootDir(ctx);
+        if(packageTemplatesDir == null){
+            Logger.log("packageTemplatesDir == null");
+            return false;
+        }
+        ctx.packageTemplatesDir = packageTemplatesDir;
+
         for (File file : ctx.selectedFiles) {
             File templateFile = new File(packageTemplatesDir.getPath() + File.separator + file.getName());
             if (templateFile.exists() && !templateFile.isDirectory()) {
-                if(shouldSkipFile(ctx, templateFile, Localizer.get("warning.import.PackageTemplateAlreadyExist"))){
+                if (shouldSkipFile(ctx, templateFile, Localizer.get("warning.import.PackageTemplateAlreadyExist"))) {
                     ctx.selectedFilesToDelete.add(file);
                 }
             }
         }
 
         //Verify existence of FileTemplates in IDE
-        File[] userFiles = new File(ExportHelper.getFileTemplatesDirPath() + Const.DIR_USER).listFiles();
-        File[] internalFiles = new File(ExportHelper.getFileTemplatesDirPath() + Const.DIR_INTERNAL).listFiles();
-        File[] j2eeFiles = new File(ExportHelper.getFileTemplatesDirPath() + Const.DIR_J2EE).listFiles();
+        File[] userFiles = new File(FileTemplateHelper.getFileTemplatesDirPath(ctx.project) + Const.DIR_USER).listFiles();
+        File[] internalFiles = new File(FileTemplateHelper.getFileTemplatesDirPath(ctx.project) + Const.DIR_INTERNAL).listFiles();
+        File[] j2eeFiles = new File(FileTemplateHelper.getFileTemplatesDirPath(ctx.project) + Const.DIR_J2EE).listFiles();
 
         for (String templateName : ctx.requiredTemplateNames) {
             File file = ExportHelper.findInArrays(templateName, userFiles, internalFiles, j2eeFiles);
             if (file != null) {
-                if(shouldSkipFile(ctx, file, Localizer.get("warning.import.FileTemplateAlreadyExist"))){
+                if (shouldSkipFile(ctx, file, Localizer.get("warning.import.FileTemplateAlreadyExist"))) {
                     ctx.templateNamesToDelete.add(templateName);
                 }
             }
         }
 
         // Delete conflicted
-        for( String name : ctx.templateNamesToDelete){
+        for (String name : ctx.templateNamesToDelete) {
             ctx.requiredTemplateNames.remove(name);
         }
 
-        for( File file : ctx.selectedFilesToDelete){
+        for (File file : ctx.selectedFilesToDelete) {
             ctx.selectedFiles.remove(file);
         }
 
@@ -232,5 +263,41 @@ public class ImportHelper {
 
         return false;
     }
+
+
+    //=================================================================
+    //  Utils
+    //=================================================================
+    private static File getCurrentRootDir(Context ctx) {
+        if (FileTemplateHelper.isDefaultScheme(ctx.project)) {
+            return PackageTemplateHelper.getRootDir();
+        }
+
+        int resultCode = Messages.showYesNoDialog(
+                ctx.project,
+                Localizer.get("title.ImportPackageTemplate"),
+                Localizer.get("text.WhereToSave"),
+                Localizer.get("action.ToDefaultDir"),
+                Localizer.get("action.ToProjectDir"),
+                Messages.getQuestionIcon()
+        );
+        //To Default
+        if (resultCode == Messages.YES) {
+            ctx.newFileTemplateSource = FileTemplateSource.DEFAULT_ONLY;
+            return PackageTemplateHelper.getRootDir();
+        } else {
+            //To Project
+            ctx.newFileTemplateSource = FileTemplateSource.PROJECT_ONLY;
+            String rootDirPath = PackageTemplateHelper.getProjectRootDirPath(ctx.project);
+            if (rootDirPath == null) {
+                return null;
+            }
+
+            File file = new File(rootDirPath);
+            FileWriter.createDirectories(file.toPath());
+            return file;
+        }
+    }
+
 
 }

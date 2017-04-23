@@ -2,14 +2,14 @@ package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.keymap.Keymap;
-import com.intellij.openapi.keymap.KeymapManager;
+import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.SeparatorComponent;
+import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.components.JBScrollPane;
@@ -17,17 +17,20 @@ import com.intellij.util.IconUtil;
 import com.intellij.util.PlatformIcons;
 import core.actions.generated.BaseAction;
 import core.state.util.SaveUtil;
+import global.Const;
+import global.listeners.ClickListener;
 import global.models.Favourite;
 import global.models.PackageTemplate;
-import global.utils.Logger;
 import global.utils.file.FileReaderUtil;
 import global.utils.file.FileValidator;
+import global.utils.templates.FileTemplateHelper;
 import global.utils.templates.PackageTemplateHelper;
 import global.utils.i18n.Localizer;
 import global.views.FavouriteRadioButton;
 import icons.PluginIcons;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
+import org.intellij.lang.regexp.RegExpFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,6 +38,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -283,6 +287,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
 //        panel.add(new SeparatorComponent(), new CC().growX().spanX().wrap());
         panel.add(btnPath, new CC().pushX().growX().spanX());
+        addPathButtons();
 
         rbFromPath = new JBRadioButton(Localizer.get("label.FromPath"));
         rbFromPath.addItemListener(e -> {
@@ -294,7 +299,35 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                 );
             }
         });
+
         panel.add(rbFromPath, new CC().growX().spanX().wrap());
+    }
+
+    private void addPathButtons() {
+        JButton btnDefaultPath = new JButton(Localizer.get("label.SetDefaultDirPath"));
+        btnDefaultPath.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                btnPath.setText(PackageTemplateHelper.getRootDirPath());
+            }
+        });
+
+        if (FileTemplateHelper.isDefaultScheme(project)) {
+            panel.add(btnDefaultPath, new CC().spanX().wrap());
+            return;
+        } else {
+            panel.add(btnDefaultPath, new CC().spanX().split(2));
+        }
+
+        JButton btnProjectPath = new JButton(Localizer.get("label.SetProjectDirPath"));
+        btnProjectPath.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                btnPath.setText(PackageTemplateHelper.getProjectRootDirPath(project));
+            }
+        });
+
+        panel.add(btnProjectPath, new CC().wrap());
     }
 
     @Override
@@ -308,13 +341,15 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
     private ButtonGroup buttonGroup;
     private ArrayList<FavouriteRadioButton> listButtons;
     private JPanel favouritesPanel;
+    private JCheckBox cbCompactNames;
+    private boolean isCompactNames = true;
 
     private void makeFavourites() {
         favouritesPanel = new JPanel(new MigLayout());
         buttonGroup = new ButtonGroup();
         listButtons = new ArrayList<>();
         buttonGroup.add(rbFromPath);
-        panel.add(favouritesPanel, new CC().growX().spanX().wrap());
+        panel.add(favouritesPanel, new CC().pushX().growX().spanX().wrap());
 
         buildFavouritesUI();
     }
@@ -324,8 +359,15 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         createFavouriteRadioButtons();
 
         if (!listButtons.isEmpty()) {
+            cbCompactNames = new JCheckBox(Localizer.get("label.CompactNames"), isCompactNames);
+            cbCompactNames.addItemListener(e -> {
+                isCompactNames = e.getStateChange() == ItemEvent.SELECTED;
+                buildFavouritesUI();
+            });
+
             favouritesPanel.add(new SeparatorComponent(), new CC().growX().spanX().wrap());
             favouritesPanel.add(new JBLabel(Localizer.get("label.Favourites")), new CC().growX().spanX().pushX().wrap().alignX("center"));
+            favouritesPanel.add(cbCompactNames, new CC().spanX().wrap().gapY("0", "10pt"));
 
             for (JBRadioButton radioButton : listButtons) {
                 favouritesPanel.add(radioButton, new CC().growX().spanX().wrap());
@@ -363,6 +405,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         }
         listButtons.clear();
         favouritesPanel.removeAll();
+        favouritesPanel.revalidate();
     }
 
     private void createFavouriteRadioButtons() {
@@ -383,7 +426,15 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
                 continue;
             }
 
-            FavouriteRadioButton radioButton = new FavouriteRadioButton(PackageTemplateHelper.createNameFromPath(file), PluginIcons.PACKAGE_TEMPLATES);
+            String favName = file.getName();
+            if (!isCompactNames) {
+                favName = file.getPath();
+                if (favName.length() > Const.FAVOURITE_NAME_LIMIT) {
+                    favName = "..." + favName.substring(favName.length() - (Const.FAVOURITE_NAME_LIMIT - 2), favName.length());
+                }
+            }
+
+            FavouriteRadioButton radioButton = new FavouriteRadioButton(favName, PluginIcons.PACKAGE_TEMPLATES);
             radioButton.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     toggleSourcePath(
@@ -418,11 +469,10 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
         switch (sourceType) {
             case FAVOURITE:
-                actionAdd.setEnabled(false);
+//                actionAdd.setEnabled(false);
                 break;
             case PATH:
-                actionAdd.setEnabled(true);
-//                actionAddToFavourites.setEnabled(true);
+//                actionAdd.setEnabled(true);
                 break;
         }
     }

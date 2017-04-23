@@ -3,6 +3,7 @@ package core.exportTemplates;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.undoTransparent.TransparentCopyFileAction;
 import core.actions.custom.undoTransparent.TransparentCreateFileAction;
@@ -16,11 +17,11 @@ import global.Const;
 import global.dialogs.SkipableNonCancelDialog;
 import global.models.PackageTemplate;
 import global.utils.Logger;
-import global.utils.text.StringTools;
 import global.utils.factories.GsonFactory;
 import global.utils.i18n.Localizer;
+import global.utils.templates.FileTemplateHelper;
+import global.utils.text.StringTools;
 import global.wrappers.PackageTemplateWrapper;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -53,6 +54,10 @@ public class ExportHelper {
     @Nullable
     public static void exportPackageTemplate(Project project, String pathDir, PackageTemplateWrapper ptWrapper, HashSet<String> hsFileTemplateNames) {
         Context ctx = new Context(project, pathDir, ptWrapper, hsFileTemplateNames);
+
+        if (!isArgsValid(ctx)) {
+            return;
+        }
 
         File rootDir = new File(pathDir + File.separator + ptWrapper.getPackageTemplate().getName());
         if (rootDir.exists()) {
@@ -95,13 +100,35 @@ public class ExportHelper {
         File fileTemplateParentDir = new File(rootDir.getPath() + File.separator + FileTemplatesScheme.TEMPLATES_DIR);
         ctx.listSimpleAction.add(new TransparentCreateSimpleDirectoryAction(fileTemplateParentDir));
 
+
         // Write FileTemplates
-        File[] userFiles = new File(getFileTemplatesDirPath() + Const.DIR_USER).listFiles();
-        File[] internalFiles = new File(getFileTemplatesDirPath() + Const.DIR_INTERNAL).listFiles();
-        File[] j2eeFiles = new File(getFileTemplatesDirPath() + Const.DIR_J2EE).listFiles();
+        File[] userProjectFiles = new File[0];
+        if (!FileTemplateHelper.isDefaultScheme(ctx.project)) {
+            userProjectFiles = new File(FileTemplateHelper.getFileTemplatesDirPath(ctx.project) + Const.DIR_USER).listFiles();
+        }
+
+        File[] userDefaultFiles = new File(FileTemplateHelper.getFileTemplatesDefaultDirPath() + Const.DIR_USER).listFiles();
+        File[] internalFiles = new File(FileTemplateHelper.getFileTemplatesDirPath(ctx.project) + Const.DIR_INTERNAL).listFiles();
+        File[] j2eeFiles = new File(FileTemplateHelper.getFileTemplatesDirPath(ctx.project) + Const.DIR_J2EE).listFiles();
 
         for (String name : ctx.hsFileTemplateNames) {
-            File file = findInArrays(name, userFiles, internalFiles, j2eeFiles);
+            File file = null;
+
+            switch (ctx.ptWrapper.getPackageTemplate().getFileTemplateSource()) {
+                case DEFAULT_ONLY:
+                    file = findInArrays(name, userDefaultFiles, internalFiles, j2eeFiles);
+                    break;
+                case PROJECT_ONLY:
+                    file = findInArrays(name, userProjectFiles, internalFiles, j2eeFiles);
+                    break;
+                case PROJECT_PRIORITY:
+                    file = findInArrays(name, userProjectFiles, internalFiles, j2eeFiles, userDefaultFiles);
+                    break;
+                case DEFAULT_PRIORITY:
+                    file = findInArrays(name, userDefaultFiles, internalFiles, j2eeFiles, userProjectFiles);
+                    break;
+            }
+
             if (file != null) {
                 ctx.listSimpleAction.add(new TransparentCopyFileAction(file,
                         Paths.get(rootDir.getPath()
@@ -128,15 +155,24 @@ public class ExportHelper {
         ActionExecutor.runAsTransaction(actionRequest);
     }
 
+    private static boolean isArgsValid(Context ctx) {
+        if (FileTemplateHelper.isDefaultScheme(ctx.project)) {
+            switch (ctx.ptWrapper.getPackageTemplate().getFileTemplateSource()) {
+                case PROJECT_ONLY:
+                case PROJECT_PRIORITY:
+                case DEFAULT_PRIORITY:
+                    Messages.showWarningDialog(ctx.project, Localizer.get("warning.SwitchToProjectScheme"), "Warning Dialog");
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
 
     //=================================================================
     //  Utils
     //=================================================================
-    @NotNull
-    public static String getFileTemplatesDirPath() {
-        return FileTemplatesScheme.DEFAULT.getTemplatesDir() + File.separator;
-    }
-
     public static File findInArrays(String name, File[]... arrays) {
         for (int arrayPos = 0; arrayPos < arrays.length; arrayPos++) {
             File[] files = arrays[arrayPos];

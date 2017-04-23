@@ -108,10 +108,11 @@ public class PackageTemplateHelper {
 
     private static void preventNPE(PackageTemplate template) {
         // 0.3.0+
-        if(template.getListTextInjection() == null) template.setListTextInjection(new ArrayList<>());
+        if (template.getListTextInjection() == null) template.setListTextInjection(new ArrayList<>());
 
         // 0.4.0+
-        if(template.getFileTemplateSource() == null) template.setFileTemplateSource(FileTemplateSource.DEFAULT_PRIORITY);
+        if (template.getFileTemplateSource() == null)
+            template.setFileTemplateSource(FileTemplateSource.getDefault());
     }
 
 
@@ -128,9 +129,19 @@ public class PackageTemplateHelper {
         return Paths.get(PathManager.getConfigPath()).toString() + File.separator + Const.PACKAGE_TEMPLATES_DIR_NAME + File.separator;
     }
 
+    public static String getProjectRootDirPath(Project project) {
+        String templatesDirPath = FileTemplateHelper.getFileTemplatesDirPath(project);
+        File file = new File(templatesDirPath);
+        if (!file.exists()) {
+            return null;
+        }
+
+        return file.getParent() + File.separator + Const.PACKAGE_TEMPLATES_DIR_NAME + File.separator;
+    }
+
     public static File getRootDir() {
         File file = new File(getRootDirPath());
-        file.mkdirs();
+        FileWriter.createDirectories(file.toPath());
         return file;
     }
 

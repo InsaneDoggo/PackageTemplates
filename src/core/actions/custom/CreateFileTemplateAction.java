@@ -55,7 +55,7 @@ public class CreateFileTemplateAction extends SimpleAction {
             return;
         }
 
-        FileTemplateManager ftm = FileTemplateManager.getDefaultInstance();
+        FileTemplateManager ftm = FileTemplateManager.getInstance(project);
         FileTemplate oldTemplate = ftm.getTemplate(StringTools.getNameWithoutExtension(fileFrom.getName()));
 
         if (oldTemplate != null) {

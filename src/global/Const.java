@@ -10,7 +10,7 @@ import java.nio.charset.Charset;
  */
 public interface Const {
 
-    boolean IS_DEBUG = false;
+    boolean IS_DEBUG = true;
     boolean SHOULD_LOG_TO_NOTIFICATION = false;
 
     String EXPORT_FILE_NAME = "Templates.json";
@@ -26,10 +26,12 @@ public interface Const {
     String FILE_EXTENSION_SEPARATOR = ".";
 
     int MESSAGE_MAX_LENGTH = 50;
+    int FAVOURITE_NAME_LIMIT = 70;
 
     String DIR_USER = "";
     String DIR_INTERNAL = "internal";
-    String DIR_J2EE = FileTemplateManager.J2EE_TEMPLATES_CATEGORY.toLowerCase();
+    String DIR_J2EE = "j2ee";
+
 
     interface charsets {
         Charset UTF_8 = Charset.forName("UTF-8");

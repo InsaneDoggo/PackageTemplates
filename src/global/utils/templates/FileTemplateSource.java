@@ -23,7 +23,7 @@ public enum FileTemplateSource {
     }
 
     public static FileTemplateSource getDefault() {
-        return PROJECT_PRIORITY;
+        return DEFAULT_ONLY;
     }
 
 }
