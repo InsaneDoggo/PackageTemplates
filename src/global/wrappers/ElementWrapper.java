@@ -263,6 +263,7 @@ public abstract class ElementWrapper extends BaseWrapper {
         switch (getPackageTemplateWrapper().getPackageTemplate().getFileTemplateSource()){
             case PROJECT_ONLY:
             case PROJECT_PRIORITY:
+            case DEFAULT_PRIORITY:
                 if(FileTemplateHelper.isDefaultScheme(getPackageTemplateWrapper().getProject())){
                     Messages.showWarningDialog(getPackageTemplateWrapper().getProject(), Localizer.get("warning.SwitchToProjectScheme"), "Warning Dialog");
                     return;

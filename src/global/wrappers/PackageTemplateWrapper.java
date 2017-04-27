@@ -211,7 +211,7 @@ public class PackageTemplateWrapper {
         panelProperties.add(cbSkipRootDirectory, new CC().spanX().wrap());
         panelProperties.add(cbShowReportDialog, new CC().spanX().wrap());
         panelProperties.add(new JLabel(Localizer.get("FileTemplateSource")), new CC().spanX().split(2));
-        panelProperties.add(cboxFileTemplateSource, new CC().pushX().growX().wrap());
+        panelProperties.add(cboxFileTemplateSource, new CC().pushX().growX().wrap().gapBottom("8pt"));
 
     }
 

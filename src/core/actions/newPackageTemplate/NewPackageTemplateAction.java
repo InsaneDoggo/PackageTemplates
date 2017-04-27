@@ -3,17 +3,10 @@ package core.actions.newPackageTemplate;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.command.UndoConfirmationPolicy;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import core.actions.custom.InjectTextAction;
 import core.actions.custom.base.SimpleAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
@@ -21,28 +14,16 @@ import core.actions.executor.request.ActionRequest;
 import core.actions.executor.request.ActionRequestBuilder;
 import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
 import core.actions.newPackageTemplate.dialogs.select.packageTemplate.SelectPackageTemplateDialog;
-import core.regexp.RegexpHelperDialog;
 import core.report.ReportHelper;
 import core.report.dialogs.ReportDialog;
-import core.search.SearchAction;
-import core.search.SearchActionType;
-import core.search.SearchEngine;
-import core.search.customPath.CustomPath;
-import core.textInjection.InjectDirection;
-import core.textInjection.TextInjection;
-import core.textInjection.VelocityHelper;
 import global.models.PackageTemplate;
-import global.utils.Logger;
 import global.utils.factories.WrappersFactory;
 import global.utils.file.PathHelper;
-import global.utils.file.PsiHelper;
 import global.utils.i18n.Localizer;
 import global.utils.templates.FileTemplateHelper;
 import global.wrappers.PackageTemplateWrapper;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -58,19 +39,19 @@ public class NewPackageTemplateAction extends AnAction {
         virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         project = event.getProject();
 
-//        Logger.log("actionPerformed ");
-//        if (true) {
-//            CommandProcessor.getInstance().executeCommand(project, () -> {
-//                ApplicationManager.getApplication().runWriteAction(() -> {
-//                                        testCode(project, event);
-//                });
-//            }, "comTest", null);
-//            return;
-//        }
-
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
             public void onSuccess(PackageTemplate pt) {
+                switch (pt.getFileTemplateSource()) {
+                    case PROJECT_ONLY:
+                    case PROJECT_PRIORITY:
+                    case DEFAULT_PRIORITY:
+                        if (FileTemplateHelper.isDefaultScheme(project)) {
+                            Messages.showWarningDialog(project, Localizer.get("warning.SwitchToProjectScheme"), "Warning Dialog");
+                            return;
+                        }
+                }
+
                 if (pt.isSkipDefiningNames()) {
                     executeTemplateSilently(pt, project, virtualFile);
                 } else {
@@ -80,48 +61,6 @@ public class NewPackageTemplateAction extends AnAction {
         };
         dialog.show();
     }
-
-
-    //=================================================================
-    //  TEST ZONE START
-    //=================================================================
-    private void testCode(Project project, AnActionEvent event) {
-        PsiFile psiFile = PsiHelper.findPsiFileByPath(project, "E:/WORK/IdeaProjects/PluginTests/src/com/company/Main.java");
-        if (psiFile == null) {
-            Logger.log("Fail: findPsiFileByPath");
-            return;
-        }
-
-        ReadonlyStatusHandler.OperationStatus status = ReadonlyStatusHandler.getInstance(project).ensureFilesWritable(psiFile.getVirtualFile());
-        if (status.hasReadonlyFiles()) {
-            Logger.log("Fail: testCode Readonly");
-            return;
-        }
-
-        Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
-        int offset = document.getText().indexOf("line_2");
-        int lineNumber = document.getLineNumber(offset);
-        int lineEndOffset = document.getLineEndOffset(lineNumber);
-
-        String textToInsert = fromVelocity("String ${DDD};");
-        document.insertString(lineEndOffset, textToInsert);
-    }
-
-    @NotNull
-    private String fromVelocity(String velocityTemplate) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("DDD", "SomeValue");
-
-        String fromTemplate = VelocityHelper.fromTemplate(velocityTemplate, map);
-        if (fromTemplate == null) {
-            return "";
-        }
-        return fromTemplate;
-    }
-    //=================================================================
-    //  TEST ZONE END
-    //=================================================================
-
 
     private static void preExecuteTemplate(Project project, VirtualFile virtualFile, PackageTemplateWrapper ptWrapper) {
         ptWrapper.getExecutionContext().virtualFile = virtualFile;
@@ -137,16 +76,6 @@ public class NewPackageTemplateAction extends AnAction {
     }
 
     public static void showDialog(PackageTemplate packageTemplate, Project project, VirtualFile virtualFile) {
-        switch (packageTemplate.getFileTemplateSource()) {
-            case PROJECT_ONLY:
-            case PROJECT_PRIORITY:
-            case DEFAULT_PRIORITY:
-                if (FileTemplateHelper.isDefaultScheme(project)) {
-                    Messages.showWarningDialog(project, Localizer.get("warning.SwitchToProjectScheme"), "Warning Dialog");
-                    return;
-                }
-        }
-
         new ImplementDialog(project, String.format(Localizer.get("NewPackageFromS"),
                 packageTemplate.getName()), packageTemplate, virtualFile) {
             @Override
