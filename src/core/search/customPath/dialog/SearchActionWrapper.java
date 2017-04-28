@@ -111,6 +111,7 @@ public class SearchActionWrapper {
         ArrayList<SearchActionType> actionTypes = new ArrayList<>();
         actionTypes.add(SearchActionType.DIR_ABOVE);
         actionTypes.add(SearchActionType.DIR_BELOW);
+        actionTypes.add(SearchActionType.DIR_PARENT);
         actionTypes.add(SearchActionType.FILE);
 
         cmbActionTypes = new ComboBox(actionTypes.toArray());

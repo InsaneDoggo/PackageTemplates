@@ -43,6 +43,8 @@ public class SearchEngine {
                     break;
                 case DIR_BELOW:
                     curDir = getEngine().findDirBelow(curDir, action);
+                case DIR_PARENT:
+                    curDir = curDir.getParentFile();
                     break;
                 case FILE:
                     curDir = getEngine().findFile(curDir, action);

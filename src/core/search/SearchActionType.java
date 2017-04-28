@@ -8,7 +8,8 @@ import com.google.gson.annotations.SerializedName;
 public enum SearchActionType {
     @SerializedName("FILE") FILE("searchAction.File"),
     @SerializedName("DIR_ABOVE") DIR_ABOVE("searchAction.DirAbove"),
-    @SerializedName("DIR_BELOW") DIR_BELOW("searchAction.DirBelow");
+    @SerializedName("DIR_BELOW") DIR_BELOW("searchAction.DirBelow"),
+    @SerializedName("DIR_PARENT") DIR_PARENT("searchAction.DirParent");
 
     private String nameLangKey;
 
@@ -19,4 +20,5 @@ public enum SearchActionType {
     public String getNameLangKey() {
         return nameLangKey;
     }
+
 }

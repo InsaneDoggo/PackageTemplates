@@ -19,6 +19,7 @@ public class SearchActionTypeCellRenderer extends ListCellRendererWrapper<Search
             switch (actionType) {
                 case DIR_ABOVE:
                 case DIR_BELOW:
+                case DIR_PARENT:
                     setIcon(AllIcons.Nodes.Package);
                     break;
                 case FILE:
