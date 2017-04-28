@@ -6,7 +6,6 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
 import core.actions.newPackageTemplate.dialogs.select.fileTemplate.SelectFileTemplateDialog;
@@ -17,6 +16,7 @@ import core.writeRules.dialog.WriteRulesDialog;
 import global.listeners.ClickListener;
 import global.models.BaseElement;
 import core.writeRules.WriteRules;
+import global.models.File;
 import global.utils.Logger;
 import global.utils.factories.GsonFactory;
 import global.utils.factories.WrappersFactory;
@@ -74,23 +74,33 @@ public abstract class ElementWrapper extends BaseWrapper {
 
         JMenuItem itemAddFile = new JBMenuItem(Localizer.get("AddFile"), AllIcons.FileTypes.Text);
         JMenuItem itemAddDirectory = new JBMenuItem(Localizer.get("AddDirectory"), AllIcons.Nodes.Package);
+        JMenuItem itemChangeFileTemplate = new JBMenuItem(Localizer.get("action.ChangeFileTemplate"), AllIcons.Actions.Edit);
         JMenuItem itemDelete = new JBMenuItem(Localizer.get("Delete"), AllIcons.Actions.Delete);
 
         itemAddFile.addActionListener(e -> AddFile());
         itemAddDirectory.addActionListener(e -> addDirectory());
         itemDelete.addActionListener(e -> deleteElement());
+
+        popupMenu.add(itemAddFile);
+        popupMenu.add(itemAddDirectory);
+
         // if NOT root element
         if (getParent() != null) {
             popupMenu.add(itemDelete);
         }
 
-        popupMenu.add(itemAddFile);
-        popupMenu.add(itemAddDirectory);
+        // Dir Specific
+        if (isDirectory()) {
+            //nothing
+        } else {
+            // File Specific
+            itemChangeFileTemplate.addActionListener(e -> changeFileTemplate());
+            popupMenu.add(itemChangeFileTemplate);
+        }
 
         addScriptMenuItems(popupMenu);
         addCustomPathMenuItems(popupMenu);
         addWriteRulesMenuItems(popupMenu);
-
 
         popupMenu.show(jlName, mouseEvent.getX(), mouseEvent.getY());
     }
@@ -260,14 +270,9 @@ public abstract class ElementWrapper extends BaseWrapper {
     }
 
     public void AddFile() {
-        switch (getPackageTemplateWrapper().getPackageTemplate().getFileTemplateSource()){
-            case PROJECT_ONLY:
-            case PROJECT_PRIORITY:
-            case DEFAULT_PRIORITY:
-                if(FileTemplateHelper.isDefaultScheme(getPackageTemplateWrapper().getProject())){
-                    Messages.showWarningDialog(getPackageTemplateWrapper().getProject(), Localizer.get("warning.SwitchToProjectScheme"), "Warning Dialog");
-                    return;
-                }
+        if (!FileTemplateHelper.isCurrentSchemeValid(packageTemplateWrapper.getProject(),
+                packageTemplateWrapper.getPackageTemplate().getFileTemplateSource())) {
+            return;
         }
 
         SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(getPackageTemplateWrapper().getProject(), getPackageTemplateWrapper()) {
@@ -282,6 +287,31 @@ public abstract class ElementWrapper extends BaseWrapper {
                     parent = getParent();
                 }
                 parent.addElement(WrappersFactory.createNewWrappedFile(parent, fileTemplate.getName(), fileTemplate.getExtension()));
+                parent.reBuildEllements();
+            }
+
+            @Override
+            public void onCancel() {
+            }
+        };
+        dialog.show();
+    }
+
+    private void changeFileTemplate() {
+        if (!FileTemplateHelper.isCurrentSchemeValid(packageTemplateWrapper.getProject(),
+                packageTemplateWrapper.getPackageTemplate().getFileTemplateSource())) {
+            return;
+        }
+
+        SelectFileTemplateDialog dialog = new SelectFileTemplateDialog(getPackageTemplateWrapper().getProject(), getPackageTemplateWrapper()) {
+            @Override
+            public void onSuccess(FileTemplate fileTemplate) {
+                getPackageTemplateWrapper().collectDataFromFields();
+
+                File file = (File) getElement();
+                file.setTemplateName(fileTemplate.getName());
+                file.setExtension(fileTemplate.getExtension());
+
                 parent.reBuildEllements();
             }
 

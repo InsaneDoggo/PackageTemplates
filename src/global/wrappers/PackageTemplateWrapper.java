@@ -97,7 +97,7 @@ public class PackageTemplateWrapper {
 
 
         // Globals
-        panel.add(new SeparatorComponent(0), new CC().pushX().growX().wrap().spanX());
+        panel.add(new SeparatorComponent(6), new CC().pushX().growX().wrap().spanX());
         JLabel jlGlobals = new JLabel(Localizer.get("GlobalVariables"), JLabel.CENTER);
         panel.add(jlGlobals, new CC().wrap().growX().pushX().spanX().gapY("0", "4pt"));
 
@@ -108,7 +108,7 @@ public class PackageTemplateWrapper {
 
 
         // Files and Directories | Elements
-        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
+        panel.add(new SeparatorComponent(6), new CC().pushX().growX().wrap().spanX());
         JLabel jlFilesAndDirs = new JLabel(Localizer.get("FilesAndDirs"), JLabel.CENTER);
         panel.add(jlFilesAndDirs, new CC().wrap().growX().pushX().spanX().gapY("0", "4pt"));
 
@@ -118,7 +118,7 @@ public class PackageTemplateWrapper {
 
 
         // Text Injection
-        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
+        panel.add(new SeparatorComponent(6), new CC().pushX().growX().wrap().spanX());
         JLabel jlTextInjection = new JLabel(Localizer.get("TextInjection"), JLabel.CENTER);
         panel.add(jlTextInjection, new CC().wrap().growX().pushX().spanX());
 
@@ -211,7 +211,7 @@ public class PackageTemplateWrapper {
         panelProperties.add(cbSkipRootDirectory, new CC().spanX().wrap());
         panelProperties.add(cbShowReportDialog, new CC().spanX().wrap());
         panelProperties.add(new JLabel(Localizer.get("FileTemplateSource")), new CC().spanX().split(2));
-        panelProperties.add(cboxFileTemplateSource, new CC().pushX().growX().wrap().gapBottom("8pt"));
+        panelProperties.add(cboxFileTemplateSource, new CC().pushX().growX().wrap());
 
     }
 
@@ -296,6 +296,7 @@ public class PackageTemplateWrapper {
     public void reBuildElements() {
         panelElements.removeAll();
         buildElements();
+        panel.repaint();
         packParentContainer();
     }
 

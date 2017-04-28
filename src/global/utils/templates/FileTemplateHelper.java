@@ -5,8 +5,10 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.openapi.options.SchemeState;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.util.ArrayUtil;
 import global.models.TemplateForSearch;
+import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -192,22 +194,36 @@ public class FileTemplateHelper {
     //=================================================================
     //  Utils
     //=================================================================
-    private static void addIfNameUnique(ArrayList<FileTemplate> to, FileTemplate[] from){
-        for (FileTemplate item : from){
-            if(!contains(to, item)){
+    private static void addIfNameUnique(ArrayList<FileTemplate> to, FileTemplate[] from) {
+        for (FileTemplate item : from) {
+            if (!contains(to, item)) {
                 to.add(item);
             }
         }
     }
 
     private static boolean contains(ArrayList<FileTemplate> list, FileTemplate template) {
-        for (FileTemplate item : list){
-            if(item.getName().equals(template.getName())){
+        for (FileTemplate item : list) {
+            if (item.getName().equals(template.getName())) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public static boolean isCurrentSchemeValid(Project project, FileTemplateSource fileTemplateSource) {
+        switch (fileTemplateSource) {
+            case PROJECT_ONLY:
+            case PROJECT_PRIORITY:
+            case DEFAULT_PRIORITY:
+                if (FileTemplateHelper.isDefaultScheme(project)) {
+                    Messages.showWarningDialog(project, Localizer.get("warning.SwitchToProjectScheme"), "Warning Dialog");
+                    return false;
+                }
+        }
+
+        return true;
     }
 
 }

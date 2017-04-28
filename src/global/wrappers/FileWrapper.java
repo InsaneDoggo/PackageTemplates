@@ -1,11 +1,11 @@
 package global.wrappers;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.components.JBCheckBox;
-import core.writeRules.WriteRules;
 import global.models.BaseElement;
 import global.models.File;
 import global.utils.i18n.Localizer;
