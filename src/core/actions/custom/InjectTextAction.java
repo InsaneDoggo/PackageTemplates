@@ -143,8 +143,12 @@ public class InjectTextAction extends SimpleAction {
                 return getDirectedOffset(document, injectDirection);
             case START_OF_FILE:
                 return 0;
+            case SOF_END_OF_LINE:
+                return document.getLineEndOffset(0);
             case END_OF_FILE:
                 return document.getText().length() - 1;
+            case EOF_START_OF_LINE:
+                return document.getLineStartOffset(document.getLineCount() - 1);
         }
 
         throw new RuntimeException("Unknown InjectDirection");

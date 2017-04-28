@@ -87,7 +87,9 @@ public abstract class TextInjectionDialog extends BaseDialog {
         directions.add(InjectDirection.NEXT_LINE);
         directions.add(InjectDirection.REPLACE);
         directions.add(InjectDirection.START_OF_FILE);
+        directions.add(InjectDirection.SOF_END_OF_LINE);
         directions.add(InjectDirection.END_OF_FILE);
+        directions.add(InjectDirection.EOF_START_OF_LINE);
 
         JLabel jlInjectDirection = new JLabel(Localizer.get("label.InjectDirection"));
         cmbDirection = new ComboBox(directions.toArray());
