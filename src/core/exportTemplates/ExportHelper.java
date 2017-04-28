@@ -55,7 +55,7 @@ public class ExportHelper {
     public static void exportPackageTemplate(Project project, String pathDir, PackageTemplateWrapper ptWrapper, HashSet<String> hsFileTemplateNames) {
         Context ctx = new Context(project, pathDir, ptWrapper, hsFileTemplateNames);
 
-        if (!isArgsValid(ctx)) {
+        if (!FileTemplateHelper.isCurrentSchemeValid(ctx.project, ptWrapper.getPackageTemplate().getFileTemplateSource())) {
             return;
         }
 
@@ -153,20 +153,6 @@ public class ExportHelper {
                 .build();
 
         ActionExecutor.runAsTransaction(actionRequest);
-    }
-
-    private static boolean isArgsValid(Context ctx) {
-        if (FileTemplateHelper.isDefaultScheme(ctx.project)) {
-            switch (ctx.ptWrapper.getPackageTemplate().getFileTemplateSource()) {
-                case PROJECT_ONLY:
-                case PROJECT_PRIORITY:
-                case DEFAULT_PRIORITY:
-                    Messages.showWarningDialog(ctx.project, Localizer.get("warning.SwitchToProjectScheme"), "Warning Dialog");
-                    return false;
-            }
-        }
-
-        return true;
     }
 
 

@@ -42,14 +42,8 @@ public class NewPackageTemplateAction extends AnAction {
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
             public void onSuccess(PackageTemplate pt) {
-                switch (pt.getFileTemplateSource()) {
-                    case PROJECT_ONLY:
-                    case PROJECT_PRIORITY:
-                    case DEFAULT_PRIORITY:
-                        if (FileTemplateHelper.isDefaultScheme(project)) {
-                            Messages.showWarningDialog(project, Localizer.get("warning.SwitchToProjectScheme"), "Warning Dialog");
-                            return;
-                        }
+                if (!FileTemplateHelper.isCurrentSchemeValid(project, pt.getFileTemplateSource())) {
+                    return;
                 }
 
                 if (pt.isSkipDefiningNames()) {
