@@ -26,6 +26,7 @@ mailto_developer: mailto:doter.ua@gmail.com
 #miscellaneous
 javascript: https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/JavaScript_basics
 regexp_docs: http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
+dropbox: https://www.dropbox.com/
 
 tutorials: /tutorials/
 
@@ -54,6 +55,9 @@ tutorial_custom_path:
 tutorial_text_injection:
   ru: /tutorials/ru/text_injection/
   en: /tutorials/en/text_injection/
+tutorial_impex:
+  ru: /tutorials/ru/impex/
+  en: /tutorials/en/impex/
 
 # other by lang key: example[page.lang]
 other_appcode_groups:
