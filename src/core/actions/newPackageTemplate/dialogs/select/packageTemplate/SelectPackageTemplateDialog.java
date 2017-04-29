@@ -1,6 +1,7 @@
 package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
@@ -114,6 +115,10 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         return action;
     }
 
+    @Override
+    protected void doHelpAction() {
+        BrowserUtil.browse(Const.TUTORIALS_URL);
+    }
 
     //=================================================================
     //  Validation

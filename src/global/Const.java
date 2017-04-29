@@ -32,6 +32,8 @@ public interface Const {
     String DIR_INTERNAL = "internal";
     String DIR_J2EE = "j2ee";
 
+    String TUTORIALS_URL = "http://ceh9.github.io/PackageTemplates/";
+
 
     interface charsets {
         Charset UTF_8 = Charset.forName("UTF-8");
