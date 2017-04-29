@@ -28,6 +28,7 @@ order: 2
 
 **Примечание:** **{{ site.data.const.favourites }}** запоминает путь к файлу. Если при запуске IDE по сохраненному пути не будет файла, то шаблон автоматически удалится из списка **{{ site.data.const.favourites }}**. 
 
+
 [1]: {{ site.baseurl}}{{ site.data.links.tutorial_shortcuts[page.lang] }}
 [2]: {{ site.baseurl}}{{ site.data.links.tutorial_impex[page.lang] }}#export
 [3]: {{ site.baseurl}}{{ site.data.links.tutorial_impex[page.lang] }}#import

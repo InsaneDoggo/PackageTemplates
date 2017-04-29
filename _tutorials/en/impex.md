@@ -24,5 +24,15 @@ For import template you should specify path to file. When you import regularly i
 ### Use Case
 Suppose that you work in team and want to share your templates. To do this, you need to share dir where you will export the templates. You can do it via third-party services such as [Dropbox][1]. After that, your colleagues should specify this folder for AutoImport and use **Update Action** after templates changes.
 
+### Schemes <a name="schemes"></a>
+
+* if current scheme is **Default**, then import works as usual.
+* if current scheme is **Project**, then appears following dialog:
+
+![where_to_save_dialog]({{ site.baseurl }}/images/tutorial/where_to_save_dialog.png){: .image}
+
+Depends on your choice [FileTemplate Source][3] of PackageTemplates will be set to **DEFAULT_ONLY** or **PROJECT_ONLY**.
+
 [1]: {{ site.data.links.dropbox }}
 [2]: {{ site.baseurl}}{{ site.data.links.tutorial_write_rules[page.lang] }}
+[3]: {{ site.baseurl}}{{ site.data.links.tutorial_file_template_source[page.lang] }}

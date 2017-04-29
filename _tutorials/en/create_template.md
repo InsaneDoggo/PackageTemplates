@@ -10,13 +10,14 @@ order: 3
 2. Skip the [presettings][3] dialog.
 3. Skip root directory. Let you create files only.
 4. Show report after successful execution.
-5. [Global variables][1].
-6. Template structure. You can add\remove elements by right-click menu.<br>
+5. [FileTemplate Source][8].
+6. [Global variables][1].
+7. Template structure. You can add\remove elements by right-click menu.<br>
 **A.** On\Off element creating<br>
 **B.** [Script][5]<br>
 **C.** [Custom Path][6]<br>
 **D.** [Write Rules][2]<br>
-7. Add [Text Injection][7]
+8. Add [Text Injection][7]
 
 ### Addition Element
 
@@ -39,3 +40,4 @@ To have a better understanding of this example, be familiar with other tutorials
 [5]: {{ site.baseurl}}{{ site.data.links.tutorial_script[page.lang] }}
 [6]: {{ site.baseurl}}{{ site.data.links.tutorial_custom_path[page.lang] }}
 [7]: {{ site.baseurl}}{{ site.data.links.tutorial_text_injection[page.lang] }}
+[8]: {{ site.baseurl}}{{ site.data.links.tutorial_file_template_source[page.lang] }}

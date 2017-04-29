@@ -5,6 +5,7 @@
 # JetBrains
 file_template_variables: https://www.jetbrains.com/help/idea/2017.1/file-template-variables.html
 file_templates: https://www.jetbrains.com/help/idea/2017.1/file-and-code-templates.html
+file_templates_schemes: https://www.jetbrains.com/help/idea/2017.1/file-and-code-templates.html#d880990e142
 
 shortcuts: https://www.jetbrains.com/help/idea/2017.1/configuring-keyboard-shortcuts.html#d2040983e232
 shortcuts_actions: https://www.jetbrains.com/help/idea/2017.1/keymap.html#d1413854e312
@@ -58,6 +59,9 @@ tutorial_text_injection:
 tutorial_impex:
   ru: /tutorials/ru/impex/
   en: /tutorials/en/impex/
+tutorial_file_template_source:
+  ru: /tutorials/ru/file_template_source/
+  en: /tutorials/en/file_template_source/
 
 # other by lang key: example[page.lang]
 other_appcode_groups:

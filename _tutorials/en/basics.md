@@ -28,6 +28,7 @@ Exists two way:
 
 **Note:** **{{ site.data.const.favourites }}** store path to file. If file will be not found while IDE starts then template will be removed from **{{ site.data.const.favourites }}** automatically. 
 
+
 [1]: {{ site.baseurl}}{{ site.data.links.tutorial_shortcuts[page.lang] }}
 [2]: {{ site.baseurl}}{{ site.data.links.tutorial_impex[page.lang] }}#export
 [3]: {{ site.baseurl}}{{ site.data.links.tutorial_impex[page.lang] }}#import
