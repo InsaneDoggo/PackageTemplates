@@ -13,7 +13,7 @@ Similarly to **FileTemplates PackageTemplates** are stored in the following loca
 * The default (global) templates are stored in the IntelliJ IDEA home directory, in the folder **config / PackageTemplates**
 * The per-project templates are stored in the **.idea / PackageTemplates** folder. These templates can be shared among the team members.
 
-Schemes have influence on Import (details [here][2]).
+**Note:** Schemes have influence on [Import][2].
 
 [1]: {{ site.data.links.file_templates_schemes }}
 [2]: {{ site.baseurl}}{{ site.data.links.tutorial_impex[page.lang] }}#schemes

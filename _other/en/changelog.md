@@ -5,9 +5,15 @@ layout: other
 css: tutorials.css
 ---
 
-### v0.1.0
+### v0.4.0
 
-Initial version.
+blabla
+
+### v0.3.0
+
+* Добавлен [Text Injection][1]
+* [Global Variables][2] a little bit reworked.
+* UI improvements.
 
 ### v0.2.0 
 
@@ -20,12 +26,9 @@ General changes:
 * Write Rules.
 * UI improvements.
 
-### v0.3.0
+### v0.1.0
 
-* Добавлен [Text Injection][1]
-* [Global Variables][2] a little bit reworked.
-* UI improvements.
-
+Initial version.
 
 [1]: {{ site.baseurl}}{{ site.data.links.tutorial_text_injection[page.lang] }}
 [2]: {{ site.baseurl}}{{ site.data.links.tutorial_global_variables[page.lang] }}

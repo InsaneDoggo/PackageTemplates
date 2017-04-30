@@ -62,6 +62,9 @@ tutorial_impex:
 tutorial_file_template_source:
   ru: /tutorials/ru/file_template_source/
   en: /tutorials/en/file_template_source/
+tutorial_scheme:
+  ru: /tutorials/ru/scheme/
+  en: /tutorials/en/scheme/
 
 # other by lang key: example[page.lang]
 other_appcode_groups:
