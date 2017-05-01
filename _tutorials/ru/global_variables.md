@@ -1,7 +1,7 @@
 ---
 title: Глобальные переменные
 lang: ru
-order: 5
+navigation: global_variables
 ---
 
 Глобальные переменные похожи на [переменные][1] в [File Templates][2].

@@ -1,7 +1,7 @@
 ---
 title: Text Injection
 lang: en
-order: 7
+navigation: text_injection
 ---
 
 Text Injection allow you to insert text to file.
@@ -21,7 +21,17 @@ Text Injection allow you to insert text to file.
 
 ![inject_direction_dropdown]({{ site.baseurl }}/images/tutorial/inject_direction_dropdown.png){: .imageFragment}
 
-Example:
+**Example:**
+
+* **BEFORE** = `Before`
+* **AFTER** = `After`
+* **PREV_LINE** = `Prev Line`
+* **NEXT_LINE** = `Next Line`
+* **REPLACE** = `Replace`
+* **START_OF_FILE** = `Start of File`
+* **SOF_END_OF_LINE** = `Start of File, End of line`
+* **END_OF_FILE** = `End of File`
+* **EOF_START_OF_LINE** = `End of File, Start of line`
 
 ![injection_directions_example]({{ site.baseurl }}/images/tutorial/injection_directions_example.png){: .imageFragment}
 

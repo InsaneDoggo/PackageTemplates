@@ -1,7 +1,7 @@
 ---
 title: Basics
 lang: en
-order: 2
+navigation: basics
 ---
 
 Open context menu and select **PackageTemplates** from **new** to open **Package Templates** dialog. Also you can use [Shortcuts][1].

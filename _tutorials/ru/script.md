@@ -1,7 +1,7 @@
 ---
 title: Script
 lang: ru
-order: 6
+navigation: script
 ---
 
 Скрипт пишется на популярном языке [JavaScript][1] и позволяет модифицировать:

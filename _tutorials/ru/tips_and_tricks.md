@@ -1,7 +1,7 @@
 ---
 title: Советы
 lang: ru
-order: 13
+navigation: tips_and_tricks
 ---
 
 ### Уникальные имена для File Template

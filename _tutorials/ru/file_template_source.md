@@ -1,7 +1,7 @@
 ---
 title: Источник FileTemplate
 lang: ru
-order: 2
+navigation: file_template_source
 ---
 
 У вас могут быть шаблоны с одинаковыми именами, но в разных [схемах][1]. **Источник FileTemplate** определяет, где искать шаблоны.

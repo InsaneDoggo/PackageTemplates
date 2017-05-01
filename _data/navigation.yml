@@ -1,0 +1,19 @@
+# Usage: 
+# {{ site.data.navigation }}
+
+tutorials:
+  - install
+  - basics
+  - create_template
+  - presettings
+  - global_variables
+  - script
+  - write_rules
+  - custom_path
+  - text_injection
+  - scheme
+  - file_template_source
+  - impex
+  - errors
+  - shortcuts
+  - tips_and_tricks

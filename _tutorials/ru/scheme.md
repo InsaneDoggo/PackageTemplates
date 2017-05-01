@@ -1,7 +1,7 @@
 ---
 title: Схема
 lang: ru
-order: 2
+navigation: scheme
 ---
 
 Прежде всего нужно ознакомиться с [Per-project vs default scheme][1]. Плагин поддерживает обе схемы. Схема изменяется в настройках IDE:

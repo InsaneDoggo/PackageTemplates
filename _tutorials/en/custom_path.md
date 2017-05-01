@@ -1,7 +1,7 @@
 ---
 title: Custom Path
 lang: en
-order: 9
+navigation: custom_path
 ---
 
 This feature allows you to search for directories and files. Each element of the template can use **CustomPath**. The found directory will be the parent for the template element (If **CustomPath** searches for the file then the item will be created in the same directory with file).

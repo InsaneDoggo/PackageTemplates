@@ -1,7 +1,7 @@
 ---
 title: Сочетания клавиш
 lang: ru
-order: 12
+navigation: shortcuts
 ---
 
 Сочетания клавиш хорошо описаны в документации от **jetbrains:**<br>

@@ -1,7 +1,7 @@
 ---
 title: Tips and Tricks
 lang: en
-order: 13
+navigation: tips_and_tricks
 ---
 
 ### Unique names for File Templates

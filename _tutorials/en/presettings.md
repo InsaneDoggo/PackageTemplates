@@ -1,7 +1,7 @@
 ---
 title: Presettings
 lang: en
-order: 4
+navigation: presettings
 ---
 
 When you select a template you will see **Presettings Dialog**. It similar to the **Edit Dialog** but with less options:

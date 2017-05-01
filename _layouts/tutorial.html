@@ -1,25 +1,13 @@
 ---
 layout: default
 ---
-{% assign tutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" | sort: 'order' %}
-{% assign nextOrder = page.order | plus: 1 %}
-{% assign prevOrder = page.order | minus: 1 %}
-{% assign nextTutorial = tutorials | where:"order", nextOrder | first %}
-{% assign prevTutorial = tutorials | where:"order", prevOrder | first %}
+
 <h1>{{ page.title }}</h1>
 
 {{ content }}
 
-<br><hr>
-<!-- Предыдущий -->
+
 <div><div id="footerNavigation"div>
-{% if prevTutorial %}
-	<a class="prevUrl" href="{{ site.baseurl }}{{ prevTutorial.url }}">{{ site.data.i18n.prev[page.lang] }}</a> 
-{% endif %}
 <!-- Содержание -->
-<a href="{{ site.baseurl }}/{{ page.lang }}">{{ site.data.i18n.tableOfContents[page.lang] }}</a>
-<!-- Следующий -->
-{% if nextTutorial %}
-	<a class="nextUrl" href="{{ site.baseurl }}{{ nextTutorial.url }}">{{ site.data.i18n.next[page.lang] }}</a>
-{% endif %}
+<a href="{{ site.baseurl }}/{{ page.lang }}">{{ site.data.i18n.back[page.lang] }}</a>
 </div></div>

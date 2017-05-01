@@ -1,7 +1,7 @@
 ---
 title: Write Rules
 lang: en
-order: 10
+navigation: write_rules
 ---
 
 ### Example

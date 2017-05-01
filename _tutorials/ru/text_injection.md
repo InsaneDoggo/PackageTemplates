@@ -1,7 +1,7 @@
 ---
 title: Вставка текста (Text Injection)
 lang: ru
-order: 7
+navigation: text_injection
 ---
 
 Text Injection позволяет вставить текст в существующий файл.
@@ -21,7 +21,17 @@ Text Injection позволяет вставить текст в существ�
 
 ![inject_direction_dropdown]({{ site.baseurl }}/images/tutorial/inject_direction_dropdown.png){: .imageFragment}
 
-Пример:
+**Пример:**
+
+* **BEFORE** = `Before`
+* **AFTER** = `After`
+* **PREV_LINE** = `Prev Line`
+* **NEXT_LINE** = `Next Line`
+* **REPLACE** = `Replace`
+* **START_OF_FILE** = `Start of File`
+* **SOF_END_OF_LINE** = `Start of File, End of line`
+* **END_OF_FILE** = `End of File`
+* **EOF_START_OF_LINE** = `End of File, Start of line`
 
 ![injection_directions_example]({{ site.baseurl }}/images/tutorial/injection_directions_example.png){: .imageFragment}
 

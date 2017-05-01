@@ -1,7 +1,7 @@
 ---
 title: Script
 lang: en
-order: 6
+navigation: script
 ---
 
 **Script** uses [JavaScript][1] language. Script allow you to modify:

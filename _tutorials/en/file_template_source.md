@@ -1,7 +1,7 @@
 ---
 title: FileTemplate Source
 lang: en
-order: 2
+navigation: file_template_source
 ---
 
 You may have templates with same names but in different [schemes][1]. **FileTemplate Source** define source where to find templates.

@@ -1,7 +1,7 @@
 ---
 title: Поведение при конфликтах записи (Write Rules)
 lang: ru
-order: 10
+navigation: write_rules
 ---
 
 ### Пример конфликта

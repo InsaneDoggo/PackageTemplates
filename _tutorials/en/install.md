@@ -1,7 +1,7 @@
 ---
 title: Install
 lang: en
-order: 1
+navigation: install
 ---
 
 1. [~~From repository~~][2] (will be available after release v1.0.0 )

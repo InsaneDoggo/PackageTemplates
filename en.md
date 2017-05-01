@@ -10,9 +10,9 @@ lang: en
 Package Templates make Multiple [File Templates][1] possible. Plugin let you create **directories** and **File Templates** in one action.
 
 ### Tutorials:
-{% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" | sort: 'order' %}
-{% for tutorial in listTutorials %}
-* [{{ tutorial.title }}]({{ site.baseurl }}{{ tutorial.url }}){% endfor %}
+{% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang"%}
+{% for nav_tutorial in site.data.navigation.tutorials %}{% for tutorial in listTutorials %}{% if nav_tutorial == tutorial.navigation %}
+* [{{ tutorial.title }}]({{ site.baseurl }}{{ tutorial.url }}){% endif %}{% endfor %}{% endfor %}
 
 ### Changelog
 [Changelog][8]

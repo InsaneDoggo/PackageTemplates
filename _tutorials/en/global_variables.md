@@ -1,7 +1,7 @@
 ---
 title: Global Variables
 lang: en
-order: 5
+navigation: global_variables
 ---
 
 **Global Variables** similar to [variables][1] in [File Templates][2].

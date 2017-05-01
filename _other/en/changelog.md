@@ -7,7 +7,15 @@ css: tutorials.css
 
 ### v0.4.0
 
-blabla
+* Features for team
+<br> **a)** Support Project templates. ([Details][4])
+<br> **b)** [AutoImport][3]
+* Added options for [Text Injection][1]:
+<br> **a)** Start of File, End of line
+<br> **b)** End of File, Start of line
+* Added option **DIR_PARENT** for [CustomPath][5]. (Return parent directory).
+* Now you can **change** FileTemplate of **element**.
+* fixed little bugs.
 
 ### v0.3.0
 
@@ -32,3 +40,6 @@ Initial version.
 
 [1]: {{ site.baseurl}}{{ site.data.links.tutorial_text_injection[page.lang] }}
 [2]: {{ site.baseurl}}{{ site.data.links.tutorial_global_variables[page.lang] }}
+[3]: {{ site.baseurl}}{{ site.data.links.tutorial_impex[page.lang] }}#autoImport
+[4]: {{ site.baseurl}}{{ site.data.links.tutorial_file_template_source[page.lang] }}
+[5]: {{ site.baseurl}}{{ site.data.links.tutorial_custom_path[page.lang] }}

@@ -8,9 +8,9 @@ lang: ru
 Package Templates это плагин реализующий Multiple [File Templates][1]. Он позволяет создавать шаблоны, состоящие из директорий и File Tamplates.
 
 ### Подробнее:
-{% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang" | sort: 'order' %}
-{% for tutorial in listTutorials %}
-* [{{ tutorial.title }}]({{ site.baseurl }}{{ tutorial.url }}){% endfor %}
+{% assign listTutorials = site.tutorials | where_exp:"item", "item.lang == page.lang"%}
+{% for nav_tutorial in site.data.navigation.tutorials %}{% for tutorial in listTutorials %}{% if nav_tutorial == tutorial.navigation %}
+* [{{ tutorial.title }}]({{ site.baseurl }}{{ tutorial.url }}){% endif %}{% endfor %}{% endfor %}
 
 ### История изменений
 [Изменения][8]

@@ -1,7 +1,7 @@
 ---
 title: Scheme
 lang: en
-order: 2
+navigation: scheme
 ---
 
 First of all be familiar with [Per-project vs default scheme][1]. Plugin supports both schemes. You can change scheme in IDE settings:

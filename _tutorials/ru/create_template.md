@@ -1,7 +1,7 @@
 ---
 title: Создание Шаблона
 lang: ru
-order: 3
+navigation: create_template
 ---
 
 ![new_package_template_dialog]({{ site.baseurl }}/images/tutorial/new_package_template_dialog.png){: .image}
