@@ -5,6 +5,9 @@ layout: other
 css: tutorials.css
 ---
 
+### v0.4.1
+- Фикс критического бага с CustomPath.
+
 ### v0.4.0
 
 * Добавлены фичи для команды
