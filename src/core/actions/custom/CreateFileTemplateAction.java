@@ -2,24 +2,24 @@ package core.actions.custom;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
+import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.ArrayUtil;
 import core.actions.custom.base.SimpleAction;
 import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
 import core.report.models.FailedActionReport;
 import core.report.models.SuccessActionReport;
-import global.utils.Logger;
-import global.utils.factories.GsonFactory;
 import global.utils.file.FileReaderUtil;
-import global.utils.file.FileWriter;
 import global.utils.i18n.Localizer;
 import global.utils.templates.FileTemplateHelper;
 import global.utils.text.StringTools;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * Created by Arsen on 09.01.2017.
@@ -55,24 +55,24 @@ public class CreateFileTemplateAction extends SimpleAction {
             return;
         }
 
-        FileTemplateManager ftm = FileTemplateManager.getInstance(project);
+
+        FileTemplateManager ftm = FileTemplateHelper.getManagerInstance(project);
         FileTemplate oldTemplate = ftm.getTemplate(StringTools.getNameWithoutExtension(fileFrom.getName()));
 
         if (oldTemplate != null) {
-            //todo ask?
-//            Logger.log("CreateFileTemplateAction file Exists");
             ftm.removeTemplate(oldTemplate);
-            ftm.saveAllTemplates();
+//            ftm.saveAllTemplates();
         }
 
-        FileTemplate newTemplate = ftm.addTemplate(
+        FileTemplate[] templates = ftm.getAllTemplates();
+
+        FileTemplate template = FileTemplateUtil.createTemplate(
                 StringTools.getNameWithoutExtension(fileFrom.getName()),
-                StringTools.getExtensionFromName(fileFrom.getName())
+                StringTools.getExtensionFromName(fileFrom.getName()),
+                text, templates
         );
+        ftm.setTemplates(FileTemplateManager.DEFAULT_TEMPLATES_CATEGORY, Arrays.asList(ArrayUtil.append(templates, template)));
 
-
-        newTemplate.setText(text);
-        ftm.saveAllTemplates();
 
         ReportHelper.putReport(new SuccessActionReport(this, toString()));
     }

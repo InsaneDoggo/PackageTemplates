@@ -1,6 +1,6 @@
-<idea-plugin url="http://ceh9.github.io/PackageTemplates/" version="3">
+<idea-plugin url="http://ceh9.github.io/PackageTemplates/">
     <id>dev.senya.packagetemplates</id>
-    <version>0.3.0-beta</version>
+    <version>0.4.0-beta</version>
     <name>Package Templates</name>
     <vendor email="senya.dev@gmail.com">CeH9</vendor>
 
@@ -9,10 +9,7 @@
     ]]></description>
 
     <change-notes><![CDATA[
-    major changes:<br>
-        - Text Injections<br>
-        - Reworked Global Variables<br>
-        - UI improvements<br>
+    Changelog available on GitHub pages.
     ]]>
     </change-notes>
 

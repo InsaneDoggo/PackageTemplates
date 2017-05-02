@@ -1,5 +1,6 @@
 package core.actions.executor;
 
+import com.intellij.ide.fileTemplates.impl.FileTemplateManagerImpl;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
 import core.actions.custom.DummyDirectoryAction;

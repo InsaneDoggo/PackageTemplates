@@ -340,6 +340,11 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         btnPath.setText(path);
     }
 
+    @Override
+    public void hideDialog() {
+        doCancelAction();
+    }
+
     //=================================================================
     //  Favourites
     //=================================================================

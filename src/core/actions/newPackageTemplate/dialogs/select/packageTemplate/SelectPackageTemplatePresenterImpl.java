@@ -227,6 +227,7 @@ public class SelectPackageTemplatePresenterImpl implements SelectPackageTemplate
 
     @Override
     public void onAutoImportAction() {
+        view.hideDialog();
         ApplicationManager.getApplication().runReadAction(() -> {
             AutoImport autoImport = SaveUtil.reader().getAutoImport();
             ArrayList<VirtualFile> listVirtualFile = new ArrayList<>();

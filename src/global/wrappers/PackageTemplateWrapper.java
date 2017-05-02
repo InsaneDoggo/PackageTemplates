@@ -191,7 +191,7 @@ public class PackageTemplateWrapper {
         if (mode == ViewMode.USAGE) {
             jtfName.setEditable(false);
             jtaDescription.setEditable(false);
-            cboxFileTemplateSource.setEditable(false);
+            cboxFileTemplateSource.setEnabled(false);
         } else {
             // Properties
             cbShouldRegisterAction = new JBCheckBox(Localizer.get("property.ShouldRegisterAction"), packageTemplate.isShouldRegisterAction());

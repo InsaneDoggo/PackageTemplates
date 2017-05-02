@@ -3,19 +3,15 @@ package global.utils.templates;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
-import com.intellij.openapi.options.SchemeState;
+import com.intellij.ide.fileTemplates.impl.FileTemplateManagerImpl;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.util.ArrayUtil;
 import global.models.TemplateForSearch;
 import global.utils.i18n.Localizer;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Properties;
 
 /**
@@ -28,7 +24,7 @@ public class FileTemplateHelper {
     }
 
     private static FileTemplateManager getProjectManager(Project project) {
-        return FileTemplateManager.getInstance(project);
+        return FileTemplateManagerImpl.getInstance(project);
     }
 
     private static FileTemplateManager getDefaultManager() {
@@ -41,6 +37,17 @@ public class FileTemplateHelper {
 
     public static String getFileTemplatesDefaultDirPath() {
         return FileTemplatesScheme.DEFAULT.getTemplatesDir() + File.separator;
+    }
+
+
+    private static FileTemplateManager fileTemplateManager;
+
+    public static FileTemplateManager getManagerInstance(Project project) {
+        if (fileTemplateManager == null) {
+            fileTemplateManager = FileTemplateManagerImpl.getInstance(project);
+        }
+
+        return fileTemplateManager;
     }
 
 

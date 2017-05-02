@@ -19,4 +19,6 @@ public interface SelectPackageTemplateView {
     void selectFavourite(Favourite selected);
 
     void setPathBtnText(String path);
+
+    void hideDialog();
 }
