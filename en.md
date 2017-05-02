@@ -40,7 +40,7 @@ Send us your ideas (see **Suggestions and comments**). Best ideas will be implem
 ### Awards
 Do you like this plugin and think it's useful? Then you could <a class="github-button" href="https://github.com/CeH9/PackageTemplates" data-icon="octicon-star" data-count-href="/CeH9/PackageTemplates/stargazers" data-count-api="/repos/CeH9/PackageTemplates#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star CeH9/PackageTemplates on GitHub">Star</a> this project.
 
-[1]: https://www.jetbrains.com/help/idea/2016.2/file-and-code-templates.html
+[1]: {{ site.data.links.file_templates }}
 [2]: {{ site.data.links.mailto_plugin }}
 [3]: {{ site.data.links.mailto_developer }}
 [4]: {{ site.data.links.github_issues }}
