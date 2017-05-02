@@ -15,9 +15,9 @@ This feature allows you to search for directories and files. Each element of the
 
 1. Delete action.
 2. Search type.
-3. Text for search (File\dir name).
+3. Text for search (File\dir name). This input field support [Global Variables][2].
 4. Deep limit.
-5. RegExp. Select checkbox to use pattern with inputfield (Plugin uses default impl from standart JDK (Java), [details][1])
+5. RegExp. Select checkbox to use pattern with input field (Plugin uses default impl from standart JDK (Java), [details][1])
 6. Add action.
 
 ### Deep limit
@@ -48,3 +48,4 @@ This CustomPath will find dir **src**, then **destination** and create file in t
 ![custom_path_example_result]({{ site.baseurl }}/images/tutorial/custom_path_example_result.png){: .imageFragment}
 
 [1]: {{ site.data.links.regexp_docs }}
+[2]: {{ site.baseurl}}{{ site.data.links.tutorial_global_variables[page.lang] }}

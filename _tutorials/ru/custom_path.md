@@ -15,7 +15,7 @@ navigation: custom_path
 
 1. Удалить action.
 2. Тип поиска.
-3. Текст для поиска (Имя файла\директории).
+3. Текст для поиска (Имя файла\директории). Это поле поддерживает [Global Variables][2].
 4. Глубина поиска.
 5. Регулярные выражения RegExp. Если отмечено, то вместо Имени в 3-м пункте указывается Pattern(Используется реализация из стандартной библиотеки языка Java, [подробнее][1])
 6. Добавить action.
@@ -48,3 +48,4 @@ navigation: custom_path
 ![custom_path_example_result]({{ site.baseurl }}/images/tutorial/custom_path_example_result.png){: .imageFragment}
 
 [1]: {{ site.data.links.regexp_docs }}
+[2]: {{ site.baseurl}}{{ site.data.links.tutorial_global_variables[page.lang] }}
