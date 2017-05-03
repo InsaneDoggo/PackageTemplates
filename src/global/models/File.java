@@ -15,7 +15,6 @@ public class File extends BaseElement {
     @Expose @SerializedName("templateName") private String templateName;
     @Expose @SerializedName("extension") private String extension;
     @Expose @SerializedName("mapProperties") private HashMap<String, String> mapProperties;
-    @Expose @SerializedName("FileTemplateSource") private FileTemplateSource fileTemplateSource;
 
     public String getTemplateName() {
         return templateName;
@@ -44,14 +43,6 @@ public class File extends BaseElement {
     @Override
     public boolean isDirectory() {
         return false;
-    }
-
-    public FileTemplateSource getFileTemplateSource() {
-        return fileTemplateSource;
-    }
-
-    public void setFileTemplateSource(FileTemplateSource fileTemplateSource) {
-        this.fileTemplateSource = fileTemplateSource;
     }
 
     public static File newInstance(String templateName, String extension) {

@@ -37,19 +37,28 @@ public class SearchEngine {
                 curDir = startDir.getParentFile();
             }
 
+            File tempDir = null;
+
             switch (action.getActionType()) {
                 case DIR_ABOVE:
-                    curDir = getEngine().findDirAbove(curDir, action);
+                    tempDir = getEngine().findDirAbove(curDir, action);
                     break;
                 case DIR_BELOW:
-                    curDir = getEngine().findDirBelow(curDir, action);
+                    tempDir = getEngine().findDirBelow(curDir, action);
+                    break;
                 case DIR_PARENT:
-                    curDir = curDir.getParentFile();
+                    tempDir = curDir.getParentFile();
                     break;
                 case FILE:
-                    curDir = getEngine().findFile(curDir, action);
+                    tempDir = getEngine().findFile(curDir, action);
                     break;
             }
+
+            if(tempDir == null){
+                return null;
+            }
+
+            curDir = tempDir;
         }
 
         return curDir;

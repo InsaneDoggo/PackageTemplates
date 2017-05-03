@@ -1,6 +1,5 @@
 package global;
 
-import com.intellij.ide.fileTemplates.FileTemplateManager;
 import global.models.File;
 
 import java.nio.charset.Charset;
