@@ -5,6 +5,10 @@ layout: other
 css: tutorials.css
 ---
 
+### v0.4.2
+- [GlobalVariables][2] in [CustomPath][5] of [TextInjection][1] now works correctly.
+- FileTemplates now imports correctly (without additional "\n" symbol in the end of content).
+
 ### v0.4.1
 - Fixed critical bug with CustomPath.
 

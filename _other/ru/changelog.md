@@ -5,6 +5,10 @@ layout: other
 css: tutorials.css
 ---
 
+### v0.4.2
+- [Global Variables][2] теперь поддерживаются в [CustomPath][5] от [Text Injection][1].
+- FileTemplates теперь импортируются корректно (без лишнего символа "\n" в конце файла).
+
 ### v0.4.1
 - Фикс критического бага с CustomPath.
 
