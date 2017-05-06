@@ -28,9 +28,17 @@ public class FileReaderUtil {
                                 StringBuilder sb = new StringBuilder();
                                 String line = br.readLine();
 
+                                boolean isFirstLine = true;
+
                                 while (line != null) {
-                                    sb.append(line);
-                                    sb.append("\n");
+                                    if (isFirstLine) {
+                                        isFirstLine = false;
+                                        sb.append(line);
+                                    } else {
+                                        sb.append("\n");
+                                        sb.append(line);
+                                    }
+
                                     line = br.readLine();
                                 }
 

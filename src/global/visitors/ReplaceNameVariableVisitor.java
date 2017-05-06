@@ -45,7 +45,7 @@ public class ReplaceNameVariableVisitor implements ElementVisitor {
         this.visitCustomPath(file.getCustomPath());
     }
 
-    private void visitCustomPath(CustomPath customPath) {
+    public void visitCustomPath(CustomPath customPath) {
         if (customPath == null) {
             return;
         }

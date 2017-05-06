@@ -317,7 +317,13 @@ public class PackageTemplateWrapper {
     //  Utils
     //=================================================================
     public void replaceNameVariable() {
-        rootElement.accept(new ReplaceNameVariableVisitor(getAllProperties()));
+        ReplaceNameVariableVisitor visitor = new ReplaceNameVariableVisitor(getAllProperties());
+
+        for(TextInjection textInjection : getPackageTemplate().getListTextInjection()){
+            visitor.visitCustomPath(textInjection.getCustomPath());
+        }
+
+        rootElement.accept(visitor);
     }
 
     public void collectDataFromFields() {
