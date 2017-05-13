@@ -4,9 +4,16 @@ title: Package Templates
 css: home.css
 ---
 
-![en]({{ site.baseurl }}/images/lang/en.png) [English][1]<br>
-![ru]({{ site.baseurl }}/images/lang/ru.png) [Русский][2]
 
+Documentation available in the following languages:
+
+* ![en]({{ site.baseurl }}/images/lang/en.png) [English][1]
+* ![ru]({{ site.baseurl }}/images/lang/ru.png) [Русский][2]
+
+**Note:** languages are clickable links to docs.
+
+
+<br><br>
 <details >
 <summary class="Spoiler">YouTube simple demo</summary>
 
