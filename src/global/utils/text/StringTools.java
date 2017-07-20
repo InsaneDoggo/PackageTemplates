@@ -1,6 +1,8 @@
 package global.utils.text;
 
+import com.intellij.openapi.util.Pair;
 import core.regexp.NonRegexResult;
+import global.Const;
 import global.wrappers.PackageTemplateWrapper;
 
 import java.util.Map;
@@ -47,11 +49,42 @@ public class StringTools {
     }
 
     public static String getNameWithoutExtension(String name) {
-        return name.replaceFirst("[.][^.]+$", "");
+        Pair<String, String> nameExt = decodeFileName(name);
+        String templateName = nameExt.first;
+        String extension = nameExt.second;
+
+        return templateName;
+        //return name.replaceFirst("[.][^.]+$", "");
     }
 
     public static String getExtensionFromName(String name) {
-        return name.replaceFirst("^.*[.]", "");
+        Pair<String, String> nameExt = decodeFileName(name);
+        String templateName = nameExt.first;
+        String extension = nameExt.second;
+
+        return extension;
+        //return name.replaceFirst("^.*[.]", "");
+    }
+
+
+    //=================================================================
+    //  Extension
+    //=================================================================
+    private static String encodeFileName(String templateName, String extension) {
+        String nameExtDelimiter = extension.contains(".") ? Const.ENCODED_NAME_EXT_DELIMITER : ".";
+        return templateName + nameExtDelimiter + extension;
+    }
+
+    private static Pair<String, String> decodeFileName(String fileName) {
+        String name = fileName;
+        String ext = "";
+        String nameExtDelimiter = fileName.contains(Const.ENCODED_NAME_EXT_DELIMITER) ? Const.ENCODED_NAME_EXT_DELIMITER : ".";
+        int extIndex = fileName.lastIndexOf(nameExtDelimiter);
+        if (extIndex >= 0) {
+            name = fileName.substring(0, extIndex);
+            ext = fileName.substring(extIndex + nameExtDelimiter.length());
+        }
+        return Pair.create(name, ext);
     }
 
 
@@ -76,7 +109,7 @@ public class StringTools {
 
     public static MatchResult match(String text, String token) {
         int start = text.indexOf(token);
-        if(start==-1){
+        if (start == -1) {
             return null;
         }
 
