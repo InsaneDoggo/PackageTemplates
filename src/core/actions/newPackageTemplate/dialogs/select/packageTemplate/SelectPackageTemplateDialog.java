@@ -196,7 +196,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
     private void initToolbarActions() {
         //Add
-        actionAdd = new BaseAction("Create", "Create a New Package Template", IconUtil.getAddIcon()) {
+        actionAdd = new BaseAction(Localizer.get("tooltip.Create"), Localizer.get("description.CreateNewPackageTemplate"), IconUtil.getAddIcon()) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 presenter.onAddAction();
@@ -204,7 +204,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         //Edit
-        actionEdit = new BaseAction("Edit", "Edit Existing Package Template", IconUtil.getEditIcon()) {
+        actionEdit = new BaseAction(Localizer.get("tooltip.Edit"), Localizer.get("description.EditExistingPackageTemplate"), IconUtil.getEditIcon()) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 if (FileValidator.isValidTemplatePath(getSelectedPath())) {
@@ -216,7 +216,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Settings
-        actionSettings = new BaseAction("Settings", "Edit General Settings", PlatformIcons.SHOW_SETTINGS_ICON) {
+        actionSettings = new BaseAction(Localizer.get("tooltip.Settings"), Localizer.get("description.EditGeneralSettings"), PlatformIcons.SHOW_SETTINGS_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 presenter.onSettingsAction();
@@ -224,7 +224,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Export
-        actionExport = new BaseAction("Export", "Export Package Template" ,PlatformIcons.EXPORT_ICON) {
+        actionExport = new BaseAction(Localizer.get("tooltip.Export"), Localizer.get("description.ExportPackageTemplate") ,PlatformIcons.EXPORT_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 if (FileValidator.isValidTemplatePath(getSelectedPath())) {
@@ -236,7 +236,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Import
-        actionImport = new BaseAction("Import", "Import Package Template", PlatformIcons.IMPORT_ICON) {
+        actionImport = new BaseAction(Localizer.get("tooltip.Import"), Localizer.get("description.ImportPackageTemplate"), PlatformIcons.IMPORT_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 presenter.onImportAction();
@@ -244,7 +244,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Add to Favourite
-        actionAddToFavourites = new BaseAction("Favourite", "Add / Remove from Favourites", AllIcons.Toolwindows.ToolWindowFavorites) {
+        actionAddToFavourites = new BaseAction(Localizer.get("tooltip.Favourite"), Localizer.get("description.AddRemoveFromFavourites"), AllIcons.Toolwindows.ToolWindowFavorites) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 String path = getSelectedPath();
@@ -265,7 +265,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // AutoImport
-        actionAutoImport = new BaseAction("Auto Import", "Edit Auto Import Settings", PluginIcons.AUTO_IMPORT) {
+        actionAutoImport = new BaseAction(Localizer.get("tooltip.Auto"), Localizer.get("description.EditAutoImportSettings"), PluginIcons.AUTO_IMPORT) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 presenter.onAutoImportAction();
