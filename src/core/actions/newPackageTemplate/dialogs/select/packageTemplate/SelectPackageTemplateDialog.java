@@ -3,14 +3,12 @@ package core.actions.newPackageTemplate.dialogs.select.packageTemplate;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.SeparatorComponent;
-import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.components.JBScrollPane;
@@ -24,14 +22,13 @@ import global.models.Favourite;
 import global.models.PackageTemplate;
 import global.utils.file.FileReaderUtil;
 import global.utils.file.FileValidator;
+import global.utils.i18n.Localizer;
 import global.utils.templates.FileTemplateHelper;
 import global.utils.templates.PackageTemplateHelper;
-import global.utils.i18n.Localizer;
 import global.views.FavouriteRadioButton;
 import icons.PluginIcons;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
-import org.intellij.lang.regexp.RegExpFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -199,7 +196,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
 
     private void initToolbarActions() {
         //Add
-        actionAdd = new BaseAction(IconUtil.getAddIcon()) {
+        actionAdd = new BaseAction("Create", "Create a New Package Template", IconUtil.getAddIcon()) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 presenter.onAddAction();
@@ -207,7 +204,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         //Edit
-        actionEdit = new BaseAction(IconUtil.getEditIcon()) {
+        actionEdit = new BaseAction("Edit", "Edit Existing Package Template", IconUtil.getEditIcon()) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 if (FileValidator.isValidTemplatePath(getSelectedPath())) {
@@ -219,7 +216,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Settings
-        actionSettings = new BaseAction(PlatformIcons.SHOW_SETTINGS_ICON) {
+        actionSettings = new BaseAction("Settings", "Edit General Settings", PlatformIcons.SHOW_SETTINGS_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 presenter.onSettingsAction();
@@ -227,7 +224,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Export
-        actionExport = new BaseAction(PlatformIcons.EXPORT_ICON) {
+        actionExport = new BaseAction("Export", "Export Package Template" ,PlatformIcons.EXPORT_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 if (FileValidator.isValidTemplatePath(getSelectedPath())) {
@@ -239,7 +236,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Import
-        actionImport = new BaseAction(PlatformIcons.IMPORT_ICON) {
+        actionImport = new BaseAction("Import", "Import Package Template", PlatformIcons.IMPORT_ICON) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 presenter.onImportAction();
@@ -247,7 +244,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // Add to Favourite
-        actionAddToFavourites = new BaseAction(AllIcons.Toolwindows.ToolWindowFavorites) {
+        actionAddToFavourites = new BaseAction("Favourite", "Add / Remove from Favourites", AllIcons.Toolwindows.ToolWindowFavorites) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 String path = getSelectedPath();
@@ -268,7 +265,7 @@ public abstract class SelectPackageTemplateDialog extends DialogWrapper implemen
         };
 
         // AutoImport
-        actionAutoImport = new BaseAction(PluginIcons.AUTO_IMPORT) {
+        actionAutoImport = new BaseAction("Auto Import", "Edit Auto Import Settings", PluginIcons.AUTO_IMPORT) {
             @Override
             public void actionPerformed(AnActionEvent e) {
                 presenter.onAutoImportAction();
