@@ -25,5 +25,5 @@ If code incorrect (throw exception) **result** will be converted to **ScriptErro
 
 ![script_dialog]({{ site.baseurl }}/images/tutorial/script_dialog.png){: .imageFragment}
 
-[1]: {{ site.baseurl}}{{ site.data.links.javascript }}
+[1]: {{ site.data.links.javascript }}
 [2]: {{ site.baseurl}}{{ site.data.links.tutorial_global_variables[page.lang] }}
