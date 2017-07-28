@@ -8,6 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.custom.base.SimpleAction;
+import core.actions.custom.undoable.CopyFileAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
 import core.actions.executor.request.ActionRequest;
@@ -23,6 +24,7 @@ import global.utils.i18n.Localizer;
 import global.utils.templates.FileTemplateHelper;
 import global.wrappers.PackageTemplateWrapper;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +41,11 @@ public class NewPackageTemplateAction extends AnAction {
         virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         project = event.getProject();
 
-        //todo delete
-        if (true) {
-            new TestFeature(project, event, virtualFile);
-            return;
-        }
+//        //todo delete
+//        if (true) {
+//            new TestFeature(project, event, virtualFile);
+//            return;
+//        }
 
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
@@ -101,6 +103,13 @@ public class NewPackageTemplateAction extends AnAction {
 
         ptWrapper.collectSimpleActions(project, virtualFile, listSimpleAction);
         ptWrapper.collectInjectionActions(project, listSimpleAction);
+
+        //todo delete
+        listSimpleAction.add(new CopyFileAction(
+                project,
+                new java.io.File("E:\\Downloads\\PackageTmp\\featureTest\\src\\enot.jpg"),
+                new java.io.File("E:\\Downloads\\PackageTmp\\featureTest\\dst\\enot.jpg")
+        ));
 
 //        TextInjection textInjection = new TextInjection();
 //
