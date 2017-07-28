@@ -3,10 +3,7 @@ package global.visitors;
 import base.ElementVisitor;
 import global.models.Directory;
 import global.models.File;
-import global.wrappers.DirectoryWrapper;
-import global.wrappers.ElementWrapper;
-import global.wrappers.FileWrapper;
-import global.wrappers.PackageTemplateWrapper;
+import global.wrappers.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +18,7 @@ public class СollectDataFromFieldsVisitor implements ElementVisitor {
     public void visit(DirectoryWrapper wrapper) {
         Directory directory = wrapper.getDirectory();
 
-        directory.setName(wrapper.etfName.getText());
+        directory.setName(wrapper.etfDescription.getText());
 
         for (ElementWrapper elementWrapper : wrapper.getListElementWrapper()) {
             elementWrapper.accept(this);
@@ -33,7 +30,7 @@ public class СollectDataFromFieldsVisitor implements ElementVisitor {
         File file = wrapper.getFile();
 
         file.setTemplateName(wrapper.jlName.getText());
-        file.setName(wrapper.etfName.getText());
+        file.setName(wrapper.etfDescription.getText());
 
         if (wrapper.getPackageTemplateWrapper().getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
             file.setMapProperties(new HashMap<>());
@@ -46,6 +43,11 @@ public class СollectDataFromFieldsVisitor implements ElementVisitor {
                 }
             }
         }
+    }
+
+    @Override
+    public void visit(BinaryFileWrapper wrapper) {
+        //todo impl visit collect data
     }
 
 }

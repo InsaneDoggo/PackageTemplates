@@ -1,47 +1,39 @@
 package global.wrappers;
 
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
+import base.ElementVisitor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.components.JBCheckBox;
 import global.models.BaseElement;
-import global.models.File;
+import global.models.BinaryFile;
+import global.utils.UIHelper;
 import global.utils.i18n.Localizer;
-import global.utils.templates.FileTemplateHelper;
-import global.utils.validation.FieldType;
-import global.utils.validation.TemplateValidator;
 import global.views.IconLabel;
 import global.views.IconLabelCustom;
 import icons.PluginIcons;
-import base.ElementVisitor;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
-import global.utils.*;
 
 import javax.swing.*;
 
 /**
  * Created by CeH9 on 06.07.2016.
  */
-public class FileWrapper extends ElementWrapper {
+public class BinaryFileWrapper extends ElementWrapper {
 
-    private File file;
+    private BinaryFile binaryFile;
 
     //=================================================================
     //  UI
     //=================================================================
-    public CreateFromTemplatePanel panelVariables;
-
     @Override
     public void buildView(Project project, JPanel container) {
-        jlName = new JLabel(UIHelper.getIconByFileExtension(getFile().getExtension()), SwingConstants.LEFT);
-        jlName.setDisabledIcon(jlName.getIcon());
-        jlName.setText(getFile().getTemplateName());
+        jlName = new JLabel("Binary File", SwingConstants.LEFT);
+//        jlName.setDisabledIcon(jlName.getIcon());
 
-        etfDescription = UIHelper.getEditorTextField(getFile().getName(), project);
+        etfDescription = UIHelper.getEditorTextField(getBinaryFile().getDescription(), project);
 
         container.add(getOptionsPanel(), new CC().spanX().split(3));
         container.add(jlName, new CC().pad(0, 0, 0, UIHelper.PADDING_LABEL));
@@ -49,31 +41,6 @@ public class FileWrapper extends ElementWrapper {
         updateComponentsState();
 
         addMouseListener();
-
-        createUsageUI(container, project);
-    }
-
-    private void createUsageUI(JPanel container, Project project) {
-        if (getPackageTemplateWrapper().getMode() != PackageTemplateWrapper.ViewMode.USAGE) {
-            return;
-        }
-        FileTemplate fileTemplate = FileTemplateHelper.getTemplate(
-                getFile().getTemplateName(),
-                project,
-                getPackageTemplateWrapper().getPackageTemplate().getFileTemplateSource()
-        );
-
-        if (fileTemplate == null) {
-            return;
-        }
-
-        panelVariables = new CreateFromTemplatePanel(
-                AttributesHelper.getUnsetAttributes(fileTemplate, getPackageTemplateWrapper()),
-                false,
-                null
-        );
-
-        container.add(panelVariables.getComponent(), new CC().spanX().pad(0, UIHelper.PADDING, 0, 0).wrap());
     }
 
     @NotNull
@@ -81,7 +48,7 @@ public class FileWrapper extends ElementWrapper {
         JPanel optionsPanel = new JPanel(new MigLayout(new LC().insets("0").gridGap("2pt","0")));
 
         cbEnabled = new JBCheckBox();
-        cbEnabled.setSelected(file.isEnabled());
+        cbEnabled.setSelected(binaryFile.isEnabled());
         cbEnabled.addItemListener(e -> setEnabled(cbEnabled.isSelected()));
         cbEnabled.setToolTipText(Localizer.get("tooltip.IfCheckedElementWillBeCreated"));
 
@@ -100,9 +67,9 @@ public class FileWrapper extends ElementWrapper {
         );
 
         // WriteRules
-        jlWriteRules = new IconLabelCustom<File>(Localizer.get("tooltip.WriteRules"), file) {
+        jlWriteRules = new IconLabelCustom<BinaryFile>(Localizer.get("tooltip.WriteRules"), binaryFile) {
             @Override
-            public void onUpdateIcon(File item) {
+            public void onUpdateIcon(BinaryFile item) {
                 setIcon(item.getWriteRules().toIcon());
             }
         };
@@ -120,8 +87,8 @@ public class FileWrapper extends ElementWrapper {
     public void updateComponentsState() {
         updateOptionIcons();
 
-        jlName.setEnabled(file.isEnabled());
-        etfDescription.setEnabled(file.isEnabled());
+        jlName.setEnabled(binaryFile.isEnabled());
+        etfDescription.setEnabled(binaryFile.isEnabled());
     }
 
 
@@ -140,13 +107,13 @@ public class FileWrapper extends ElementWrapper {
 
     @Override
     public ValidationInfo validateFields() {
-        return TemplateValidator.validateText(etfDescription, etfDescription.getText(), FieldType.CLASS_NAME);
+        return null;
     }
 
     @Override
     public void setEnabled(boolean isEnabled) {
         cbEnabled.setSelected(isEnabled);
-        file.setEnabled(isEnabled);
+        binaryFile.setEnabled(isEnabled);
         updateComponentsState();
     }
 
@@ -159,17 +126,17 @@ public class FileWrapper extends ElementWrapper {
     //=================================================================
     //  Getter | setter
     //=================================================================
-    public File getFile() {
-        return file;
+    public BinaryFile getBinaryFile() {
+        return binaryFile;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    public void setBinaryFile(BinaryFile binaryFile) {
+        this.binaryFile = binaryFile;
     }
 
     @Override
     public BaseElement getElement() {
-        return file;
+        return binaryFile;
     }
 
     @Override

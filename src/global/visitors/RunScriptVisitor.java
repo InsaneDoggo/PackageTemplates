@@ -2,8 +2,10 @@ package global.visitors;
 
 import base.ElementVisitor;
 import core.script.ScriptExecutor;
+import global.models.BinaryFile;
 import global.models.Directory;
 import global.models.File;
+import global.wrappers.BinaryFileWrapper;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
@@ -33,6 +35,11 @@ public class RunScriptVisitor implements ElementVisitor {
         if (file.getScript() != null && !file.getScript().isEmpty()) {
             file.setName(ScriptExecutor.runScript(file.getScript(), file.getName()));
         }
+    }
+
+    @Override
+    public void visit(BinaryFileWrapper wrapper) {
+        //nothing
     }
 
 }

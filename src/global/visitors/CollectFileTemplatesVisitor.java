@@ -1,6 +1,7 @@
 package global.visitors;
 
 import base.ElementVisitor;
+import global.wrappers.BinaryFileWrapper;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
@@ -32,6 +33,11 @@ public class CollectFileTemplatesVisitor implements ElementVisitor {
     @Override
     public void visit(FileWrapper wrapper) {
         hsFileTemplateNames.add(wrapper.getFile().getTemplateName());
+    }
+
+    @Override
+    public void visit(BinaryFileWrapper wrapper) {
+        //nothing
     }
 
 }

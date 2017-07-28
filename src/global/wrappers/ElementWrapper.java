@@ -54,8 +54,6 @@ public abstract class ElementWrapper extends BaseWrapper {
 
     public abstract boolean isDirectory();
 
-    public abstract ValidationInfo isNameValid(List<String> listAllTemplates);
-
     public abstract ValidationInfo validateFields();
 
     public abstract void setEnabled(boolean isEnabled);
@@ -65,7 +63,7 @@ public abstract class ElementWrapper extends BaseWrapper {
     //  UI
     //=================================================================
     public JLabel jlName;
-    public EditorTextField etfName;
+    public EditorTextField etfDescription;
     public IconLabel jlCustomPath;
     public IconLabelCustom<? extends BaseElement> jlWriteRules;
 
@@ -74,15 +72,19 @@ public abstract class ElementWrapper extends BaseWrapper {
 
         JMenuItem itemAddFile = new JBMenuItem(Localizer.get("AddFile"), AllIcons.FileTypes.Text);
         JMenuItem itemAddDirectory = new JBMenuItem(Localizer.get("AddDirectory"), AllIcons.Nodes.Package);
+        JMenuItem itemAddBinaryFile = new JBMenuItem(Localizer.get("action.AddBinaryFile"), AllIcons.FileTypes.Text);
+        JMenuItem itemEditSourcePath = new JBMenuItem(Localizer.get("action.EditSourcePath"), AllIcons.FileTypes.Text);
         JMenuItem itemChangeFileTemplate = new JBMenuItem(Localizer.get("action.ChangeFileTemplate"), AllIcons.Actions.Edit);
         JMenuItem itemDelete = new JBMenuItem(Localizer.get("Delete"), AllIcons.Actions.Delete);
 
         itemAddFile.addActionListener(e -> AddFile());
         itemAddDirectory.addActionListener(e -> addDirectory());
+        itemAddBinaryFile.addActionListener(e -> addBinaryFile());
         itemDelete.addActionListener(e -> deleteElement());
 
         popupMenu.add(itemAddFile);
         popupMenu.add(itemAddDirectory);
+        popupMenu.add(itemAddBinaryFile);
 
         // if NOT root element
         if (getParent() != null) {
@@ -94,8 +96,13 @@ public abstract class ElementWrapper extends BaseWrapper {
             //nothing
         } else {
             // File Specific
-            itemChangeFileTemplate.addActionListener(e -> changeFileTemplate());
-            popupMenu.add(itemChangeFileTemplate);
+            if (this instanceof FileWrapper) {
+                itemChangeFileTemplate.addActionListener(e -> changeFileTemplate());
+                popupMenu.add(itemChangeFileTemplate);
+            } else if (this instanceof BinaryFileWrapper){
+                itemEditSourcePath.addActionListener(e -> changeFileTemplate());
+                popupMenu.add(itemEditSourcePath);
+            }
         }
 
         addScriptMenuItems(popupMenu);
@@ -322,6 +329,9 @@ public abstract class ElementWrapper extends BaseWrapper {
         dialog.show();
     }
 
+    public void addBinaryFile() {
+        //todo impl addBinaryFile
+    }
 
     //=================================================================
     //  Getters | Setters

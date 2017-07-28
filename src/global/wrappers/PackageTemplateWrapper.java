@@ -421,7 +421,7 @@ public class PackageTemplateWrapper {
             if (baseElement.isDirectory()) {
                 list.add(wrapDirectory(((Directory) baseElement), result));
             } else {
-                list.add(wrapFile(((File) baseElement), result));
+                list.add(wrapFile(baseElement, result));
             }
         }
 
@@ -429,13 +429,17 @@ public class PackageTemplateWrapper {
         return result;
     }
 
-    private FileWrapper wrapFile(File file, DirectoryWrapper parent) {
-        FileWrapper result = new FileWrapper();
-        result.setPackageTemplateWrapper(PackageTemplateWrapper.this);
-        result.setParent(parent);
-        result.setFile(file);
-
-        return result;
+    private ElementWrapper wrapFile(BaseElement baseElement, DirectoryWrapper parent) {
+        if(baseElement instanceof File){
+            FileWrapper result = new FileWrapper();
+            result.setPackageTemplateWrapper(PackageTemplateWrapper.this);
+            result.setParent(parent);
+            result.setFile((File) baseElement);
+            return result;
+        } else {
+            //todo binaryFileWrapper
+            return null;
+        }
     }
 
     public void initCollections() {

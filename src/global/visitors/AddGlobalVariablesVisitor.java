@@ -1,10 +1,7 @@
 package global.visitors;
 
 import base.ElementVisitor;
-import global.wrappers.DirectoryWrapper;
-import global.wrappers.ElementWrapper;
-import global.wrappers.FileWrapper;
-import global.wrappers.PackageTemplateWrapper;
+import global.wrappers.*;
 
 /**
  * Добавляет глобальные переменные в каждый FileTemplate.
@@ -23,6 +20,11 @@ public class AddGlobalVariablesVisitor implements ElementVisitor {
         if (wrapper.getPackageTemplateWrapper().getMode() == PackageTemplateWrapper.ViewMode.USAGE) {
             wrapper.getFile().getMapProperties().putAll(wrapper.getPackageTemplateWrapper().getPackageTemplate().getMapGlobalVars());
         }
+    }
+
+    @Override
+    public void visit(BinaryFileWrapper wrapper) {
+        //nothing
     }
 
 }

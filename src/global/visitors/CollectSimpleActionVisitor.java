@@ -9,6 +9,7 @@ import core.report.ReportHelper;
 import core.report.models.PendingActionReport;
 import global.models.File;
 import global.utils.templates.FileTemplateHelper;
+import global.wrappers.BinaryFileWrapper;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
@@ -106,6 +107,11 @@ public class CollectSimpleActionVisitor implements ElementVisitor {
 
         getLastAction().addAction(createFileFromTemplateAction);
         //        FileWriter.writeFile(getLastAction(), wrapper);
+    }
+
+    @Override
+    public void visit(BinaryFileWrapper wrapper) {
+        //todo impl BinaryFile action
     }
 
 }
