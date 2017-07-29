@@ -104,28 +104,6 @@ public class NewPackageTemplateAction extends AnAction {
         ptWrapper.collectSimpleActions(project, virtualFile, listSimpleAction);
         ptWrapper.collectInjectionActions(project, listSimpleAction);
 
-        //todo delete
-        listSimpleAction.add(new CopyFileAction(
-                project,
-                new java.io.File("E:\\Downloads\\PackageTmp\\featureTest\\src\\enot.jpg"),
-                new java.io.File("E:\\Downloads\\PackageTmp\\featureTest\\dst\\enot.jpg")
-        ));
-
-//        TextInjection textInjection = new TextInjection();
-//
-//        ArrayList<SearchAction> listSearchAction = new ArrayList<>();
-//        listSearchAction.add(new SearchAction(SearchActionType.FILE, "Main.java", SearchEngine.DEEP_LIMITLESS, false));
-//
-//
-//        textInjection.setCustomPath(new CustomPath(listSearchAction));
-//        textInjection.setDescription("sds");
-//        textInjection.setInjectDirection(InjectDirection.BEFORE);
-//        textInjection.setRegexp(false);
-//        textInjection.setTextToInject("TestText");
-//        textInjection.setTextToSearch("MyToken");
-//
-//        listSimpleAction.add(new InjectTextAction(project, textInjection,ptWrapper.getPackageTemplate().getMapGlobalVars()));
-
         ActionRequest actionRequest = new ActionRequestBuilder()
                 .setProject(project)
                 .setActions(listSimpleAction)

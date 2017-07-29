@@ -25,6 +25,7 @@ import global.utils.file.PsiHelper;
 import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -49,10 +50,11 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
 
         if (parentAction instanceof IHasPsiDirectory) {
             PsiDirectory psiParent = ((IHasPsiDirectory) parentAction).getPsiDirectory();
+            String parentPath = psiParent.getVirtualFile().getPath();
 
             // Custom Path
             if (directory.getCustomPath() != null) {
-                psiParent = getPsiDirectoryFromCustomPath(directory, psiParent.getVirtualFile().getPath());
+                psiParent = getPsiDirectoryFromCustomPath(directory, parentPath);
 
                 if (psiParent == null) {
                     ReportHelper.setState(ExecutionState.FAILED);
@@ -62,6 +64,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
             }
 
             // check existence
+            //File file = new File(psiParent.getVirtualFile().getPath() + File.separator + directory.getName());
             psiDirectoryResult = psiParent.findSubdirectory(directory.getName());
             if (psiDirectoryResult == null) {
                 // create new one
@@ -127,14 +130,11 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
     }
 
     private boolean onOverwrite(PsiDirectory psiDuplicate) {
-        PsiDirectory psiParent = psiDuplicate.getParent();
-        String name = psiDuplicate.getName();
-
         try {
             //Remove
             psiDuplicate.delete();
             // Create
-            createSubDir(psiParent, name);
+            createSubDir(psiDuplicate.getParent(), psiDuplicate.getName());
             return true;
         } catch (Exception e) {
             Logger.log("CreateDirectoryAction " + e.getMessage());
@@ -157,7 +157,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
 
                     CommandProcessor.getInstance().executeCommand(project, runnable, "testId", "testId");
                 }
-        , ModalityState.defaultModalityState());
+                , ModalityState.defaultModalityState());
     }
 
 
@@ -175,7 +175,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
     }
 
     @Nullable
-    private PsiDirectory getPsiDirectoryFromCustomPath(BaseElement element, String pathFrom) {
+    private String getCustomPath(BaseElement element, String pathFrom) {
         ArrayList<SearchAction> actions = element.getCustomPath().getListSearchAction();
 
         java.io.File searchResultFile = SearchEngine.find(new java.io.File(pathFrom), actions);
@@ -186,7 +186,12 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
             return null;
         }
 
-        return PsiHelper.findPsiDirByPath(project, searchResultFile.getPath());
+        return searchResultFile.getPath();
+    }
+
+    @Nullable
+    private PsiDirectory getPsiDirectoryFromCustomPath(BaseElement element, String pathFrom) {
+        return PsiHelper.findPsiDirByPath(project, getCustomPath(element, pathFrom));
     }
 
     @Override

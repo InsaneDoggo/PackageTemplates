@@ -17,9 +17,9 @@ public abstract class BaseDialog extends DialogWrapper {
     protected Project project;
     protected JPanel panel;
 
-    protected  static final int PADDING = 10;
-    protected  static final int MIN_WIDTH = 600;
-    protected  static final int MIN_HEIGHT = 520;
+    protected static final int PADDING = 10;
+    protected static final int MIN_WIDTH = 600;
+    protected static final int MIN_HEIGHT = 520;
 
     public BaseDialog(@Nullable Project project) {
         super(project);
@@ -27,9 +27,14 @@ public abstract class BaseDialog extends DialogWrapper {
         init();
     }
 
-    public void preShow(){}
-    public void onOKAction(){}
-    public void onCancelAction(){}
+    public void preShow() {
+    }
+
+    public void onOKAction() {
+    }
+
+    public void onCancelAction() {
+    }
 
     @Override
     public void show() {

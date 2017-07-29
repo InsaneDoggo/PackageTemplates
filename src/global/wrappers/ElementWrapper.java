@@ -8,6 +8,7 @@ import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.EditorTextField;
+import core.actions.newPackageTemplate.dialogs.select.binaryFile.SelectBinaryFileDialog;
 import core.actions.newPackageTemplate.dialogs.select.fileTemplate.SelectFileTemplateDialog;
 import core.script.ScriptDialog;
 import core.search.customPath.CustomPath;
@@ -16,6 +17,7 @@ import core.writeRules.dialog.WriteRulesDialog;
 import global.listeners.ClickListener;
 import global.models.BaseElement;
 import core.writeRules.WriteRules;
+import global.models.BinaryFile;
 import global.models.File;
 import global.utils.Logger;
 import global.utils.factories.GsonFactory;
@@ -28,7 +30,6 @@ import icons.PluginIcons;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -330,7 +331,28 @@ public abstract class ElementWrapper extends BaseWrapper {
     }
 
     public void addBinaryFile() {
-        //todo impl addBinaryFile
+        SelectBinaryFileDialog dialog = new SelectBinaryFileDialog(getPackageTemplateWrapper().getProject(), null) {
+            @Override
+            public void onSuccess(BinaryFile binaryFile) {
+                Logger.log("onSuccess");
+                getPackageTemplateWrapper().collectDataFromFields();
+
+                DirectoryWrapper parent;
+                if (isDirectory()) {
+                    parent = ((DirectoryWrapper) ElementWrapper.this);
+                } else {
+                    parent = getParent();
+                }
+                parent.addElement(WrappersFactory.wrapBinaryFile(parent, binaryFile));
+                parent.reBuildEllements();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        };
+        dialog.show();
     }
 
     //=================================================================

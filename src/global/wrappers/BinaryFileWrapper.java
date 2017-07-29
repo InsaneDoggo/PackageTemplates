@@ -17,6 +17,7 @@ import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.io.File;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -30,14 +31,12 @@ public class BinaryFileWrapper extends ElementWrapper {
     //=================================================================
     @Override
     public void buildView(Project project, JPanel container) {
-        jlName = new JLabel("Binary File", SwingConstants.LEFT);
+        File file = new File(getBinaryFile().getSourcePath());
+        jlName = new JLabel("Binary File:      " + file.getName());
 //        jlName.setDisabledIcon(jlName.getIcon());
 
-        etfDescription = UIHelper.getEditorTextField(getBinaryFile().getDescription(), project);
-
         container.add(getOptionsPanel(), new CC().spanX().split(3));
-        container.add(jlName, new CC().pad(0, 0, 0, UIHelper.PADDING_LABEL));
-        container.add(etfDescription, new CC().wrap().pushX().growX());
+        container.add(jlName, new CC().pushX().growX().wrap());
         updateComponentsState();
 
         addMouseListener();
@@ -45,7 +44,7 @@ public class BinaryFileWrapper extends ElementWrapper {
 
     @NotNull
     private JPanel getOptionsPanel() {
-        JPanel optionsPanel = new JPanel(new MigLayout(new LC().insets("0").gridGap("2pt","0")));
+        JPanel optionsPanel = new JPanel(new MigLayout(new LC().insets("0").gridGap("2pt", "0")));
 
         cbEnabled = new JBCheckBox();
         cbEnabled.setSelected(binaryFile.isEnabled());
@@ -88,7 +87,6 @@ public class BinaryFileWrapper extends ElementWrapper {
         updateOptionIcons();
 
         jlName.setEnabled(binaryFile.isEnabled());
-        etfDescription.setEnabled(binaryFile.isEnabled());
     }
 
 

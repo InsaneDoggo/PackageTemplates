@@ -1,10 +1,8 @@
-package core.actions.custom;
+package core.actions.custom.element;
 
-import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import core.actions.custom.base.SimpleAction;
@@ -17,50 +15,40 @@ import core.report.models.SuccessActionReport;
 import core.search.SearchAction;
 import core.search.SearchEngine;
 import core.writeRules.WriteRules;
-import global.Const;
 import global.dialogs.impl.NeverShowAskCheckBox;
 import global.models.BaseElement;
-import global.models.File;
 import global.utils.Logger;
-import global.utils.file.FileWriter;
 import global.utils.file.PsiHelper;
 import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Properties;
 
 /**
- * Created by Arsen on 09.01.2017.
+ * Created by Arsen on 29.07.2017.
  */
-public class CreateFileFromTemplateAction extends SimpleAction implements IHasWriteRules {
+public abstract class CreateElementBaseAction extends SimpleAction implements IHasWriteRules {
 
-    private Properties properties;
-    private FileTemplate template;
-    private File file;
     private Project project;
+    private BaseElement element;
+    private Object fileResult;
 
-    //result
-    private PsiElement psiElementResult;
-
-    public CreateFileFromTemplateAction(Properties properties, FileTemplate template, File file, Project project) {
-        this.properties = properties;
-        this.template = template;
-        this.file = file;
+    public CreateElementBaseAction(Project project, BaseElement element) {
         this.project = project;
+        this.element = element;
     }
 
     @Override
     public void doRun() {
-        psiElementResult = null;
+        fileResult = null;
 
         if (parentAction instanceof IHasPsiDirectory) {
             PsiDirectory psiParent = ((IHasPsiDirectory) parentAction).getPsiDirectory();
             String parentPath = psiParent.getVirtualFile().getPath();
 
             // Custom Path
-            if (file.getCustomPath() != null) {
-                parentPath = getCustomPath(file, parentPath);
+            if (element.getCustomPath() != null) {
+                parentPath = getCustomPath(element, parentPath);
 
                 if (parentPath == null) {
                     ReportHelper.setState(ExecutionState.FAILED);
@@ -74,7 +62,7 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
 
             // Duplicate
             if (fileDuplicate.exists()) {
-                WriteRules rules = file.getWriteRules();
+                WriteRules rules = element.getWriteRules();
                 if (rules == WriteRules.FROM_PARENT) {
                     rules = geWriteRulesFromParent(parentAction);
                 }
@@ -102,11 +90,11 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
                 }
             } else {
                 // No duplicate, create
-                createFromTemplate(parentPath);
+                createElement(parentPath);
             }
         }
 
-        if (psiElementResult == null) {
+        if (fileResult == null) {
             ReportHelper.setState(ExecutionState.FAILED);
             return;
         }
@@ -116,7 +104,7 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
 
     private boolean onAsk(java.io.File fileDuplicate) {
         int dialogAnswerCode = Messages.showYesNoDialog(project,
-                String.format(Localizer.get("warning.ArgAlreadyExists"), file.getName() + Const.FILE_EXTENSION_SEPARATOR + file.getExtension()),
+                String.format(Localizer.get("warning.ArgAlreadyExists"), elementToString()),
                 Localizer.get("title.WriteConflict"),
                 Localizer.get("action.Overwrite"),
                 Localizer.get("action.Skip"),
@@ -149,26 +137,28 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
             }
         }
         // Create
-        createFromTemplate(fileDuplicate.getParentFile().getPath());
+        createElement(fileDuplicate.getParentFile().getPath());
         return true;
     }
 
     private boolean onUseExisting(java.io.File fileDuplicate) {
-        psiElementResult = PsiHelper.findPsiFileByPath(project, fileDuplicate.getPath());
+        fileResult = PsiHelper.findPsiFileByPath(project, fileDuplicate.getPath());
         return true;
     }
 
-    private void createFromTemplate(String path) {
-        psiElementResult = FileWriter.createFileFromTemplate(this, project, template, file.getName(), properties, path);
-    }
-
+    //=================================================================
+    //  Abstraction
+    //=================================================================
+    protected abstract void createElement(String path);
+    protected abstract java.io.File getDuplicateFile(String path);
+    protected abstract String elementToString();
 
     //=================================================================
     //  Utils
     //=================================================================
     @Override
     public WriteRules getWriteRules() {
-        return file.getWriteRules();
+        return element.getWriteRules();
     }
 
     @Nullable
@@ -184,19 +174,6 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
         }
 
         return searchResultFile.getPath();
-    }
-
-    private java.io.File getDuplicateFile(String path) {
-        return new java.io.File(path + java.io.File.separator
-                + file.getName() + Const.FILE_EXTENSION_SEPARATOR + file.getExtension());
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Create from FileTemplate:    %s.%s",
-                file.getName(),
-                file.getExtension()
-        );
     }
 
 }

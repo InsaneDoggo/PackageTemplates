@@ -6,47 +6,55 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.base.SimpleUndoableAction;
+import core.actions.custom.interfaces.IHasPsiDirectory;
+import core.actions.custom.interfaces.IHasWriteRules;
 import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
+import core.report.models.FailedActionReport;
+import core.report.models.SuccessActionReport;
+import core.search.SearchAction;
+import core.search.SearchEngine;
+import core.writeRules.WriteRules;
+import global.Const;
+import global.models.BaseElement;
+import global.models.BinaryFile;
 import global.utils.Logger;
 import global.utils.file.FileWriter;
 import global.utils.file.PsiHelper;
 import global.utils.i18n.Localizer;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Arsen on 09.01.2017.
  */
-public class CopyFileAction extends SimpleUndoableAction {
+public class CopyFileAction extends SimpleUndoableAction implements IHasWriteRules {
 
+    private BinaryFile file;
     private File fileFrom;
-    private File fileTo;
 
-    public CopyFileAction(Project project, File fileFrom, File fileTo) {
+    public CopyFileAction(Project project, BinaryFile file) {
         super(project);
-        this.fileFrom = fileFrom;
-        this.fileTo = fileTo;
+        this.file = file;
+        fileFrom = new File(file.getSourcePath());
     }
 
     @Override
     public void undo() throws UnexpectedUndoException {
-        if(!FileWriter.removeFile(fileTo)) {
-            //nothing
-        }
+//        if (!FileWriter.removeFile(fileTo)) {
+//            //nothing
+//        }
     }
 
     @Override
     public void redo() throws UnexpectedUndoException {
-        if(fileTo.exists()){
-            //todo ask
-            Logger.log("TransparentCopyFileAction file Exists");
-        }
 
-        if(!FileWriter.copyFile(fileFrom.toPath(), fileTo.toPath())){
-            ReportHelper.setState(ExecutionState.FAILED);
-            return;
-        }
+    }
+
+    private boolean createBinaryFile(File fileTo) {
+        return FileWriter.copyFile(fileFrom.toPath(), fileTo.toPath());
     }
 
 
@@ -54,11 +62,35 @@ public class CopyFileAction extends SimpleUndoableAction {
     //  Utils
     //=================================================================
     @Override
+    public WriteRules getWriteRules() {
+        return file.getWriteRules();
+    }
+
+    @Nullable
+    private String getCustomPath(BaseElement element, String pathFrom) {
+        ArrayList<SearchAction> actions = element.getCustomPath().getListSearchAction();
+
+        java.io.File searchResultFile = SearchEngine.find(new java.io.File(pathFrom), actions);
+
+        if (searchResultFile == null) {
+            //print name of last action
+            Logger.log("getCustomPath File Not Found: " + (actions.isEmpty() ? "" : actions.get(actions.size() - 1).getName()));
+            return null;
+        }
+
+        return searchResultFile.getPath();
+    }
+
+    private java.io.File getDuplicateFile(String path) {
+        return new java.io.File(path + java.io.File.separator
+                + fileFrom.getName());
+    }
+
+    @Override
     public String toString() {
-        return String.format("%s: from %s to %s",
+        return String.format("%s:  %s",
                 getClass().getSimpleName(),
-                fileFrom.getName(),
-                fileTo.getName()
+                fileFrom.getName()
         );
     }
 

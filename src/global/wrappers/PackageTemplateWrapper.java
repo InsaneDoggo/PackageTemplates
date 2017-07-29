@@ -132,7 +132,7 @@ public class PackageTemplateWrapper {
     }
 
     private void initTextInjectionAddButton() {
-        if(getMode() == ViewMode.USAGE){
+        if (getMode() == ViewMode.USAGE) {
             return;
         }
 
@@ -147,7 +147,7 @@ public class PackageTemplateWrapper {
     }
 
     private void initAvailableVariablesButton() {
-        if(getMode() == ViewMode.USAGE){
+        if (getMode() == ViewMode.USAGE) {
             return;
         }
 
@@ -184,7 +184,7 @@ public class PackageTemplateWrapper {
         cboxFileTemplateSource = new ComboBox(actionTypes.toArray());
         cboxFileTemplateSource.setRenderer(new FileTemplateSourceCellRenderer());
         cboxFileTemplateSource.setSelectedItem(packageTemplate.getFileTemplateSource());
-        cboxFileTemplateSource.addActionListener (e -> {
+        cboxFileTemplateSource.addActionListener(e -> {
             packageTemplate.setFileTemplateSource((FileTemplateSource) cboxFileTemplateSource.getSelectedItem());
         });
 
@@ -319,7 +319,7 @@ public class PackageTemplateWrapper {
     public void replaceNameVariable() {
         ReplaceNameVariableVisitor visitor = new ReplaceNameVariableVisitor(getAllProperties());
 
-        for(TextInjection textInjection : getPackageTemplate().getListTextInjection()){
+        for (TextInjection textInjection : getPackageTemplate().getListTextInjection()) {
             visitor.visitCustomPath(textInjection.getCustomPath());
         }
 
@@ -407,39 +407,6 @@ public class PackageTemplateWrapper {
 
     public void addGlobalVariablesToFileTemplates() {
         rootElement.accept(new AddGlobalVariablesVisitor());
-    }
-
-    public DirectoryWrapper wrapDirectory(Directory directory, DirectoryWrapper parent) {
-        DirectoryWrapper result = new DirectoryWrapper();
-        result.setDirectory(directory);
-        result.setParent(parent);
-        result.setPackageTemplateWrapper(PackageTemplateWrapper.this);
-
-        ArrayList<ElementWrapper> list = new ArrayList<>();
-
-        for (BaseElement baseElement : directory.getListBaseElement()) {
-            if (baseElement.isDirectory()) {
-                list.add(wrapDirectory(((Directory) baseElement), result));
-            } else {
-                list.add(wrapFile(baseElement, result));
-            }
-        }
-
-        result.setListElementWrapper(list);
-        return result;
-    }
-
-    private ElementWrapper wrapFile(BaseElement baseElement, DirectoryWrapper parent) {
-        if(baseElement instanceof File){
-            FileWrapper result = new FileWrapper();
-            result.setPackageTemplateWrapper(PackageTemplateWrapper.this);
-            result.setParent(parent);
-            result.setFile((File) baseElement);
-            return result;
-        } else {
-            //todo binaryFileWrapper
-            return null;
-        }
     }
 
     public void initCollections() {

@@ -3,19 +3,23 @@ package core.actions.newPackageTemplate.dialogs.select.binaryFile;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.ui.EditorTextField;
+import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.components.JBScrollPane;
-import core.actions.newPackageTemplate.dialogs.implement.ImplementDialog;
+import global.models.BinaryFile;
+import global.utils.Logger;
+import global.utils.factories.GsonFactory;
 import global.utils.file.FileReaderUtil;
 import global.utils.i18n.Localizer;
 import global.utils.templates.PackageTemplateHelper;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 /**
  * Created by CeH9 on 24.06.2016.
@@ -24,10 +28,13 @@ public abstract class SelectBinaryFileDialog extends DialogWrapper implements Se
 
     private SelectBinaryFilePresenter presenter;
     private Project project;
+    @Nullable
+    private BinaryFile binaryFile;
 
-    public SelectBinaryFileDialog(Project project) {
+    public SelectBinaryFileDialog(Project project, @Nullable BinaryFile binaryFile) {
         super(project);
         this.project = project;
+        this.binaryFile = GsonFactory.cloneObject(binaryFile, BinaryFile.class);
         init();
     }
 
@@ -38,28 +45,49 @@ public abstract class SelectBinaryFileDialog extends DialogWrapper implements Se
     private JPanel panel;
     private TextFieldWithBrowseButton btnPath;
     private ButtonGroup bgSourceMode;
+    private JBRadioButton rbCopyToLib;
+    private JBRadioButton rbUseOriginal;
 
     private void render() {
-        JLabel jlDescription = new JLabel(Localizer.get("Description"));
-
         btnPath = new TextFieldWithBrowseButton();
-        btnPath.setText(PackageTemplateHelper.getRootDirPath());
-        btnPath.addBrowseFolderListener(Localizer.get("title.SelectBinaryFile"), "", project, FileReaderUtil.getBinaryFileDescriptor());
 
-        JBRadioButton rbCopyToDir;
-        JBRadioButton rbUseOriginal;
+        if (binaryFile == null) {
+            binaryFile = BinaryFile.newInstance();
+            binaryFile.setSourcePath(PackageTemplateHelper.getRootDirPath());
+        }
+
+        btnPath.setText(binaryFile.getSourcePath());
+        btnPath.addBrowseFolderListener(Localizer.get("title.SelectBinaryFile"), "", project, FileReaderUtil.getBinaryFileDescriptor());
 
         panel.add(btnPath, new CC().wrap().pushX().growX());
     }
 
+    protected void collectDataFromFields() {
+        binaryFile.setSourcePath(btnPath.getText());
+    }
+
+    @Override
+    protected ValidationInfo doValidate() {
+        // Path
+        File file = new File(btnPath.getText());
+        if (btnPath.getText().isEmpty() || !file.exists() || file.isDirectory()) {
+            return new ValidationInfo(Localizer.get("warning.WrongFilePath"), btnPath);
+        }
+
+        return null;
+    }
+
+    @Override
+    protected void doOKAction() {
+        super.doOKAction();
+
+        collectDataFromFields();
+        onSuccess(binaryFile);
+    }
 
     //=================================================================
     //  Dialog specific stuff
     //=================================================================
-    public abstract void onSuccess();
-
-    public abstract void onCancel();
-
     @Override
     protected JComponent createCenterPanel() {
         presenter = new SelectBinaryFilePresenterImpl(this);
@@ -68,21 +96,9 @@ public abstract class SelectBinaryFileDialog extends DialogWrapper implements Se
 
         render();
 
-        return new JBScrollPane(panel);
-    }
-
-    @Override
-    public void show() {
-        super.show();
-
-        switch (getExitCode()) {
-            case ImplementDialog.OK_EXIT_CODE:
-                presenter.onSuccess();
-                break;
-            case ImplementDialog.CANCEL_EXIT_CODE:
-                presenter.onCancel();
-                break;
-        }
+        JBScrollPane scrollPane = new JBScrollPane(panel);
+        scrollPane.setMinimumSize(new Dimension(600, 200));
+        return scrollPane;
     }
 
 }

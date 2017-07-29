@@ -7,8 +7,4 @@ import com.intellij.ide.fileTemplates.FileTemplate;
  */
 public interface SelectBinaryFilePresenter {
 
-    void onSuccess();
-
-    void onCancel();
-
 }
