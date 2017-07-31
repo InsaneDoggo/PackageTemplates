@@ -2,14 +2,20 @@ package core.actions.custom.undoable;
 
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.openapi.application.PathManager;
+import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.command.undo.DocumentReference;
+import com.intellij.openapi.command.undo.DocumentReferenceManager;
+import com.intellij.openapi.command.undo.UndoConstants;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Clock;
+import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.custom.base.SimpleUndoableAction;
 import global.utils.Logger;
 import global.utils.file.FileWriter;
 import global.utils.file.PsiHelper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -36,6 +42,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
             Logger.log("restore from cache fail");
         } else {
             refreshDir();
+            restoreForceUndoEvent();
         }
 
         if (!FileWriter.removeFile(new File(cacheFileName))) {
@@ -57,6 +64,9 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
             Logger.log("cache fail");
         }
 
+        //Prevent Event
+        preventForceUndoEvent();
+
         if (!FileWriter.removeFile(fileToDelete)) {
             Logger.log("redo fail");
         } else {
@@ -68,6 +78,28 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
         PsiHelper.refreshVirtualFile(fileToDelete.getParentFile().getPath());
         ProjectView.getInstance(project).refresh();
     }
+
+
+    //=================================================================
+    //  ForceUndo Event
+    //=================================================================
+    private Boolean forceUndoHolder;
+
+    private void preventForceUndoEvent() {
+        VirtualFile virtualFile = PsiHelper.findVirtualFileByPath(fileToDelete.getPath());
+        if (virtualFile != null) {
+            forceUndoHolder = virtualFile.getUserData(UndoConstants.FORCE_RECORD_UNDO);
+            virtualFile.putUserData(UndoConstants.FORCE_RECORD_UNDO, Boolean.TRUE);
+        }
+    }
+
+    private void restoreForceUndoEvent() {
+        VirtualFile virtualFile = PsiHelper.findVirtualFileByPath(fileToDelete.getPath());
+        if (virtualFile != null) {
+            virtualFile.putUserData(UndoConstants.FORCE_RECORD_UNDO, forceUndoHolder);
+        }
+    }
+
 
     //=================================================================
     //  Utils
@@ -91,7 +123,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
         return cacheKey;
     }
 
-    private void clearCahceKey(){
+    private void clearCahceKey() {
         cacheKey = null;
     }
 }

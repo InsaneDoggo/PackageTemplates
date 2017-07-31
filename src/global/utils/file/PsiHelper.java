@@ -1,9 +1,9 @@
 package global.utils.file;
 
-import com.intellij.ide.projectView.ProjectView;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
@@ -15,7 +15,7 @@ import global.utils.Logger;
 public class PsiHelper {
 
     public static void refreshVirtualFile(String path) {
-        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+        VirtualFile virtualFile = findVirtualFileByPath(path);
         if (virtualFile == null) {
             Logger.log("refreshVirtualFile virtualFile is NULL");
             return;
@@ -24,8 +24,12 @@ public class PsiHelper {
         virtualFile.refresh(true,true);
     }
 
+    public static VirtualFile findVirtualFileByPath(String path) {
+        return LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+    }
+
     public static PsiDirectory findPsiDirByPath(Project project, String path) {
-        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+        VirtualFile virtualFile = findVirtualFileByPath(path);
         if (virtualFile == null) {
             Logger.log("findPsiDirByPath virtualFile is NULL");
             return null;
@@ -41,7 +45,7 @@ public class PsiHelper {
     }
 
     public static PsiFile findPsiFileByPath(Project project, String path) {
-        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+        VirtualFile virtualFile = findVirtualFileByPath(path);
         if (virtualFile == null) {
             Logger.log("findPsiFileByPath virtualFile is NULL");
             return null;
