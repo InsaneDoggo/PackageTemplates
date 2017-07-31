@@ -1,9 +1,14 @@
 package core.actions.newPackageTemplate;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.CommandProcessor;
+import com.intellij.openapi.command.undo.UnexpectedUndoException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import core.actions.custom.undoable.TestDeleteFileAction;
+
+import java.io.File;
 
 /**
  * Created by Arsen on 28.07.2017.
@@ -28,11 +33,14 @@ public class TestFeature {
     //=================================================================
     private void runTest() {
         String commandId = "testId";
-        CommandProcessor.getInstance().executeCommand(project, this::execute, commandId, commandId);
+        CommandProcessor.getInstance().executeCommand(project, () ->
+                        ApplicationManager.getApplication().runWriteAction(this::execute),
+                commandId, commandId);
     }
 
     private void execute() {
-
+        TestDeleteFileAction action = new TestDeleteFileAction(project, new File(virtualFile.getPath()));
+        action.run();
     }
 
 }

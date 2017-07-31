@@ -1,5 +1,6 @@
 package global.utils.file;
 
+import com.intellij.ide.projectView.ProjectView;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -12,6 +13,16 @@ import global.utils.Logger;
  * Created by Arsen on 06.02.2017.
  */
 public class PsiHelper {
+
+    public static void refreshVirtualFile(String path) {
+        VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+        if (virtualFile == null) {
+            Logger.log("refreshVirtualFile virtualFile is NULL");
+            return;
+        }
+
+        virtualFile.refresh(true,true);
+    }
 
     public static PsiDirectory findPsiDirByPath(Project project, String path) {
         VirtualFile virtualFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
