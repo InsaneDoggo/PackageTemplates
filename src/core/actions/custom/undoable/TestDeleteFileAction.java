@@ -2,9 +2,6 @@ package core.actions.custom.undoable;
 
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.command.undo.DocumentReference;
-import com.intellij.openapi.command.undo.DocumentReferenceManager;
 import com.intellij.openapi.command.undo.UndoConstants;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;
 import com.intellij.openapi.project.Project;
@@ -15,7 +12,6 @@ import global.utils.Logger;
 import global.utils.file.FileWriter;
 import global.utils.file.PsiHelper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -42,7 +38,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
             Logger.log("restore from cache fail");
         } else {
             refreshDir();
-            restoreForceUndoEvent();
+            restoreDataAfterPreventing();
         }
 
         if (!FileWriter.removeFile(new File(cacheFileName))) {
@@ -65,7 +61,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
         }
 
         //Prevent Event
-        preventForceUndoEvent();
+        preventAdditionalAction();
 
         if (!FileWriter.removeFile(fileToDelete)) {
             Logger.log("redo fail");
@@ -85,7 +81,9 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
     //=================================================================
     private Boolean forceUndoHolder;
 
-    private void preventForceUndoEvent() {
+    // When non-binaryFile deleted IDE register additional non undoable action
+    // which cause "Following files have changes that cannot be undone:".
+    private void preventAdditionalAction() {
         VirtualFile virtualFile = PsiHelper.findVirtualFileByPath(fileToDelete.getPath());
         if (virtualFile != null) {
             forceUndoHolder = virtualFile.getUserData(UndoConstants.FORCE_RECORD_UNDO);
@@ -93,7 +91,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
         }
     }
 
-    private void restoreForceUndoEvent() {
+    private void restoreDataAfterPreventing() {
         VirtualFile virtualFile = PsiHelper.findVirtualFileByPath(fileToDelete.getPath());
         if (virtualFile != null) {
             virtualFile.putUserData(UndoConstants.FORCE_RECORD_UNDO, forceUndoHolder);
@@ -106,7 +104,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
     //=================================================================
     @NotNull
     private File getCacheSystemDir() {
-        File cacheDir = new File(PathManager.getSystemPath() + File.separator + "PackageTemplatesCache");
+        File cacheDir = new File(PathManager.getSystemPath() + File.separator + "PackageTemplatesCache" + File.separator + "BinaryFiles");
         if (!cacheDir.exists()) {
             FileWriter.createDirectories(cacheDir.toPath());
         }
