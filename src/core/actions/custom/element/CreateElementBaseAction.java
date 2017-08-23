@@ -33,6 +33,7 @@ public abstract class CreateElementBaseAction<ElementClazz extends BaseElement, 
     protected Project project;
     protected ElementClazz element;
     protected ResultClazz fileResult;
+    protected PsiDirectory psiParent;
 
     public CreateElementBaseAction(Project project, ElementClazz element) {
         this.project = project;
@@ -44,7 +45,7 @@ public abstract class CreateElementBaseAction<ElementClazz extends BaseElement, 
         fileResult = null;
 
         if (parentAction instanceof IHasPsiDirectory) {
-            PsiDirectory psiParent = ((IHasPsiDirectory) parentAction).getPsiDirectory();
+            psiParent = ((IHasPsiDirectory) parentAction).getPsiDirectory();
             String parentPath = psiParent.getVirtualFile().getPath();
 
             // Custom Path
@@ -126,7 +127,7 @@ public abstract class CreateElementBaseAction<ElementClazz extends BaseElement, 
 
     private boolean onOverwrite(java.io.File fileDuplicate) {
         //Remove
-        if(!removeExistingElement(fileDuplicate)){
+        if (!removeExistingElement(fileDuplicate)) {
             return false;
         }
         // Create
@@ -144,9 +145,13 @@ public abstract class CreateElementBaseAction<ElementClazz extends BaseElement, 
     //  Abstraction
     //=================================================================
     protected abstract void createElement(String path);
+
     protected abstract java.io.File getDuplicateFile(String path);
+
     protected abstract String elementToString();
+
     protected abstract ResultClazz findExistingResultFile(File fileDuplicate);
+
     protected abstract boolean removeExistingElement(File fileDuplicate);
 
 
