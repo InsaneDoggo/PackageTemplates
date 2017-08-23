@@ -2,26 +2,15 @@ package core.actions.custom.undoable;
 
 import com.intellij.openapi.command.undo.UnexpectedUndoException;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
-import core.actions.custom.base.SimpleAction;
 import core.actions.custom.base.SimpleUndoableAction;
-import core.actions.custom.interfaces.IHasPsiDirectory;
 import core.actions.custom.interfaces.IHasWriteRules;
-import core.report.ReportHelper;
-import core.report.enums.ExecutionState;
-import core.report.models.FailedActionReport;
-import core.report.models.SuccessActionReport;
 import core.search.SearchAction;
 import core.search.SearchEngine;
 import core.writeRules.WriteRules;
-import global.Const;
 import global.models.BaseElement;
 import global.models.BinaryFile;
 import global.utils.Logger;
 import global.utils.file.FileWriter;
-import global.utils.file.PsiHelper;
-import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;

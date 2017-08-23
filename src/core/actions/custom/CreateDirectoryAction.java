@@ -21,11 +21,10 @@ import global.dialogs.impl.NeverShowAskCheckBox;
 import global.models.BaseElement;
 import global.models.Directory;
 import global.utils.Logger;
-import global.utils.file.PsiHelper;
+import global.utils.file.VFSHelper;
 import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -191,7 +190,7 @@ public class CreateDirectoryAction extends SimpleAction implements IHasPsiDirect
 
     @Nullable
     private PsiDirectory getPsiDirectoryFromCustomPath(BaseElement element, String pathFrom) {
-        return PsiHelper.findPsiDirByPath(project, getCustomPath(element, pathFrom));
+        return VFSHelper.findPsiDirByPath(project, getCustomPath(element, pathFrom));
     }
 
     @Override

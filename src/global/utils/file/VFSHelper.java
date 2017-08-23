@@ -3,7 +3,6 @@ package global.utils.file;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
@@ -12,7 +11,7 @@ import global.utils.Logger;
 /**
  * Created by Arsen on 06.02.2017.
  */
-public class PsiHelper {
+public class VFSHelper {
 
     public static void refreshVirtualFile(String path) {
         VirtualFile virtualFile = findVirtualFileByPath(path);

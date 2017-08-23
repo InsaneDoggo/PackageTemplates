@@ -17,9 +17,7 @@ import core.report.ReportHelper;
 import core.report.models.FailedActionReport;
 import global.Const;
 import global.utils.Logger;
-import global.utils.templates.FileTemplateHelper;
 import global.wrappers.DirectoryWrapper;
-import global.wrappers.FileWrapper;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -108,7 +106,7 @@ public class FileWriter {
         ApplicationManager.getApplication().invokeAndWait(() -> {
                     Runnable runnable = () -> {
                         psiElement[0] = ApplicationManager.getApplication().runWriteAction((Computable<PsiElement>) () -> {
-                            PsiDirectory psiParentDir = PsiHelper.findPsiDirByPath(project, parentPath);
+                            PsiDirectory psiParentDir = VFSHelper.findPsiDirByPath(project, parentPath);
                             if (psiParentDir == null) {
                                 return null;
                             }
@@ -178,7 +176,7 @@ public class FileWriter {
     }
 
     public static PsiDirectory createDirectory(Project project, File dir) {
-        PsiDirectory psiParentDir = PsiHelper.findPsiDirByPath(project, dir.getParentFile().getPath());
+        PsiDirectory psiParentDir = VFSHelper.findPsiDirByPath(project, dir.getParentFile().getPath());
         if (psiParentDir == null) {
             return null;
         }

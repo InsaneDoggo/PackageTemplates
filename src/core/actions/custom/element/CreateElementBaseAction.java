@@ -18,7 +18,7 @@ import core.writeRules.WriteRules;
 import global.dialogs.impl.NeverShowAskCheckBox;
 import global.models.BaseElement;
 import global.utils.Logger;
-import global.utils.file.PsiHelper;
+import global.utils.file.VFSHelper;
 import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 
@@ -125,7 +125,7 @@ public abstract class CreateElementBaseAction extends SimpleAction implements IH
 
     private boolean onOverwrite(java.io.File fileDuplicate) {
         //Remove
-        PsiFile psiDuplicate = PsiHelper.findPsiFileByPath(project, fileDuplicate.getPath());
+        PsiFile psiDuplicate = VFSHelper.findPsiFileByPath(project, fileDuplicate.getPath());
         if (psiDuplicate != null) {
             try {
                 psiDuplicate.delete();
@@ -142,7 +142,7 @@ public abstract class CreateElementBaseAction extends SimpleAction implements IH
     }
 
     private boolean onUseExisting(java.io.File fileDuplicate) {
-        fileResult = PsiHelper.findPsiFileByPath(project, fileDuplicate.getPath());
+        fileResult = VFSHelper.findPsiFileByPath(project, fileDuplicate.getPath());
         return true;
     }
 

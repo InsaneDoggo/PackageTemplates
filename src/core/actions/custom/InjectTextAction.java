@@ -24,7 +24,7 @@ import global.Const;
 import global.utils.Logger;
 import core.regexp.RegexHelper;
 import global.utils.text.StringTools;
-import global.utils.file.PsiHelper;
+import global.utils.file.VFSHelper;
 import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,7 +69,7 @@ public class InjectTextAction extends SimpleAction {
         }
 
         try {
-            PsiFile psiFile = PsiHelper.findPsiFileByPath(project, path);
+            PsiFile psiFile = VFSHelper.findPsiFileByPath(project, path);
             if (psiFile == null) {
                 ReportHelper.setState(ExecutionState.FAILED);
                 ReportHelper.putReport(new FailedActionReport(this, Localizer.get("error.CustomPathNotFound"), "InjectTextAction findPsiFileByPath result == null"));

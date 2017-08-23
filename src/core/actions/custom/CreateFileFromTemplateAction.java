@@ -23,7 +23,7 @@ import global.models.BaseElement;
 import global.models.File;
 import global.utils.Logger;
 import global.utils.file.FileWriter;
-import global.utils.file.PsiHelper;
+import global.utils.file.VFSHelper;
 import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 
@@ -137,7 +137,7 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
 
     private boolean onOverwrite(java.io.File fileDuplicate) {
         //Remove
-        PsiFile psiDuplicate = PsiHelper.findPsiFileByPath(project, fileDuplicate.getPath());
+        PsiFile psiDuplicate = VFSHelper.findPsiFileByPath(project, fileDuplicate.getPath());
         if (psiDuplicate != null) {
             try {
                 psiDuplicate.delete();
@@ -154,7 +154,7 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
     }
 
     private boolean onUseExisting(java.io.File fileDuplicate) {
-        psiElementResult = PsiHelper.findPsiFileByPath(project, fileDuplicate.getPath());
+        psiElementResult = VFSHelper.findPsiFileByPath(project, fileDuplicate.getPath());
         return true;
     }
 

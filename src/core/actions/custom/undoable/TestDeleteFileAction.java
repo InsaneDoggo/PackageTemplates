@@ -10,7 +10,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.custom.base.SimpleUndoableAction;
 import global.utils.Logger;
 import global.utils.file.FileWriter;
-import global.utils.file.PsiHelper;
+import global.utils.file.VFSHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -44,7 +44,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
         if (!FileWriter.removeFile(new File(cacheFileName))) {
             Logger.log("Clear cache fail");
         } else {
-            clearCahceKey();
+            clearCacheKey();
         }
     }
 
@@ -71,7 +71,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
     }
 
     private void refreshDir() {
-        PsiHelper.refreshVirtualFile(fileToDelete.getParentFile().getPath());
+        VFSHelper.refreshVirtualFile(fileToDelete.getParentFile().getPath());
         ProjectView.getInstance(project).refresh();
     }
 
@@ -84,7 +84,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
     // When non-binaryFile deleted IDE register additional non undoable action
     // which cause "Following files have changes that cannot be undone:".
     private void preventAdditionalAction() {
-        VirtualFile virtualFile = PsiHelper.findVirtualFileByPath(fileToDelete.getPath());
+        VirtualFile virtualFile = VFSHelper.findVirtualFileByPath(fileToDelete.getPath());
         if (virtualFile != null) {
             forceUndoHolder = virtualFile.getUserData(UndoConstants.FORCE_RECORD_UNDO);
             virtualFile.putUserData(UndoConstants.FORCE_RECORD_UNDO, Boolean.TRUE);
@@ -92,7 +92,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
     }
 
     private void restoreDataAfterPreventing() {
-        VirtualFile virtualFile = PsiHelper.findVirtualFileByPath(fileToDelete.getPath());
+        VirtualFile virtualFile = VFSHelper.findVirtualFileByPath(fileToDelete.getPath());
         if (virtualFile != null) {
             virtualFile.putUserData(UndoConstants.FORCE_RECORD_UNDO, forceUndoHolder);
         }
@@ -121,7 +121,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
         return cacheKey;
     }
 
-    private void clearCahceKey() {
+    private void clearCacheKey() {
         cacheKey = null;
     }
 }
