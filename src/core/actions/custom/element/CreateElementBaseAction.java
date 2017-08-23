@@ -22,18 +22,19 @@ import global.utils.file.VFSHelper;
 import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
  * Created by Arsen on 29.07.2017.
  */
-public abstract class CreateElementBaseAction extends SimpleAction implements IHasWriteRules {
+public abstract class CreateElementBaseAction<ElementClazz extends BaseElement, ResultClazz> extends SimpleAction implements IHasWriteRules {
 
-    private Project project;
-    private BaseElement element;
-    private Object fileResult;
+    protected Project project;
+    protected ElementClazz element;
+    protected ResultClazz fileResult;
 
-    public CreateElementBaseAction(Project project, BaseElement element) {
+    public CreateElementBaseAction(Project project, ElementClazz element) {
         this.project = project;
         this.element = element;
     }
@@ -125,16 +126,8 @@ public abstract class CreateElementBaseAction extends SimpleAction implements IH
 
     private boolean onOverwrite(java.io.File fileDuplicate) {
         //Remove
-        PsiFile psiDuplicate = VFSHelper.findPsiFileByPath(project, fileDuplicate.getPath());
-        if (psiDuplicate != null) {
-            try {
-                psiDuplicate.delete();
-            } catch (IncorrectOperationException e) {
-                Logger.log("CreateFileFromTemplateAction " + e.getMessage());
-                Logger.printStack(e);
-                ReportHelper.putReport(new FailedActionReport(this, e.getMessage()));
-                return false;
-            }
+        if(!removeExistingElement(fileDuplicate)){
+            return false;
         }
         // Create
         createElement(fileDuplicate.getParentFile().getPath());
@@ -142,9 +135,10 @@ public abstract class CreateElementBaseAction extends SimpleAction implements IH
     }
 
     private boolean onUseExisting(java.io.File fileDuplicate) {
-        fileResult = VFSHelper.findPsiFileByPath(project, fileDuplicate.getPath());
+        fileResult = findExistingResultFile(fileDuplicate);
         return true;
     }
+
 
     //=================================================================
     //  Abstraction
@@ -152,6 +146,9 @@ public abstract class CreateElementBaseAction extends SimpleAction implements IH
     protected abstract void createElement(String path);
     protected abstract java.io.File getDuplicateFile(String path);
     protected abstract String elementToString();
+    protected abstract ResultClazz findExistingResultFile(File fileDuplicate);
+    protected abstract boolean removeExistingElement(File fileDuplicate);
+
 
     //=================================================================
     //  Utils
@@ -162,14 +159,14 @@ public abstract class CreateElementBaseAction extends SimpleAction implements IH
     }
 
     @Nullable
-    private String getCustomPath(BaseElement element, String pathFrom) {
+    private String getCustomPath(ElementClazz element, String pathFrom) {
         ArrayList<SearchAction> actions = element.getCustomPath().getListSearchAction();
 
         java.io.File searchResultFile = SearchEngine.find(new java.io.File(pathFrom), actions);
 
         if (searchResultFile == null) {
             //print name of last action
-            Logger.log("getCustomPath File Not Found: " + (actions.isEmpty() ? "" : actions.get(actions.size() - 1).getName()));
+            Logger.log("getCustomPath Element Not Found: " + (actions.isEmpty() ? "" : actions.get(actions.size() - 1).getName()));
             return null;
         }
 
