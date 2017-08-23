@@ -8,6 +8,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import core.actions.custom.base.SimpleAction;
+import core.actions.custom.element.CreateElementBaseAction;
 import core.actions.custom.interfaces.IHasPsiDirectory;
 import core.actions.custom.interfaces.IHasWriteRules;
 import core.report.ReportHelper;
@@ -33,133 +34,56 @@ import java.util.Properties;
 /**
  * Created by Arsen on 09.01.2017.
  */
-public class CreateFileFromTemplateAction extends SimpleAction implements IHasWriteRules {
+public class CreateFileFromTemplateAction extends CreateElementBaseAction<File, PsiElement> {
 
     private Properties properties;
     private FileTemplate template;
-    private File file;
-    private Project project;
-
-    //result
-    private PsiElement psiElementResult;
 
     public CreateFileFromTemplateAction(Properties properties, FileTemplate template, File file, Project project) {
+        super(project, file);
         this.properties = properties;
         this.template = template;
-        this.file = file;
-        this.project = project;
     }
 
     @Override
-    public void doRun() {
-        psiElementResult = null;
-
-        if (parentAction instanceof IHasPsiDirectory) {
-            PsiDirectory psiParent = ((IHasPsiDirectory) parentAction).getPsiDirectory();
-            String parentPath = psiParent.getVirtualFile().getPath();
-
-            // Custom Path
-            if (file.getCustomPath() != null) {
-                parentPath = getCustomPath(file, parentPath);
-
-                if (parentPath == null) {
-                    ReportHelper.setState(ExecutionState.FAILED);
-                    ReportHelper.putReport(new FailedActionReport(this, Localizer.get("error.CustomPathNotFound"), "Custom Path result == null"));
-                    return;
-                }
-            }
-
-            //Write Rules
-            java.io.File fileDuplicate = getDuplicateFile(parentPath);
-
-            // Duplicate
-            if (fileDuplicate.exists()) {
-                WriteRules rules = file.getWriteRules();
-                if (rules == WriteRules.FROM_PARENT) {
-                    rules = geWriteRulesFromParent(parentAction);
-                }
-
-                switch (rules) {
-                    default:
-                    case ASK_ME:
-                        if (!onAsk(fileDuplicate)) {
-                            ReportHelper.setState(ExecutionState.FAILED);
-                            return;
-                        }
-                        break;
-                    case OVERWRITE:
-                        if (!onOverwrite(fileDuplicate)) {
-                            ReportHelper.setState(ExecutionState.FAILED);
-                            return;
-                        }
-                        break;
-                    case USE_EXISTING:
-                        if (!onUseExisting(fileDuplicate)) {
-                            ReportHelper.setState(ExecutionState.FAILED);
-                            return;
-                        }
-                        break;
-                }
-            } else {
-                // No duplicate, create
-                createFromTemplate(parentPath);
-            }
-        }
-
-        if (psiElementResult == null) {
-            ReportHelper.setState(ExecutionState.FAILED);
-            return;
-        }
-
-        ReportHelper.putReport(new SuccessActionReport(this, toString()));
+    protected void createElement(String path) {
+        fileResult = FileWriter.createFileFromTemplate(this, project, template, element.getName(), properties, path);
     }
 
-    private boolean onAsk(java.io.File fileDuplicate) {
-        int dialogAnswerCode = Messages.showYesNoDialog(project,
-                String.format(Localizer.get("warning.ArgAlreadyExists"), file.getName() + Const.FILE_EXTENSION_SEPARATOR + file.getExtension()),
-                Localizer.get("title.WriteConflict"),
-                Localizer.get("action.Overwrite"),
-                Localizer.get("action.Skip"),
-                Messages.getQuestionIcon(),
-                new NeverShowAskCheckBox()
+    @Override
+    protected java.io.File getDuplicateFile(String path) {
+        return new java.io.File(path + java.io.File.separator
+                + element.getName() + Const.FILE_EXTENSION_SEPARATOR + element.getExtension());
+    }
+
+    @Override
+    protected String elementToString() {
+        return String.format("%s.%s",
+                element.getName(),
+                element.getExtension()
         );
-        if (dialogAnswerCode == Messages.OK) {
-            if (!onOverwrite(fileDuplicate)) {
-                return false;
-            }
-        } else {
-            if (!onUseExisting(fileDuplicate)) {
-                return false;
-            }
+    }
+
+    @Override
+    protected PsiElement findExistingResultFile(java.io.File fileDuplicate) {
+        return VFSHelper.findPsiFileByPath(project, fileDuplicate.getPath());
+    }
+
+    @Override
+    protected boolean removeExistingElement(java.io.File fileDuplicate) {
+        PsiFile psiDuplicate = (PsiFile) findExistingResultFile(fileDuplicate);
+        if (psiDuplicate == null) {
+            return false;
         }
-        return true;
-    }
 
-    private boolean onOverwrite(java.io.File fileDuplicate) {
-        //Remove
-        PsiFile psiDuplicate = VFSHelper.findPsiFileByPath(project, fileDuplicate.getPath());
-        if (psiDuplicate != null) {
-            try {
-                psiDuplicate.delete();
-            } catch (IncorrectOperationException e) {
-                Logger.log("CreateFileFromTemplateAction " + e.getMessage());
-                Logger.printStack(e);
-                ReportHelper.putReport(new FailedActionReport(this, e.getMessage()));
-                return false;
-            }
+        try {
+            psiDuplicate.delete();
+            return true;
+        } catch (IncorrectOperationException e) {
+            Logger.logAndPrintStack("CreateFileFromTemplateAction " + e.getMessage(), e);
+            ReportHelper.putReport(new FailedActionReport(this, e.getMessage()));
+            return false;
         }
-        // Create
-        createFromTemplate(fileDuplicate.getParentFile().getPath());
-        return true;
-    }
-
-    private boolean onUseExisting(java.io.File fileDuplicate) {
-        psiElementResult = VFSHelper.findPsiFileByPath(project, fileDuplicate.getPath());
-        return true;
-    }
-
-    private void createFromTemplate(String path) {
-        psiElementResult = FileWriter.createFileFromTemplate(this, project, template, file.getName(), properties, path);
     }
 
 
@@ -167,35 +91,10 @@ public class CreateFileFromTemplateAction extends SimpleAction implements IHasWr
     //  Utils
     //=================================================================
     @Override
-    public WriteRules getWriteRules() {
-        return file.getWriteRules();
-    }
-
-    @Nullable
-    private String getCustomPath(BaseElement element, String pathFrom) {
-        ArrayList<SearchAction> actions = element.getCustomPath().getListSearchAction();
-
-        java.io.File searchResultFile = SearchEngine.find(new java.io.File(pathFrom), actions);
-
-        if (searchResultFile == null) {
-            //print name of last action
-            Logger.log("getCustomPath File Not Found: " + (actions.isEmpty() ? "" : actions.get(actions.size() - 1).getName()));
-            return null;
-        }
-
-        return searchResultFile.getPath();
-    }
-
-    private java.io.File getDuplicateFile(String path) {
-        return new java.io.File(path + java.io.File.separator
-                + file.getName() + Const.FILE_EXTENSION_SEPARATOR + file.getExtension());
-    }
-
-    @Override
     public String toString() {
         return String.format("Create from FileTemplate:    %s.%s",
-                file.getName(),
-                file.getExtension()
+                element.getName(),
+                element.getExtension()
         );
     }
 
