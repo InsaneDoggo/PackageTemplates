@@ -2,6 +2,7 @@ package global.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import core.library.models.Alias;
 import core.search.customPath.CustomPath;
 import core.writeRules.WriteRules;
 
@@ -15,6 +16,7 @@ public abstract class BaseElement {
     @Expose @SerializedName("script") private String script;
     @Expose @SerializedName("customPath") private CustomPath customPath;
     @Expose @SerializedName("writeRules") private WriteRules writeRules;
+    @Expose @SerializedName("alias") private Alias alias;
 
     public abstract boolean isDirectory();
 
@@ -57,4 +59,13 @@ public abstract class BaseElement {
     public void setWriteRules(WriteRules writeRules) {
         this.writeRules = writeRules;
     }
+
+    public Alias getAlias() {
+        return alias;
+    }
+
+    public void setAlias(Alias alias) {
+        this.alias = alias;
+    }
+
 }

@@ -9,7 +9,6 @@ import core.report.models.FailedActionReport;
 import global.Const;
 import global.models.BinaryFile;
 import global.utils.Logger;
-import global.utils.file.FileWriter;
 import global.utils.file.VFSHelper;
 
 public class CreateBinaryFileAction extends CreateElementBaseAction<BinaryFile, java.io.File> {

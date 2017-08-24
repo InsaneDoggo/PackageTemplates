@@ -20,6 +20,7 @@ public interface Const {
 
     String NODE_GROUP_DEFAULT = "default";
 
+    String LIBRARIES_DIR_NAME = "packageTemplatesLibraries";
     String PACKAGE_TEMPLATES_DIR_NAME = "packageTemplates";
     String PACKAGE_TEMPLATES_EXTENSION = "json";
     String FILE_EXTENSION_SEPARATOR = ".";
