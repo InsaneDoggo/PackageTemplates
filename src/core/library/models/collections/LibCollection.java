@@ -1,4 +1,4 @@
-package core.library;
+package core.library.models.collections;
 
 import core.library.models.LibRequest;
 

@@ -1,8 +1,9 @@
 package core.library;
 
 import com.intellij.openapi.application.PathManager;
-import core.library.models.LibCollectionBinaryFile;
-import core.library.models.LibCollectionScript;
+import core.library.models.collections.LibCollection;
+import core.library.models.collections.LibCollectionBinaryFile;
+import core.library.models.collections.LibCollectionScript;
 import core.library.models.LibRequest;
 import global.Const;
 import global.utils.Logger;
@@ -29,6 +30,7 @@ public class LibraryManager {
     public static void removeInstance() {
         instance = null;
     }
+
 
     //=================================================================
     //  API

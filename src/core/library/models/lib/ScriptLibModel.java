@@ -1,4 +1,4 @@
-package core.library.models;
+package core.library.models.lib;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

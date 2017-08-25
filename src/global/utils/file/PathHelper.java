@@ -8,7 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 public class PathHelper {
 
     public static String toDirPath(VirtualFile file) {
-        if(file.isDirectory()){
+        if (file.isDirectory()) {
             return file.getPath();
         } else {
             return file.getParent().getPath();

@@ -23,4 +23,5 @@ public class Alias {
     public void setAliasType(AliasType aliasType) {
         this.aliasType = aliasType;
     }
+
 }

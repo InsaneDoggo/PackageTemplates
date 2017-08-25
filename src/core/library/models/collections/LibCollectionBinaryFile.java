@@ -1,6 +1,6 @@
-package core.library.models;
+package core.library.models.collections;
 
-import core.library.LibCollection;
+import core.library.models.lib.BinaryFileLibModel;
 
 public class LibCollectionBinaryFile extends LibCollection<String, BinaryFileLibModel> {
 }
