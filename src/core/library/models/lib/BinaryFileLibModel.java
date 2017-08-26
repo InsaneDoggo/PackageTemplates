@@ -5,13 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class BinaryFileLibModel {
 
-    @Expose @SerializedName("relativePath")  private String relativePath;
+    @Expose @SerializedName("path")  private String path;
 
-    public String getRelativePath() {
-        return relativePath;
+    public String getPath() {
+        return path;
     }
 
-    public void setRelativePath(String relativePath) {
-        this.relativePath = relativePath;
+    public void setPath(String path) {
+        this.path = path;
     }
+
 }

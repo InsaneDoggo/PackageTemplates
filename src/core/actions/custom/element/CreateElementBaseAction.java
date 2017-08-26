@@ -3,8 +3,6 @@ package core.actions.custom.element;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.interfaces.IHasPsiDirectory;
 import core.actions.custom.interfaces.IHasWriteRules;
@@ -18,7 +16,6 @@ import core.writeRules.WriteRules;
 import global.dialogs.impl.NeverShowAskCheckBox;
 import global.models.BaseElement;
 import global.utils.Logger;
-import global.utils.file.VFSHelper;
 import global.utils.i18n.Localizer;
 import org.jetbrains.annotations.Nullable;
 

@@ -128,6 +128,8 @@ public class NewPackageTemplateAction extends AnAction {
                 })
                 .build();
 
+        //todo pre transaction Validation
+
         ActionExecutor.runAsTransaction(actionRequest);
     }
 

@@ -6,6 +6,7 @@ import core.actions.custom.CreateDirectoryAction;
 import core.actions.custom.CreateFileFromTemplateAction;
 import core.actions.custom.base.SimpleAction;
 import core.actions.custom.undoable.CopyFileAction;
+import core.actions.custom.undoable.CreateBinaryFileAction;
 import core.report.ReportHelper;
 import core.report.models.PendingActionReport;
 import global.models.BinaryFile;
@@ -120,7 +121,7 @@ public class CollectSimpleActionVisitor implements ElementVisitor {
         }
 
         // Add Report
-        CopyFileAction action = new CopyFileAction(project, wrapper.getBinaryFile());
+        CreateBinaryFileAction action = new CreateBinaryFileAction(binaryFile, project);
         action.setId(ReportHelper.getGenerateId());
         ReportHelper.putReport(new PendingActionReport(action));
 

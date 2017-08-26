@@ -28,6 +28,11 @@ public class BinaryFileHelper {
     }
 
     public static File getBinaryFile(Alias alias) {
+        //todo delete
+        if(true){
+            return new File("E:\\Downloads\\PackageTmp\\BinaryTest\\enot.jpg");
+        }
+
         if (alias == null) {
             Logger.log("getBinaryFile alias is NULL");
             return null;
@@ -40,10 +45,14 @@ public class BinaryFileHelper {
 
         LibRequest<BinaryFileLibModel> request = new LibRequest<>(alias);
         LibraryManager.getInstance().get(request);
+        LibraryManager.removeInstance();
 
-        if (request.getValue() != null) {
-            String relativePath = request.getValue().getRelativePath();
+        if (request.getValue() == null) {
+            Logger.log("getBinaryFile request.getValue() is NULL");
+            return null;
         }
+
+        return new File(request.getValue().getPath());
     }
 
 }
