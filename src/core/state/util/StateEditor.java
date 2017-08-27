@@ -105,4 +105,33 @@ public class StateEditor {
         return this;
     }
 
+
+    //=================================================================
+    //  BinaryFiles
+    //=================================================================
+    public StateEditor setBinaryFileWriteRules(WriteRules writeRules) {
+        model.getBinaryFileConfig().setWriteRules(writeRules);
+        return this;
+    }
+
+    public StateEditor setBinaryFileCacheDirPath(String path) {
+        model.getBinaryFileConfig().setPathToBinaryFilesCache(path);
+        return this;
+    }
+
+    public StateEditor resetBinaryFileCacheDirPath() {
+        model.getBinaryFileConfig().setDefaultBinaryFilesCacheDir();
+        return this;
+    }
+
+    public StateEditor setBinaryFileShouldClearCacheOnIdeStarts(boolean shouldClear) {
+        model.getBinaryFileConfig().setShouldClearCacheOnIdeStarts(shouldClear);
+        return this;
+    }
+
+    public StateEditor setBinaryFileEnabled(boolean enabled) {
+        model.getBinaryFileConfig().setEnabled(enabled);
+        return this;
+    }
+
 }

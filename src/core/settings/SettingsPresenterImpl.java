@@ -57,6 +57,12 @@ public class SettingsPresenterImpl implements SettingsPresenter {
         view.buildAutoImport(paths);
     }
 
+    @Override
+    public void loadBinaryFileConfig() {
+        view.buildBinaryFilesBlock(SaveUtil.reader().getBinaryFileConfig());
+    }
+
+
     //=================================================================
     //  Save
     //=================================================================

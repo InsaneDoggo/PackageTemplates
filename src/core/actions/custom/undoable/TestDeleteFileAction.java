@@ -1,7 +1,6 @@
 package core.actions.custom.undoable;
 
 import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.command.undo.UndoConstants;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;
 import com.intellij.openapi.project.Project;
@@ -10,6 +9,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.custom.base.SimpleUndoableAction;
 import global.utils.Logger;
 import global.utils.file.FileWriter;
+import global.utils.file.PathHelper;
 import global.utils.file.VFSHelper;
 import org.jetbrains.annotations.NotNull;
 
@@ -104,7 +104,7 @@ public class TestDeleteFileAction extends SimpleUndoableAction {
     //=================================================================
     @NotNull
     private File getCacheSystemDir() {
-        File cacheDir = new File(PathManager.getSystemPath() + File.separator + "PackageTemplatesCache" + File.separator + "BinaryFiles");
+        File cacheDir = new File(PathHelper.getBinaryFilesCacheDefaultDir());
         if (!cacheDir.exists()) {
             FileWriter.createDirectories(cacheDir.toPath());
         }

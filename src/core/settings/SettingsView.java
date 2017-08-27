@@ -1,5 +1,6 @@
 package core.settings;
 
+import core.sync.BinaryFileConfig;
 import core.writeRules.WriteRules;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface SettingsView {
     void buildView();
     void buildAutoImport(List<String> paths);
     void setAutoImportWriteRules(WriteRules writeRules);
+    void buildBinaryFilesBlock(BinaryFileConfig config);
+
 }

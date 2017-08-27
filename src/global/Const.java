@@ -12,16 +12,15 @@ public interface Const {
     boolean IS_DEBUG = true;
     boolean SHOULD_LOG_TO_NOTIFICATION = false;
 
-    String EXPORT_FILE_NAME = "Templates.json";
     String ACTION_PREFIX = "pt.action.";
 
     String MODELS_PACKAGE_PATH = File.class.getCanonicalName().substring(
             0, File.class.getCanonicalName().length() - File.class.getSimpleName().length());
 
-    String NODE_GROUP_DEFAULT = "default";
-
     String LIBRARIES_DIR_NAME = "packageTemplatesLibraries";
     String BINARY_FILES_DIR_NAME = "packageTemplatesBinaryFiles";
+    String CACHE_DIR_NAME = "PackageTemplatesCache";
+    String BINARY_FILES_CACHE_DIR_NAME = "BinaryFiles";
     String PACKAGE_TEMPLATES_DIR_NAME = "packageTemplates";
     String PACKAGE_TEMPLATES_EXTENSION = "json";
     String FILE_EXTENSION_SEPARATOR = ".";

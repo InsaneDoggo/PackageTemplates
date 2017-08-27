@@ -21,4 +21,6 @@ public interface SettingsPresenter {
     void addImportPath(List<String> oldPaths);
 
     void removeImportPath(List<String> paths, int pos);
+
+    void loadBinaryFileConfig();
 }

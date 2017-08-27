@@ -3,6 +3,7 @@ package core.state.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import core.sync.AutoImport;
+import core.sync.BinaryFileConfig;
 import global.models.Favourite;
 import global.models.PackageTemplate;
 
@@ -17,6 +18,7 @@ public class StateModel {
     @Expose @SerializedName("userSettings") private UserSettings userSettings;
     @Expose @SerializedName("listFavourite") private ArrayList<Favourite> listFavourite;
     @Expose @SerializedName("autoImport") private AutoImport autoImport;
+    @Expose @SerializedName("binaryFileConfig") private BinaryFileConfig binaryFileConfig;
 
     public long getModelVersion() {
         return modelVersion;
@@ -48,5 +50,13 @@ public class StateModel {
 
     public void setAutoImport(AutoImport autoImport) {
         this.autoImport = autoImport;
+    }
+
+    public BinaryFileConfig getBinaryFileConfig() {
+        return binaryFileConfig;
+    }
+
+    public void setBinaryFileConfig(BinaryFileConfig binaryFileConfig) {
+        this.binaryFileConfig = binaryFileConfig;
     }
 }
