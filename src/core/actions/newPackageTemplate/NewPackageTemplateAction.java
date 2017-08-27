@@ -41,11 +41,11 @@ public class NewPackageTemplateAction extends AnAction {
         virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         project = event.getProject();
 
-//        //todo delete
-//        if (true) {
-//            new TestFeature(project, event, virtualFile);
-//            return;
-//        }
+        //todo delete
+        if (true) {
+            new TestFeature(project, event, virtualFile);
+            return;
+        }
 
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override

@@ -202,7 +202,7 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
         //PathToBinaryFilesCache
         btnBinaryFilesCacheDirPath = new TextFieldWithBrowseButton();
         btnBinaryFilesCacheDirPath.setText(config.getPathToBinaryFilesCache());
-        btnBinaryFilesCacheDirPath.addBrowseFolderListener(Localizer.get("settings.ChooseBinaryFilesCacheDir"), "", project, FileReaderUtil.getPackageTemplatesDescriptor());
+        btnBinaryFilesCacheDirPath.addBrowseFolderListener(Localizer.get("settings.ChooseBinaryFilesCacheDir"), "", project, FileReaderUtil.getDirectoryDescriptor());
         panel.add(btnBinaryFilesCacheDirPath, new CC().pushX().growX().spanX());
 
     }

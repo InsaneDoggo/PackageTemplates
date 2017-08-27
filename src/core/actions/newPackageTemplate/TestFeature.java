@@ -14,6 +14,7 @@ import core.actions.executor.ActionExecutor;
 import core.actions.executor.request.ActionRequest;
 import core.actions.executor.request.ActionRequestBuilder;
 import core.report.ReportHelper;
+import core.settings.SettingsDialog;
 import global.utils.Logger;
 
 import java.io.File;
@@ -33,7 +34,17 @@ public class TestFeature {
         this.event = event;
         this.virtualFile = virtualFile;
 
-        runTest();
+//        runTest();
+        runSettingsTest();
+    }
+
+
+    //=================================================================
+    //  Settings TEST
+    //=================================================================
+    private void runSettingsTest() {
+        SettingsDialog dialog = new SettingsDialog(project);
+        dialog.show();
     }
 
 
