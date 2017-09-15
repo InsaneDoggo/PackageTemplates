@@ -16,6 +16,7 @@ import core.writeRules.WriteRules;
 import core.writeRules.dialog.WriteRulesCellRenderer;
 import global.listeners.ClickListener;
 import global.utils.file.FileReaderUtil;
+import global.utils.file.PathHelper;
 import global.utils.i18n.Language;
 import global.utils.i18n.Localizer;
 import global.views.adapter.ListView;
@@ -171,6 +172,7 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
     private JCheckBox cbClearCacheOnIdeStart;
     private TextFieldWithBrowseButton btnBinaryFilesCacheDirPath;
     private JButton btnShowCacheDirInExplorer;
+    private JButton btnResetCacheDirPathToDefault;
 
     public void buildBinaryFilesBlock(BinaryFileConfig config) {
         panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
@@ -213,11 +215,24 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    ShowFilePathAction.openDirectory(new File(config.getPathToBinaryFilesCache()));
+                    ShowFilePathAction.openDirectory(new File(btnBinaryFilesCacheDirPath.getText()));
                 }
             }
         });
-        panel.add(btnShowCacheDirInExplorer, new CC().gapY("4pt","4pt").wrap());
+        panel.add(btnShowCacheDirInExplorer, new CC().spanX().split(2).gapY("2pt", "0"));
+
+        //Reset Cache Dir Path to Default
+        btnResetCacheDirPathToDefault = new JButton(Localizer.get("action.ResetCacheDirPathToDefault"));
+        btnResetCacheDirPathToDefault.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    btnBinaryFilesCacheDirPath.setText(PathHelper.getBinaryFilesCacheDefaultDir());
+                }
+            }
+        });
+        panel.add(btnResetCacheDirPathToDefault, new CC().gapX("8pt", "0pt").gapY("2pt", "0").wrap());
+
 
     }
 
@@ -228,10 +243,21 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
         //Language
         //todo language save
 //        Language selectedLang = (Language) comboLanguages.getSelectedItem();
-//        presenter.saveLanguage(selectedLang);
+//        presenter.setLanguage(selectedLang);
 
         //AutoImport
-        presenter.saveAutoImport(paths, (WriteRules) cbAutoImportWriteRules.getSelectedItem());
+        presenter.setAutoImport(paths, (WriteRules) cbAutoImportWriteRules.getSelectedItem());
+
+        //BinaryFileConfig
+        BinaryFileConfig binaryFileConfig = BinaryFileConfig.newInstance();
+        binaryFileConfig.setEnabled(cbBinaryFilesEnabled.isSelected());
+        binaryFileConfig.setShouldClearCacheOnIdeStarts(cbClearCacheOnIdeStart.isSelected());
+        binaryFileConfig.setPathToBinaryFilesCache(btnBinaryFilesCacheDirPath.getText());
+        binaryFileConfig.setWriteRules((WriteRules) cbBinaryFilesWriteRules.getSelectedItem());
+
+        presenter.setBinaryFilesConfig(binaryFileConfig);
+
+        presenter.save();
     }
 
 

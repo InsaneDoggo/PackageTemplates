@@ -1,19 +1,12 @@
 package core.actions.custom.undoable;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
 import core.actions.custom.element.CreateElementBaseAction;
-import core.library.models.Alias;
 import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
 import core.report.models.FailedActionReport;
-import global.Const;
 import global.models.BinaryFile;
 import global.utils.BinaryFileHelper;
-import global.utils.Logger;
-import global.utils.file.VFSHelper;
 import global.utils.i18n.Localizer;
 
 import java.io.File;
