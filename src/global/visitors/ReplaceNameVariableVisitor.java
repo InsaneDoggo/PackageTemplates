@@ -3,6 +3,7 @@ package global.visitors;
 import base.ElementVisitor;
 import core.search.SearchAction;
 import core.search.customPath.CustomPath;
+import core.textInjection.TextInjection;
 import core.textInjection.VelocityHelper;
 import global.models.BinaryFile;
 import global.models.Directory;
@@ -65,5 +66,13 @@ public class ReplaceNameVariableVisitor implements ElementVisitor {
         for (SearchAction searchAction : customPath.getListSearchAction()) {
             searchAction.setName(VelocityHelper.fromTemplate(searchAction.getName(), mapGlobalVars));
         }
+    }
+
+    public void visitTextToSearch(TextInjection textInjection) {
+        if(textInjection.isRegexp()){
+            return;
+        }
+
+        textInjection.setTextToSearch(VelocityHelper.fromTemplate(textInjection.getTextToSearch(), mapGlobalVars));
     }
 }
