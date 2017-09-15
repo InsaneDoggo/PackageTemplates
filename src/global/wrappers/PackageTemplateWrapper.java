@@ -321,6 +321,7 @@ public class PackageTemplateWrapper {
 
         for(TextInjection textInjection : getPackageTemplate().getListTextInjection()){
             visitor.visitCustomPath(textInjection.getCustomPath());
+            visitor.visitTextToSearch(textInjection);
         }
 
         rootElement.accept(visitor);
