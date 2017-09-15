@@ -1,6 +1,7 @@
 package core.settings;
 
 import base.BaseDialog;
+import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.Messages;
@@ -17,7 +18,6 @@ import global.listeners.ClickListener;
 import global.utils.file.FileReaderUtil;
 import global.utils.i18n.Language;
 import global.utils.i18n.Localizer;
-import global.utils.templates.PackageTemplateHelper;
 import global.views.adapter.ListView;
 import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -169,6 +170,7 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
     private ComboBox cbBinaryFilesWriteRules;
     private JCheckBox cbClearCacheOnIdeStart;
     private TextFieldWithBrowseButton btnBinaryFilesCacheDirPath;
+    private JButton btnShowCacheDirInExplorer;
 
     public void buildBinaryFilesBlock(BinaryFileConfig config) {
         panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
@@ -203,7 +205,19 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
         btnBinaryFilesCacheDirPath = new TextFieldWithBrowseButton();
         btnBinaryFilesCacheDirPath.setText(config.getPathToBinaryFilesCache());
         btnBinaryFilesCacheDirPath.addBrowseFolderListener(Localizer.get("settings.ChooseBinaryFilesCacheDir"), "", project, FileReaderUtil.getDirectoryDescriptor());
-        panel.add(btnBinaryFilesCacheDirPath, new CC().pushX().growX().spanX());
+        panel.add(btnBinaryFilesCacheDirPath, new CC().pushX().growX().spanX().wrap());
+
+        //Show Cache Dir in Explorer
+        btnShowCacheDirInExplorer = new JButton(Localizer.get("action.ShowCacheDirInExplorer"));
+        btnShowCacheDirInExplorer.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    ShowFilePathAction.openDirectory(new File(config.getPathToBinaryFilesCache()));
+                }
+            }
+        });
+        panel.add(btnShowCacheDirInExplorer, new CC().gapY("4pt","4pt").wrap());
 
     }
 
