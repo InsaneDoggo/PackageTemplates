@@ -1,10 +1,12 @@
 package core.library;
 
 import com.intellij.openapi.application.PathManager;
+import core.library.models.Alias;
 import core.library.models.collections.LibCollection;
 import core.library.models.collections.LibCollectionBinaryFile;
 import core.library.models.collections.LibCollectionScript;
 import core.library.models.LibRequest;
+import core.library.models.lib.BinaryFileLibModel;
 import global.Const;
 import global.utils.Logger;
 import global.utils.factories.GsonFactory;
@@ -35,7 +37,9 @@ public class LibraryManager {
     //=================================================================
     //  API
     //=================================================================
-    public LibRequest get(LibRequest request) {
+    public LibRequest get(Alias alias) {
+        LibRequest request = new LibRequest<>(alias);
+
         switch (request.getAlias().getAliasType()) {
             case BINARY_FILE:
                 initBinaryFileCollection();

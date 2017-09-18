@@ -57,7 +57,7 @@ public abstract class SelectBinaryFileDialog extends DialogWrapper implements Se
         }
 
         btnPath.setText(binaryFile.getSourcePath());
-        btnPath.addBrowseFolderListener(Localizer.get("title.SelectBinaryFile"), "", project, FileReaderUtil.getBinaryFileDescriptor());
+        btnPath.addBrowseFolderListener(Localizer.get("library.ChooseBinaryFile"), "", project, FileReaderUtil.getBinaryFileDescriptor());
 
         panel.add(btnPath, new CC().wrap().pushX().growX());
     }

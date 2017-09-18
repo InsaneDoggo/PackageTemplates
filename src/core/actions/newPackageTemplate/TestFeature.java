@@ -13,6 +13,7 @@ import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
 import core.actions.executor.request.ActionRequest;
 import core.actions.executor.request.ActionRequestBuilder;
+import core.library.ui.LibraryDialog;
 import core.report.ReportHelper;
 import core.settings.SettingsDialog;
 import global.utils.Logger;
@@ -35,7 +36,17 @@ public class TestFeature {
         this.virtualFile = virtualFile;
 
 //        runTest();
-        runSettingsTest();
+//        runSettingsTest();
+        runTabsTest();
+    }
+
+
+    //=================================================================
+    //  Settings TEST
+    //=================================================================
+    private void runTabsTest() {
+        LibraryDialog dialog = new LibraryDialog(project);
+        dialog.show();
     }
 
 

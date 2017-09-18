@@ -7,6 +7,10 @@ public class BinaryFileLibModel {
 
     @Expose @SerializedName("path")  private String path;
 
+    public BinaryFileLibModel(String path) {
+        this.path = path;
+    }
+
     public String getPath() {
         return path;
     }
