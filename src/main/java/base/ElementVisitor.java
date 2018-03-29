@@ -1,5 +1,6 @@
 package base;
 
+import global.wrappers.BinaryFileWrapper;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.FileWrapper;
 
@@ -11,5 +12,7 @@ public interface ElementVisitor {
     void visit(DirectoryWrapper wrapper);
 
     void visit(FileWrapper wrapper);
+
+    void visit(BinaryFileWrapper wrapper);
 
 }

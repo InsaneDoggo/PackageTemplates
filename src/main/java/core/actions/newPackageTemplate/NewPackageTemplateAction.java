@@ -8,6 +8,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import core.actions.custom.base.SimpleAction;
+import core.actions.custom.undoable.CopyFileAction;
 import core.actions.executor.AccessPrivileges;
 import core.actions.executor.ActionExecutor;
 import core.actions.executor.request.ActionRequest;
@@ -23,6 +24,7 @@ import global.utils.i18n.Localizer;
 import global.utils.templates.FileTemplateHelper;
 import global.wrappers.PackageTemplateWrapper;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,12 @@ public class NewPackageTemplateAction extends AnAction {
     public void actionPerformed(AnActionEvent event) {
         virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         project = event.getProject();
+
+        //todo delete
+        if (true) {
+            new TestFeature(project, event, virtualFile);
+            return;
+        }
 
         SelectPackageTemplateDialog dialog = new SelectPackageTemplateDialog(event.getProject()) {
             @Override
@@ -96,21 +104,6 @@ public class NewPackageTemplateAction extends AnAction {
         ptWrapper.collectSimpleActions(project, virtualFile, listSimpleAction);
         ptWrapper.collectInjectionActions(project, listSimpleAction);
 
-//        TextInjection textInjection = new TextInjection();
-//
-//        ArrayList<SearchAction> listSearchAction = new ArrayList<>();
-//        listSearchAction.add(new SearchAction(SearchActionType.FILE, "Main.java", SearchEngine.DEEP_LIMITLESS, false));
-//
-//
-//        textInjection.setCustomPath(new CustomPath(listSearchAction));
-//        textInjection.setDescription("sds");
-//        textInjection.setInjectDirection(InjectDirection.BEFORE);
-//        textInjection.setRegexp(false);
-//        textInjection.setTextToInject("TestText");
-//        textInjection.setTextToSearch("MyToken");
-//
-//        listSimpleAction.add(new InjectTextAction(project, textInjection,ptWrapper.getPackageTemplate().getMapGlobalVars()));
-
         ActionRequest actionRequest = new ActionRequestBuilder()
                 .setProject(project)
                 .setActions(listSimpleAction)
@@ -134,6 +127,8 @@ public class NewPackageTemplateAction extends AnAction {
                     }
                 })
                 .build();
+
+        //todo pre transaction Validation
 
         ActionExecutor.runAsTransaction(actionRequest);
     }

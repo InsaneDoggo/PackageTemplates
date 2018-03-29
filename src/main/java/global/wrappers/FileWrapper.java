@@ -1,6 +1,5 @@
 package global.wrappers;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplatePanel;
 import com.intellij.openapi.project.Project;
@@ -23,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import global.utils.*;
 
 import javax.swing.*;
-import java.util.List;
 
 /**
  * Created by CeH9 on 06.07.2016.
@@ -43,11 +41,11 @@ public class FileWrapper extends ElementWrapper {
         jlName.setDisabledIcon(jlName.getIcon());
         jlName.setText(getFile().getTemplateName());
 
-        etfName = UIHelper.getEditorTextField(getFile().getName(), project);
+        etfDescription = UIHelper.getEditorTextField(getFile().getName(), project);
 
         container.add(getOptionsPanel(), new CC().spanX().split(3));
         container.add(jlName, new CC().pad(0, 0, 0, UIHelper.PADDING_LABEL));
-        container.add(etfName, new CC().wrap().pushX().growX());
+        container.add(etfDescription, new CC().wrap().pushX().growX());
         updateComponentsState();
 
         addMouseListener();
@@ -123,7 +121,7 @@ public class FileWrapper extends ElementWrapper {
         updateOptionIcons();
 
         jlName.setEnabled(file.isEnabled());
-        etfName.setEnabled(file.isEnabled());
+        etfDescription.setEnabled(file.isEnabled());
     }
 
 
@@ -141,16 +139,8 @@ public class FileWrapper extends ElementWrapper {
     }
 
     @Override
-    public ValidationInfo isNameValid(List<String> listAllTemplates) {
-        if (!listAllTemplates.contains(getFile().getTemplateName())) {
-            return new ValidationInfo(String.format(Localizer.get("warning.TemplateSDoesntExist"), getFile().getTemplateName()));
-        }
-        return null;
-    }
-
-    @Override
     public ValidationInfo validateFields() {
-        return TemplateValidator.validateText(etfName, etfName.getText(), FieldType.CLASS_NAME);
+        return TemplateValidator.validateText(etfDescription, etfDescription.getText(), FieldType.CLASS_NAME);
     }
 
     @Override

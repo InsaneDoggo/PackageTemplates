@@ -5,10 +5,14 @@ import com.intellij.openapi.project.Project;
 import core.actions.custom.CreateDirectoryAction;
 import core.actions.custom.CreateFileFromTemplateAction;
 import core.actions.custom.base.SimpleAction;
+import core.actions.custom.undoable.CopyFileAction;
+import core.actions.custom.undoable.CreateBinaryFileAction;
 import core.report.ReportHelper;
 import core.report.models.PendingActionReport;
+import global.models.BinaryFile;
 import global.models.File;
 import global.utils.templates.FileTemplateHelper;
+import global.wrappers.BinaryFileWrapper;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
@@ -106,6 +110,22 @@ public class CollectSimpleActionVisitor implements ElementVisitor {
 
         getLastAction().addAction(createFileFromTemplateAction);
         //        FileWriter.writeFile(getLastAction(), wrapper);
+    }
+
+    @Override
+    public void visit(BinaryFileWrapper wrapper) {
+        BinaryFile binaryFile = wrapper.getBinaryFile();
+
+        if (!binaryFile.isEnabled()) {
+            return;
+        }
+
+        // Add Report
+        CreateBinaryFileAction action = new CreateBinaryFileAction(binaryFile, project);
+        action.setId(ReportHelper.getGenerateId());
+        ReportHelper.putReport(new PendingActionReport(action));
+
+        getLastAction().addAction(action);
     }
 
 }

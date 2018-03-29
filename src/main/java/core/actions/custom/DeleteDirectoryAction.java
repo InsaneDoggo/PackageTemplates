@@ -7,7 +7,7 @@ import core.actions.custom.base.SimpleAction;
 import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
 import global.utils.Logger;
-import global.utils.file.PsiHelper;
+import global.utils.file.VFSHelper;
 
 import java.io.File;
 
@@ -26,7 +26,7 @@ public class DeleteDirectoryAction extends SimpleAction {
 
     @Override
     public void doRun() {
-        PsiDirectory psiDirectory = PsiHelper.findPsiDirByPath(project, fileDirToDelete.getPath());
+        PsiDirectory psiDirectory = VFSHelper.findPsiDirByPath(project, fileDirToDelete.getPath());
         if (psiDirectory == null) {
             ReportHelper.setState(ExecutionState.FAILED);
             return;

@@ -23,7 +23,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,19 +42,8 @@ public class DirectoryWrapper extends ElementWrapper {
     }
 
     @Override
-    public ValidationInfo isNameValid(List<String> listAllTemplates) {
-        for (ElementWrapper element : getListElementWrapper()) {
-            ValidationInfo validationInfo = element.isNameValid(listAllTemplates);
-            if (validationInfo != null) {
-                return validationInfo;
-            }
-        }
-        return null;
-    }
-
-    @Override
     public ValidationInfo validateFields() {
-        ValidationInfo result = TemplateValidator.validateText(etfName, etfName.getText(), FieldType.CLASS_NAME);
+        ValidationInfo result = TemplateValidator.validateText(etfDescription, etfDescription.getText(), FieldType.CLASS_NAME);
         if (result != null) {
             return result;
         }
@@ -116,12 +104,12 @@ public class DirectoryWrapper extends ElementWrapper {
         jlName.setDisabledIcon(jlName.getIcon());
         jlName.setText(Localizer.get("Directory"));
 
-        etfName = UIHelper.getEditorTextField(getDirectory().getName(), project);
+        etfDescription = UIHelper.getEditorTextField(getDirectory().getName(), project);
         addMouseListener();
 
         container.add(getOptionsPanel(), new CC().spanX().split(3));
         container.add(jlName, new CC().pad(0, 0, 0, UIHelper.PADDING_LABEL));
-        container.add(etfName, new CC().growX().pushX().wrap());
+        container.add(etfDescription, new CC().growX().pushX().wrap());
 
         updateComponentsState();
 
@@ -189,7 +177,7 @@ public class DirectoryWrapper extends ElementWrapper {
         updateOptionIcons();
 
         jlName.setEnabled(directory.isEnabled());
-        etfName.setEnabled(directory.isEnabled());
+        etfDescription.setEnabled(directory.isEnabled());
     }
 
 

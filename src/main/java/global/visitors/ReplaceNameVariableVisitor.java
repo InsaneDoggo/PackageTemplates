@@ -5,8 +5,10 @@ import core.search.SearchAction;
 import core.search.customPath.CustomPath;
 import core.textInjection.TextInjection;
 import core.textInjection.VelocityHelper;
+import global.models.BinaryFile;
 import global.models.Directory;
 import global.models.File;
+import global.wrappers.BinaryFileWrapper;
 import global.wrappers.DirectoryWrapper;
 import global.wrappers.ElementWrapper;
 import global.wrappers.FileWrapper;
@@ -46,6 +48,16 @@ public class ReplaceNameVariableVisitor implements ElementVisitor {
         this.visitCustomPath(file.getCustomPath());
     }
 
+    @Override
+    public void visit(BinaryFileWrapper wrapper) {
+        BinaryFile binaryFile = wrapper.getBinaryFile();
+        this.visitCustomPath(binaryFile.getCustomPath());
+    }
+
+
+    //=================================================================
+    //  Utils
+    //=================================================================
     public void visitCustomPath(CustomPath customPath) {
         if (customPath == null) {
             return;

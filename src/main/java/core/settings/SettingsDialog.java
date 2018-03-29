@@ -1,18 +1,22 @@
 package core.settings;
 
 import base.BaseDialog;
+import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.EnumComboBoxModel;
 import com.intellij.ui.SeparatorComponent;
+import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.IconUtil;
 import core.state.util.SaveUtil;
+import core.sync.BinaryFileConfig;
 import core.writeRules.WriteRules;
 import core.writeRules.dialog.WriteRulesCellRenderer;
 import global.listeners.ClickListener;
 import global.utils.file.FileReaderUtil;
+import global.utils.file.PathHelper;
 import global.utils.i18n.Language;
 import global.utils.i18n.Localizer;
 import global.views.adapter.ListView;
@@ -23,7 +27,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +40,6 @@ import java.util.List;
 public class SettingsDialog extends BaseDialog implements SettingsView {
 
     private SettingsPresenter presenter;
-    private JLabel jlLanguage;
-    private ComboBox comboLanguages;
 
     public SettingsDialog(Project project) {
         super(project);
@@ -51,8 +55,19 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
         panel.setLayout(new MigLayout(new LC().insets("0").fillX().gridGapY("1pt")));
 
         buildLanguageBlock();
+
         buildAutoImportBlock();
+        presenter.loadAutoImport();
+
+        presenter.loadBinaryFileConfig();
     }
+
+
+    //=================================================================
+    //  Language
+    //=================================================================
+    private JLabel jlLanguage;
+    private ComboBox comboLanguages;
 
     private void buildLanguageBlock() {
         createLanguageViews();
@@ -72,23 +87,24 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
     //=================================================================
     private ListView<String> lvAutoImport;
     private List<String> paths;
-    private ComboBox comboBoxRules;
+    private ComboBox cbAutoImportWriteRules;
 
     private void buildAutoImportBlock() {
         panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
         panel.add(new JLabel(Localizer.get("settings.AutoImport"), JLabel.CENTER), new CC().wrap().growX().pushX().spanX());
 
-        //Type
+        //WriteRules
         ArrayList<WriteRules> actionTypes = new ArrayList<>();
         actionTypes.add(WriteRules.USE_EXISTING);
         actionTypes.add(WriteRules.ASK_ME);
         actionTypes.add(WriteRules.OVERWRITE);
 
-        comboBoxRules = new ComboBox(actionTypes.toArray());
-        comboBoxRules.setRenderer(new WriteRulesCellRenderer());
+        cbAutoImportWriteRules = new ComboBox(actionTypes.toArray());
+        cbAutoImportWriteRules.setRenderer(new WriteRulesCellRenderer());
 
-        panel.add(comboBoxRules, new CC().pushX().growX().spanX().gapY("10","10"));
+        panel.add(cbAutoImportWriteRules, new CC().pushX().growX().spanX().gapY("10", "10"));
 
+        //Paths
         paths = new ArrayList<>();
         lvAutoImport = new ListView<String>(paths) {
             @Nullable
@@ -123,8 +139,6 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
             }
         });
         panel.add(btnAdd, new CC().wrap());
-
-        presenter.loadAutoImport();
     }
 
     @Override
@@ -137,7 +151,7 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
 
     @Override
     public void setAutoImportWriteRules(WriteRules writeRules) {
-        comboBoxRules.setSelectedItem(writeRules);
+        cbAutoImportWriteRules.setSelectedItem(writeRules);
     }
 
     private void createLanguageViews() {
@@ -151,16 +165,99 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
 
 
     //=================================================================
+    //  BinaryFiles
+    //=================================================================
+    private JCheckBox cbBinaryFilesEnabled;
+    private ComboBox cbBinaryFilesWriteRules;
+    private JCheckBox cbClearCacheOnIdeStart;
+    private TextFieldWithBrowseButton btnBinaryFilesCacheDirPath;
+    private JButton btnShowCacheDirInExplorer;
+    private JButton btnResetCacheDirPathToDefault;
+
+    public void buildBinaryFilesBlock(BinaryFileConfig config) {
+        panel.add(new SeparatorComponent(10), new CC().pushX().growX().wrap().spanX());
+        panel.add(new JLabel(Localizer.get("settings.BinaryFiles"), JLabel.CENTER), new CC().wrap().growX().pushX().spanX());
+
+        //isEnabled
+        cbBinaryFilesEnabled = new JBCheckBox(Localizer.get("settings.EnableBinaryFiles"), config.isEnabled());
+        cbBinaryFilesEnabled.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                //todo show tutor dialog
+            }
+        });
+        panel.add(cbBinaryFilesEnabled, new CC().spanX().wrap());
+
+        //WriteRules
+        ArrayList<WriteRules> actionTypes = new ArrayList<>();
+        actionTypes.add(WriteRules.USE_EXISTING);
+        actionTypes.add(WriteRules.ASK_ME);
+        actionTypes.add(WriteRules.OVERWRITE);
+
+        cbBinaryFilesWriteRules = new ComboBox(actionTypes.toArray());
+        cbBinaryFilesWriteRules.setRenderer(new WriteRulesCellRenderer());
+        cbBinaryFilesWriteRules.setSelectedItem(config.getWriteRules());
+
+        panel.add(cbBinaryFilesWriteRules, new CC().pushX().growX().spanX().gapY("10", "10"));
+
+        //shouldClearCacheOnIdeStarts
+        cbClearCacheOnIdeStart = new JBCheckBox(Localizer.get("settings.ClearCacheOnIdeStart"), config.isEnabled());
+        panel.add(cbClearCacheOnIdeStart, new CC().spanX().wrap());
+
+        //PathToBinaryFilesCache
+        btnBinaryFilesCacheDirPath = new TextFieldWithBrowseButton();
+        btnBinaryFilesCacheDirPath.setText(config.getPathToBinaryFilesCache());
+        btnBinaryFilesCacheDirPath.addBrowseFolderListener(Localizer.get("settings.ChooseBinaryFilesCacheDir"), "", project, FileReaderUtil.getDirectoryDescriptor());
+        panel.add(btnBinaryFilesCacheDirPath, new CC().pushX().growX().spanX().wrap());
+
+        //Show Cache Dir in Explorer
+        btnShowCacheDirInExplorer = new JButton(Localizer.get("action.ShowCacheDirInExplorer"));
+        btnShowCacheDirInExplorer.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    ShowFilePathAction.openDirectory(new File(btnBinaryFilesCacheDirPath.getText()));
+                }
+            }
+        });
+        panel.add(btnShowCacheDirInExplorer, new CC().spanX().split(2).gapY("2pt", "0"));
+
+        //Reset Cache Dir Path to Default
+        btnResetCacheDirPathToDefault = new JButton(Localizer.get("action.ResetCacheDirPathToDefault"));
+        btnResetCacheDirPathToDefault.addMouseListener(new ClickListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    btnBinaryFilesCacheDirPath.setText(PathHelper.getBinaryFilesCacheDefaultDir());
+                }
+            }
+        });
+        panel.add(btnResetCacheDirPathToDefault, new CC().gapX("8pt", "0pt").gapY("2pt", "0").wrap());
+
+
+    }
+
+    //=================================================================
     //  Save
     //=================================================================
     public void saveAll() {
         //Language
         //todo language save
 //        Language selectedLang = (Language) comboLanguages.getSelectedItem();
-//        presenter.saveLanguage(selectedLang);
+//        presenter.setLanguage(selectedLang);
 
         //AutoImport
-        presenter.saveAutoImport(paths, (WriteRules) comboBoxRules.getSelectedItem());
+        presenter.setAutoImport(paths, (WriteRules) cbAutoImportWriteRules.getSelectedItem());
+
+        //BinaryFileConfig
+        BinaryFileConfig binaryFileConfig = BinaryFileConfig.newInstance();
+        binaryFileConfig.setEnabled(cbBinaryFilesEnabled.isSelected());
+        binaryFileConfig.setShouldClearCacheOnIdeStarts(cbClearCacheOnIdeStart.isSelected());
+        binaryFileConfig.setPathToBinaryFilesCache(btnBinaryFilesCacheDirPath.getText());
+        binaryFileConfig.setWriteRules((WriteRules) cbBinaryFilesWriteRules.getSelectedItem());
+
+        presenter.setBinaryFilesConfig(binaryFileConfig);
+
+        presenter.save();
     }
 
 
@@ -201,8 +298,8 @@ public class SettingsDialog extends BaseDialog implements SettingsView {
     private boolean isDataValid() {
         lvAutoImport.collectDataFromUI();
 
-        for(String path : paths){
-            if(path.trim().isEmpty()){
+        for (String path : paths) {
+            if (path.trim().isEmpty()) {
                 Messages.showErrorDialog(Localizer.get("warning.PathShoudntBeEmpty"), "AutoImport");
                 return false;
             }

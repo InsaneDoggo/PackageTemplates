@@ -21,6 +21,8 @@ import core.report.models.PendingActionReport;
 import core.textInjection.TextInjection;
 import core.textInjection.dialog.TextInjectionDialog;
 import core.textInjection.dialog.TextInjectionWrapper;
+import core.writeRules.WriteRules;
+import core.writeRules.dialog.WriteRulesCellRenderer;
 import global.Const;
 import global.dialogs.PredefinedVariablesDialog;
 import global.listeners.ClickListener;
@@ -37,6 +39,8 @@ import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.*;
 
@@ -128,7 +132,7 @@ public class PackageTemplateWrapper {
     }
 
     private void initTextInjectionAddButton() {
-        if(getMode() == ViewMode.USAGE){
+        if (getMode() == ViewMode.USAGE) {
             return;
         }
 
@@ -143,7 +147,7 @@ public class PackageTemplateWrapper {
     }
 
     private void initAvailableVariablesButton() {
-        if(getMode() == ViewMode.USAGE){
+        if (getMode() == ViewMode.USAGE) {
             return;
         }
 
@@ -180,7 +184,7 @@ public class PackageTemplateWrapper {
         cboxFileTemplateSource = new ComboBox(actionTypes.toArray());
         cboxFileTemplateSource.setRenderer(new FileTemplateSourceCellRenderer());
         cboxFileTemplateSource.setSelectedItem(packageTemplate.getFileTemplateSource());
-        cboxFileTemplateSource.addActionListener (e -> {
+        cboxFileTemplateSource.addActionListener(e -> {
             packageTemplate.setFileTemplateSource((FileTemplateSource) cboxFileTemplateSource.getSelectedItem());
         });
 
@@ -315,7 +319,7 @@ public class PackageTemplateWrapper {
     public void replaceNameVariable() {
         ReplaceNameVariableVisitor visitor = new ReplaceNameVariableVisitor(getAllProperties());
 
-        for(TextInjection textInjection : getPackageTemplate().getListTextInjection()){
+        for (TextInjection textInjection : getPackageTemplate().getListTextInjection()) {
             visitor.visitCustomPath(textInjection.getCustomPath());
             visitor.visitTextToSearch(textInjection);
         }
@@ -343,7 +347,7 @@ public class PackageTemplateWrapper {
         }
 
 
-        rootElement.accept(new CollectDataFromFieldsVisitor());
+        rootElement.accept(new СollectDataFromFieldsVisitor());
     }
 
     /**
@@ -404,35 +408,6 @@ public class PackageTemplateWrapper {
 
     public void addGlobalVariablesToFileTemplates() {
         rootElement.accept(new AddGlobalVariablesVisitor());
-    }
-
-    public DirectoryWrapper wrapDirectory(Directory directory, DirectoryWrapper parent) {
-        DirectoryWrapper result = new DirectoryWrapper();
-        result.setDirectory(directory);
-        result.setParent(parent);
-        result.setPackageTemplateWrapper(PackageTemplateWrapper.this);
-
-        ArrayList<ElementWrapper> list = new ArrayList<>();
-
-        for (BaseElement baseElement : directory.getListBaseElement()) {
-            if (baseElement.isDirectory()) {
-                list.add(wrapDirectory(((Directory) baseElement), result));
-            } else {
-                list.add(wrapFile(((File) baseElement), result));
-            }
-        }
-
-        result.setListElementWrapper(list);
-        return result;
-    }
-
-    private FileWrapper wrapFile(File file, DirectoryWrapper parent) {
-        FileWrapper result = new FileWrapper();
-        result.setPackageTemplateWrapper(PackageTemplateWrapper.this);
-        result.setParent(parent);
-        result.setFile(file);
-
-        return result;
     }
 
     public void initCollections() {

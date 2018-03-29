@@ -1,5 +1,6 @@
 package core.settings;
 
+import core.sync.BinaryFileConfig;
 import core.writeRules.WriteRules;
 import global.utils.i18n.Language;
 
@@ -12,13 +13,20 @@ public interface SettingsPresenter {
 
     void onPreShow();
 
-    void saveAutoImport(List<String> list, WriteRules writeRules);
+    void setAutoImport(List<String> list, WriteRules writeRules);
 
-    void saveLanguage(Language lang);
+    void setLanguage(Language lang);
 
     void loadAutoImport();
 
     void addImportPath(List<String> oldPaths);
 
     void removeImportPath(List<String> paths, int pos);
+
+    void loadBinaryFileConfig();
+
+    void save();
+
+    void setBinaryFilesConfig(BinaryFileConfig config);
+
 }

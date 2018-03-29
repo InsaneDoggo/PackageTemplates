@@ -10,7 +10,7 @@ import core.actions.custom.base.SimpleAction;
 import core.report.ReportHelper;
 import core.report.enums.ExecutionState;
 import global.utils.Logger;
-import global.utils.file.PsiHelper;
+import global.utils.file.VFSHelper;
 
 import java.io.File;
 
@@ -31,7 +31,7 @@ public class CreateFileAction extends SimpleAction {
 
     @Override
     public void doRun() {
-        PsiDirectory psiParent = PsiHelper.findPsiDirByPath(project, file.getParentFile().getPath());
+        PsiDirectory psiParent = VFSHelper.findPsiDirByPath(project, file.getParentFile().getPath());
         if(psiParent==null){
             ReportHelper.setState(ExecutionState.FAILED);
             return;

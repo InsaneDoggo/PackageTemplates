@@ -1,6 +1,7 @@
 package core.settings;
 
 import core.state.util.SaveUtil;
+import core.sync.BinaryFileConfig;
 import core.writeRules.WriteRules;
 import global.utils.i18n.Language;
 import global.utils.i18n.Localizer;
@@ -57,23 +58,41 @@ public class SettingsPresenterImpl implements SettingsPresenter {
         view.buildAutoImport(paths);
     }
 
+    @Override
+    public void loadBinaryFileConfig() {
+        view.buildBinaryFilesBlock(SaveUtil.reader().getBinaryFileConfig());
+    }
+
+
     //=================================================================
     //  Save
     //=================================================================
     @Override
-    public void saveLanguage(Language lang) {
+    public void setLanguage(Language lang) {
         SaveUtil.editor()
-                .setLanguage(lang)
-                .save();
+                .setLanguage(lang);
     }
 
     @Override
-    public void saveAutoImport(List<String> list, WriteRules writeRules) {
+    public void setAutoImport(List<String> list, WriteRules writeRules) {
         SaveUtil.editor()
                 .clearAutoImportPaths()
                 .addAutoImportPath(list)
-                .setAutoImportWriteRules(writeRules)
-                .save();
+                .setAutoImportWriteRules(writeRules);
+    }
+
+    @Override
+    public void setBinaryFilesConfig(BinaryFileConfig config) {
+        SaveUtil.editor()
+                .setBinaryFileCacheDirPath(config.getPathToBinaryFilesCache())
+                .setBinaryFileEnabled(config.isEnabled())
+                .setBinaryFileShouldClearCacheOnIdeStarts(config.isShouldClearCacheOnIdeStarts())
+                .setBinaryFileWriteRules(config.getWriteRules());
+    }
+
+    @Override
+    public void save() {
+        SaveUtil.editor().save();
     }
 
 }

@@ -66,6 +66,10 @@ public class FileReaderUtil {
         return descriptor;
     }
 
+    public static FileChooserDescriptor getBinaryFileDescriptor() {
+        return new FileChooserDescriptor(true, false, true, false, false, false);
+    }
+
     public static FileChooserDescriptor getPackageTemplatesDescriptorForImport() {
         FileChooserDescriptor descriptor = new FileChooserDescriptor(true, false, false, false, false, true);
         descriptor.withFileFilter(file -> {
