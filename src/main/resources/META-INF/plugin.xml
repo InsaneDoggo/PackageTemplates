@@ -1,19 +1,7 @@
 <idea-plugin url="http://ceh9.github.io/PackageTemplates/">
-    <id>dev.senya.packagetemplates</id>
-    <version>0.4.2-beta</version>
+    <id>io.github.ceh9.package-templates</id>
     <name>Package Templates</name>
     <vendor email="senya.dev@gmail.com">CeH9</vendor>
-
-    <description><![CDATA[
-      Flexible tool for creating multiple File Templates.<br> Visit GitHub page for details.<br>
-    ]]></description>
-
-    <change-notes><![CDATA[
-    Changelog available on GitHub pages.
-    ]]>
-    </change-notes>
-
-    <idea-version since-build="141.0"/>
 
     <depends>com.intellij.modules.lang</depends>
 
@@ -35,6 +23,5 @@
             <add-to-group group-id="NewGroup" anchor="last"/>
         </action>
     </actions>
-
 
 </idea-plugin>

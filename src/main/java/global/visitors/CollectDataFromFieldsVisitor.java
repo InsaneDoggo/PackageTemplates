@@ -15,7 +15,7 @@ import java.util.Properties;
 /**
  * Сохраняет значения из UI элементов в соответствующие контейнеры.
  */
-public class СollectDataFromFieldsVisitor implements ElementVisitor {
+public class CollectDataFromFieldsVisitor implements ElementVisitor {
 
     @Override
     public void visit(DirectoryWrapper wrapper) {
