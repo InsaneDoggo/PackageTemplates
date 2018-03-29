@@ -21,8 +21,6 @@ import core.report.models.PendingActionReport;
 import core.textInjection.TextInjection;
 import core.textInjection.dialog.TextInjectionDialog;
 import core.textInjection.dialog.TextInjectionWrapper;
-import core.writeRules.WriteRules;
-import core.writeRules.dialog.WriteRulesCellRenderer;
 import global.Const;
 import global.dialogs.PredefinedVariablesDialog;
 import global.listeners.ClickListener;
@@ -39,8 +37,6 @@ import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.*;
 
@@ -347,7 +343,7 @@ public class PackageTemplateWrapper {
         }
 
 
-        rootElement.accept(new СollectDataFromFieldsVisitor());
+        rootElement.accept(new CollectDataFromFieldsVisitor());
     }
 
     /**

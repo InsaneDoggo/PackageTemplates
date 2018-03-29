@@ -42,7 +42,7 @@ public class NewPackageTemplateAction extends AnAction {
         project = event.getProject();
 
         //todo delete
-        if (true) {
+        if (false) {
             new TestFeature(project, event, virtualFile);
             return;
         }
