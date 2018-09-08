@@ -1,25 +1,11 @@
-buildscript {
-    ext.kotlin_version = '1.2.30'
-
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 plugins {
-    id 'org.jetbrains.intellij' version '0.3.1'
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.3.9'
+    id 'org.jetbrains.kotlin.jvm' version '1.2.51'
 }
 
 group 'io.github.ceh9'
 version '0.5.0-beta'
-
-apply plugin: 'java'
-apply plugin: 'kotlin'
 
 sourceCompatibility = 1.8
 
@@ -28,13 +14,21 @@ repositories {
 }
 
 dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.0'
 }
 
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
 intellij {
-    version '2017.3'
+    version '2018.2.3'
     pluginName 'Package Templates'
     updateSinceUntilBuild false
     sameSinceUntilBuild true

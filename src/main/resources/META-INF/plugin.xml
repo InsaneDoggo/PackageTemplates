@@ -1,20 +1,26 @@
 <idea-plugin url="http://ceh9.github.io/PackageTemplates/">
-    <id>io.github.ceh9.package-templates</id>
+    <id>io.github.ceh9.packageTemplates</id>
     <name>Package Templates</name>
-    <vendor email="senya.dev@gmail.com">CeH9</vendor>
+    <vendor
+            email="senya.dev@gmail.com"
+            url="http://www.yourcompany.com">CeH9
+    </vendor>
 
     <depends>com.intellij.modules.lang</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceInterface="core.state.Config" serviceImplementation="core.state.Config"/>
+        <applicationService
+                serviceInterface="core.state.Config"
+                serviceImplementation="core.state.Config"/>
     </extensions>
 
     <application-components>
-        <component><implementation-class>core.AppComponent</implementation-class></component>
+        <component>
+            <implementation-class>core.AppComponent</implementation-class>
+        </component>
     </application-components>
 
     <actions>
-        <!-- Add your actions here -->
         <action id="PackageTemplate"
                 class="core.actions.newPackageTemplate.NewPackageTemplateAction"
                 description="Package Templates management"
