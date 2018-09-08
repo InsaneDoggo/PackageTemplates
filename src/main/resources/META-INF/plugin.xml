@@ -3,7 +3,7 @@
     <name>Package Templates</name>
     <vendor
             email="senya.dev@gmail.com"
-            url="http://www.yourcompany.com">CeH9
+            url="http://ceh9.github.io/PackageTemplates/">CeH9
     </vendor>
 
     <depends>com.intellij.modules.lang</depends>
@@ -21,8 +21,9 @@
     </application-components>
 
     <actions>
+        <!--class="core.actions.newPackageTemplate.NewPackageTemplateAction"-->
         <action id="PackageTemplate"
-                class="core.actions.newPackageTemplate.NewPackageTemplateAction"
+                class="EntryPointAction"
                 description="Package Templates management"
                 icon="PluginIcons.PACKAGE_TEMPLATES"
                 text="Package Template">
