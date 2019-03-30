@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.5'
+    id 'org.jetbrains.intellij' version '0.4.7'
     id 'org.jetbrains.kotlin.jvm' version '1.3.21'
 }
 
@@ -17,7 +17,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
-    compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.0'
+    compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.2'
 }
 
 compileKotlin {
@@ -33,6 +33,7 @@ intellij {
     updateSinceUntilBuild false
     sameSinceUntilBuild true
 }
+
 patchPluginXml {
     sinceBuild '141.0'
     changeNotes """
