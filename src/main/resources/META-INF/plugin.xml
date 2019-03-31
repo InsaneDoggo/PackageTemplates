@@ -1,10 +1,7 @@
 <idea-plugin url="http://ceh9.github.io/PackageTemplates/">
     <id>io.github.ceh9.packageTemplates</id>
     <name>Package Templates</name>
-    <vendor
-            email="senya.dev@gmail.com"
-            url="http://ceh9.github.io/PackageTemplates/">CeH9
-    </vendor>
+    <vendor email="senya.dev@gmail.com" url="http://ceh9.github.io/PackageTemplates/">CeH9</vendor>
 
     <depends>com.intellij.modules.lang</depends>
 
