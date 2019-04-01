@@ -2,6 +2,7 @@ package ui.base
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
+import java.awt.Dimension
 import javax.swing.JComponent
 import javax.swing.JPanel
 
@@ -24,7 +25,7 @@ abstract class BaseDialog(
     override fun getPreferredFocusedComponent() = root
 
     override fun createCenterPanel(): JComponent? {
-        root.setSize(width, height)
+        root.minimumSize = Dimension(width, height)
         initUI()
 
         return root
