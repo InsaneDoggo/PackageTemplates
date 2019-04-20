@@ -4,6 +4,7 @@ import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import core.state.models.StateWrapper;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by CeH9 on 03.07.2016.
@@ -12,7 +13,7 @@ import core.state.models.StateWrapper;
 @State(
         name = "PackageTemplateSettings_v0.2",
         storages = {
-                @Storage(file = "PackageTemplateSettings_v0.2.xml")
+                @Storage(value = "PackageTemplateSettings_v0.2.xml")
         }
 )
 public class Config implements PersistentStateComponent<StateWrapper> {
@@ -23,11 +24,7 @@ public class Config implements PersistentStateComponent<StateWrapper> {
         return myState;
     }
 
-    public void loadState(StateWrapper state) {
+    public void loadState(@NotNull StateWrapper state) {
         myState = state;
-    }
-
-    public void setMyState(StateWrapper myState) {
-        this.myState = myState;
     }
 }

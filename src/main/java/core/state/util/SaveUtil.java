@@ -39,7 +39,7 @@ public class SaveUtil {
         if (stateWrapper == null) {
             stateModel = StateFactory.createStateModel();
             stateWrapper = new StateWrapper();
-            cfg.setMyState(stateWrapper);
+            cfg.loadState(stateWrapper);
             return;
         }
 
