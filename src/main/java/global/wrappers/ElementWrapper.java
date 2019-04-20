@@ -75,7 +75,7 @@ public abstract class ElementWrapper extends BaseWrapper {
         JMenuItem itemAddFile = new JBMenuItem(Localizer.get("AddFile"), AllIcons.FileTypes.Text);
         JMenuItem itemAddDirectory = new JBMenuItem(Localizer.get("AddDirectory"), AllIcons.Nodes.Package);
         JMenuItem itemChangeFileTemplate = new JBMenuItem(Localizer.get("action.ChangeFileTemplate"), AllIcons.Actions.Edit);
-        JMenuItem itemDelete = new JBMenuItem(Localizer.get("Delete"), AllIcons.Actions.Delete);
+        JMenuItem itemDelete = new JBMenuItem(Localizer.get("Delete"), AllIcons.Actions.Cancel);
 
         itemAddFile.addActionListener(e -> AddFile());
         itemAddDirectory.addActionListener(e -> addDirectory());
@@ -117,7 +117,7 @@ public abstract class ElementWrapper extends BaseWrapper {
         // With Script
         if (getElement().getScript() != null && !getElement().getScript().isEmpty()) {
             JMenuItem itemEdit = new JBMenuItem(Localizer.get("EditScript"), PluginIcons.SCRIPT);
-            JMenuItem itemDelete = new JBMenuItem(Localizer.get("DeleteScript"), AllIcons.Actions.Delete);
+            JMenuItem itemDelete = new JBMenuItem(Localizer.get("DeleteScript"), AllIcons.Actions.Cancel);
 
             itemEdit.addActionListener(e -> new ScriptDialog(
                     getPackageTemplateWrapper().getProject(), getElement().getScript()) {
@@ -154,7 +154,7 @@ public abstract class ElementWrapper extends BaseWrapper {
     private void addCustomPathMenuItems(JPopupMenu popupMenu) {
         if (getElement().getCustomPath() != null) {
             JMenuItem itemEdit = new JBMenuItem(Localizer.get("EditCustomPath"), PluginIcons.CUSTOM_PATH);
-            JMenuItem itemDelete = new JBMenuItem(Localizer.get("DeleteCustomPath"), AllIcons.Actions.Delete);
+            JMenuItem itemDelete = new JBMenuItem(Localizer.get("DeleteCustomPath"), AllIcons.Actions.Cancel);
 
             CustomPath customPath = getElement().getCustomPath() == null ? null : GsonFactory.cloneObject(getElement().getCustomPath(), CustomPath.class);
             itemEdit.addActionListener(e -> new CustomPathDialog(getPackageTemplateWrapper().getProject(), customPath) {

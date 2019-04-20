@@ -9,7 +9,6 @@ import com.intellij.ui.EnumComboBoxModel;
 import com.intellij.ui.SeparatorComponent;
 import com.intellij.util.IconUtil;
 import core.state.util.SaveUtil;
-import core.textInjection.dialog.TextInjectionWrapper;
 import core.writeRules.WriteRules;
 import core.writeRules.dialog.WriteRulesCellRenderer;
 import global.listeners.ClickListener;
@@ -22,12 +21,10 @@ import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import sun.plugin2.message.Message;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**

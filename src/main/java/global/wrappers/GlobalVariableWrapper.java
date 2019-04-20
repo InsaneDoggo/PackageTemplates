@@ -102,7 +102,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
         JPopupMenu popupMenu = new JBPopupMenu();
 
         JMenuItem itemAddVariable = new JBMenuItem(Localizer.get("AddVariable"), AllIcons.Nodes.Variable);
-        JMenuItem itemDelete = new JBMenuItem(Localizer.get("Delete"), AllIcons.Actions.Delete);
+        JMenuItem itemDelete = new JBMenuItem(Localizer.get("Delete"), AllIcons.Actions.Cancel);
 
         itemAddVariable.addActionListener(e -> addVariable(ptWrapper));
         itemDelete.addActionListener(e -> deleteVariable(ptWrapper));
@@ -127,7 +127,7 @@ public class GlobalVariableWrapper extends BaseWrapper {
             }.show());
             popupMenu.add(itemEditScript);
 
-            JMenuItem itemDeleteScript = new JBMenuItem(Localizer.get("DeleteScript"), AllIcons.Actions.Delete);
+            JMenuItem itemDeleteScript = new JBMenuItem(Localizer.get("DeleteScript"), AllIcons.Actions.Cancel);
             itemDeleteScript.addActionListener(e -> {
                 globalVariable.setScript("");
                 updateComponentsState();
