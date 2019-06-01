@@ -1,6 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 
-out
-.idea
-build
-.gradle
+/out/
+/.idea/
+/build/
+/.gradle/
