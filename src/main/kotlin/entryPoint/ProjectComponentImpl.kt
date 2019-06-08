@@ -12,8 +12,6 @@ class ProjectComponentImpl(val project: Project) : ProjectComponent {
 
     override fun getComponentName() = "$PLUGIN_NAME.ProjectComponent"
 
-    private fun toScopeId() = project.name
-
     override fun initComponent() {
         Logger.i("initComponent", LogScopes.Project)
 
@@ -39,6 +37,8 @@ class ProjectComponentImpl(val project: Project) : ProjectComponent {
     //  DI
     //==================================================================================================================
     lateinit var scope: Scope
+
+    private fun toScopeId() = project.name
 
     private fun initDI() {
         scope = ApplicationComponentImpl.koin.createScope(toScopeId(), ProjectModule.SCOPE)
