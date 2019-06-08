@@ -1,8 +1,9 @@
+package entryPoint
+
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.ui.Messages
-import ui.demo.DemoDialog
+import features.demo.ui.DemoDialog
 
 class EntryPointAction: AnAction() {
 

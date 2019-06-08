@@ -1,4 +1,4 @@
-package ui.home
+package features.home.ui
 
 interface HomeContract {
 

@@ -1,9 +1,9 @@
-package ui.demo
+package features.demo.ui
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
-import ui.base.BaseDialog
+import core.base.BaseDialog
 import javax.swing.JButton
 
 class DemoDialog(project: Project) :
