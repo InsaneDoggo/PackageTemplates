@@ -13,14 +13,26 @@
 
     <application-components>
         <component>
-            <implementation-class>core.AppComponent</implementation-class>
+            <implementation-class>entryPoint.ApplicationComponentImpl</implementation-class>
         </component>
     </application-components>
+
+    <project-components>
+        <component>
+            <implementation-class>entryPoint.ProjectComponentImpl</implementation-class>
+        </component>
+    </project-components>
+
+    <module-components>
+        <component>
+            <implementation-class>entryPoint.ModuleComponentImpl</implementation-class>
+        </component>
+    </module-components>
 
     <actions>
         <!--class="core.actions.newPackageTemplate.NewPackageTemplateAction"-->
         <action id="PackageTemplate"
-                class="EntryPointAction"
+                class="entryPoint.EntryPointAction"
                 description="Package Templates management"
                 icon="PluginIcons.PACKAGE_TEMPLATES"
                 text="Package Template">
