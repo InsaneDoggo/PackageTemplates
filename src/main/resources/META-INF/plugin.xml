@@ -9,6 +9,12 @@
         <applicationService
                 serviceInterface="core.state.Config"
                 serviceImplementation="core.state.Config"/>
+
+        <projectConfigurable id="PackageTemplates.Settings"
+                                 groupWeight="151"
+                                 displayName="PackageTemplates"
+                                 groupId="editor"
+                                 instance="features.settings.ConfigurableImpl"/>
     </extensions>
 
     <application-components>
